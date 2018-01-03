@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <style name="WrapEverythingDialog" >
+    <item name="windowMinWidthMajor">0dp</item>
+    <item name="windowMinWidthMinor">0dp</item>
+</style>
+</resources>

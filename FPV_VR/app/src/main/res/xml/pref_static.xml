@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    //All these values get written with the first install (or a upgrade from 3.x to >4.0)
+    //by the 2 Test Activities (TA_MSAA and TA_FB)
+    //And may be read from any non-first-startup activity
+    //'static' because I don't expect them to change, as long as there is no upgrade on the android version
+
+    <SwitchPreference
+        android:key="@string/A_MSAATester_Start"
+        android:defaultValue="false" />
+    <SwitchPreference
+        android:key="@string/A_MSAATester_Stop"
+        android:defaultValue="false" />
+    <SwitchPreference
+        android:key="@string/A_FBTester_Start"
+        android:defaultValue="false" />
+    <SwitchPreference
+        android:key="@string/A_FBTester_Stop"
+        android:defaultValue="false" />
+
+    <SwitchPreference
+        android:key="@string/GL_QCOM_tiled_renderingAvailable"
+        android:defaultValue="false" />
+    <SwitchPreference
+        android:key="@string/EGL_KHR_reusable_syncAvailable"
+        android:defaultValue="false" />
+    <SwitchPreference
+        android:key="@string/EGL_ANDROID_front_buffer_auto_refreshAvailable"
+        android:defaultValue="false" />
+    <SwitchPreference
+        android:key="@string/SingleBufferedSurfaceCreatable"
+        android:defaultValue="false" />
+    <EditTextPreference
+        android:key="@string/MaxMSAALevel"
+        android:defaultValue="0"/>
+    <EditTextPreference
+        android:key="@string/AllMSAALevels"
+        android:defaultValue="0#" />
+
+    <SwitchPreference
+        android:key="@string/FirstStart"
+        android:defaultValue="true" />
+
+    <SwitchPreference
+        android:key="@string/MinAndroid7"
+        android:defaultValue="false" />
+
+
+</PreferenceScreen>

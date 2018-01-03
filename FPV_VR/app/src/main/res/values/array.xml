@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="entriesConnectionType" >
+        <item>EZ-Wifibroadcast (Stream)</item>
+        <item>Manually (Stream)</item>
+        <item>Included Test File</item>
+        <item>Ground recording file</item>
+    </string-array>
+    <string-array name="valuesConnectionType" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+
+    <string-array name="entriesHLSelectSourceValue" >
+        <item>BARO</item>
+        <item>GPS</item>
+        <item>BARO_GPS</item>
+    </string-array>
+    <string-array name="valuesHLSelectSourceValue" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="entriesGroundHeadTrackingMode" >
+        <item>disable</item>
+        <item>1st person perspective</item>
+        <item>3rd person perspective for gimbal</item>
+    </string-array>
+    <string-array name="valuesGroundHeadTrackingMode" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="entriesAirHeadTrackingMode" >
+        <item>disable</item>
+        <item>enable</item>
+    </string-array>
+    <string-array name="valuesAirHeadTrackingMode" >
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+
+    <string-array name="listentries2" >
+        <item>Use Default HW decoder</item>
+        <item>Use Google SW decoder(pretty slow,but tested)</item>
+    </string-array>
+    <string-array name="listvalues2">
+        <item>HW</item>
+        <item>SW</item>
+    </string-array>
+
+    <string-array name="listentries3" >
+        <item>Cardboard V1</item>
+        <item>Cardboard V2</item>
+        <item>GearVR</item>
+        <item>Daydream</item>
+        <item>Manually</item>
+    </string-array>
+    <string-array name="listvalues3">
+        <item>CV1</item>
+        <item>CV2</item>
+        <item>GVR</item>
+        <item>DD</item>
+        <item>Manually</item>
+    </string-array>
+
+    <string-array name="entriesMSAA" >
+        <item>Enable 16xMSAA</item>
+        <item>Enable 8xMSAA</item>
+        <item>Enable 4xMSAA</item>
+        <item>Enable 2xMSAA</item>
+        <item>Disable MSAA</item>
+    </string-array>
+    <string-array name="valuesMSAA">
+        <item>16</item>
+        <item>8</item>
+        <item>4</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
+
+
+    <string-array name="entriesMSAA0x" >
+        <item>Disable MSAA</item>
+    </string-array>
+    <string-array name="valuesMSAA0x">
+        <item>0</item>
+    </string-array>
+    <string-array name="entriesMSAA2x" >
+        <item>Enable 2xMSAA</item>
+        <item>Disable MSAA</item>
+    </string-array>
+    <string-array name="valuesMSAA2x">
+        <item>2</item>
+        <item>0</item>
+    </string-array>
+    <string-array name="entriesMSAA4x" >
+        <item>Enable 4xMSAA</item>
+        <item>Enable 2xMSAA</item>
+        <item>Disable MSAA</item>
+    </string-array>
+    <string-array name="valuesMSAA4x">
+        <item>4</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
+    <string-array name="entriesMSAA8x" >
+        <item>Enable 8xMSAA</item>
+        <item>Enable 4xMSAA</item>
+        <item>Enable 2xMSAA</item>
+        <item>Disable MSAA</item>
+    </string-array>
+    <string-array name="valuesMSAA8x">
+        <item>8</item>
+        <item>4</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
+
+</resources>
