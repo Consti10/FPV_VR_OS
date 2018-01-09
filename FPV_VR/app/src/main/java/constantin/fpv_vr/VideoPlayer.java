@@ -14,7 +14,7 @@ package constantin.fpv_vr;
  *    stopAndDeleteVideoPlayer(). This will delete the LowLag decoder and free resources.
  *    after stopAndDeleteVideoPlayer the instance is no longer usable
  *
- * A java VideoPlayer Instance holds two cpp instances:
+ * A java VideoPlayer Instance holds up to two cpp instances:
  *  1) one LowLagDecoder instance
  *  2) one UDPReceiver instance, if the Data Source is UDP
  **********************************************************************************/
@@ -44,11 +44,8 @@ public class VideoPlayer {
 
     private Context mContext;
     private Thread receiverThread;
-    private VideoPlayerInterface mVideoRatioI;
+    private VideoParamsChanged mVideoParamsChangedI;
     private final Object lock=new Object();
-
-    //private long nativeLowLagDecoder;
-    //private long nativeUDPReceiver;
 
     private static final int BUFER_SIZE=1024*1024;
 
@@ -58,7 +55,7 @@ public class VideoPlayer {
     private final String videoFromIntStorageFileName;
 
 
-    public static VideoPlayer createAndStartVideoPlayer(Context context, Surface surface, VideoPlayerInterface vri){
+    public static VideoPlayer createAndStartVideoPlayer(Context context, Surface surface, VideoParamsChanged vri){
         VideoPlayer videoPlayer=new VideoPlayer(context, surface, vri);
         videoPlayer.startPlaying();
         return videoPlayer;
@@ -73,7 +70,7 @@ public class VideoPlayer {
         videoPlayer.stopPlaying();
     }
 
-    private VideoPlayer(Context context, Surface surface, VideoPlayerInterface vri){
+    private VideoPlayer(Context context, Surface surface, VideoParamsChanged vri){
         mContext=context;
         mConnectionType=Settings.ConnectionType;
         videoFromIntStorageFileName=Settings.FilenameVideo;
@@ -82,7 +79,7 @@ public class VideoPlayer {
             limitFPS=true;
         }
         createDecoder(limitFPS,surface);
-        mVideoRatioI=vri;
+        mVideoParamsChangedI=vri;
     }
 
     private void startPlaying(){
@@ -195,14 +192,14 @@ public class VideoPlayer {
     //IntelliJ seems to not notice that (warning)
     //LowLagDecoder->onDecoderRatioChanged
     private void onDecoderRatioChanged(int videoW,int videoH) {
-        if(mVideoRatioI!=null){
-            mVideoRatioI.onVideoRatioChanged(videoW,videoH);
+        if(mVideoParamsChangedI!=null){
+            mVideoParamsChangedI.onVideoRatioChanged(videoW,videoH);
         }
     }
     //LowLagDecoder->onDecoderFpsChanged
     private void onDecoderFpsChanged(float fps) {
-        if(mVideoRatioI!=null){
-            mVideoRatioI.onVideoFPSChanged(fps);
+        if(mVideoParamsChangedI!=null){
+            mVideoParamsChangedI.onVideoFPSChanged(fps);
         }
     }
 
@@ -211,24 +208,9 @@ public class VideoPlayer {
         //Toaster.makeToast(mContext,text,false);
         System.out.println(text);
     }
-}
 
-////Old thoughts. May be wrong
-/* *
- * When Porting my VideoPlayer class from Java to cpp I encountered a serious Problem.
- * One or more of the NDK functions AMediaCodec_createDecoderByType(),AMediaFormat_new(),AMediaCodec_configure,and
- * AMediaCodec_start have a different behaviour than their java counterparts/ e.g. They are broken ?
- * I found out about the Problem when trying to configure the "OMX.google.h264.decoder". The !Exact! same code for Java e.g. cpp
- * produced different results. I was NOT able to get the SW decoder working in NDK, but the HW Qualcom decoder worked fine.
- * These were the logcat errors from the failed creation of the SW decoder in cpp:
- * Unable to instantiate a decoder for type 'OMX.google.h264.decoder' with err 0xfffffffe.
- * signalError(omxError 0xfffffffe, internalError -2)
- * Codec reported err 0xfffffffe, actionCode 0, while in state 1
- *
- * My challenge therefore was:
- * 1) I don't want to forgo the performance improvement of writing the UDP receiver in CPP and passing the NALUS to the decoder
- * in Native code
- * ##2) The decoder has to be configured and started in Java, and then passed to NDK for continuous NALU submission.##
- * ##I don''t think this is possible. Therefore, the SW decoder is disabled currently. Extra care has to be taken to support
- * all different devices with the next FPV_VR Release
- */
+    interface VideoParamsChanged{
+        void onVideoRatioChanged(int videoW, int videoH);
+        void onVideoFPSChanged(float decFPS);
+    }
+}

@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLRenderTextureExternal.h>
-#include <GLRenderColor.h>
+#include <GLRenderGeometry.h>
 
 //#define DEBUG_POSITION
 

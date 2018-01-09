@@ -95,9 +95,16 @@ public:
      */
     void renderNewEyeCallback(JNIEnv* env,bool whichEye,int64_t offsetNS);
 
+    /**
+     * Pass trough the home location lat,lon,alt. May be called multiple times until we have a high enough accuracy.
+     * Is called at least once.
+     */
+    void setHomeLocation(double latitude, double longitude,double attitude);
+
 private:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::shared_ptr<GLRenderColor> mGLRenderColor= nullptr;
+    std::shared_ptr<GLRenderLine> mGLRenderLine= nullptr;
     std::shared_ptr<GLRenderText> mGLRenderText= nullptr;
     std::shared_ptr<GLRenderTextureExternal> mGLRenderTextureExternal= nullptr;
     std::shared_ptr<VideoRenderer> mVideoRenderer= nullptr;
@@ -112,7 +119,7 @@ private:
     int ViewPortW=0,ViewPortH=0;
     int WindowW=0,WindowH=0;
 
-    bool videoFormatChanged;
+    std::atomic<bool> videoFormatChanged;
     float videoFormat=1.77777f;
 
     const float MAX_Z_DISTANCE=14.0f;

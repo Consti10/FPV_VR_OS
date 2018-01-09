@@ -6,6 +6,7 @@
 #include "../SettingsN.h"
 #include <../Helper/GeometryHelper.h>
 #include <unistd.h>
+#include <cFiles/telemetry.h>
 
 #define TAG "TextElements"
 #define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, TAG, __VA_ARGS__)
@@ -169,18 +170,20 @@ void TextElements::circularRefreshThread() {
 string TextElements::getStringForTE(int TE) {
     string s="";
     float tmp;
+    telemetry_data_t* uav_td=mTelemetryR->get_uav_td();
+    otherOSDData* other_osd_data=mTelemetryR->get_other_osd_data();
     switch (TE){
         case TE_DFPS:s.append("Dec:");
-            s.append(intToString((int)round(mTelemetryR->getVal(TelemetryReceiver::ID_FPSD)),4));
+            s.append(intToString((int)round(other_osd_data->decoder_fps),4));
             s.append("fps");
             break;
         case TE_GLFPS:s.append("OGL:");
-            s.append(intToString((int)round(mTelemetryR->getVal(TelemetryReceiver::ID_FPSGL)),4));
+            s.append(intToString((int)round(other_osd_data->opengl_fps),4));
             s.append("fps");
             break;
         case TE_TIME:s.append("Time:");
-            mTelemetryR->setVal(((float)(getTimeMS()-flightStartMS))/1000.0f,TelemetryReceiver::ID_TIME);
-            tmp=mTelemetryR->getVal(TelemetryReceiver::ID_TIME);
+            tmp=(((float)(getTimeMS()-flightStartMS))/1000.0f);
+            other_osd_data->time_seconds=tmp;
             if(tmp<60){
                 s.append(floatToString(tmp,4,0));
                 s.append("sec");
@@ -189,66 +192,74 @@ string TextElements::getStringForTE(int TE) {
                 s.append("min");
             }
             break;
-        case TE_RX1:s.append("RX1:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_RX1),7,0));
+        case TE_RX1:s.append("ezWB:");
+            s.append(floatToString(other_osd_data->rssi_ezwb,7,0));
             s.append("rssi");
             break;
-        case TE_RX2:s.append("RX2:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_RX2),7,0));
+        case TE_RX2:s.append("RX1:");
+            s.append(floatToString(uav_td->rssi1,7,0));
             s.append("rssi");
             break;
-        case TE_RX3:s.append("RX3:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_RX3),7,0));
+        case TE_RX3:s.append("RX2:");
+            s.append(floatToString(uav_td->rssi2,7,0));
             s.append("rssi");
             break;
         case TE_BATT_P:s.append("Batt:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_BATT_PERC),9,0));
+            s.append(floatToString(other_osd_data->batt_percentage,9,0));
             s.append("%");
             break;
         case TE_BATT_V:s.append("Batt:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_BATT_V),9,0));
+            s.append(floatToString(uav_td->voltage,9,0));
             s.append("V");
             break;
         case TE_BATT_A:
             s.append("Batt:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_BATT_A),9,0));
+            s.append(floatToString(uav_td->ampere,9,0));
             s.append("A");
             break;
         case TE_BATT_AH:
             s.append("Batt:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_BATT_AH),9,0));
+            s.append(floatToString(other_osd_data->batt_ah,9,0));
             s.append("Ah");
             break;
         case TE_HOME_D:s.append("Home:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_HOME_M),9,0));
-            s.append("m");
+            mTelemetryR->recalculateHomeDistance();
+            tmp=other_osd_data->home_distance_m;
+            if(tmp>1000){
+                tmp/=1000.0f;
+                s.append(floatToString(tmp,6,0));
+                s.append("km");
+            }else{
+                s.append(floatToString(tmp,7,0));
+                s.append("m");
+            }
             break;
         case TE_SPEED_V:s.append("VS:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_VS),9,0));
+            s.append(floatToString(uav_td->speed,7,0));
             s.append("km/h");
             break;
-        case TE_SPEED_H:s.append("HS:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_HS),7,0));
+        case TE_SPEED_H:s.append("VS:");
+            s.append(floatToString(uav_td->airspeed,7,0));
             s.append("km/h");
             break;
         case TE_LAT:s.append("Lat:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_LAT),9,0));
+            s.append(floatToString((float)uav_td->latitude,9,0));
             //s.append("");
             break;
         case TE_LON:s.append("Lon:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_LON),9,0));
+            s.append(floatToString((float)uav_td->longitude,9,0));
             //s.append("");
             break;
         case TE_HEIGHT_B:s.append("Height:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_HEIGHT_B),7,0));
+            s.append(floatToString((float)uav_td->baro_altitude,7,0));
             s.append("m");
             break;
         case TE_HEIGHT_GPS:s.append("Height:");
-            s.append(floatToString(mTelemetryR->getVal(TelemetryReceiver::ID_HEIGHT_GPS),7,0));
+            s.append(floatToString(uav_td->gps_altitude,7,0));
             s.append("m");
             break;
         case TE_N_SAT:s.append("Sats:");
-            s.append(intToString((int)mTelemetryR->getVal(TelemetryReceiver::ID_N_SAT),3));
+            s.append(intToString((int)uav_td->sats,3));
             break;
         default:
             break;

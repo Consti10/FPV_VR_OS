@@ -65,9 +65,6 @@ void ModelRollPitch::setWorldPosition(float x,float y,float z,float modelWidth){
 }
 
 void ModelRollPitch::update(float rollDegree, float pitchDegree) {
-    //TODO hack before demo
-    rollDegree=0;
-    pitchDegree=5;
 #ifdef DEBUG_POSITION
     rollDegree=0;
     pitchDegree=20;

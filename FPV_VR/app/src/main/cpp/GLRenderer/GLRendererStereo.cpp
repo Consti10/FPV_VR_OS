@@ -9,6 +9,7 @@
 #include <GLRenderTextureExternal.h>
 #include <TelemetryReceiver.h>
 #include <Chronometer.h>
+#include <cFiles/telemetry.h>
 #include "../SettingsN.h"
 #include "../Helper/CPUPriorities.h"
 
@@ -32,12 +33,13 @@ GLRendererStereo::~GLRendererStereo() {
 
 void GLRendererStereo::placeGLElements(){
     //LOGV("Place GL Elements");
+    int strokeW=2;
     float videoW=5;
     float videoH=videoW*1.0f/videoFormat;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
     float videoZ=-HeadTrackerExtended::MAX_Z_DISTANCE*((100-S_SceneScale)/100.0f);
-    mOSDRenderer->placeGLElementsStereo(videoX,videoY,videoZ,videoW,videoH);
+    mOSDRenderer->placeGLElementsStereo(videoX,videoY,videoZ,videoW,videoH,strokeW);
     mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
 }
 
@@ -67,20 +69,12 @@ void GLRendererStereo::drawScene() {
 
 void GLRendererStereo::calculateMetrics(){
     int64_t ts=getTimeMS();
-    //calculate current fps every 3 seconds
-    fpsData.framesSinceLastFPSCalculation++;
-    if(ts-fpsData.lastFPSCalculation>3000){
-        double exactElapsedSeconds=(ts-fpsData.lastFPSCalculation)*0.001;
-        fpsData.currFPS=fpsData.framesSinceLastFPSCalculation/exactElapsedSeconds;
-        mTelemetryReceiver->setVal((float)fpsData.currFPS,TelemetryReceiver::ID_FPSGL);
-        fpsData.framesSinceLastFPSCalculation=0;
-        fpsData.lastFPSCalculation=ts;
-    }
+    mFPSCalculator->tick();
+    mTelemetryReceiver->get_other_osd_data()->opengl_fps=mFPSCalculator->getCurrentFPS();
     //calculate and print CPU Frame time every 5 seconds
     if(ts-lastLog>5*1000){
         lastLog=ts;
 #ifdef PRINT_LOGS
-        LOGV("OpenGL FPS:%f",fpsData.currFPS);
         CPUFrameTime->printAvg();
 #endif
         CPUFrameTime->reset();
@@ -93,10 +87,11 @@ void GLRendererStereo::OnSurfaceCreated(JNIEnv * env,jobject obj,jint videoTextu
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mGLRenderColor=std::make_shared<GLRenderColor>(S_DistortionCorrection);
+    mGLRenderLine=std::make_shared<GLRenderLine>(S_DistortionCorrection);
     mGLRenderText=std::make_shared<GLRenderText>(S_DistortionCorrection);
     mGLRenderText->loadTextureImage(env, obj,assetManagerJAVA);
     mGLRenderTextureExternal=std::make_shared<GLRenderTextureExternal>(S_DistortionCorrection,(GLuint)videoTexture);
-    mOSDRenderer=std::make_shared<OSDRenderer>(mTelemetryReceiver.get(), mGLRenderColor.get(), mGLRenderText.get());
+    mOSDRenderer=std::make_shared<OSDRenderer>(mTelemetryReceiver.get(), mGLRenderColor.get(),mGLRenderLine.get(), mGLRenderText.get());
     mVideoRenderer=std::make_shared<VideoRenderer>(mGLRenderColor.get(),mGLRenderTextureExternal.get(),S_DistortionCorrection);
     lastLog=getTimeMS();
     glEnable(GL_BLEND);
@@ -113,26 +108,13 @@ void GLRendererStereo::OnSurfaceChanged(int width, int height) {
     WindowH=height;
     ViewPortW=width/2;
     ViewPortH=height;
-    /*mProjM=glm::perspective(glm::radians(45.0f), (float) ViewPortW / (float)ViewPortH, 0.1f, MAX_Z_DISTANCE+5.0f);
-    mLeftEyeVM=glm::lookAt(
-            glm::vec3(-S_InterpupilaryDistance/2.0f,0,0),
-            glm::vec3(0,0,-MAX_Z_DISTANCE),
-            glm::vec3(0,1,0)
-    );
-    mRightEyeVM=glm::lookAt(
-            glm::vec3(S_InterpupilaryDistance/2.0f,0,0),
-            glm::vec3(0,0,-MAX_Z_DISTANCE),
-            glm::vec3(0,1,0)
-    );*/
-    mHeadTrackerExtended->calculateMatrices((float) ViewPortW / (float)ViewPortH);
-
-    mLeftEyeTranslate = glm::translate(glm::mat4(1.0f),glm::vec3(0,-S_InterpupilaryDistance/2.0f,0));
-    mRightEyeTranslate = glm::translate(glm::mat4(1.0f),glm::vec3(0,S_InterpupilaryDistance/2.0f,0));
+    mHeadTrackerExtended->calculateMatrices(((float) ViewPortW)/((float)ViewPortH));
     placeGLElements();
     setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
 }
 
 void GLRendererStereo::OnDrawFrame() {
+    //changeSwapColor=true;
     if(changeSwapColor){
         color++;
         if(color>1){
@@ -141,6 +123,10 @@ void GLRendererStereo::OnDrawFrame() {
         }else{
             glClearColor(1.0f,1.0f,0.0f,0.0f);
         }
+    }
+    if(videoFormatChanged){
+        placeGLElements();
+        videoFormatChanged=false;
     }
     calculateMetrics();
     CPUFrameTime->start();
@@ -169,7 +155,7 @@ void GLRendererStereo::OnVideoRatioChanged(int videoW, int videoH) {
 
 void GLRendererStereo::setVideoDecoderFPS(float fps) {
     if(mTelemetryReceiver.get()){
-        mTelemetryReceiver->setVal(fps,TelemetryReceiver::ID_FPSD);
+       mTelemetryReceiver->get_other_osd_data()->decoder_fps=fps;
     }
 }
 
@@ -182,6 +168,9 @@ void GLRendererStereo::setVideoDecoderFPS(float fps) {
     }
 }*/
 
+void GLRendererStereo::setHomeLocation(double latitude, double longitude,double attitude) {
+    mTelemetryReceiver->setHome(latitude,longitude,attitude);
+}
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 
 #define JNI_METHOD(return_type, method_name) \
@@ -243,5 +232,10 @@ JNI_METHOD(void, nativeOnGLSurfaceDestroyed)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {
     LOGV("nativeOnGLSurfaceDestroyed()");
     native(glRendererStereo)->OnGLSurfaceDestroyed();
+}
+JNI_METHOD(void, nativeSetHomeLocation)
+(JNIEnv *env, jobject obj, jlong glRendererStereo,jdouble latitude,jdouble longitude,jdouble attitude) {
+    native(glRendererStereo)->setHomeLocation((double)latitude,(double)longitude,(double)attitude);
+    LOGV("setHomeLocation()");
 }
 }

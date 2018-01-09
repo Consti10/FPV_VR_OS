@@ -14,6 +14,7 @@
 #include <VideoRenderer.h>
 #include <gvr_types.h>
 #include <HeadTrackerExtended.h>
+#include <FPSCalculator.h>
 
 class GLRendererStereo {
 public:
@@ -64,10 +65,16 @@ public:
      */
     void OnVideoRatioChanged(int videoW,int videoH);
 
+    /**
+     * Pass trough the home location lat,lon,alt. May be called multiple times until we have a high enough accuracy.
+     * Is called at least once.
+     */
+    void setHomeLocation(double latitude, double longitude,double attitude);
 
 private:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::shared_ptr<GLRenderColor> mGLRenderColor= nullptr;
+    std::shared_ptr<GLRenderLine> mGLRenderLine= nullptr;
     std::shared_ptr<GLRenderText> mGLRenderText= nullptr;
     std::shared_ptr<GLRenderTextureExternal> mGLRenderTextureExternal= nullptr;
     std::shared_ptr<VideoRenderer> mVideoRenderer= nullptr;
@@ -77,21 +84,14 @@ private:
     //std::unique_ptr CPUFrameTime=std::unique_ptr<Chronometer>(new Chronometer("CPU FrameTime"));
     std::shared_ptr<Chronometer>CPUFrameTime=make_shared<Chronometer>("CPU FrameTime");
     std::shared_ptr<HeadTrackerExtended>mHeadTrackerExtended= nullptr;
+    std::shared_ptr<FPSCalculator>mFPSCalculator=make_shared<FPSCalculator>("OpenGL FPS",2000);
 
-    //glm::mat4x4 mLeftEyeVM,mRightEyeVM;
-    //glm::mat4x4 mProjM;
-    glm::mat4x4 mLeftEyeTranslate,mRightEyeTranslate;
     int ViewPortW=0,ViewPortH=0;
     int WindowW=0,WindowH=0;
-    bool videoFormatChanged;
+    std::atomic<bool> videoFormatChanged;
     float videoFormat=1.77777f;
     int color=0;
     bool changeSwapColor= false;
-    struct DataToCalculateFPS{
-        int64_t lastFPSCalculation=0;
-        double framesSinceLastFPSCalculation=0;
-        double currFPS;
-    }fpsData;
     int64_t lastLog;
     //const float MAX_Z_DISTANCE=14.0f;
 

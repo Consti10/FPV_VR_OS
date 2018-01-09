@@ -2,6 +2,7 @@
 // Created by Constantin on 06.12.2017.
 //
 
+#include <cFiles/telemetry.h>
 #include "GLRSuperSync.h"
 #include "../SettingsN.h"
 #include "../Helper/Extensions.h"
@@ -32,10 +33,11 @@ void GLRSuperSync::OnSurfaceCreated(JNIEnv *env, jobject obj, jint videoTexture,
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mGLRenderColor=std::make_shared<GLRenderColor>(S_DistortionCorrection);
+    mGLRenderLine=std::make_shared<GLRenderLine>(S_DistortionCorrection);
     mGLRenderText=std::make_shared<GLRenderText>(S_DistortionCorrection);
     mGLRenderText->loadTextureImage(env, obj,assetManagerJAVA);
     mGLRenderTextureExternal=std::make_shared<GLRenderTextureExternal>(S_DistortionCorrection,(GLuint)videoTexture);
-    mOSDRenderer=std::make_shared<OSDRenderer>(mTelemetryReceiver.get(), mGLRenderColor.get(), mGLRenderText.get());
+    mOSDRenderer=std::make_shared<OSDRenderer>(mTelemetryReceiver.get(), mGLRenderColor.get(),mGLRenderLine.get(), mGLRenderText.get());
     mVideoRenderer=std::make_shared<VideoRenderer>(mGLRenderColor.get(),mGLRenderTextureExternal.get(),S_DistortionCorrection);
     std::vector<std::string> v = {"startDR","updateTexImage1","clear","drawGL","stopDR","updateTexImage2"};
     mFrameCPUChronometer=std::make_shared<FrameCPUChronometer>(v);
@@ -52,7 +54,7 @@ void GLRSuperSync::OnSurfaceChanged(int width, int height) {
     WindowH=height;
     ViewPortW=width/2;
     ViewPortH=height;
-    mHeadTrackerExtended->calculateMatrices((float) ViewPortW / (float)ViewPortH);
+    mHeadTrackerExtended->calculateMatrices(((float) ViewPortW)/((float)ViewPortH));
     placeGLElements();
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
@@ -64,7 +66,7 @@ void GLRSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject surfaceT
     mVideoRenderer->initUpdateTexImageJAVA(env,obj,surfaceTexture);
     setAffinity(exclusiveVRCore);
     setCPUPriority(CPU_PRIORITY_GLRENDERER_STEREO_FB,"GLRenderer14_StereoSuperSYNC");
-    mTelemetryReceiver->setVal(-1,TelemetryReceiver::ID_FPSGL);
+    mTelemetryReceiver->get_other_osd_data()->opengl_fps=-1.0f;
     //This will block until mFBRManager->exitDirectRenderingLoop() is called
     LOGV("entering superSync loop. GLThread will be blocked");
     mFBRManager->enterDirectRenderingLoop(env);
@@ -73,6 +75,7 @@ void GLRSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject surfaceT
 }
 
 void GLRSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_t offsetNS) {
+    //changeSwapColor=true;
     if(changeSwapColor){
         color++;
         if(color>4){
@@ -81,6 +84,10 @@ void GLRSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_t offs
         }else{
             glClearColor(1.0f,1.0f,0.0f,0.0f);
         }
+    }
+    if(videoFormatChanged){
+        placeGLElements();
+        videoFormatChanged=false;
     }
     mFrameCPUChronometer->start(whichEye);
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
@@ -150,12 +157,13 @@ void GLRSuperSync::drawEye(bool whichEye) {
 }
 
 void GLRSuperSync::placeGLElements() {
+    int strokeW=2;
     float videoW=5;
     float videoH=videoW*1.0f/videoFormat;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
     float videoZ=-MAX_Z_DISTANCE*((100-S_SceneScale)/100.0f);
-    mOSDRenderer->placeGLElementsStereo(videoX,videoY,videoZ,videoW,videoH);
+    mOSDRenderer->placeGLElementsStereo(videoX,videoY,videoZ,videoW,videoH,strokeW);
     mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
 }
 
@@ -185,10 +193,12 @@ void GLRSuperSync::doFrame(int64_t lastVSYNC) {
 
 void GLRSuperSync::setVideoDecoderFPS(float fps) {
     if(mTelemetryReceiver.get()){
-        mTelemetryReceiver->setVal(fps,TelemetryReceiver::ID_FPSD);
+        mTelemetryReceiver->get_other_osd_data()->decoder_fps=fps;
     }
 }
-
+void GLRSuperSync::setHomeLocation(double latitude, double longitude,double attitude) {
+    mTelemetryReceiver->setHome(latitude,longitude,attitude);
+}
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
@@ -259,5 +269,9 @@ JNI_METHOD(void, nativeOnVideoRatioChanged)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoW,jint videoH) {
     native(glRendererStereo)->OnVideoRatioChanged((int)videoW,(int)videoH);
 }
-
+JNI_METHOD(void, nativeSetHomeLocation)
+(JNIEnv *env, jobject obj, jlong glRendererStereo,jdouble latitude,jdouble longitude,jdouble attitude) {
+    native(glRendererStereo)->setHomeLocation((double)latitude,(double)longitude,(double)attitude);
+    LOGV("setHomeLocation()");
+}
 }

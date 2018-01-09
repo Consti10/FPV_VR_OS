@@ -21,7 +21,7 @@ import com.google.vr.ndk.base.GvrApi;
  ******************************************************************/
 
 
-public class Activity_MonoVid extends AppCompatActivity implements SurfaceHolder.Callback,VideoPlayerInterface {
+public class Activity_MonoVid extends AppCompatActivity implements SurfaceHolder.Callback,VideoPlayer.VideoParamsChanged {
     private static final String TAG = "VideoOnlyActivity";
     private AspectFrameLayout mAspectFrameLayout;
     private SurfaceView mSurfaceView;

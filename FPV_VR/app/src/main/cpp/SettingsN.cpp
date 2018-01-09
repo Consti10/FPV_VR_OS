@@ -52,46 +52,16 @@ bool S_TE[20];
 
 extern "C" {
 
-/*JNIEXPORT void JNICALL Java_constantin_osdtester_Settings_initializeN(
-        JNIEnv *env, jobject obj) {
-    S_InterpupilaryDistance=0.4f;
-    S_SceneScale=100;
-    S_DistortionCorrection=true;
-    for(int i=0;i<7;i++){
-        S_UndistortionData[i]=0;
-    }
-    //OSD Settings
-    S_OSD_TextElements = true;
-    S_OSD_CompasLadder = true;
-    S_OSD_HeightLadder = true;
-    S_OSD_HorizonModel = true;
-    S_OSD_CLHomeArrow = true;
-    S_OSD_OverlaysVideo = true;
-    S_OSD_ParseLTM = true;
-    S_OSD_ParseFRSKY = true;
-    S_OSD_ParseMAVLINK = true;
-    S_OSD_ParseRSSI = true;
-    S_OSD_Roll = true;
-    S_OSD_Pitch = true;
-    S_OSD_InvertRoll = true;
-    S_OSD_InvertPitch = true;
-    S_LTMPort=5001;
-    S_FRSKYPort=5002;
-    S_MAVLINKPort=5003;
-    S_RSSIPort=5004;
-    for(int i=0;i<20;i++){
-        S_TE[i]=true;
-    }
-}*/
-
 JNIEXPORT void JNICALL Java_constantin_fpv_1vr_Settings_setBoolByStringID(
         JNIEnv *env, jobject obj,jboolean jval,jstring jstring1) {
     bool val=(bool)jval;
     const char *cparam = env->GetStringUTFChars(jstring1,0);
     std::string s(cparam);
     //LOGV("Set Bool by string: %s",s.c_str());
+//Stereo/VR only one boolean
     if("DistortionCorrection"==s){
         S_DistortionCorrection=val;
+//OSD booleans
     } else if("TextElements"==s){
         S_OSD_TextElements=val;
     }else if("CompassLadder"==s){

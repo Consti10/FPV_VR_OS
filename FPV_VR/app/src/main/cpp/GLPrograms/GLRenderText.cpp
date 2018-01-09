@@ -13,7 +13,6 @@ constexpr int IMAGE_WIDTH_HEIGHT_PIXELS=1024;
 
 constexpr float CELL_WIDTH_HEIGHT_UV=1.0f/((float)IMAGE_WIDTH_HEIGHT_PIXELS/(float)CELL_WIDTH_HEIGHT_PIXELS);
 
-
 constexpr int FONT_WIDTH_PIXELS[] = {41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,
                            15,17,20,31,31,49,37,11,18,18,21,32,15,18,15,15,31,31,31,31,31,31,31,31,31,31,15,15,32,32,32,31,
                            56,37,37,40,40,37,34,43,40,15,28,37,31,45,40,43,37,43,40,37,33,40,37,54,35,35,34,15,15,15,24,31,
@@ -53,10 +52,6 @@ int GLRenderText::convertStringToVECs_UVs(const string text, const float X, cons
     {
         char c=text.at(j);
         int indx=c-32;
-        /*if(c=='A'){
-            LOGV("Index for A: %d",indx);
-            LOGV("W: %d",FONT_WIDTH_PIXELS[indx+32]);
-        }*/
         if(indx<0) {
             c='?';
             indx=c-32;

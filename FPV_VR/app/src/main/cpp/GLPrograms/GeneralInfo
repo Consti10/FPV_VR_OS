@@ -14,4 +14,4 @@ They are each created & passed using a shared_ptr
 12.12.2017:
 Additional GLRenderLine class:
 this is only used to draw the "seperator" line for a VR headset, and does not support Vertex displacement distortion correction
-deprecated: using GvrLayout instead
+@deprecated: using GvrLayout instead

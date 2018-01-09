@@ -16,7 +16,7 @@
  * ################################################################################################################# */
 #include <android/log.h>
 #include "ltm.h"
-#include "tID.h"
+#include "telemetry.h"
 
 
 static uint8_t LTMserialBuffer[LIGHTTELEMETRY_GFRAMELENGTH-4];
@@ -27,21 +27,20 @@ static uint8_t LTMreadIndex;
 static uint8_t LTMframelength;
 
 
-
 uint8_t ltmread_u8()  {
-  return LTMserialBuffer[LTMreadIndex++];
+    return LTMserialBuffer[LTMreadIndex++];
 }
 
 uint16_t ltmread_u16() {
-  uint16_t t = ltmread_u8();
-  t |= (uint16_t)ltmread_u8()<<8;
-  return t;
+    uint16_t t = ltmread_u8();
+    t |= (uint16_t)ltmread_u8()<<8;
+    return t;
 }
 
 uint32_t ltmread_u32() {
-  uint32_t t = ltmread_u16();
-  t |= (uint32_t)ltmread_u16()<<16;
-  return t;
+    uint32_t t = ltmread_u16();
+    t |= (uint32_t)ltmread_u16()<<16;
+    return t;
 }
 
 static enum _serial_state {
@@ -51,11 +50,13 @@ static enum _serial_state {
     HEADER_MSGTYPE,
     HEADER_DATA
 }
-c_state = IDLE;
+        c_state = IDLE;
 
-void ltm_read(float td[], uint8_t *buf, int buflen) {
+void ltm_read(telemetry_data_t *td, uint8_t *buf, int buflen) {
+    int i;
+    td->datarx++;
 
-    for(int i=0; i<buflen; ++i) {
+    for(i=0; i<buflen; ++i) {
         uint8_t c = buf[i];
         if (c_state == IDLE) {
             c_state = (c=='$') ? HEADER_START1 : IDLE;
@@ -118,21 +119,23 @@ void ltm_read(float td[], uint8_t *buf, int buflen) {
 }
 
 // --------------------------------------------------------------------------------------
-// Decoded received commands 
-void ltm_check(float *td) {
-    //__android_log_print(ANDROID_LOG_ERROR, "FPV_VR", "LTM CHECK");
+// Decoded received commands
+void ltm_check(telemetry_data_t *td) {
+    td->validmsgrx_ltm++;
     LTMreadIndex = 0;
-    if (LTMcmd==LIGHTTELEMETRY_GFRAME)  {
-        td[ID_LAT] = (float)((int32_t)ltmread_u32())/10000000;
-        td[ID_LON] = (float)((int32_t)ltmread_u32())/10000000;
-        uint8_t uav_groundspeedms = ltmread_u8();
-        td[ID_VS] = (float)(uav_groundspeedms * 3.6f); // convert to kmh
-        td[ID_HEIGHT_BandGPS] = (float)((int32_t)ltmread_u32())/100.0f;
-        uint8_t ltm_satsfix = ltmread_u8();
-        td[ID_N_SAT] = (ltm_satsfix >> 2) & 0xFF;
-        td[ID_N_FIX] = ltm_satsfix & 0b00000011;
+//  float hdoptmp = 0;
 
-        td[ID_NValidR]++;
+    if (LTMcmd==LIGHTTELEMETRY_GFRAME)  {
+        td->latitude = (double)((int32_t)ltmread_u32())/10000000;
+        td->longitude = (double)((int32_t)ltmread_u32())/10000000;
+        uint8_t uav_groundspeedms = ltmread_u8();
+        td->speed = (float)(uav_groundspeedms * 3.6f); // convert to kmh
+        td->gps_altitude = (float)((int32_t)ltmread_u32())/100.0f;
+        uint8_t ltm_satsfix = ltmread_u8();
+        td->sats = (uint32_t )((ltm_satsfix >> 2) & 0xFF);
+        td->fix = (uint32_t )(ltm_satsfix & 0b00000011);
+
+        td->validmsgsrx++;
         /*printf("LTM G FRAME: ");
         printf("fix:%d  ", td->fix);
         printf("sats:%d  ", td->sats);
@@ -142,50 +145,43 @@ void ltm_check(float *td) {
         printf("groundspeed:%d  ", td->speed);*/
 
     }else if (LTMcmd==LIGHTTELEMETRY_AFRAME)  {
-        td[ID_PITCH] = (int16_t)ltmread_u16();
-        td[ID_ROLL] =  (int16_t)ltmread_u16();
-        td[ID_YAW] = (float)((int16_t)ltmread_u16());
-        if (td[ID_YAW] < 0 ) td[ID_YAW] = td[ID_YAW] + 360; //convert from -180/180 to 0/360Â°
-        td[ID_NValidR]++;
+        td->pitch = (float)((int16_t)ltmread_u16());
+        td->roll =  (float)((int16_t)ltmread_u16());
+        td->heading = (float)((int16_t)ltmread_u16());
+        if (td->heading < 0 ) td->heading = td->heading + 360; //convert from -180/180 to 0/360°
+        td->validmsgsrx++;
         /*printf("LTM A FRAME: ");
         printf("heading:%f  ", td->heading);
         printf("roll:%d  ", td->roll);
         printf("pitch:%d  ", td->pitch);*/
 
     }else if (LTMcmd==LIGHTTELEMETRY_OFRAME)  {
-        td[ID_HOME_LATITUDE] = (double)((int32_t)ltmread_u32())/10000000;
-        td[ID_HOME_LONGITUDE] = (double)((int32_t)ltmread_u32())/10000000;
-        td[ID_HOME_ALTITUDE] = (float)((int32_t)ltmread_u32())/100.0f;
-        td[ID_HOME_FIX_BOOL] = ltmread_u8();
-        td[ID_NValidR]++;
+        /*td->home_latitude = (double)((int32_t)ltmread_u32())/10000000;
+        td->home_longitude = (double)((int32_t)ltmread_u32())/10000000;
+        td->home_altitude = (float)((int32_t)ltmread_u32())/100.0f;
+        td->osdon = ltmread_u8();
+        td->home_fix = ltmread_u8();*/
+        td->validmsgsrx++;
         /*printf("LTM O FRAME: ");
         printf("home_altitude:%f  ", td->altitude);
         printf("home_latitude:%f  ", td->latitude);
         printf("home_longitude:%f  ", td->longitude);
-        printf("osdon:%d  ", td->osdon);
         printf("home_fix:%d  ", td->home_fix);*/
-
-//  }else if (LTMcmd==LIGHTTELEMETRY_XFRAME)  {
-
-//    td->hdop = (float)((uint16_t)ltmread_u16())/10000.0f;
-//    printf("LTM X FRAME:\n");
-//    printf("GPS hdop:%f  ", td->hdop);
-
     }else if (LTMcmd==LIGHTTELEMETRY_SFRAME)  {
-        td[ID_BATT_V] = (float)ltmread_u16()/1000.0f;
-        td[ID_BATT_A] = (float)ltmread_u16()/1000.0f;
-        td[ID_RX1] = ltmread_u8();
+        td->voltage = (float)ltmread_u16()/1000.0f;
+        td->ampere = (float)ltmread_u16()/1000.0f;
+        td->rssi2 = ltmread_u8();
 
         uint8_t uav_airspeedms = ltmread_u8();
-        td[ID_VS] = (float)(uav_airspeedms * 3.6f); // convert to kmh
+        td->airspeed = (float)(uav_airspeedms * 3.6f); // convert to kmh
 
-        /*uint8_t ltm_armfsmode = ltmread_u8();
-        td->uav_arm = ltm_armfsmode & 0b00000001;
+        uint8_t ltm_armfsmode = ltmread_u8();
+        /*td->uav_arm = ltm_armfsmode & 0b00000001;
         td->uav_failsafe = (ltm_armfsmode >> 1) & 0b00000001;
         td->uav_flightmode = (ltm_armfsmode >> 2) & 0b00111111;*/
-        td[ID_NValidR]++;
-        /*
-        printf("LTM S FRAME: ");
+
+        td->validmsgsrx++;
+        /*printf("LTM S FRAME: ");
         printf("voltage:%f  ", td->voltage);
         printf("ampere:%f  ", td->ampere);
         printf("rssi:%f  ", td->rssi);
@@ -195,4 +191,5 @@ void ltm_check(float *td) {
         printf("failsafe:%d  ", td->uav_failsafe);
         printf("flightmode:%d  ", td->uav_flightmode);*/
     }
+    //printf("\n");
 }

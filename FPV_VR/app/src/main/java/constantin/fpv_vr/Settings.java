@@ -18,7 +18,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class Settings {
-    private static boolean isUpdating=false;
+    private volatile static boolean isUpdating=false;
     private static final Object lock = new Object();
 
     static {
@@ -85,6 +85,7 @@ public class Settings {
                 //there is a small delay between the start of the update thread and when the update thread acquires the lock
                 //System.out.println("Object not jet locked");
                 //e.printStackTrace();
+                try {Thread.sleep(1);} catch (InterruptedException e1) {e1.printStackTrace();}
             }catch (InterruptedException e){
                 System.out.println("waitUntilSharedPreferencesAreRead: Updating took too long.Returning.");
                 e.printStackTrace();

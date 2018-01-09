@@ -52,7 +52,6 @@ public class Activity_Connect extends FragmentActivity implements AdapterView.On
         mSpinner.setOnItemSelectedListener(this);
         SharedPreferences pref_connect = getSharedPreferences("pref_connect", MODE_PRIVATE);
         String connectionType=pref_connect.getString(mContext.getString(R.string.ConnectionType),""+Settings.ConnectionTypeTestFile);
-        //System.out.println("OnResume ConnectionType:"+connectionType);
         mSpinner.setSelection(Integer.parseInt(connectionType));
     }
 
@@ -154,8 +153,6 @@ public class Activity_Connect extends FragmentActivity implements AdapterView.On
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(message);
                 AlertDialog dialog = builder.create();
-               // dialog.setW
-                //dialog.getWindow().setLayout(200,200);
                 dialog.show();
             }
         });

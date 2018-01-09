@@ -21,7 +21,6 @@ public class Activity_ConnectSub extends Activity{
 
     @Override
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
        //pref_connect.registerOnSharedPreferenceChangeListener(this);
     }

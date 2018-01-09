@@ -7,7 +7,7 @@
 #include <vector>
 #include <GLES2/gl2.h>
 #include <GLRenderText.h>
-#include <GLRenderColor.h>
+#include <GLRenderGeometry.h>
 #include <TelemetryReceiver.h>
 #include <thread>
 #include <atomic>
@@ -15,24 +15,6 @@
 
 //#define DEBUG_POSITION
 
-/*struct EnableElements{
-    bool DFPS=true;
-    bool GLFPS=true;
-    bool TIME=true;
-    bool RX1=true;
-    bool RX2=true;
-    bool RX3=true;
-    bool BATT_P=true;
-    bool BATT_V=true;
-    bool BATT_A=true;
-    bool BATT_AH=true;
-    bool HOME_D=true;
-    bool SPEED=true;
-    bool LAT=true;
-    bool LON=true;
-    bool HEIGHT_B=true;
-    bool HEIGHT_GPS=true;
-};*/
 class TextElements {
 private:
 #ifdef DEBUG_POSITION
@@ -84,9 +66,7 @@ public:
     const static int TE_N_SAT=17;
 
     static const int MAX_N_TEXT_E=18;
-
     bool enable[MAX_N_TEXT_E];
-
     int linkVecToTE[MAX_N_TEXT_E];
 
 };

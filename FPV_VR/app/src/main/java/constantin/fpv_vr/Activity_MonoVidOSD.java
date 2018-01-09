@@ -3,6 +3,7 @@ package constantin.fpv_vr;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.PixelFormat;
+import android.location.Location;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,7 @@ import javax.microedition.khronos.opengles.GL10;
  ***************************************************************** */
 
 
-public class Activity_MonoVidOSD extends AppCompatActivity implements SurfaceHolder.Callback,VideoPlayerInterface {
+public class Activity_MonoVidOSD extends AppCompatActivity implements SurfaceHolder.Callback,VideoPlayer.VideoParamsChanged,HomeLocation.HomeLocationChanged {
     private static final String TAG = "MonoVidOSDActivity";
     static {
         System.loadLibrary("GLRendererMono");
@@ -41,6 +42,7 @@ public class Activity_MonoVidOSD extends AppCompatActivity implements SurfaceHol
     private static native void nativeSetVideoDecoderFPS(long glRendererMonoP,float fps);
     //since we do not preserve the OpenGL context when paused, nativeOnSurfaceCreated is called each time nativeOnPause was called
     private static native void nativeOnPause(long glRendererMonoP);
+    private static native void nativeSetHomeLocation(long glRendererMonoP,double latitude, double longitude,double attitude);
     // Opaque native pointer to the native GLRendererMono instance.
     private long nativeGLRendererMono=0;
 
@@ -49,6 +51,8 @@ public class Activity_MonoVidOSD extends AppCompatActivity implements SurfaceHol
     private VideoPlayer mVideoPlayer;
     private Context mContext;
     private  GLSurfaceView mGLView;
+
+    private HomeLocation mHomeLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +95,7 @@ public class Activity_MonoVidOSD extends AppCompatActivity implements SurfaceHol
         mGLView.setZOrderMediaOverlay(true);
         addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-
+        mHomeLocation=new HomeLocation(this,this);
     }
 
     @Override
@@ -113,12 +117,14 @@ public class Activity_MonoVidOSD extends AppCompatActivity implements SurfaceHol
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mGLView.onResume();
+        mHomeLocation.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         //Log.d(TAG, "onPause");
+        mHomeLocation.pause();
         mGLView.onPause();
         nativeOnPause(nativeGLRendererMono);
     }
@@ -175,6 +181,10 @@ public class Activity_MonoVidOSD extends AppCompatActivity implements SurfaceHol
     }
 
 
+    @Override
+    public void onHomeLocationChanged(Location location) {
+        nativeSetHomeLocation(nativeGLRendererMono,location.getLatitude(),location.getLongitude(),location.getAltitude());
+    }
 }
 
 

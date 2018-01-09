@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.SurfaceTexture;
+import android.location.Location;
 import android.opengl.EGL14;
 import android.opengl.GLES20;
 import android.os.Build;
@@ -22,7 +23,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Description: see Activity_StereoSuperSYNC
  */
 
-public class GLRenderer14_StereoSuperSYNC implements GLSurfaceViewEGL14.IRendererEGL14,VideoPlayerInterface {
+public class GLRenderer14_StereoSuperSYNC implements GLSurfaceViewEGL14.IRendererEGL14,VideoPlayer.VideoParamsChanged,HomeLocation.HomeLocationChanged {
     static {
         System.loadLibrary("GLRSuperSync");
     }
@@ -39,7 +40,7 @@ public class GLRenderer14_StereoSuperSYNC implements GLSurfaceViewEGL14.IRendere
     private static native void nativeDoFrame(long glRendererStereoP,long lastVsync);
     private static native void nativeOnGLSurfaceDestroyed(long glRendererStereoP);
     public static native void nativeExitSuperSyncLoop(long glRendererMonoP);
-
+    private static native void nativeSetHomeLocation(long glRendererStereoP,double latitude, double longitude,double attitude);
 
     private final Context mContext;
     private SurfaceTexture mSurfaceTexture;
@@ -136,6 +137,11 @@ public class GLRenderer14_StereoSuperSYNC implements GLSurfaceViewEGL14.IRendere
         } finally {
             super.finalize();
         }
+    }
+
+    @Override
+    public void onHomeLocationChanged(Location location) {
+        nativeSetHomeLocation(nativeGLRSuperSync,location.getLatitude(),location.getLongitude(),location.getAltitude());
     }
 }
 

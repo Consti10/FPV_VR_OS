@@ -107,7 +107,7 @@ JNIEXPORT void JNICALL Java_constantin_fpv_1vr_VideoPlayer_passNALUDataToNative(
 
 JNIEXPORT void JNICALL Java_constantin_fpv_1vr_VideoPlayer_createUDPReceiver(
         JNIEnv * env, jobject obj,jint port) {
-    mVideoReceiver=new UDPReceiver((int)port,UDPReceiver::MODE_BLOCKING,onDataReceivedCallback,"VideoPlayerN VideoReceiver",CPU_PRIORITY_UDPRECEIVER_VIDEO);
+    mVideoReceiver=new UDPReceiver((int)port,UDPReceiver::MODE_BLOCKING,"VideoPlayerN VideoReceiver",CPU_PRIORITY_UDPRECEIVER_VIDEO,1024,onDataReceivedCallback);
 }
 JNIEXPORT void JNICALL Java_constantin_fpv_1vr_VideoPlayer_startReceiving(
         JNIEnv * env, jobject obj) {

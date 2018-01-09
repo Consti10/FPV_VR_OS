@@ -1,6 +1,8 @@
 
 
 #include <android/log.h>
+#include <cFiles/telemetry.h>
+#include <GLRenderLine.h>
 #include "GLRendererMono.h"
 #include "../SettingsN.h"
 #include "../Helper/CPUPriorities.h"
@@ -28,14 +30,16 @@ void GLRendererMono::OnSurfaceCreated(JNIEnv * env,jobject obj,jobject assetMana
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mGLRenderColor=std::make_shared<GLRenderColor>(false);
+    mGLRenderLine=std::make_shared<GLRenderLine>(false);
     mGLRenderText=std::make_shared<GLRenderText>(false);
     mGLRenderText->loadTextureImage(env, obj,assetManagerJAVA);
-    mOSDRenderer=std::make_shared<OSDRenderer>(mTelemetryReceiver.get(), mGLRenderColor.get(), mGLRenderText.get());
+    mOSDRenderer=std::make_shared<OSDRenderer>(mTelemetryReceiver.get(), mGLRenderColor.get(),mGLRenderLine.get(), mGLRenderText.get());
     lastLog=getTimeMS();
     CPUFrameTime->reset();
 }
 
 void GLRendererMono::OnSurfaceChanged(int width,int height) {
+    int strokeW=4;
     float displayRatio=(float) width/(float)height;
     mProjM=glm::perspective(glm::radians(45.0f), displayRatio, 0.1f, 100.0f);
     mViewM=glm::lookAt(glm::vec3(0,0,0), glm::vec3(0,0,-10), glm::vec3(0,1,0));
@@ -44,7 +48,7 @@ void GLRendererMono::OnSurfaceChanged(int width,int height) {
     float videoW=videoH*displayRatio;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
-    mOSDRenderer->placeGLElementsMono(videoX,videoY,videoZ,videoW,videoH);
+    mOSDRenderer->placeGLElementsMono(videoX,videoY,videoZ,videoW,videoH,strokeW);
     //glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_BLEND);
@@ -65,7 +69,7 @@ void GLRendererMono::OnDrawFrame() {
 
 void GLRendererMono::setVideoDecoderFPS(float fps) {
     if(mTelemetryReceiver.get()){
-        mTelemetryReceiver->setVal(fps,TelemetryReceiver::ID_FPSD);
+        mTelemetryReceiver->get_other_osd_data()->decoder_fps=fps;
     }
     //LOGV("fps: %f",fps);
 }
@@ -79,25 +83,22 @@ void GLRendererMono::OnPause() {
 }
 
 void GLRendererMono::calculateMetrics(){
+    mFPSCalculator->tick();
+    mTelemetryReceiver->get_other_osd_data()->opengl_fps=mFPSCalculator->getCurrentFPS();
     int64_t ts=getTimeMS();
-    //calculate current fps every 2 seconds
-    fpsData.framesSinceLastFPSCalculation++;
-    if(ts-fpsData.lastFPSCalculation>2000){
-        double exactElapsedSeconds=(ts-fpsData.lastFPSCalculation)*0.001;
-        fpsData.currFPS=fpsData.framesSinceLastFPSCalculation/exactElapsedSeconds;
-        mTelemetryReceiver->setVal((float)fpsData.currFPS,TelemetryReceiver::ID_FPSGL);
-        fpsData.framesSinceLastFPSCalculation=0;
-        fpsData.lastFPSCalculation=ts;
-    }
+
     //calculate and print CPU Frame time every 2 seconds
     if(ts-lastLog>2*1000){
         lastLog=ts;
 #ifdef PRINT_LOGS
-        LOGV("OpenGL FPS:%f",fpsData.currFPS);
         CPUFrameTime->printAvg();
 #endif
         CPUFrameTime->reset();
     }
+}
+
+void GLRendererMono::setHomeLocation(double latitude, double longitude,double attitude) {
+    mTelemetryReceiver->setHome(latitude,longitude,attitude);
 }
 
 
@@ -156,6 +157,12 @@ JNI_METHOD(void, nativeOnPause)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {
     LOGV("OnPause()");
     native(glRendererMono)->OnPause();
+}
+
+JNI_METHOD(void, nativeSetHomeLocation)
+(JNIEnv *env, jobject obj, jlong glRendererMono,jdouble latitude,jdouble longitude,jdouble attitude) {
+    native(glRendererMono)->setHomeLocation((double)latitude,(double)longitude,(double)attitude);
+    LOGV("setHomeLocation()");
 }
 
 }

@@ -9,7 +9,11 @@
  *  b)draw(...,r=1.0,g=0.0,b=0.0)
  *  b)draw(...,r=0.0,g=1.0,b=0.0)
  *  c)afterDraw();
+ *
+ *  Note: When drawing dynamically changing text you should consider multithreading and asynchronous uploading of vecs_uvs data, like
+ *  I did in OSD/TextElements.cpp
  * */
+
 #ifndef GLRENDERTEXT
 #define GLRENDERTEXT
 

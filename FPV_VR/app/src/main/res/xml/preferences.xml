@@ -3,7 +3,7 @@
     <PreferenceCategory
         android:title="OSD/head tracking">
         <PreferenceScreen
-            android:title="OSD settings"
+            android:title="General OSD settings"
             android:summary="Customize your OSD." >
             <PreferenceCategory
                 android:title="Horizon Model">

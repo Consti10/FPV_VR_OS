@@ -4,7 +4,7 @@
  * - no timeout
  * - buffsize 1024*1024
  * MODE_BLOCKING
- * - timeout of 100ms
+ * - timeout of 500ms
  * - buffsize 1024
  */
 
@@ -19,12 +19,13 @@
 //#define PRINT_HEARTBEAT
 //#define PRINT_RECEIVED_BYTES
 
-UDPReceiver::UDPReceiver(int port,int mode,std::function<void(uint8_t[],int)> callback,string name,int CPUPriority){
+UDPReceiver::UDPReceiver(int port,int mode,string name,int CPUPriority,int buffsize,std::function<void(uint8_t[],int)> callback){
     mPort=port;
     mMode=mode;
     mName=name;
-    onDataReceivedCallback=callback;
+    mBuffsize=buffsize;
     mCPUPriority=CPUPriority;
+    onDataReceivedCallback=callback;
 }
 
 void UDPReceiver::startReceiving() {
@@ -79,8 +80,10 @@ void UDPReceiver::receiveFromUDPLoop() {
         struct timeval tv;
         tv.tv_sec = 0;
         tv.tv_usec=500000; //500ms. Just for safety (shutdown() also interrupts the receive)
-        if (setsockopt(mSocket, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0)
+        if (setsockopt(mSocket, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0){
             LOGV("SetSocketTimeout error");
+        }
+        uint8_t buff[mBuffsize];
         while (receiving) {
 #ifdef PRINT_HEARTBEAT
             if ((getTimeMS() - heartbeatTS) > 1000) {
@@ -88,16 +91,16 @@ void UDPReceiver::receiveFromUDPLoop() {
                 heartbeatTS = getTimeMS();
             }
 #endif
-            ssize_t message_length = recvfrom(mSocket, mBuffer, (size_t)mBuffsize, MSG_WAITALL, 0, 0);
+            ssize_t message_length = recvfrom(mSocket, buff, (size_t)mBuffsize, MSG_WAITALL, 0, 0);
             if ( message_length > 0) { //else -1 was returned;timeout/No data received
 #ifdef PRINT_RECEIVED_BYTES
                 LOGV("%s: received %d bytes\n", mName.c_str(),(int) message_length);
 #endif
-                onDataReceivedCallback(mBuffer, (int) message_length);
+                onDataReceivedCallback(buff, (int) message_length);
             }
         }
     }else{
-        LOGV("UDPReceiver Unknown Mode");
+        LOGV("UDPReceiver unknown mode");
     }
 }
 

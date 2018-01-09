@@ -16,17 +16,20 @@
 #include <string>
 #include <thread>  // NOLINT
 #include <vector>
-#include <GLRenderColor.h>
+#include <GLRenderGeometry.h>
 #include <GLRenderText.h>
 #include <OSDRenderer.h>
 #include <Chronometer.h>
+#include <FPSCalculator.h>
+#include <GLRenderLine.h>
 
 #include "gvr.h"
 #include "gvr_audio.h"
 #include "gvr_controller.h"
 #include "gvr_types.h"
+#include "IRendererEGL14.h"
 
-class GLRendererMono {
+class GLRendererMono{
 public:
     /**
      * Create a GLRendererMono using a given |gvr_context|.
@@ -66,22 +69,25 @@ public:
    */
     void OnPause();
 
+    /**
+     * Pass trough the home location lat,lon,alt. May be called multiple times until we have a high enough accuracy.
+     * Is called at least once.
+     */
+    void setHomeLocation(double latitude, double longitude,double attitude);
+
 
 private:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::shared_ptr<GLRenderColor> mGLRenderColor= nullptr;
+    std::shared_ptr<GLRenderLine> mGLRenderLine= nullptr;
     std::shared_ptr<GLRenderText> mGLRenderText= nullptr;
     std::shared_ptr<TelemetryReceiver> mTelemetryReceiver= nullptr;
     //TODO these could be unique pointers; but c++11 has no make_unique
     std::shared_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::shared_ptr<Chronometer>CPUFrameTime=make_shared<Chronometer>("CPU FrameTime");
+    std::shared_ptr<FPSCalculator>mFPSCalculator=make_shared<FPSCalculator>("OpenGL FPS",2000);
 
     glm::mat4x4 mViewM,mProjM;
-    struct DataToCalculateFPS{
-        int64_t lastFPSCalculation=0;
-        double framesSinceLastFPSCalculation=0;
-        double currFPS;
-    }fpsData;
     int64_t lastLog;
 
     void calculateMetrics();

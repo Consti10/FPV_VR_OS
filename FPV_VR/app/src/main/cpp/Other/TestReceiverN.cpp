@@ -73,7 +73,7 @@ JNIEXPORT void JNICALL Java_constantin_fpv_1vr_TestReceiver_createAllReceiverN(
     nVideoFrames=0;
     nVideoKeyFrames=0;
     mVideoPort=(int)videoPort;
-    mVideoReceiver=new UDPReceiver(mVideoPort,UDPReceiver::MODE_BLOCKING,onVideoDataReceivedCallback,"TestRecN Video",CPU_PRIORITY_UDPRECEIVER_VIDEO);
+    mVideoReceiver=new UDPReceiver(mVideoPort,UDPReceiver::MODE_BLOCKING,"TestRecN Video",CPU_PRIORITY_UDPRECEIVER_VIDEO,1024,onVideoDataReceivedCallback);
     mVideoReceiver->startReceiving();
     mTelemetryReceiver=new TelemetryReceiver(S_OSD_ParseLTM,S_LTMPort,S_OSD_ParseFRSKY,S_FRSKYPort,S_OSD_ParseMAVLINK,
                                              S_MAVLINKPort,S_OSD_ParseRSSI,S_RSSIPort);

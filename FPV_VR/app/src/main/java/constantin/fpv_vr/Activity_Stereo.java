@@ -27,8 +27,9 @@ public class Activity_Stereo extends AppCompatActivity {
     private GLRenderer14_Stereo mGLRenderer14Stereo;
     private GvrLayout mGvrLayout;
     private GvrApi mGvrApi;
+    private HomeLocation mHomeLocation;
 
-    //We mustn't call onPause/onResume on zhe Gvr layout, or else the surface might be destroyed/app will crash. TODO: track this issue to it's roots
+    //We mustn't call onPause/onResume on the Gvr layout, or else the surface might be destroyed/app will crash. TODO: track this issue to it's roots
     private final boolean useGVRLayout=true;
 
     private void enableSustainedPerformanceIfPossible(){
@@ -69,7 +70,6 @@ public class Activity_Stereo extends AppCompatActivity {
         } else if (Settings.Disable60fpsCap) {
             mode = GLSurfaceViewEGL14.MODE_UNLIMITED_FPS_BUT_VSYNC_ON;
         }
-        Eye eye;
         if (useGVRLayout) {
             mGvrLayout = new GvrLayout(this);
             mGvrLayout.setAsyncReprojectionEnabled(false);
@@ -93,6 +93,7 @@ public class Activity_Stereo extends AppCompatActivity {
             mGLView14Stereo.setPreserveEGLContextOnPause(false);
             setContentView(mGLView14Stereo);
         }
+        mHomeLocation=new HomeLocation(this,mGLRenderer14Stereo);
     }
 
     @Override
@@ -117,6 +118,7 @@ public class Activity_Stereo extends AppCompatActivity {
         //    mGvrLayout.onResume();
         //}
         mGLView14Stereo.onResume();
+        mHomeLocation.resume();
     }
 
     @Override
@@ -128,6 +130,7 @@ public class Activity_Stereo extends AppCompatActivity {
         //}
         mGLView14Stereo.onPause();
         disableSustainedPerformanceIfEnabled();
+        mHomeLocation.pause();
     }
 
     @Override

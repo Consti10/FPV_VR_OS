@@ -31,7 +31,6 @@ public class MyEZWBFragment extends Fragment {
     //checks for changes in the connection status every 200ms.
     //This "check" has to run on the UI thread, since it might have to modify UI elements,
     //e.g. a connection status button. invokeConnectionCheck schedules a runnable on the UI thread every 200ms
-    //private Timer invokeConnectionCheck;
     final Handler connectionCheckHandler=new Handler();
     Runnable connectionCheckRunnable;
     private volatile boolean disableWifiMessageAlreadySent=false;

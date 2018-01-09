@@ -3,11 +3,12 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "constantin.fpv_vr"
+        //applicationId "constantin.fpv_vr"
+        applicationId "com.constantin.wilson.FPV_VR"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 16
+        versionName "4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -53,7 +54,10 @@ dependencies {
 
     //everything gvr related
     // Adds Google VR spatial audio support
-    compile 'com.google.vr:sdk-audio:1.80.0'
+    compile 'com.google.vr:sdk-audio:1.101.0'
     // Required for all Google VR apps
-    compile 'com.google.vr:sdk-base:1.80.0'
+    compile 'com.google.vr:sdk-base:1.101.0'
+
+    //location
+    compile 'com.google.android.gms:play-services-location:11.8.0'
 }

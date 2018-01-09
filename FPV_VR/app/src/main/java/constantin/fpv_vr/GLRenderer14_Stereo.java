@@ -3,6 +3,7 @@ package constantin.fpv_vr;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.SurfaceTexture;
+import android.location.Location;
 import android.opengl.EGL14;
 import android.opengl.EGLExt;
 import android.opengl.GLES20;
@@ -13,7 +14,7 @@ import com.google.vr.ndk.base.GvrApi;
  * Description: see Activity_Stereo
  */
 
-public class GLRenderer14_Stereo implements GLSurfaceViewEGL14.IRendererEGL14,VideoPlayerInterface{
+public class GLRenderer14_Stereo implements GLSurfaceViewEGL14.IRendererEGL14,VideoPlayer.VideoParamsChanged,HomeLocation.HomeLocationChanged{
     static {
         System.loadLibrary("GLRendererStereo");
     }
@@ -30,6 +31,7 @@ public class GLRenderer14_Stereo implements GLSurfaceViewEGL14.IRendererEGL14,Vi
     //since we do not preserve the OpenGL context when paused, nativeOnSurfaceCreated acts as a "onResume" equivalent.
     //private static native void nativeOnPause(long glRendererStereoP);
     private static native void nativeOnGLSurfaceDestroyed(long glRendererStereoP);
+    private static native void nativeSetHomeLocation(long glRendererStereoP,double latitude, double longitude,double attitude);
 
     private final Context mContext;
     private SurfaceTexture mSurfaceTexture=null;
@@ -106,4 +108,8 @@ public class GLRenderer14_Stereo implements GLSurfaceViewEGL14.IRendererEGL14,Vi
     }
 
 
+    @Override
+    public void onHomeLocationChanged(Location location) {
+        nativeSetHomeLocation(nativeGLRendererStereo,location.getLatitude(),location.getLongitude(),location.getAltitude());
+    }
 }

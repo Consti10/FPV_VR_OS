@@ -12,6 +12,7 @@ import android.widget.TextView;
  * A Instantiation implies also a "startReceiving"
  * make sure you call "stopReceiving" after each instantiation
  *****************************************************/
+
 public class TestReceiver extends Thread{
     static {
         System.loadLibrary("TestReceiverN");

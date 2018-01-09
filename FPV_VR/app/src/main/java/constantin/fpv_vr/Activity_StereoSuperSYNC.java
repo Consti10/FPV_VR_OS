@@ -28,6 +28,7 @@ public class Activity_StereoSuperSYNC extends AppCompatActivity implements Chore
     private GLRenderer14_StereoSuperSYNC mGLRenderer14Stereo_SuperSYNC;
     private GvrLayout mGvrLayout;
     private GvrApi mGvrApi;
+    private HomeLocation mHomeLocation;
 
     //We mustn't call onPause/onResume on the Gvr layout, or else the surface might be destroyed/app will crash. TODO: track this issue to it's roots
     private final boolean useGVRLayout=true;
@@ -99,6 +100,7 @@ public class Activity_StereoSuperSYNC extends AppCompatActivity implements Chore
             mGLView14_FB.setPreserveEGLContextOnPause(false);
             setContentView(mGLView14_FB);
         }
+        mHomeLocation=new HomeLocation(this,mGLRenderer14Stereo_SuperSYNC);
     }
 
     @Override
@@ -127,6 +129,7 @@ public class Activity_StereoSuperSYNC extends AppCompatActivity implements Chore
         //if(useGVRLayout){
         //mGvrLayout.onResume();
         //}
+        mHomeLocation.resume();
     }
 
     @Override
@@ -140,6 +143,7 @@ public class Activity_StereoSuperSYNC extends AppCompatActivity implements Chore
         //    mGvrLayout.onPause();
         //}
         //System.out.println("OGLActivity" + "On Pause");
+        mHomeLocation.pause();
     }
 
     @Override

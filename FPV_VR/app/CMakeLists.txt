@@ -53,7 +53,13 @@ target_link_libraries( FrameCPUChronometer
                        ${log-lib}
                        android
                        log)
-
+add_library( FPSCalculator
+             SHARED
+             src/main/cpp/Other/FPSCalculator.cpp )
+target_link_libraries( FPSCalculator
+                       ${log-lib}
+                       android
+                       log)
 add_library( FBRManager
              SHARED
              src/main/cpp/Other/FBRManager.cpp )
@@ -77,10 +83,18 @@ target_link_libraries( HeadTrackerExtended
 ##########################################################################################################
 #GLPrograms
 ##########################################################################################################
-add_library( GLRenderColor
+add_library( GLRenderGeometry
              SHARED
-             src/main/cpp/GLPrograms/GLRenderColor.cpp )
-target_link_libraries( GLRenderColor
+             src/main/cpp/GLPrograms/GLRenderGeometry.cpp )
+target_link_libraries( GLRenderGeometry
+                       ${log-lib}
+                       android
+                       log
+                       GLESv2)
+add_library( GLRenderLine
+             SHARED
+             src/main/cpp/GLPrograms/GLRenderLine.cpp )
+target_link_libraries( GLRenderLine
                        ${log-lib}
                        android
                        log
@@ -174,7 +188,8 @@ add_library( CompasLadder
              src/main/cpp/OSD/CompasLadder.cpp )
 target_link_libraries( CompasLadder
                        GLRenderText
-                       GLRenderColor
+                       GLRenderLine
+                       GLRenderGeometry
                        ${log-lib}
                        android
                        log
@@ -184,7 +199,8 @@ add_library( HeightLadder
              src/main/cpp/OSD/HeightLadder.cpp )
 target_link_libraries( HeightLadder
                        GLRenderText
-                       GLRenderColor
+                       GLRenderGeometry
+                       GLRenderLine
                        ${log-lib}
                        android
                        log
@@ -193,7 +209,7 @@ add_library( ModelRollPitch
              SHARED
              src/main/cpp/OSD/ModelRollPitch.cpp )
 target_link_libraries( ModelRollPitch
-                       GLRenderColor
+                       GLRenderGeometry
                        ${log-lib}
                        android
                        log
@@ -205,7 +221,7 @@ target_link_libraries( TextElements
                        TelemetryReceiver
                        GLRenderText
                        GLTextObj
-                       GLRenderColor
+                       GLRenderGeometry
                        ${log-lib}
                        android
                        log
@@ -215,7 +231,8 @@ add_library( OSDRenderer
              src/main/cpp/OSD/OSDRenderer.cpp )
 target_link_libraries( OSDRenderer
                        TelemetryReceiver
-                       GLRenderColor
+                       GLRenderGeometry
+                       GLRenderLine
                        GLRenderText
                        GLTextObj
                        ModelRollPitch
@@ -244,7 +261,7 @@ add_library( VideoRenderer
              SHARED
              src/main/cpp/Video/VideoRenderer.cpp )
 target_link_libraries(VideoRenderer
-                      GLRenderColor
+                      GLRenderGeometry
                       GLRenderTextureExternal
                        ${log-lib}
                        android
@@ -269,7 +286,8 @@ add_library( GLRendererMono
              SHARED
              src/main/cpp/GLRenderer/GLRendererMono.cpp )
 target_link_libraries( GLRendererMono
-                       GLRenderColor
+                       GLRenderGeometry
+                       GLRenderLine
                        GLRenderText
                        GLRenderTexture
                        OSDRenderer
@@ -282,13 +300,15 @@ target_link_libraries( GLRendererMono
                        EGL
                        GLESv2
                        gvr-lib
+                       FPSCalculator
                        )
 
 add_library( GLRendererStereo
              SHARED
              src/main/cpp/GLRenderer/GLRendererStereo.cpp )
 target_link_libraries( GLRendererStereo
-                       GLRenderColor
+                       GLRenderGeometry
+                       GLRenderLine
                        GLRenderText
                        GLRenderTexture
                        GLRenderTextureExternal
@@ -303,13 +323,15 @@ target_link_libraries( GLRendererStereo
                        EGL
                        GLESv2
                        #gvr-lib
-                       HeadTrackerExtended)
+                       HeadTrackerExtended
+                       FPSCalculator)
 
 add_library( GLRSuperSync
              SHARED
              src/main/cpp/GLRenderer/GLRSuperSync.cpp )
 target_link_libraries( GLRSuperSync
-                       GLRenderColor
+                       GLRenderGeometry
+                       GLRenderLine
                        GLRenderText
                        GLRenderTexture
                        GLRenderTextureExternal
@@ -325,7 +347,8 @@ target_link_libraries( GLRSuperSync
                        EGL
                        GLESv2
                        #gvr-lib
-                       HeadTrackerExtended)
+                       HeadTrackerExtended
+                       FPSCalculator)
 ############################################################
 ## OTHER 2
 ############################################################

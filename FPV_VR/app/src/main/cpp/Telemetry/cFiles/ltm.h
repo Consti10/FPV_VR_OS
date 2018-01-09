@@ -3,10 +3,10 @@
 #define LTM
 
 #include <stdint.h>
+#include "telemetry.h"
 
-void ltm_read(float telemetryD[], uint8_t *buf, int buflen);
-void ltm_check(float telemetryD[]);
-
+void ltm_read(telemetry_data_t *td, uint8_t *buf, int buflen);
+void ltm_check(telemetry_data_t *td);
 
 #define LIGHTTELEMETRY_START1 0x24 //$ Header byte 1
 #define LIGHTTELEMETRY_START2 0x54 //T Header byte 2
@@ -24,6 +24,9 @@ void ltm_check(float telemetryD[]);
 #define LIGHTTELEMETRY_OFRAMELENGTH 18
 #define LIGHTTELEMETRY_NFRAMELENGTH 10
 #define LIGHTTELEMETRY_XFRAMELENGTH 10
+
+void telemetry_off(void);
+
 
 
 #endif

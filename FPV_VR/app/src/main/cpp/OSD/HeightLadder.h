@@ -6,7 +6,8 @@
 #include <GLES2/gl2.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLRenderText.h>
-#include <GLRenderColor.h>
+#include <GLRenderGeometry.h>
+#include <GLRenderLine.h>
 
 
 //#define DEBUG_POSITION
@@ -18,38 +19,39 @@ private:
 #endif
     const GLRenderText* mGLRenderText;
     const GLRenderColor* mGLRenderColor;
-    GLuint mGLLadderLines_Arrow_B[1];
+    const GLRenderLine* mGLRenderLine;
+    GLuint mGLLadderLinesB[1];
     GLuint mGLLadderTextB[1];
-    //int ladderStringsO=0,nLadderStringsToDraw=0;
-    struct ValueString{
-        int maxChars=6;
-        string s="0m";
+    struct{
+        int MAX_N_CHARS=6;
+        string s="0";
         int nVertices=0;
-        GLuint mGLBuffer[1];
-    } mValueS;
-    glm::mat4x4 mHeightTransM;
-    glm::mat4x4 mLinesTM;
-    glm::mat4x4 mLadderStringsTM;
-    int mLinesOffset=0,mNLinesToDraw=0;
-    int mLadderSOffset=0,mNLadderSToDraw=0;
-    float meter_in_gl_translation;
-    int mCurrentLadderStartValue;
-    float text_height;
+        GLuint GLTextBuffer[1];
+        GLuint GLOutlineLinesB[1];
+    } mMainGLString;
+
     float mX,mY,mZ,mWidth,mHeight;
-    const int CHARS_PER_LADDER=6;
+    int mLadderLinesOffset=0,mNLadderLinesToDraw=0;
+    int mLadderSOffset1=0,mNLadderSToDraw1=0;
+    int mLadderSOffset2=0,mNLadderSToDraw2=0;
+    glm::mat4x4 mLadderLinesTM;
+    glm::mat4x4 mLadderStringsTM;
     const int N_LADDER_L=4*5;
+    const int METERS_PER_4_LADDERS=20;
+    const int CHARS_PER_LADDER=6;
     const int N_LADDER_S=5;
-    const int METERS_PER_4Ladders=20;
-    void updateLadderStringsForRange(int startVal);
-    //void updateValueString(float value);
-    float artMovC=0;
-    bool artMovReverse= false;
+    float meter_in_gl_translation;
+    float outline_quad_height;
+    float ladder_text_height;
+    int outline_stroke_pixels;
+    int ladder_stroke_pixels;
+    int mCurrentLadderStartValue;
+    void updateLadderTextForRange(int startValue);
 public:
-    HeightLadder(const GLRenderColor* glRenderColor,const GLRenderText* glRenderText);
-    void setWorldPosition(float x,float y,float z,float width,float height,float strokeWidth);
+    HeightLadder(const GLRenderColor* glRenderColor,const GLRenderLine* glRenderLine,const GLRenderText* glRenderText);
+    void setWorldPosition(float x,float y,float z,float width,float height,int strokeW);
     void updateGL(float value);
     void drawGL(glm::mat4x4 ViewM, glm::mat4x4 ProjM);
     const float RATIO=3.0f/1.0f;
 };
-
 #endif

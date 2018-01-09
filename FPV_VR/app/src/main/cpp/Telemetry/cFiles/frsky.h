@@ -3,7 +3,9 @@
 #define FPV_VR_FRSKY_H
 
 #include <stdint.h>
-/// Data Ids (bp = before decimal point; af = after decimal point)
+#include "telemetry.h"
+
+// Data Ids (bp = before decimal point; af = after decimal point)
 // Official data IDs
 #define ID_GPS_ALTITUDE_BP 0x01
 #define ID_GPS_ALTITUDE_AP 0x09
@@ -47,10 +49,12 @@ typedef struct {
 	int pkg_pos;
 } frsky_state_t;
 
-int frsky_interpret_packet(frsky_state_t *state, float td[]);
-int frsky_parse_buffer(frsky_state_t *state, float td[], uint8_t *buf, int buflen);
+int frsky_interpret_packet(frsky_state_t *state, telemetry_data_t *td);
+int frsky_parse_buffer(frsky_state_t *state, telemetry_data_t *td, uint8_t *buf, int buflen);
 
 frsky_state_t state;
-int frsky_read(float telemetryD[], uint8_t *buf, int buflen);
+int frsky_read( telemetry_data_t *td, uint8_t *buf, int buflen){
+	return frsky_parse_buffer(&state,td,buf,buflen);
+}
 
 #endif //FPV_VR_FRSKY_H

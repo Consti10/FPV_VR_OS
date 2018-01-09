@@ -1,6 +1,7 @@
 package constantin.fpv_vr;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,9 +21,11 @@ import android.widget.TextView;
 
 public class Activity_Main extends AppCompatActivity implements View.OnClickListener{
     private Context mContext;
-
     private TestReceiver mTestReceiver=null;
 
+    public static final long DATE_2018_VERSION_WAS_RELEASED=0;
+
+    @SuppressLint("ApplySharedPref")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,13 @@ public class Activity_Main extends AppCompatActivity implements View.OnClickList
         *  Also request all permissions needed for the app
          */
         if(pref_static.getBoolean(getString(R.string.FirstStart),true)){
+            //ether a new install of the 2018 version or an update to it.
+            //clear all preferences for a fresh (re)-start:
+            pref_static.edit().clear().commit();
+            SharedPreferences pref_connect = getSharedPreferences("pref_connect", MODE_PRIVATE);
+            pref_connect.edit().clear().commit();
+            SharedPreferences pref_default= PreferenceManager.getDefaultSharedPreferences(mContext);
+            pref_default.edit().clear().commit();
             Intent i=new Intent();
             i.setClass(mContext,Activity_FirstStart.class);
             startActivity(i);
@@ -161,6 +172,7 @@ public class Activity_Main extends AppCompatActivity implements View.OnClickList
         try {
             long firstInstallTime =  getPackageManager().getPackageInfo(getPackageName(), 0).firstInstallTime;
             long lastUpdateTime = getPackageManager().getPackageInfo(getPackageName(), 0).lastUpdateTime;
+            System.out.println("LUT:"+lastUpdateTime);
             return firstInstallTime == lastUpdateTime;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

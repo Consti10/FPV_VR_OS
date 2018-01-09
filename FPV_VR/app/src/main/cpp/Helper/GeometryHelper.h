@@ -53,6 +53,25 @@ static const void makeColoredRect(float array[],int arrayOffset,glm::vec3 point,
     array[arrayOffset+40]=b;
     array[arrayOffset+41]=a;
 }
+static const void makeColoredLine(float array[],int arrayOffset,glm::vec3 point1,glm::vec3 point2,
+                                  float r,float g,float b,float a){
+    array[arrayOffset   ]=point1[0];
+    array[arrayOffset+ 1]=point1[1];
+    array[arrayOffset+ 2]=point1[2];
+    array[arrayOffset+ 3]=r;
+    array[arrayOffset+ 4]=g;
+    array[arrayOffset+ 5]=b;
+    array[arrayOffset+ 6]=a;
+    array[arrayOffset+ 7]=point2[0];
+    array[arrayOffset+ 8]=point2[1];
+    array[arrayOffset+ 9]=point2[2];
+    array[arrayOffset+10]=r;
+    array[arrayOffset+11]=g;
+    array[arrayOffset+12]=b;
+    array[arrayOffset+13]=a;
+
+}
+
 static const void makeTexturedRect(float array[],int arrayOffset,glm::vec3 point,glm::vec3 width,glm::vec3 height,
                                    float u,float v,float uRange,float vRange){
     //|--------------------------------|h
