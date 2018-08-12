@@ -1,5 +1,5 @@
 # FPV_VR_2018
-Latest version of FPV_VR
+Latest open-sourced version of FPV_VR
 
 I created a new repository because this is more a re-write than an update.
 
