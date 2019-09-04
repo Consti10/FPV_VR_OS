@@ -52,7 +52,7 @@ void UDPReceiver::receiveFromUDPLoop() {
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     myaddr.sin_port = htons(mPort);
-    if (bind(mSocket, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) {
+    if (::bind(mSocket, (struct sockaddr *) &myaddr, sizeof(myaddr)) == -1) {
         LOGV("Error binding Port; %d", mPort);
         return;
     }
