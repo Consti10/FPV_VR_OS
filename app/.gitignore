@@ -2,3 +2,4 @@
 .cxx/
 .externalNativeBuild/
 google-services.json
+/release
