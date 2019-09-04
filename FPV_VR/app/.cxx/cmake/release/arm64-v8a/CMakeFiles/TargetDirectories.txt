@@ -1,0 +1,12 @@
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/GLRStereoSuperSync.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/VRSettings.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/Time.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/SuperSync.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/GLPrograms.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/OtherStuff.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/GLRStereoNormal.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/GLRMono.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/Scene.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/GLRStereoDaydream.dir
+C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/arm64-v8a/CMakeFiles/edit_cache.dir

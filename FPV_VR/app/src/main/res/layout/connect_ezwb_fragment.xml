@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="constantin.fpv_vr.AConnect.AConnect">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="@string/EZWBDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
+            android:text="@string/Mode1_Description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/Mode1InfoB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="INFO" />
+            <Button
+                android:id="@+id/Mode1ConnectB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="CONNECT"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/Mode1StatusTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Status: Not connected"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@android:color/background_light"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
+            android:text="@string/Mode2_Description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/Mode2InfoB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="INFO" />
+            <Button
+                android:id="@+id/Mode2ConnectB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="CONNECT" />
+            <TextView
+                android:id="@+id/Mode2StatusTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Status: Not connected"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@android:color/background_light"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/FEZWB_ReceivedVideoDataTV"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:text="No receiver detected.&#10;RX:0" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/FEZWB_ReceivedTelemetryDataTV"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:text="" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@android:color/background_light"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/FEZWB_ReceivedEZWBForwardDataTV"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:text="" />
+
+    </LinearLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>

@@ -1,34 +1,36 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
-        //applicationId "constantin.fpv_vr"
-        applicationId "com.constantin.wilson.FPV_VR"
-        minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 16
-        versionName "4.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        applicationId "constantin.fpv_vr.wifibroadcast"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 29
+        versionName "1.19"
         externalNativeBuild {
             cmake {
-                cppFlags "-frtti -fexceptions -std=c++11"
+                cppFlags "-std=c++17"  //,"-frtti","-fexceptions"
+                arguments "-DANDROID_STL=c++_static"   //, "-DCMAKE_VERBOSE_MAKEFILE=ON"
             }
         }
         ndk {
-            //abiFilters 'armeabi-v7a', 'arm64-v8a'
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
         }
+        testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
     }
-
-
-
+    crashlytics {
+        enableNdk true
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+// Use this block to link Gradle to your CMake build script.
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
@@ -37,7 +39,6 @@ android {
     sourceSets {
         main {
             res.srcDirs = ['src/main/res']
-            //jniLibs.srcDirs = ['libs/qcom/symphony']
             jniLibs.srcDirs = ['libs/google/gvr']
         }
     }
@@ -45,19 +46,33 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:design:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    //everything gvr related
-    // Adds Google VR spatial audio support
-    compile 'com.google.vr:sdk-audio:1.101.0'
-    // Required for all Google VR apps
-    compile 'com.google.vr:sdk-base:1.101.0'
+    implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutVersion"
+    implementation "com.google.android.material:material:$rootProject.materialVersion"
+    implementation('com.google.android.gms:play-services-location:16.0.0')
 
-    //location
-    compile 'com.google.android.gms:play-services-location:11.8.0'
+    implementation project(path: ':colorpreference')
+    implementation project(path: ':preferences')
+    implementation project(path: ':rtsplib')
+
+    implementation project(':VideoCore')
+    //implementation 'com.github.Consti10:LiveVideo10ms:v1.2'
+    implementation project(':TelemetryCore')
+    implementation project(':RenderingXCore')
+
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4')
+    androidTestImplementation('androidx.test:rules:1.1.0-alpha4')
+
+    implementation 'com.mapzen.android:prefs-plus:1.0.0'
+    //firebase stuff
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics-ndk:2.1.0'
+    //implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
+
+    //Dafuq ?
+    implementation "com.google.vr:sdk-base:$mGvrVersion"
 }
+
+apply plugin: 'com.google.gms.google-services'

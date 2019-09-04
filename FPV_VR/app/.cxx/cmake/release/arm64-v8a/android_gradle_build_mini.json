@@ -1,0 +1,80 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target clean"
+  ],
+  "libraries": {
+    "GLRStereoDaydream-Release-arm64-v8a": {
+      "artifactName": "GLRStereoDaydream",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target GLRStereoDaydream",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libGLRStereoDaydream.so"
+    },
+    "Time-Release-arm64-v8a": {
+      "artifactName": "Time",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target Time",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libTime.so"
+    },
+    "gvr-lib-Release-arm64-v8a": {
+      "artifactName": "gvr-lib",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\jni\\arm64-v8a\\libgvr.so"
+    },
+    "GLRMono-Release-arm64-v8a": {
+      "artifactName": "GLRMono",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target GLRMono",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libGLRMono.so"
+    },
+    "SuperSync-Release-arm64-v8a": {
+      "artifactName": "SuperSync",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target SuperSync",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libSuperSync.so"
+    },
+    "Telemetry-lib-Release-arm64-v8a": {
+      "artifactName": "Telemetry-lib",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\..\\..\\Telemetry\\TelemetryCore\\jniLibs\\arm64-v8a\\libTelemetryReceiver.so"
+    },
+    "GLRStereoSuperSync-Release-arm64-v8a": {
+      "artifactName": "GLRStereoSuperSync",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target GLRStereoSuperSync",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libGLRStereoSuperSync.so"
+    },
+    "Scene-Release-arm64-v8a": {
+      "artifactName": "Scene",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target Scene",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libScene.so"
+    },
+    "VRSettings-Release-arm64-v8a": {
+      "artifactName": "VRSettings",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target VRSettings",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libVRSettings.so"
+    },
+    "GLRStereoNormal-Release-arm64-v8a": {
+      "artifactName": "GLRStereoNormal",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target GLRStereoNormal",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libGLRStereoNormal.so"
+    },
+    "OtherStuff-Release-arm64-v8a": {
+      "artifactName": "OtherStuff",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target OtherStuff",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libOtherStuff.so"
+    },
+    "GLPrograms-Release-arm64-v8a": {
+      "artifactName": "GLPrograms",
+      "buildCommand": "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\arm64-v8a --target GLPrograms",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a\\libGLPrograms.so"
+    }
+  }
+}

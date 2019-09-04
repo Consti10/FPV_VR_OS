@@ -1,0 +1,5 @@
+[1/5] Building CXX object CMakeFiles/GLPrograms.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramText.cpp.o
+[2/5] Building CXX object CMakeFiles/GLPrograms.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramVC.cpp.o
+[3/5] Building CXX object CMakeFiles/GLPrograms.dir/3d162cec1a8010251b0dc1922726a5da/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramTextureExt.cpp.o
+[4/5] Building CXX object CMakeFiles/GLPrograms.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramLine.cpp.o
+[5/5] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\arm64-v8a\libGLPrograms.so

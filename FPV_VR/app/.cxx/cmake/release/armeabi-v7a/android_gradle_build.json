@@ -1,0 +1,333 @@
+
+{
+	"buildFiles" : 
+	[
+		"C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/CMakeLists.txt"
+	],
+	"cleanCommands" : 
+	[
+		"C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target clean"
+	],
+	"cppFileExtensions" : [ "cpp" ],
+	"libraries" : 
+	{
+		"GLPrograms-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "GLPrograms",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target GLPrograms",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLPrograms_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramVC.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLPrograms_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramText.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLPrograms_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramTextureExt.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLPrograms_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/GLPrograms/GLProgramLine.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libGLPrograms.so",
+			"toolchain" : "1543376759"
+		},
+		"GLRMono-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "GLRMono",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target GLRMono",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLRMono_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/GLRenderer/GLRMono.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libGLRMono.so",
+			"toolchain" : "1543376759"
+		},
+		"GLRStereoDaydream-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "GLRStereoDaydream",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target GLRStereoDaydream",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLRStereoDaydream_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/GLRenderer/GLRStereoDaydream.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libGLRStereoDaydream.so",
+			"toolchain" : "1543376759"
+		},
+		"GLRStereoNormal-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "GLRStereoNormal",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target GLRStereoNormal",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLRStereoNormal_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/GLRenderer/GLRStereoNormal.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libGLRStereoNormal.so",
+			"toolchain" : "1543376759"
+		},
+		"GLRStereoSuperSync-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "GLRStereoSuperSync",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target GLRStereoSuperSync",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DGLRStereoSuperSync_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libGLRStereoSuperSync.so",
+			"toolchain" : "1543376759"
+		},
+		"OtherStuff-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "OtherStuff",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target OtherStuff",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DOtherStuff_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Other/IGLRenderer.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DOtherStuff_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Other/MatricesManager.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libOtherStuff.so",
+			"toolchain" : "1543376759"
+		},
+		"Scene-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "Scene",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target Scene",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/ArtificialHorizon/AHorizon.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/Ladders/CompassLadder.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/Ladders/AVerticalLadder.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/Ladders/VLAltitude.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/Ladders/VLSpeed.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/ElementBatching/CpuGpuBuff.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/ElementBatching/BatchingManager.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/Text/TextElements1.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/Text/TextElements2.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/Text/TEWarning.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/OSD/OSDRenderer.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/Video/VideoRenderer.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/Settings/SettingsOSDElements.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DScene_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/Scene/Settings/SettingsOSDStyle.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libScene.so",
+			"toolchain" : "1543376759"
+		},
+		"SuperSync-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "SuperSync",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target SuperSync",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DSuperSync_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/SuperSync/FBRManager.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libSuperSync.so",
+			"toolchain" : "1543376759"
+		},
+		"Telemetry-lib-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "Telemetry-lib",
+			"buildType" : "release",
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/../../Telemetry/TelemetryCore/jniLibs/armeabi-v7a/libTelemetryReceiver.so",
+			"toolchain" : "1543376759"
+		},
+		"Time-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "Time",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target Time",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DTime_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Time/Chronometer.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DTime_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Time/VRFrameCPUChronometer.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				},
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DTime_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Time/FPSCalculator.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libTime.so",
+			"toolchain" : "1543376759"
+		},
+		"VRSettings-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "VRSettings",
+			"buildCommand" : "C:\\Users\\Consti10\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Consti10\\Desktop\\FPV_VR_for_wifibroadcast\\FPV_VR_Private\\app\\.cxx\\cmake\\release\\armeabi-v7a --target VRSettings",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot  -DVRSettings_EXPORTS -I..\\..\\..\\..\\libs\\other -I..\\..\\..\\..\\..\\..\\Telemetry\\TelemetryCore\\src\\main\\cpp\\Telemetry -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\glm -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\libs\\google\\gvr\\headers -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Time -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\SuperSync -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\GLPrograms -I..\\..\\..\\..\\..\\..\\RenderingX\\RenderingXCore\\src\\main\\cpp\\Other -I..\\..\\..\\..\\src\\main\\cpp\\Scene -I..\\..\\..\\..\\src\\main\\cpp\\VRSettings  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++17 -Oz -DNDEBUG  -fPIC    -c ",
+					"src" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/src/main/cpp/VRSettings/SettingsVR.cpp",
+					"workingDirectory" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/.cxx/cmake/release/armeabi-v7a"
+				}
+			],
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/build/intermediates/cmake/release/obj/armeabi-v7a/libVRSettings.so",
+			"toolchain" : "1543376759"
+		},
+		"gvr-lib-Release-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "gvr-lib",
+			"buildType" : "release",
+			"output" : "C:/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/FPV_VR_Private/app/../../RenderingX/RenderingXCore/libs/google/gvr/jni/armeabi-v7a/libgvr.so",
+			"toolchain" : "1543376759"
+		}
+	},
+	"toolchains" : 
+	{
+		"1543376759" : 
+		{
+			"cCompilerExecutable" : "C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe",
+			"cppCompilerExecutable" : "C:/Users/Consti10/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe"
+		}
+	}
+}

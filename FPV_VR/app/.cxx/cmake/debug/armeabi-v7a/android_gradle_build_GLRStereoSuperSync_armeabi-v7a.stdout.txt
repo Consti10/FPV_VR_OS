@@ -1,0 +1,4 @@
+[1/4] Building CXX object CMakeFiles/SuperSync.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/SuperSync/FBRManager.cpp.o
+[2/4] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\armeabi-v7a\libSuperSync.so
+[3/4] Building CXX object CMakeFiles/GLRStereoSuperSync.dir/src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp.o
+[4/4] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\armeabi-v7a\libGLRStereoSuperSync.so

@@ -9,19 +9,22 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     android:background="@android:color/black"
-    tools:context="constantin.fpv_vr.Activity_MonoVid">
+    tools:context="constantin.fpv_vr.APlay.AMonoVid">
 
-    <constantin.fpv_vr.AspectFrameLayout
+    <constantin.video.core.External.AspectFrameLayout
         android:id="@+id/videoOnly_AFL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="false">
         <SurfaceView
             android:id="@+id/videoOnly_Surface"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
-    </constantin.fpv_vr.AspectFrameLayout>
+            android:layout_gravity="center"/>
+
+    </constantin.video.core.External.AspectFrameLayout>
+
+
 
 </RelativeLayout>
 

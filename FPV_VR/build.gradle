@@ -5,6 +5,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://maven.fabric.io/public' }
         maven {
             url 'https://maven.google.com/'
             name 'Google'
@@ -12,10 +13,9 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
-        
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.google.gms:google-services:4.3.1'
+        classpath 'io.fabric.tools:gradle:1.28.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
@@ -23,7 +23,20 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" } //this one is for being able to include projects from github
+        maven { url 'https://maven.fabric.io/public' }
     }
+
+    ext {
+        minSdkVersion = 21
+        compileSdkVersion = 28
+        targetSdkVersion = 28
+        mGvrVersion = '1.190.0'
+        appcompatVersion = '1.1.0-rc01'
+        materialVersion = '1.1.0-alpha09'
+        constraintlayoutVersion='1.1.3'
+    }
+
 }
 
 task clean(type: Delete) {

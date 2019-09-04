@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    //head tracking
+    <string name="GroundHeadTrackingMode">GroundHeadTrackingMode</string>
+    <string name="GroundHeadTrackingX">GroundHeadTrackingX</string>
+    <string name="GroundHeadTrackingY">GroundHeadTrackingY</string>
+    <string name="GroundHeadTrackingZ">GroundHeadTrackingZ</string>
+    <string name="AirHeadTrackingMode">AirHeadTrackingMode</string>
+    <string name="AirHeadTrackingYaw">AirHeadTrackingYaw</string>
+    <string name="AirHeadTrackingRoll">AirHeadTrackingRoll</string>
+    <string name="AirHeadTrackingPitch">AirHeadTrackingPitch</string>
+    <string name="AHTRefreshRateMs">AHTRefreshRateMs</string>
+    //Performance "Hacks"
+    <string name="SuperSync">SuperSync</string>
+    <string name="DisableVSYNC">DisableVSYNC</string>
+    <string name="Disable60FPSLock">Disable60FPSLock</string>
+    <string name="MultiSampleAntiAliasing">MultiSampleAntiAliasing</string>
+    <string name="DISABLE_LOW_PERSISTENCE">Disable low persistence mode</string>
+    //VR or Stereo Settings
+    <string name="VR_InterpupilaryDistance">VR_InterpupilaryDistance</string>
+    <string name="VR_SceneScale">VR_SceneScale</string>
+    <string name="VR_DistortionCorrection">VR_DistortionCorrection</string>
+
+</resources>

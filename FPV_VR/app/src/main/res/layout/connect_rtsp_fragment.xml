@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="constantin.fpv_vr.AConnect.AConnect">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/RTSPDescription"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <EditText
+            android:id="@+id/rtspUrlEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/testRTSP1Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TEST 1"/>
+            <Button
+                android:id="@+id/testRTSP2Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TEST 2"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/testRTSPStatusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Press TEST to start"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/rtspSETUP1_Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SETUP1"/>
+            <Button
+                android:id="@+id/rtspSETUP2_Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SETUP2"/>
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/testReceiverTextView"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:text="RX:0" />
+
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
+
+

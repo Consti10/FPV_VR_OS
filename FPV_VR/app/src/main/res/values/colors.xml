@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="colorLightText">#deffffff</color>
+
+    <color name="DEFAULT_OSD_LINE_FILL_COLOR">#FFFFFF</color>
+    <color name="DEFAULT_OSD_LINE_OUTLINE_COLOR">#3f51b5</color>
+    <color name="DEFAULT_OSD_TEXT_FILL_COLOR1">#00bcd4</color>
+    <color name="DEFAULT_OSD_TEXT_FILL_COLOR2">#FFFFFF</color>
+    <color name="DEFAULT_OSD_TEXT_FILL_COLOR3">#FFFFFF</color>
+    <color name="DEFAULT_OSD_TEXT_OUTLINE_COLOR">#000000</color>
+
 </resources>

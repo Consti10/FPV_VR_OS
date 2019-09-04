@@ -1,101 +1,14 @@
 <resources>
-    <string name="app_name">FPV_VR</string>
 
-    <string name="GroundRecFileName">GroundRecFileName</string>
+    <string name="app_name">FPV-VR for wifibroadcast</string>
 
-    //pref_static
-    <string name="FirstStart">FirstStart</string>
-    <string name="MinAndroid7">MinAndroid7</string>
-    <string name="GL_QCOM_tiled_renderingAvailable">GL_QCOM_tiled_renderingAvailable</string>
-    <string name="EGL_KHR_reusable_syncAvailable">EGL_KHR_reusable_syncAvailable</string>
-    <string name="EGL_ANDROID_front_buffer_auto_refreshAvailable">EGL_ANDROID_front_buffer_auto_refreshAvailable</string>
-    <string name="SingleBufferedSurfaceCreatable">SingleBufferedSurfaceCreatable</string>
-    <string name="MaxMSAALevel">MaxMSAALevel</string>
-    <string name="AllMSAALevels">AllMSAALevels</string>
-
-    //Network settings
-    <string name="UDPVideoPort">UDPVideoPort</string>
-
-    //VR
-    <string name="VRHeadsetType">VRHeadsetType</string>
-    <string name="K1">K1</string>
-    <string name="K2">K2</string>
-
-    <string name="GroundHeadTrackingMode">GroundHeadTrackingMode</string>
-    <string name="GroundHeadTrackingX">GroundHeadTrackingX</string>
-    <string name="GroundHeadTrackingY">GroundHeadTrackingY</string>
-    <string name="GroundHeadTrackingZ">GroundHeadTrackingZ</string>
-    <string name="AirHeadTrackingMode">AirHeadTrackingMode</string>
-    <string name="AirHeadTrackingYaw">AirHeadTrackingYaw</string>
-    <string name="AirHeadTrackingRoll">AirHeadTrackingRoll</string>
-    <string name="AirHeadTrackingPitch">AirHeadTrackingPitch</string>
-
-    //Performance "Hacks"
-    <string name="PerformanceHacksDescription">PLEASE READ CAREFULLY BEFORE CHANGING VALUES !</string>
-    <string name="SuperSync">SuperSync</string>
-    <string name="DisableVSYNC">DisableVSYNC</string>
-    <string name="Disable60FPSLock">Disable60FPSLock</string>
-    <string name="MultiSampleAntiAliasing">MultiSampleAntiAliasing</string>
-
-    //VR or Stereo Settings
-    <string name="InterpupilaryDistance">InterpupilaryDistance</string>
-    <string name="SceneScale">SceneScale</string>
-    <string name="DistortionCorrection">DistortionCorrection</string>
-    //OSD and Telemetry Settings
-    <string name="HorizonModel">HorizonModel</string>
-    <string name="HMScale">HMScale</string>
-    <string name="Roll">Roll</string>
-    <string name="Pitch">Pitch</string>
-    <string name="InvertRoll">InvertRoll</string>
-    <string name="InvertPitch">InvertPitch</string>
-    <string name="CompassLadder">CompassLadder</string>
-    <string name="CLHomeArrow">CLHomeArrow</string>
-    <string name="CLInvertHeading">CLInvertHeading</string>
-    <string name="HeightLadder">HeightLadder</string>
-    <string name="HLSelectSourceValue">HLSelectSourceValue</string>
-    <string name="TextElements">TextElements</string>
-    <string name="OverlaysVideo">OverlaysVideo</string>
-    <string name="ParseLTM">ParseLTM</string>
-    <string name="ParseFRSKY">ParseFRSKY</string>
-    <string name="ParseMAVLINK">ParseMAVLINK</string>
-    <string name="ParseRSSI">ParseRSSI</string>
-    <string name="LTMPort">LTMPort</string>
-    <string name="FRSKYPort">FRSKYPort</string>
-    <string name="MAVLINKPort">MAVLINKPort</string>
-    <string name="RSSIPort">RSSIPort</string>
-    //OSD Settings Text Elements
-    <string name="TE_DFPS">TE_DFPS</string>
-    <string name="TE_GLFPS">TE_GLFPS</string>
-    <string name="TE_TIME">TE_TIME</string>
-    <string name="TE_RX1">TE_RX1</string>
-    <string name="TE_RX2">TE_RX2</string>
-    <string name="TE_RX3">TE_RX3</string>
-    <string name="TE_BATT_P">TE_BATT_P</string>
-    <string name="TE_BATT_V">TE_BATT_V</string>
-    <string name="TE_BATT_A">TE_BATT_A</string>
-    <string name="TE_BATT_AH">TE_BATT_AH</string>
-    <string name="TE_HOME_D">TE_HOME_D</string>
-    <string name="TE_VS">TE_VS</string>
-    <string name="TE_HS">TE_HS</string>
-    <string name="TE_LAT">TE_LAT</string>
-    <string name="TE_LON">TE_LON</string>
-    <string name="TE_HEIGHT_B">TE_HEIGHT_B</string>
-    <string name="TE_HEIGHT_GPS">TE_HEIGHT_GPS</string>
-    <string name="TE_N_SATS">TE_N_SATS</string>
-
-    <string name="ConnectionType">ConnectionType</string>
-
-    //Head tracking
-    <string name="VRWorldTracking">VRWorldTracking</string>
-    <string name="CameraGimbalTracking">CameraGimbalTracking</string>
-
-    <string name="SuperSyncDescription">Advanced VR rendering technique, modified for FPV_VR. Lowest input lag possible (8.3ms), without any visual imperfections
+    <string name="SuperSyncDescription">Advanced VR rendering technique, modified for FPV-VR. Lowest input lag possible (8.3ms), without any visual imperfections
         like tearing. Has high performance and hardware requirements, that are only fulfilled on high-end phones. I recommend a Daydream-ready device.
         If you enable this technique on non-daydream ready phones, you might see stuttering and/or tearing.
     </string>
     <string name="DisableVSYNCDescription">
         Disables VSYNC (Vertical Sync). Reduces input lag to ~16.6ms@120fps or less, depending on your hardware (higher fps->less latency).
-        WARNING: Has the negative side effect of Tearing (Visual imperfections, Bildfehler) and wasted frames  It is up to you if you can live with tearing for a lower
+        WARNING: Has the negative side effect of Tearing (Visual imperfections) and wasted frames  It is up to you if you can live with tearing for a lower
         latency, but I definitely recommend enabling this option if available.
     </string>
     <string name="Disable60FPSLockDescription">
@@ -110,27 +23,36 @@
 
     <string name="IPDDescription">Set to zero when you do not want to have an 3D Effect;for each Person different, but a default value of 0.2 seems to be optimal</string>
 
-    <string name="EZWBDescription">Connect via UDP (Network Protocol) to your EZ-WB FPV receiver. When you connected successfully, you should see
+    <string name="EZWBDescription">Connect via UDP (Network Protocol) to your WB FPV receiver (rpi). When you connected successfully, you can see
         counter(s) indicating how much data has been received. </string>
     <string name="ManuallyDescription">Connect via UDP (Network Protocol) to any FPV receiver. Since UDP is unidirectional the app
     can only check if data arrives at the specified UDP ports. </string>
-    <string name="AssetsFileDescription">Play a test video file (included in the app) to test
-    your decoder.</string>
-    <string name="StorageFileDescription"> Play video or telemetry data from a file in your internal storage (e.g. you have
-    a ground recording file you want to play).</string>
+    <string name="AssetsFileDescription">Play a test video/telemetry file (included in the app) to test your decoder</string>
+    <string name="StorageFileDescription1">Play video/telemetry from files in your internal storage (Ground Recording).</string>
+    <string name="StorageFileDescription2">You can find your ground recording files in \"DCIM\\FPV_VR\".
+        \nTo sync files with windows, connect your phone as "camera device".
+        \nEnter your file names (e.g. 11-04-2019 16-33-42 are creation date and time)
+        \nThey have to be in the right format and sit in your FPV_VR folder\n</string>
 
-    <string name="Mode1">Mode 1: Connect to EZ-Wifibroadcast RX Pi via Wifi</string>
-    <string name="Mode2">Mode 2: Connect to EZ-Wifibroadcast RX Pi via USB cable</string>
-    <string name="Mode3">Mode 3: Connect to any Digital FPV setup (ADVANCED)</string>
+    <string name="RTSPDescription">In development. Enter valid RTSP string first.
+        \nTest 1: Check if server responds to OPTIONS requests.
+        \nTest 2: Check if server offers an h264 rtp video
+        \nSetup 1: Start receiving video using rtp/ udp (but not playing it)
+        \nSetup 2: Start receiving video using rtp/tcp interleaved (but not playing it)
+    </string>
 
-    <string name="EZWBMode1Info">Connect your mobile phone to EZ-Wifibroadcast RX Pi via Wifi
-            \n1)On your RX PI (wifibroadcast-1 file): WIFI_HOTSPOT=Y; FORWARD_STREAM=raw; VIDEO_UDP_PORT=5000;
+    <string name="Mode1_Description">Mode 1: Connect to EZ-WB/OpenHD RX Pi via Wifi</string>
+    <string name="Mode2_Description">Mode 2: Connect to EZ-WB/OpenHD RX Pi via USB cable</string>
+
+    <string name="EZWBMode1Info">Connect your mobile phone to EZ-WB/OpenHD RX Pi via Wifi
+            \n1)On your RX PI (wifibroadcast-1 file): WIFI_HOTSPOT=Y; VIDEO_UDP_PORT=5600;
             \n  Start RX and TX PIs
             \n2)On your Phone: Activate Wifi and connect to \"EZ-WifiBroadcast\" using \"wifibroadcast\" as passphrase
+            \n Or \"OpenHD\" using \"wifiopenhd\" as passphrase
             \n3)If your RX Pi also has a display connected: Wait for \"Secondary Display Connected\" message to appear on
             your RX Pi Monitor</string>
-    <string name="EZWBMode2Info">Connect your Mobile Phone to EZ-Wifibroadcast RX Pi via USB cable
-            \n1)On your RX PI (wifibroadcast-1 file): ETHERNET_HOTSPOT=Y; FORWARD_STREAM=raw; VIDEO_UDP_PORT=5000;
+    <string name="EZWBMode2Info">Connect your Mobile Phone to EZ-WB/OpenHD RX Pi via USB cable
+            \n1)On your RX PI (wifibroadcast-1 file): VIDEO_UDP_PORT=5600;
             \n  Start RX and TX PIs
             \n2)Connect your Phone to the RX Pi via USB Cable
             \n3)On your Phone: Enable \"USB tethering\" (now the Phone acts as Hotspot via USB and the RPI automatically connects)
@@ -138,12 +60,16 @@
             your RX Pi Monitor</string>
     <string name="ManuallyInfo">Connect your Mobile Phone to any Digital FPV setup (ADVANCED)
             \n1)Create a Network connection between your digital receiver and your phone
-            \n2)On your receiver, forward raw h.264 video stream via UDP to Port 5000 and Telemetry to the equivalent Ports (5001,5001 usw)
+            \n2)On your receiver, forward rtp h264 video stream via UDP to Port 5600 and Telemetry to the equivalent Ports (5001,5001 usw)
+            \n or raw h264 video stream via UDP to Port 5600 when disabling parseRTP
     </string>
 
-    <string name="A_MSAATester_Start">A_MSAATester_Start</string>
-    <string name="A_MSAATester_Stop">A_MSAATester_Stop</string>
-    <string name="A_FBTester_Start">A_FBTester_Start</string>
-    <string name="A_FBTester_Stop">A_FBTester_Stop</string>
 
+    <string name="PerformanceHacksDescription">PLEASE READ CAREFULLY BEFORE CHANGING VALUES !
+    </string>
+
+    <string name="DisbaleLowPersistenceModeDescription">Low persistence mode slightly decreases your perceived display response time
+        (and therefore latency) but makes your screen flickery. Disable it here if you dont like it. Only has an effect when SuperSync is enabled.
+    </string>
+    <string name="button_network_settings">NETWORK</string>
 </resources>

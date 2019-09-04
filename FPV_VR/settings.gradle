@@ -1,1 +1,10 @@
-include ':app'
+include ':app', ':preferences', ':rtsplib', ':colorpreference'
+
+include ':VideoCore'
+project(':VideoCore').projectDir=new File('..\\..\\LiveVideo10ms\\VideoCore')
+
+include ':TelemetryCore'
+project(':TelemetryCore').projectDir=new File('..\\..\\Telemetry\\TelemetryCore')
+
+include ':RenderingXCore'
+project(':RenderingXCore').projectDir=new File('..\\..\\RenderingX\\RenderingXCore')

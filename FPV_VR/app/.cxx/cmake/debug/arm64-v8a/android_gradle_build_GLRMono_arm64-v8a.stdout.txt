@@ -1,0 +1,2 @@
+[1/2] Building CXX object CMakeFiles/GLRMono.dir/src/main/cpp/GLRenderer/GLRMono.cpp.o
+[2/2] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\arm64-v8a\libGLRMono.so

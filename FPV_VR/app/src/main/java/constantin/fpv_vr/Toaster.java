@@ -14,11 +14,7 @@ public class Toaster {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(longMessage){
-                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(context, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
             }
         });
     }

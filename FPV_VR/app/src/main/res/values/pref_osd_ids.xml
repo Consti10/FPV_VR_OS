@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    //******************************** pref_osd **************************************
+    //OSD Settings -------------------------------------------------------------------------
+    //OSD STYLE - - - - - - - - - -- - - - -- - - - -- - - - -- - - - -- - - - -- - - - -
+    //Lines
+    <string name="OSD_MONO_LINE_WIDTH">Line width mono, in percentage.</string>
+    <string name="OSD_STEREO_LINE_WIDTH">Line width stereo, in percentage</string>
+    <string name="OSD_LINE_FILL_COLOR">Line fill (inner) color</string>
+    <string name="OSD_LINE_OUTLINE_COLOR">Line outline (outer) color</string>
+    //Text
+    <string name="OSD_TEXT_FONT_TYPE">Text font type</string>
+    <string name="OSD_TEXT_FILL_COLOR1">Text fill color 1</string>
+    <string name="OSD_TEXT_FILL_COLOR2">Text fill color 2</string>
+    <string name="OSD_TEXT_FILL_COLOR3">Text fill color 3</string>
+    <string name="OSD_TEXT_OUTLINE_COLOR">Text outline color</string>
+    <string name="OSD_MONO_TEXT_OUTLINE_STRENGTH">Mono text outline strength</string>
+    <string name="OSD_STEREO_TEXT_OUTLINE_STRENGTH">Stereo text outline strength</string>
+    <string name="OSD_TRANSPARENT_BACKGROUND_STRENGTH">Transparent background strength</string>
+    //Scale
+    <string name="OSD_MONO_GLOBAL_SCALE">Mono global scale, in %. Default 100.</string>
+    <string name="OSD_STEREO_GLOBAL_SCALE">Stereo global scale, in %. Default 100.</string>
+    <string name="OSD_STEREO_FOVX_SCALE">(Stereo only) FOV X SCALE, in %. Default 80</string>
+    <string name="OSD_STEREO_FOVY_SCALE">(Stereo only) FOV Y SCALE, in %. Default 100</string>
+
+
+    //OSD Elements
+    //Artificial Horizon
+    <string name="AH_mode">AH mode</string>
+    <string name="AH_scale">AH scale</string>
+    <string name="AH_roll">AH roll</string>
+    <string name="AH_pitch">AH pitch</string>
+    <string name="AH_invRoll">AH invRoll</string>
+    <string name="AH_invPitch">AH invPitch</string>
+    //Compass ladder
+    <string name="CL_enable">CL enable</string>
+    <string name="CL_scale">CL scale</string>
+    <string name="CL_homeArrow">CL homeArrow</string>
+    <string name="CL_invHeading">CL invHeading</string>
+    <string name="CL_COGoverMAG">CL COGoverMAG</string>
+    //Altitude ladder
+    <string name="AL_enable">AL enable</string>
+    <string name="AL_scale">AL scale</string>
+    <string name="AL_sourceValue">AL sourceValue</string>
+    //Speed ladder
+    <string name="SL_enable">SL enable</string>
+    <string name="SL_scale">SL scale</string>
+    <string name="SL_useKMHinsteadOfMS">SL use km/h instead of m/s</string>
+    //Text Warnings
+    <string name="TW_BATT_P">TW BATT_P</string>
+    <string name="TW_BATT_V">TW BATT V</string>
+    <string name="TW_BATT_MAH_USED">TW_BATT_MAH_USED</string>
+
+    //Text elements 1 TE1
+    <string name="TE1_SCALE">TE1 scale</string>
+    <string name="TE1_GLFPS">TE1 OPENGL FPS (renderer)</string>
+    <string name="TE1_DEC_FPS">TE1 DECODER FPS</string>
+    <string name="TE1_DEC_LATENCY_DETAILED">TE1 DECODER LATENCY DETAILED (parsing,waitForInputB,decoding)</string>
+    <string name="TE1_DEC_LATENCY_SUM">TE1 DECODER LATENCY_SUM</string>
+    <string name="TE1_DEC_DBITRATE">TE1 DECODER BITRATE</string>
+    <string name="TE1_TIME">TE1 TIME</string>
+    <string name="TE1_RX_EZWB">TE1 RX EZWB (worst)</string>
+    <string name="TE1_RX1">TE1 RX1 (not ez-wb)</string>
+    <string name="TE1_BATT_P">TE1 BATT PERCENTAGE</string>
+    <string name="TE1_BATT_V">TE1 BATT VOLTAGE</string>
+    <string name="TE1_BATT_A">TE1 BATT AMPERE (current)</string>
+    <string name="TE1_BATT_mAH">TE1 BATT mAH (used capacity)</string>
+    <string name="TE1_HOME_DISTANCE">TE1 HOME DISTANCE</string>
+    <string name="TE1_VS">TE1 VS (Vertical speed)</string>
+    <string name="TE1_HS">TE1 HS (Horizontal speed)</string>
+    <string name="TE1_LAT">TE1 LAT (Latitude)</string>
+    <string name="TE1_LON">TE1 LON (Longitude)</string>
+    <string name="TE1_ALTITUDE_GPS">TE1 ALTITUDE GPS</string>
+    <string name="TE1_ALTITUDE_BARO">TE1 ALTITUDE BARO</string>
+    <string name="TE1_N_SATS">TE1 N SATS (Visible for uav gps)</string>
+    <string name="TE1_XXX">TE1 XXX (for future use)</string>
+    //Text elements 2
+    <string name="TE2_SCALE">TE2 scale</string>
+    <string name="TE2_EZWB_UPLINK_RSSI">TE2 EZWB UPLINK RSSI (rc over wbc)</string>
+    <string name="TE2_EZWB_UPLINK_BLOCKS">TE2 EZWB UPLINK BLOCKS (rc over wbc)</string>
+    <string name="TE2_STATUS_AIR">TE2 STATUS AIR</string>
+    <string name="TE2_STATUS_GROUND">TE2 STATUS GROUND</string>
+    <string name="TE2_HS">TE2 HS (Horizontal speed)</string>
+    <string name="TE2_VS">TE2 VS (Vertical speed)</string>
+    <string name="TE2_LAT">TE2 LAT (Latitude)</string>
+    <string name="TE2_LON">TE2 LON (Longitude)</string>
+    <string name="TE2_HOME_DISTANCE">TE2 HOME DISTANCE</string>
+    <string name="TE2_SAT">TE2 SAT</string>
+    <string name="TE2_BATT_P">TE2 BATT PERCENTAGE</string>
+    <string name="TE2_BATT_V">TE2 BATT VOLTAGE</string>
+    <string name="TE2_BATT_A">TE2 BATT AMPERE (Current)</string>
+    <string name="TE2_EZWB_RSSI_WORST">TE2 EZWB RSSI WORST</string>
+    <string name="TE2_EZWB_STRENGTH_P">TE2 EZWB STRENGTH P</string>
+    <string name="TE2_EZWB_BLOCKS">TE2 EZWB BLOCKS</string>
+    <string name="TE2_EZWB_RSSI_ADAPTERS_1to6">TE2 EZWB RSSI ADAPTERS 1to6</string>
+    <string name="TE2_FLIGHT_MODE">TE2 FLIGHT MODE</string>
+
+
+
+</resources>

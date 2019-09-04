@@ -1,0 +1,19 @@
+[1/19] Building CXX object CMakeFiles/Time.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Time/VRFrameCPUChronometer.cpp.o
+[2/19] Building CXX object CMakeFiles/Time.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Time/FPSCalculator.cpp.o
+[3/19] Building CXX object CMakeFiles/Time.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Time/Chronometer.cpp.o
+[4/19] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\arm64-v8a\libTime.so
+[5/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/Text/TextElements2.cpp.o
+[6/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/Text/TextElements1.cpp.o
+[7/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/Text/TEWarning.cpp.o
+[8/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/ElementBatching/BatchingManager.cpp.o
+[9/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/Ladders/VLAltitude.cpp.o
+[10/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/ArtificialHorizon/AHorizon.cpp.o
+[11/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/Ladders/VLSpeed.cpp.o
+[12/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/Ladders/AVerticalLadder.cpp.o
+[13/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/Ladders/CompassLadder.cpp.o
+[14/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/ElementBatching/CpuGpuBuff.cpp.o
+[15/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/Settings/SettingsOSDStyle.cpp.o
+[16/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/OSD/OSDRenderer.cpp.o
+[17/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/Settings/SettingsOSDElements.cpp.o
+[18/19] Building CXX object CMakeFiles/Scene.dir/src/main/cpp/Scene/Video/VideoRenderer.cpp.o
+[19/19] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\arm64-v8a\libScene.so

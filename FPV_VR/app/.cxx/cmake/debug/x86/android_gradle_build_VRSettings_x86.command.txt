@@ -1,0 +1,8 @@
+Executable : C:\Users\Consti10\AppData\Local\Android\Sdk\cmake\3.6.4111459\bin\cmake.exe
+arguments : 
+--build
+C:\Users\Consti10\Desktop\FPV_VR_for_wifibroadcast\FPV_VR_2018\FPV_VR\app\.cxx\cmake\debug\x86
+--target
+VRSettings
+jvmArgs : 
+

@@ -1,86 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    //All values that get only written by "ActivityConnect" and may be read by other activities.
-    //Holds:
-    //1) ConnectionType
-    //2)GroundRecFileName
-    //3) All network settings
-
-    <ListPreference
-        android:title="@string/ConnectionType"
+    <!--Stores the connection type seleced by the user. Make sure to write all other values according to the connection type
+    when either initializing or changing the value-->
+    <com.mapzen.prefsplus.EditIntPreference
         android:key="@string/ConnectionType"
+        android:title="@string/ConnectionType"
         android:summary="@string/ConnectionType"
-        android:entries="@array/entriesConnectionType"
-        android:entryValues="@array/valuesConnectionType"
+        android:enabled="false"
         android:defaultValue="2"/>
-
-    <EditTextPreference
-        android:key="@string/GroundRecFileName"
-        android:title="@string/GroundRecFileName"
-        android:defaultValue="video.h264" />
-
-    //Network settings
-    <PreferenceCategory
-        android:title="Video stream">
-        <EditTextPreference
-            android:title="@string/UDPVideoPort"
-            android:key="@string/UDPVideoPort"
-            android:summary="UDP Port to receive raw h.264 NALUS (video stream)"
-            android:inputType="numberSigned"
-            android:defaultValue="5000" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="Telemetry stream(s)">
-        <SwitchPreference
-            android:key="@string/ParseLTM"
-            android:title="@string/ParseLTM"
-            android:summary="receive and parse LTM (Light-Telemetry) data"
-            android:defaultValue="false" />
-        <EditTextPreference
-            android:key="@string/LTMPort"
-            android:title="@string/LTMPort"
-            android:defaultValue="5001"
-            android:inputType="numberSigned"
-            android:summary="UDP Port to listen for LTM data;default:5001"
-            android:dependency="@string/ParseLTM"/>
-        <SwitchPreference
-            android:key="@string/ParseFRSKY"
-            android:title="@string/ParseFRSKY"
-            android:summary="receive and parse  FRSKY data"
-            android:defaultValue="false" />
-        <EditTextPreference
-            android:key="@string/FRSKYPort"
-            android:title="@string/FRSKYPort"
-            android:defaultValue="5002"
-            android:inputType="numberSigned"
-            android:summary="UDP Port to listen for FRSKY data;default:5002"
-            android:dependency="@string/ParseFRSKY"/>
-        <SwitchPreference
-            android:key="@string/ParseMAVLINK"
-            android:title="@string/ParseMAVLINK"
-            android:summary="receive and parse  MAVLINK data"
-            android:defaultValue="false" />
-        <EditTextPreference
-            android:key="@string/MAVLINKPort"
-            android:title="@string/MAVLINKPort"
-            android:defaultValue="5004"
-            android:inputType="numberSigned"
-            android:summary="UDP Port to listen for MAVLINK data;default:5004"
-            android:dependency="@string/ParseMAVLINK"/>
-        <SwitchPreference
-            android:key="@string/ParseRSSI"
-            android:title="@string/ParseRSSI"
-            android:summary="receive and parse Wifibroadcast RSSI raw hex values (this option can be used synchronous with another telemetry source, like LTM)"
-            android:defaultValue="false" />
-        <EditTextPreference
-            android:key="@string/RSSIPort"
-            android:title="@string/RSSIPort"
-            android:defaultValue="5003"
-            android:inputType="numberSigned"
-            android:summary="UDP Port to listen for RSSI hex values;default:5003"
-            android:dependency="@string/ParseRSSI"/>
-    </PreferenceCategory>
 
 </PreferenceScreen>
 

@@ -9,9 +9,9 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     android:background="@android:color/black"
-    tools:context="constantin.fpv_vr.Activity_MonoVidOSD">
+    tools:context="constantin.fpv_vr.APlay.AMonoVidOSD">
 
-    <constantin.fpv_vr.AspectFrameLayout
+    <constantin.video.core.External.AspectFrameLayout
         android:id="@+id/VideoSurface_AFL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
-    </constantin.fpv_vr.AspectFrameLayout>
+    </constantin.video.core.External.AspectFrameLayout>
 
 </RelativeLayout>
 

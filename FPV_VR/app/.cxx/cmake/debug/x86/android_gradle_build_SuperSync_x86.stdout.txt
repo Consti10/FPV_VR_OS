@@ -1,0 +1,2 @@
+[1/2] Building CXX object CMakeFiles/SuperSync.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/SuperSync/FBRManager.cpp.o
+[2/2] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\x86\libSuperSync.so

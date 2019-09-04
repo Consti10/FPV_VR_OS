@@ -1,0 +1,9 @@
+<resources>
+
+    //********************************** pref_connect only **********************************
+    <string name="ConnectionType">ConnectionType</string>
+    <string name="AHTPort">AHTPort</string>
+    <string name="RTSPString">RTSPString</string>
+    //*************************************************************************************
+
+</resources>

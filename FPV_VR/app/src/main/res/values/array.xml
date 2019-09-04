@@ -2,30 +2,74 @@
 <resources>
 
 
+    <string-array name="color_choices">
+        <item>#f44336</item>
+        <item>#e91e63</item>
+        <item>#9c27b0</item>
+        <item>#673ab7</item>
+        <item>#3f51b5</item>
+        <item>#2196f3</item>
+        <item>#03a9f4</item>
+        <item>#00bcd4</item>
+        <item>#009688</item>
+        <item>#4caf50</item>
+        <item>#8bc34a</item>
+        <item>#cddc39</item>
+        <item>#ffeb3b</item>
+        <item>#ffc107</item>
+        <item>#ff9800</item>
+        <item>#ff5722</item>
+        <item>#795548</item>
+        <item>#9e9e9e</item>
+        <item>#607d8b</item>
+
+        <item>#FFFFFF</item>
+        <item>#000000</item>
+    </string-array>
+
+
     <string-array name="entriesConnectionType" >
-        <item>EZ-Wifibroadcast (Stream)</item>
+        <item>EZ-Wifibroadcast/OpenHD (Stream)</item>
         <item>Manually (Stream)</item>
         <item>Included Test File</item>
         <item>Ground recording file</item>
     </string-array>
-    <string-array name="valuesConnectionType" >
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string-array name="entriesConnectionType_Dev" >
+        <item>EZ-Wifibroadcast/OpenHD (Stream)</item>
+        <item>Manually (Stream)</item>
+        <item>Included Test File</item>
+        <item>Ground recording file</item>
+        <item>RTSP (experimental)</item>
     </string-array>
+
 
 
     <string-array name="entriesHLSelectSourceValue" >
         <item>BARO</item>
         <item>GPS</item>
-        <item>BARO_GPS</item>
     </string-array>
     <string-array name="valuesHLSelectSourceValue" >
         <item>0</item>
         <item>1</item>
-        <item>2</item>
     </string-array>
+
+    <string-array name="entriesTypefaces" >
+        <item>ARIAL PLAIN</item>
+        <item>ARIAL BOLD</item>
+        <item>ARIAL ITALIC</item>
+        <item> ARIAL BOLD_ITALIC</item>
+        <item>MONOSPACE PLAIN</item>
+        <item>MONOSPACE BOLD</item>
+    </string-array>
+    <string-array name="valuesTypefaces" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
 
     <string-array name="entriesGroundHeadTrackingMode" >
         <item>disable</item>
@@ -46,82 +90,66 @@
         <item>1</item>
     </string-array>
 
-
-    <string-array name="listentries2" >
-        <item>Use Default HW decoder</item>
-        <item>Use Google SW decoder(pretty slow,but tested)</item>
+    <string-array name="entriesAHTRefreshRateMs" >
+        <item>1000 ms (1 hz)</item>
+        <item>500 ms (2 hz)</item>
+        <item>100 ms (10 hz)</item>
+        <item>10 ms (100 hz)</item>
+        <item>5 ms (200 hz)</item>
+        <item>1 ms (1000 hz)</item>
     </string-array>
-    <string-array name="listvalues2">
-        <item>HW</item>
-        <item>SW</item>
-    </string-array>
-
-    <string-array name="listentries3" >
-        <item>Cardboard V1</item>
-        <item>Cardboard V2</item>
-        <item>GearVR</item>
-        <item>Daydream</item>
-        <item>Manually</item>
-    </string-array>
-    <string-array name="listvalues3">
-        <item>CV1</item>
-        <item>CV2</item>
-        <item>GVR</item>
-        <item>DD</item>
-        <item>Manually</item>
+    <string-array name="valuesAHTRefreshRateMs" >
+        <item>1000</item>
+        <item>500</item>
+        <item>100</item>
+        <item>10</item>
+        <item>5</item>
+        <item>1</item>
     </string-array>
 
-    <string-array name="entriesMSAA" >
-        <item>Enable 16xMSAA</item>
-        <item>Enable 8xMSAA</item>
-        <item>Enable 4xMSAA</item>
-        <item>Enable 2xMSAA</item>
-        <item>Disable MSAA</item>
+
+
+    <string-array name="entriesArtificialHorizon" >
+        <item>3D Quadcopter</item>
+        <item>2D Ladders (Traditional)</item>
+        <item>Both</item>
+        <item>NONE</item>
     </string-array>
-    <string-array name="valuesMSAA">
+    <string-array name="valuesArtificialHorizon" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+
+    <string-array name="entriesDEV_3D_VIDEO" >
+        <item>disable</item>
+        <item>left eye only</item>
+        <item>left and right eye</item>
+    </string-array>
+    <string-array name="valuesDEV_3D_VIDEO" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="entriesMSAADefault" >
+        <item>0xMSAA</item>
+        <item>2xMSAA</item>
+        <item>4xMSAA</item>
+        <item>6xMSAA</item>
+        <item>8xMSAA</item>
+        <item>16xMSAA</item>
+    </string-array>
+    <string-array name="valuesMSAADefault" >
+        <item>0</item>
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
         <item>16</item>
-        <item>8</item>
-        <item>4</item>
-        <item>2</item>
-        <item>0</item>
     </string-array>
 
-
-    <string-array name="entriesMSAA0x" >
-        <item>Disable MSAA</item>
-    </string-array>
-    <string-array name="valuesMSAA0x">
-        <item>0</item>
-    </string-array>
-    <string-array name="entriesMSAA2x" >
-        <item>Enable 2xMSAA</item>
-        <item>Disable MSAA</item>
-    </string-array>
-    <string-array name="valuesMSAA2x">
-        <item>2</item>
-        <item>0</item>
-    </string-array>
-    <string-array name="entriesMSAA4x" >
-        <item>Enable 4xMSAA</item>
-        <item>Enable 2xMSAA</item>
-        <item>Disable MSAA</item>
-    </string-array>
-    <string-array name="valuesMSAA4x">
-        <item>4</item>
-        <item>2</item>
-        <item>0</item>
-    </string-array>
-    <string-array name="entriesMSAA8x" >
-        <item>Enable 8xMSAA</item>
-        <item>Enable 4xMSAA</item>
-        <item>Enable 2xMSAA</item>
-        <item>Disable MSAA</item>
-    </string-array>
-    <string-array name="valuesMSAA8x">
-        <item>8</item>
-        <item>4</item>
-        <item>2</item>
-        <item>0</item>
-    </string-array>
 
 </resources>

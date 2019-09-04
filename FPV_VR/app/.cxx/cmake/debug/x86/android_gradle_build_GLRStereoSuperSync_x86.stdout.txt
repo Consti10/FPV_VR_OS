@@ -1,0 +1,2 @@
+[1/2] Building CXX object CMakeFiles/GLRStereoSuperSync.dir/src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp.o
+[2/2] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\x86\libGLRStereoSuperSync.so

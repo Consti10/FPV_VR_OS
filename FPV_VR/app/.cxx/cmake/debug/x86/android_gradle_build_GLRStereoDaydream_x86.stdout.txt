@@ -1,0 +1,2 @@
+[1/2] Building CXX object CMakeFiles/GLRStereoDaydream.dir/src/main/cpp/GLRenderer/GLRStereoDaydream.cpp.o
+[2/2] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\x86\libGLRStereoDaydream.so
