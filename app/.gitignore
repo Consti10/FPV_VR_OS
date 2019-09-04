@@ -1,0 +1,4 @@
+/build
+.cxx/
+.externalNativeBuild/
+google-services.json

@@ -1,7 +1,0 @@
-[1/7] Building CXX object CMakeFiles/VRSettings.dir/src/main/cpp/VRSettings/SettingsVR.cpp.o
-[2/7] Building CXX object CMakeFiles/OtherStuff.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Other/IGLRenderer.cpp.o
-[3/7] Building CXX object CMakeFiles/OtherStuff.dir/C_/Users/Consti10/Desktop/FPV_VR_for_wifibroadcast/RenderingX/RenderingXCore/src/main/cpp/Other/MatricesManager.cpp.o
-[4/7] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\arm64-v8a\libVRSettings.so
-[5/7] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\arm64-v8a\libOtherStuff.so
-[6/7] Building CXX object CMakeFiles/GLRStereoSuperSync.dir/src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp.o
-[7/7] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\arm64-v8a\libGLRStereoSuperSync.so

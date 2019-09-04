@@ -1,2 +1,0 @@
-[1/2] Building CXX object CMakeFiles/GLRStereoNormal.dir/src/main/cpp/GLRenderer/GLRStereoNormal.cpp.o
-[2/2] Linking CXX shared library ..\..\..\..\build\intermediates\cmake\debug\obj\armeabi-v7a\libGLRStereoNormal.so
