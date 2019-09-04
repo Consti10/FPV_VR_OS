@@ -1,9 +1,7 @@
 # FPV_VR_2018
-Latest open-sourced version of FPV_VR
+Latest open-sourced version of FPV_VR \
+[Buy app here](https://github.com/Consti10/FPV_VR_2018) to support development
 
-I created a new repository because this is more a re-write than an update.
 
-See FPV_VR for the old source code, mostly written in JAVA.
-
-See "Changelog_4.0.pdf" in this branch for changes.
+**Build Instructions**
 
