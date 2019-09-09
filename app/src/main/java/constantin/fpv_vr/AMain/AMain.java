@@ -137,6 +137,9 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
             case R.id.b_VRSettings:
                 startActivity(new Intent().setClass(this, ASettingsVR.class));
                 break;
+            case R.id.b_startMonoVideoOSD360:
+                startActivity(new Intent().setClass(this, ASettingsVR.class));
+                break;
         }
     }
 

@@ -18,6 +18,9 @@
 #include <vector>
 #include <GLProgramVC.h>
 #include <GLProgramText.h>
+
+#include <GLProgramSpherical.cpp> //
+
 #include <FPSCalculator.h>
 #include <MatricesManager.h>
 #include <OSD/OSDRenderer.h>
