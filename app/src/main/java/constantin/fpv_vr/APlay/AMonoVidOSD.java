@@ -147,7 +147,7 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
     @Override
     public void onDecodingInfoChanged(DecodingInfo decodingInfo) {
         telemetryReceiver.setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
-                decodingInfo.avgDecodingTime_ms);
+                decodingInfo.avgHWDecodingTime_ms);
     }
 
 }

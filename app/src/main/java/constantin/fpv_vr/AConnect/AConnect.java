@@ -179,19 +179,19 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         switch (connectionType){
             case CONNECTION_TYPE_EZWB:
             case CONNECTION_TYPE_Manually:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE), VideoNative.SOURCE_TYPE_UDP);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE), VideoNative.VS_SOURCE_UDP);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE), TelemetryReceiver.SOURCE_TYPE_UDP);
                 break;
             case CONNECTION_TYPE_StorageFile:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.SOURCE_TYPE_FILE);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_FILE);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_FILE);
                 break;
             case CONNECTION_TYPE_TestFile:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.SOURCE_TYPE_ASSETS);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_ASSETS);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_ASSETS);
                 break;
             case CONNECTION_TYPE_RTSP:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.SOURCE_TYPE_EXTERNAL);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_EXTERNAL);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_UDP);
                 break;
              default:break;
