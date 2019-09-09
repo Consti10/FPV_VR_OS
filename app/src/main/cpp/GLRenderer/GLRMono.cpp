@@ -7,7 +7,7 @@
 #define TAG "GLRendererMono"
 
 
-GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver):
+GLRMono360::GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver):
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
         mTelemetryReceiver(telemetryReceiver),
@@ -15,7 +15,7 @@ GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetry
         mMatricesM(mSettingsVR){
 }
 
-void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalVideoTexture) {
+void GLRMono360::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalVideoTexture) {
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>();
@@ -23,7 +23,7 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
 }
 
-void GLRMono::onSurfaceChanged(int width, int height) {
+void GLRMono360::onSurfaceChanged(int width, int height) {
     float displayRatio=(float) width/(float)height;
     mMatricesM.calculateMatrices(45.0f,displayRatio);
     float videoZ=-10;
@@ -42,7 +42,7 @@ void GLRMono::onSurfaceChanged(int width, int height) {
     //error->afterDraw();
 }
 
-void GLRMono::onDrawFrame() {
+void GLRMono360::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     cpuFrameTime.start();
     Matrices& worldMatrices=mMatricesM.getWorldMatrices();
@@ -60,18 +60,18 @@ void GLRMono::onDrawFrame() {
   JNIEXPORT return_type JNICALL              \
       Java_constantin_fpv_1vr_GLRenderer_GLRMono_##method_name
 
-inline jlong jptr(GLRMono *glRendererMono) {
+inline jlong jptr(GLRMono360 *glRendererMono) {
     return reinterpret_cast<intptr_t>(glRendererMono);
 }
-inline GLRMono *native(jlong ptr) {
-    return reinterpret_cast<GLRMono*>(ptr);
+inline GLRMono360 *native(jlong ptr) {
+    return reinterpret_cast<GLRMono360*>(ptr);
 }
 
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver) {
-    return jptr(new GLRMono(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver)));
+    return jptr(new GLRMono360(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver)));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {

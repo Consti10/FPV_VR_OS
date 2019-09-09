@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import constantin.fpv_vr.AConnect.AConnect;
+import constantin.fpv_vr.APlay.AMono360;
 import constantin.fpv_vr.Settings.ASettingsOSD;
 import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
@@ -138,7 +139,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 startActivity(new Intent().setClass(this, ASettingsVR.class));
                 break;
             case R.id.b_startMonoVideoOSD360:
-                startActivity(new Intent().setClass(this, ASettingsVR.class));
+                startActivity(new Intent().setClass(this, AMono360.class));
                 break;
         }
     }

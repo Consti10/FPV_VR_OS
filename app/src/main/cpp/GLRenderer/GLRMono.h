@@ -30,9 +30,9 @@
 #include "IGLRenderer.h"
 
 
-class GLRMono : public IGLRenderer,public IVideoFormatChanged{
+class GLRMono360 : public IGLRenderer,public IVideoFormatChanged{
 public:
-    explicit GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver);
+    explicit GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver);
 private:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture) override;
     void onSurfaceChanged(int width, int height)override;
