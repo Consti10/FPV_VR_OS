@@ -17,11 +17,12 @@
 #define TAG "VideoRenderer"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-VideoRenderer::VideoRenderer(const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,const int DEV_3D_VIDEO):
+VideoRenderer::VideoRenderer(const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,const int DEV_3D_VIDEO,GLProgramSpherical *glPSpherical):
         mPositionDebug(glRenderGeometry,6, false),
         DEV_3D_VIDEO(DEV_3D_VIDEO),
         mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
+    mGLProgramSpherical=glPSpherical;
     glGenBuffers(1,&mGLBuffVid);
     glGenBuffers(1,&mGLBuffVidLeft);
     glGenBuffers(1,&mGLBuffVidRight);
@@ -103,6 +104,10 @@ void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool l
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas");
 }
 
+void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
+    mGLProgramSpherical->draw(ViewM,ProjM);
+    GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
+}
 
 void VideoRenderer::initUpdateTexImageJAVA(JNIEnv *env, jobject obj,jobject surfaceTexture) {
 #ifdef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
