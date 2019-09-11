@@ -29,9 +29,9 @@
 #include "IGLRenderer.h"
 
 
-class GLRMono360 : public IGLRenderer,public IVideoFormatChanged{
+class GLRMono360 : public IGLRenderer{
 public:
-    explicit GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver);
+    explicit GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context);
 private:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture) override;
     void onSurfaceChanged(int width, int height)override;
@@ -45,10 +45,9 @@ private:
     const SettingsVR mSettingsVR;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
-    //
-    //std::unique_ptr<GLProgramTextureExt> mGLRenderTextureExternal= nullptr;
     std::unique_ptr<GLProgramSpherical> mGLProgramSpherical=nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
+    std::unique_ptr<gvr::GvrApi> gvr_api_;
 };
 
 

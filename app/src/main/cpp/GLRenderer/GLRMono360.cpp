@@ -1,18 +1,19 @@
 
 
+#include <vr/gvr/capi/include/gvr.h>
 #include "GLRMono360.h"
 #include "CPUPriorities.hpp"
 
+constexpr auto TAG="GLRMono360";
 
-#define TAG "GLRendererMono"
 
-
-GLRMono360::GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver):
+GLRMono360::GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context):
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
         mTelemetryReceiver(telemetryReceiver),
         mSettingsVR(env,androidContext),
         mMatricesM(mSettingsVR){
+    gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
 }
 
 void GLRMono360::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalVideoTexture) {
@@ -38,7 +39,7 @@ void GLRMono360::onSurfaceChanged(int width, int height) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0,0,width,height);
-    glClearColor(0.2f,0,0,0.0f);
+    glClearColor(0.0f,0,0,0.0f);
     setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
     cpuFrameTime.reset();
     //GLProgramLine* error=nullptr;
@@ -48,10 +49,10 @@ void GLRMono360::onSurfaceChanged(int width, int height) {
 void GLRMono360::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     cpuFrameTime.start();
+    mMatricesM.calculateNewHeadPose360(gvr_api_.get(),0);
+
     Matrices& worldMatrices=mMatricesM.getWorldMatrices();
-
     mVideoRenderer->drawVideoCanvas360(worldMatrices.monoViewTracked,worldMatrices.projection360);
-
     mOSDRenderer->updateAndDrawElementsGL(worldMatrices.eyeView,worldMatrices.projection);
     mFPSCalculator.tick();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
@@ -76,8 +77,8 @@ inline GLRMono360 *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver) {
-    return jptr(new GLRMono360(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver)));
+(JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver,jlong native_gvr_api) {
+    return jptr(new GLRMono360(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api)));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {

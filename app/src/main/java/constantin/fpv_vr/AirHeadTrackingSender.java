@@ -77,7 +77,7 @@ public class AirHeadTrackingSender{
     }
 
 
-    public void loop(){
+    private void loop(){
         //send int16_t (2 byte) *3 (x,y,z)
         byte[] buf=new byte[3*4]; // 3 degree values Pitch_Deg, yaw and Roll_Deg, 4 bytes per float
         float[] headView=new float[16];

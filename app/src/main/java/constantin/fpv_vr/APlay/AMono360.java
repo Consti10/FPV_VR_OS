@@ -1,15 +1,10 @@
 package constantin.fpv_vr.APlay;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.google.vr.cardboard.DisplaySynchronizer;
@@ -17,7 +12,6 @@ import com.google.vr.ndk.base.GvrApi;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.GLRenderer.GLRMono360;
-import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingX.MyEGLConfigChooser;
 import constantin.renderingX.MyEGLWindowSurfaceFactory;
@@ -43,12 +37,12 @@ public class AMono360 extends AppCompatActivity {
 
         //mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mGLView.setPreserveEGLContextOnPause(true);
+        gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
         if(SJ.EnableAHT(mContext)){
-            gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
             airHeadTrackingSender=new AirHeadTrackingSender(this,gvrApi);
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono360(mContext,telemetryReceiver);
+        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,gvrApi);
         mGLView.setRenderer(mGLRenderer);
         setContentView(mGLView);
     }
@@ -64,6 +58,8 @@ public class AMono360 extends AppCompatActivity {
         mGLView.onResume();
         if(gvrApi!=null){
             gvrApi.resumeTracking();
+        }
+        if(airHeadTrackingSender!=null){
             airHeadTrackingSender.startSendingDataIfEnabled();
         }
     }

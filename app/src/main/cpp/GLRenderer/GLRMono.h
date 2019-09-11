@@ -30,7 +30,7 @@
 #include "IGLRenderer.h"
 
 
-class GLRMono360 : public IGLRenderer,public IVideoFormatChanged{
+class GLRMono360 : public IGLRenderer{
 public:
     explicit GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver);
 private:

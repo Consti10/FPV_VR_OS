@@ -36,6 +36,7 @@ include_directories(${GVR_DIR}/headers)
 add_library( gvr-lib SHARED IMPORTED )
 set_target_properties(gvr-lib PROPERTIES IMPORTED_LOCATION
         ${GVR_DIR}/jni/${ANDROID_ABI}/libgvr.so )
+#now build our libraries
 #Time library
 include_directories(${RX_CORE_DIR}/src/main/cpp/Time)
 add_library( Time SHARED
@@ -56,16 +57,17 @@ add_library( GLPrograms SHARED
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTextureExt.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramLine.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/Sphere.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp
-        )
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp)
 target_link_libraries( GLPrograms ${log-lib} android GLESv2)
-##Other stuff (cannot really be generalized)
-include_directories(${RX_CORE_DIR}/src/main/cpp/Other)
-add_library(OtherStuff SHARED
-        ${RX_CORE_DIR}/src/main/cpp/Other/IGLRenderer.cpp
-        ${RX_CORE_DIR}/src/main/cpp/Other/MatricesManager.cpp)
-target_link_libraries(OtherStuff android log gvr-lib)
 
+
+
+##Other stuff (cannot really be generalized)
+include_directories(src/main/cpp/Other)
+add_library(OtherStuff SHARED
+        src/main/cpp/Other/IGLRenderer.cpp
+        src/main/cpp/Other/MatricesManager.cpp)
+target_link_libraries(OtherStuff android log gvr-lib)
 
 ##########################################################################################################
 #Scene (Engine) Stuff (OSD and video rendering)

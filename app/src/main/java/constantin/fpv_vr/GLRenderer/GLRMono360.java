@@ -6,6 +6,8 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.view.Surface;
 
+import com.google.vr.ndk.base.GvrApi;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -22,7 +24,7 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     static {
         System.loadLibrary("GLRMono360");
     }
-    private native long nativeConstruct(Context context,long telemetryReceiver);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext);
     private native void nativeDelete(long glRendererMonoP);
     private native void nativeOnSurfaceCreated(long glRendererP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height);
@@ -33,9 +35,9 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     private SurfaceTexture mSurfaceTexture;
     private MVideoPlayer mVideoPlayer;
 
-    public GLRMono360(final Context context, final TelemetryReceiver telemetryReceiver){
+    public GLRMono360(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi){
         mContext=context;
-        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance());
+        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext());
     }
 
     @Override
