@@ -34,12 +34,7 @@
         \nEnter your file names (e.g. 11-04-2019 16-33-42 are creation date and time)
         \nThey have to be in the right format and sit in your FPV_VR folder\n</string>
 
-    <string name="RTSPDescription">In development. Enter valid RTSP string first.
-        \nTest 1: Check if server responds to OPTIONS requests.
-        \nTest 2: Check if server offers an h264 rtp video
-        \nSetup 1: Start receiving video using rtp/ udp (but not playing it)
-        \nSetup 2: Start receiving video using rtp/tcp interleaved (but not playing it)
-    </string>
+    <string name="RTSPDescription">In development. Enter valid RTSP string (or other string that can be played by ffmpeg), then start video playing activity.</string>
 
     <string name="Mode1_Description">Mode 1: Connect to EZ-WB/OpenHD RX Pi via Wifi</string>
     <string name="Mode2_Description">Mode 2: Connect to EZ-WB/OpenHD RX Pi via USB cable</string>

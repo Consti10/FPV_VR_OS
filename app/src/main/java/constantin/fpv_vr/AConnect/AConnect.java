@@ -81,21 +81,10 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         super.onResume();
         Spinner mSpinner=findViewById(R.id.spinner_connection_type);
         mSpinner.setOnItemSelectedListener(this);
-        final boolean showRTSP=SJ.DEV_SHOW_RTSP(mContext);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,showRTSP ? R.array.entriesConnectionType_Dev : R.array.entriesConnectionType,
-                R.layout.spinner_white);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.entriesConnectionType,R.layout.spinner_white);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
-        if(SJ.DEV_SHOW_RTSP(mContext)){
-            mSpinner.setSelection(SJ.ConnectionType(this));
-        }else{
-            final int selection=SJ.ConnectionType(this);
-            if(selection<=3){
-                mSpinner.setSelection(selection);
-            }else{
-                mSpinner.setSelection(0);
-            }
-        }
+        mSpinner.setSelection(SJ.ConnectionType(this));
     }
 
     @Override
@@ -188,12 +177,11 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 break;
             case CONNECTION_TYPE_TestFile:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_ASSETS);
-                pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
-                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
+                pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_ASSETS);
                 break;
             case CONNECTION_TYPE_RTSP:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_EXTERNAL);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_FFMPEG_URL);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_UDP);
                 break;
              default:break;

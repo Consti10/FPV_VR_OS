@@ -2,6 +2,7 @@ package constantin.fpv_vr.AConnect;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,19 +17,13 @@ import android.widget.TextView;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;
+import constantin.video.core.VideoNative.VideoNative;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class FConnectRTSP extends Fragment implements View.OnClickListener {
     private Context mContext;
 
-    private EditText mRtspUrlEditText;
-    private Button mTestRTSP1Button;
-    private Button mTestRTSP2Button;
-    private TextView mTestReceiverTestView;
-    //
-    private Button mRTSP_SETUP1_Button;
-    private Button mRTSP_SETUP2_Button;
-    private TextView mTestReceiverTextView;
+    private EditText mEditTextRTSPUrl;
 
 
     @Override
@@ -37,20 +32,19 @@ public class FConnectRTSP extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.connect_rtsp_fragment, container, false);
         mContext=getActivity();
-
-        mTestRTSP1Button=rootView.findViewById(R.id.testRTSP1Button);
-        mTestRTSP1Button.setOnClickListener(this);
-        mTestRTSP2Button=rootView.findViewById(R.id.testRTSP2Button);
-        mTestRTSP2Button.setOnClickListener(this);
-        mTestReceiverTestView =rootView.findViewById(R.id.testRTSPStatusTextView);
-        //
-        mRTSP_SETUP1_Button =rootView.findViewById(R.id.rtspSETUP1_Button);
-        mRTSP_SETUP1_Button.setOnClickListener(this);
-        mRTSP_SETUP2_Button =rootView.findViewById(R.id.rtspSETUP2_Button);
-        mRTSP_SETUP2_Button.setOnClickListener(this);
-        //
-        mTestReceiverTextView=rootView.findViewById(R.id.testReceiverTextView);
-        //
+        mEditTextRTSPUrl=rootView.findViewById(R.id.editText_rtspUrl);
+        final SharedPreferences pref_video=mContext.getSharedPreferences("pref_video",Context.MODE_PRIVATE);
+        final String url=pref_video.getString(mContext.getString(R.string.VS_FFMPEG_URL),"rtsp://");
+        mEditTextRTSPUrl.setText(url);
+        mEditTextRTSPUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @SuppressLint("ApplySharedPref")
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                //Toaster.makeToast(mContext,"URL saved",false);
+                pref_video.edit().putString(mContext.getString(R.string.VS_FFMPEG_URL),v.getText().toString()).commit();
+                return false;
+            }
+        });
         return rootView;
     }
 
@@ -68,8 +62,6 @@ public class FConnectRTSP extends Fragment implements View.OnClickListener {
     public void onDestroy(){
         super.onDestroy();
     }
-
-
 
 
     @SuppressLint("SetTextI18n")

@@ -13,10 +13,6 @@
             android:key="@string/DEV_USE_GVR_VIDEO_TEXTURE"
             android:title="@string/DEV_USE_GVR_VIDEO_TEXTURE"
             android:defaultValue="false"/>
-        <SwitchPreference
-            android:key="@string/DEV_SHOW_RTSP"
-            android:title="@string/DEV_SHOW_RTSP"
-            android:defaultValue="false"/>
 
         <com.mapzen.prefsplus.IntListPreference
             android:key="@string/DEV_3D_VIDEO"

@@ -28,11 +28,6 @@ public class SJ {
         final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
         return pref_connect.getInt(context.getString(R.string.ConnectionType),CONNECTION_TYPE_TestFile);
     }
-
-    public static String RTSPString(final Context context) {
-        final SharedPreferences pref_connect = context.getSharedPreferences("pref_connect", MODE_PRIVATE);
-        return pref_connect.getString(context.getString(R.string.RTSPString),"");
-    }
     //********************************** pref_connect only **********************************
 
     //******************************** pref_vr **************************************
@@ -83,20 +78,9 @@ public class SJ {
         final SharedPreferences pref_developer=context.getSharedPreferences("pref_developer",MODE_PRIVATE);
         return pref_developer.getBoolean(context.getString(R.string.DEV_USE_GVR_VIDEO_TEXTURE),false);
     }
-    public static boolean DEV_SHOW_RTSP(final Context context){
-        final SharedPreferences pref_developer=context.getSharedPreferences("pref_developer",MODE_PRIVATE);
-        return pref_developer.getBoolean(context.getString(R.string.DEV_SHOW_RTSP),false);
-    }
     //******************************** pref_default **************************************
 
 
-
-    //Writing
-    @SuppressLint("ApplySharedPref")
-    public static void RTSPString(final Context context, final String input){
-        final SharedPreferences pref_connect = context.getSharedPreferences("pref_connect", MODE_PRIVATE);
-        pref_connect.edit().putString(context.getString(R.string.RTSPString),input).commit();
-    }
 
 
     /*        Set<String> set=new HashSet<>();

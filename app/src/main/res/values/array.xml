@@ -28,20 +28,14 @@
     </string-array>
 
 
+
     <string-array name="entriesConnectionType" >
-        <item>EZ-Wifibroadcast/OpenHD (Stream)</item>
-        <item>Manually (Stream)</item>
-        <item>Included Test File</item>
-        <item>Ground recording file</item>
-    </string-array>
-    <string-array name="entriesConnectionType_Dev" >
         <item>EZ-Wifibroadcast/OpenHD (Stream)</item>
         <item>Manually (Stream)</item>
         <item>Included Test File</item>
         <item>Ground recording file</item>
         <item>RTSP (experimental)</item>
     </string-array>
-
 
 
     <string-array name="entriesHLSelectSourceValue" >
