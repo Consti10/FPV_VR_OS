@@ -69,8 +69,10 @@ public class AMono360 extends AppCompatActivity {
         super.onPause();
         //Log.d(TAG, "onPause");
         if(gvrApi!=null){
-            airHeadTrackingSender.stopSendingDataIfEnabled();
             gvrApi.pauseTracking();
+        }
+        if(airHeadTrackingSender!=null){
+            airHeadTrackingSender.stopSendingDataIfEnabled();
         }
         telemetryReceiver.stopReceiving();
         mGLRenderer.onPause();

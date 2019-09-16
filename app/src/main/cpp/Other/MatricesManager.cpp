@@ -68,8 +68,9 @@ void MatricesManager::calculateMatrices(float fov,float ratio) {
     worldMatrices.leftEyeView=glm::translate(worldMatrices.eyeView,glm::vec3(-settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
     worldMatrices.rightEyeView=glm::translate(worldMatrices.eyeView,glm::vec3(settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
     //360
-    const float S_FieldOfView=80;
-    worldMatrices.projection360=glm::perspective(glm::radians(S_FieldOfView), ratio, 0.1f, MAX_Z_DISTANCE);
+    const float S_FieldOfView=40;
+    worldMatrices.projection360=glm::perspective(glm::radians(S_FieldOfView), ratio, 0.1f, MAX_Z_DISTANCE+5);
+    worldMatrices.monoViewTracked=glm::mat4();
 }
 
 
