@@ -16,14 +16,10 @@ import android.widget.TextView;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;
-import constantin.fpv_vr.rtsplib.MySimpleRTSPClient;
-import constantin.fpv_vr.rtsplib.RTSPUrl;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class FConnectRTSP extends Fragment implements View.OnClickListener {
     private Context mContext;
-
-    MySimpleRTSPClient mRTSPTestClient=null;
 
     private EditText mRtspUrlEditText;
     private Button mTestRTSP1Button;
@@ -42,22 +38,6 @@ public class FConnectRTSP extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.connect_rtsp_fragment, container, false);
         mContext=getActivity();
 
-        mRtspUrlEditText = rootView.findViewById(R.id.rtspUrlEditText);
-        mRtspUrlEditText.setText(SJ.RTSPString(mContext));
-        mRtspUrlEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                RTSPUrl url=RTSPUrl.parseFromURL(v.getText().toString());
-                if(!url.valid){
-                    Toaster.makeToast(mContext,"Invalid URL.",false);
-                }else{
-                    SJ.RTSPString(mContext,v.getText().toString());
-                    Toaster.makeToast(mContext,"URL saved",false);
-                }
-                return false;
-            }
-        });
-
         mTestRTSP1Button=rootView.findViewById(R.id.testRTSP1Button);
         mTestRTSP1Button.setOnClickListener(this);
         mTestRTSP2Button=rootView.findViewById(R.id.testRTSP2Button);
@@ -70,8 +50,6 @@ public class FConnectRTSP extends Fragment implements View.OnClickListener {
         mRTSP_SETUP2_Button.setOnClickListener(this);
         //
         mTestReceiverTextView=rootView.findViewById(R.id.testReceiverTextView);
-        //
-        mRTSPTestClient=new MySimpleRTSPClient(getActivity(), mTestReceiverTextView);
         //
         return rootView;
     }
@@ -98,17 +76,5 @@ public class FConnectRTSP extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        if(v.getId()==R.id.testRTSP1Button){
-            mRTSPTestClient.startSafe(MySimpleRTSPClient.MODE_TEST_1, mTestReceiverTestView,SJ.RTSPString(mContext));
-        }
-        if(v.getId()==R.id.testRTSP2Button){
-            mRTSPTestClient.startSafe(MySimpleRTSPClient.MODE_TEST_2, mTestReceiverTestView,SJ.RTSPString(mContext));
-        }
-        if(v.getId()==R.id.rtspSETUP1_Button){
-            mRTSPTestClient.startSafe(MySimpleRTSPClient.MODE_SETUP_1,mTestReceiverTextView,SJ.RTSPString(mContext));
-        }
-        if(v.getId()==R.id.rtspSETUP2_Button){
-            mRTSPTestClient.startSafe(MySimpleRTSPClient.MODE_SETUP_2,mTestReceiverTextView,SJ.RTSPString(mContext));
-        }
     }
 }

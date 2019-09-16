@@ -54,7 +54,6 @@ dependencies {
 
     implementation project(path: ':colorpreference')
     implementation project(path: ':preferences')
-    implementation project(path: ':rtsplib')
 
     implementation project(':VideoCore')
     //implementation 'com.github.Consti10:LiveVideo10ms:v1.2'

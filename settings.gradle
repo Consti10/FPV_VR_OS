@@ -1,4 +1,4 @@
-include ':app', ':preferences', ':rtsplib', ':colorpreference'
+include ':app', ':preferences', ':colorpreference'
 
 include ':VideoCore'
 project(':VideoCore').projectDir=new File('..\\LiveVideo10ms\\VideoCore')
