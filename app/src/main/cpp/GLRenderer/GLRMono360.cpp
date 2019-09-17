@@ -49,7 +49,6 @@ void GLRMono360::onSurfaceChanged(int width, int height) {
 void GLRMono360::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     cpuFrameTime.start();
-    mMatricesM.calculateNewHeadPoseIfNeeded(gvr_api_.get(),0);
     mMatricesM.calculateNewHeadPose360(gvr_api_.get(),0);
     Matrices& worldMatrices=mMatricesM.getWorldMatrices();
     mVideoRenderer->drawVideoCanvas360(worldMatrices.monoViewTracked,worldMatrices.projection360);

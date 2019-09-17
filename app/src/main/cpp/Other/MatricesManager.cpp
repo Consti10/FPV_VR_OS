@@ -124,17 +124,14 @@ void MatricesManager::calculateNewHeadPose360(gvr::GvrApi *gvr_api, const int pr
     const gvr::Mat4f tmpHeadPose = gvr_api->GetHeadSpaceFromStartSpaceTransform(target_time);
     gvr_api->ApplyNeckModel(tmpHeadPose,1);
     worldMatrices.monoViewTracked=toGLM(tmpHeadPose);
-    worldMatrices.monoViewTracked=glm::transpose(worldMatrices.monoViewTracked);
-
-    worldMatrices.monoViewTracked=worldMatrices.leftEyeViewTracked;
-
-    //float aaa[16]={1,-1.94429e-07,5.55111e-17,0,
-    //               1.94429e-07,1,1.66533e-16,0,
-    //               -5.55112e-17,-1.66533e-16,1,0,
-    //               -0.1,1.94429e-08,-5.55111e-18,1,};
-    //worldMatrices.monoViewTracked=glm::make_mat4x4(aaa);
 }
 
+
+//float aaa[16]={1,-1.94429e-07,5.55111e-17,0,
+//               1.94429e-07,1,1.66533e-16,0,
+//               -5.55112e-17,-1.66533e-16,1,0,
+//               -0.1,1.94429e-08,-5.55111e-18,1,};
+//worldMatrices.monoViewTracked=glm::make_mat4x4(aaa);
 /*float rot=0;
 void MatricesManager::calculateNewHeadPose360_fixRot(gvr::GvrApi *gvr_api, const int predictMS) {
     gvr::ClockTimePoint target_time = gvr::GvrApi::GetTimePointNow();
