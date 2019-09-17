@@ -9,6 +9,7 @@ import android.view.WindowManager;
 
 import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
+import com.google.vr.ndk.base.GvrLayout;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.GLRenderer.GLRMono360;
@@ -21,30 +22,42 @@ import constantin.telemetry.core.TelemetryReceiver;
 public class AMono360 extends AppCompatActivity {
     private Context mContext;
     private GLSurfaceView mGLView;
-    private GvrApi gvrApi;
     private GLRMono360 mGLRenderer;
-    private AirHeadTrackingSender airHeadTrackingSender;
     private TelemetryReceiver telemetryReceiver;
+    //either create gvr api directly or use gvr layout as wrapper - first one introduces bug, e.g. "wrong 360° video orientation"
+    private static final boolean useGvrLayout=true;
+    private GvrApi gvrApi;
+    private GvrLayout gvrLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
+        PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         mGLView = new GLSurfaceView(this);
         mGLView.setEGLContextClientVersion(2);
         mGLView.setEGLConfigChooser(new MyEGLConfigChooser(false, SJ.MultiSampleAntiAliasing(this),true));
         mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
-
-        //mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mGLView.setPreserveEGLContextOnPause(true);
-        gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
-        if(SJ.EnableAHT(mContext)){
-            airHeadTrackingSender=new AirHeadTrackingSender(this,gvrApi);
+        if(useGvrLayout){
+            gvrLayout=new GvrLayout(this);
+            gvrLayout.setAsyncReprojectionEnabled(false);
+            gvrLayout.setStereoModeEnabled(false);
+            gvrLayout.setPresentationView(mGLView);
+        }else{
+            gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
+            gvrApi.reconnectSensors();
+            gvrApi.clearError();
+            gvrApi.recenterTracking();
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,gvrApi);
+        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi);
         mGLView.setRenderer(mGLRenderer);
-        setContentView(mGLView);
+        if(useGvrLayout){
+            setContentView(gvrLayout);
+        }else{
+            setContentView(mGLView);
+        }
     }
 
 
@@ -56,33 +69,32 @@ public class AMono360 extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         telemetryReceiver.startReceiving();
         mGLView.onResume();
-        if(gvrApi!=null){
+        if(useGvrLayout){
+            gvrLayout.onResume();
+        }else{
             gvrApi.resumeTracking();
-        }
-        if(airHeadTrackingSender!=null){
-            airHeadTrackingSender.startSendingDataIfEnabled();
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //Log.d(TAG, "onPause");
-        if(gvrApi!=null){
-            gvrApi.pauseTracking();
-        }
-        if(airHeadTrackingSender!=null){
-            airHeadTrackingSender.stopSendingDataIfEnabled();
-        }
         telemetryReceiver.stopReceiving();
         mGLRenderer.onPause();
         mGLView.onPause();
+        if(useGvrLayout){
+            gvrLayout.onPause();
+        }else{
+            gvrApi.pauseTracking();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(gvrApi!=null){
+        if(useGvrLayout){
+            gvrLayout.shutdown();
+        }else{
             gvrApi.shutdown();
         }
         mGLView=null;
