@@ -46,7 +46,7 @@ void GLRStereoDaydream::placeGLElements() {
 
 void GLRStereoDaydream::updateBufferViewports() {
     Matrices& t=mMatricesM.getWorldMatrices();
-    recommended_buffer_viewports.SetToRecommendedBufferViewports();
+    //recommended_buffer_viewports.SetToRecommendedBufferViewports();
     //First the view ports for the video, handled by the async reprojection
     /*for(size_t eye=0;eye<2;eye++){
         recommended_buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
@@ -74,13 +74,26 @@ void GLRStereoDaydream::updateBufferViewports() {
         scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
         buffer_viewports.SetBufferViewport(eye,scratch_viewport);
     }*/
+    recommended_buffer_viewports.SetToRecommendedBufferViewports();
+    //
+    for(size_t eye=0;eye<2;eye++){
+        recommended_buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
+        //gvr::Rectf fov={45,45,45,45};
+        //gvr::Rectf fov={33.15,33.15,33.15,33.15};
+        //scratch_viewport.SetSourceFov(fov);
+        scratch_viewport.SetExternalSurfaceId(videoSurfaceID);
+        scratch_viewport.SetSourceBufferIndex(GVR_BUFFER_INDEX_EXTERNAL_SURFACE);
+        scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
+        buffer_viewports.SetBufferViewport(eye,scratch_viewport);
+    }
+    //
     for(size_t eye=0;eye<2;eye++){
         recommended_buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
         //gvr::Rectf fov={45,45,45,45};
         //gvr::Rectf fov={33.15,33.15,33.15,33.15};
         //scratch_viewport.SetSourceFov(fov);
         scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
-        buffer_viewports.SetBufferViewport(eye,scratch_viewport);
+        buffer_viewports.SetBufferViewport(eye+2,scratch_viewport);
     }
 }
 
@@ -89,8 +102,6 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     gvr_api_->InitializeGl();
     std::vector<gvr::BufferSpec> specs;
     specs.push_back(gvr_api_->CreateBufferSpec());
-    specs.push_back(gvr_api_->CreateBufferSpec());
-
     framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     specs[0].SetSize(framebuffer_size);
     specs[0].SetColorFormat(GVR_COLOR_FORMAT_RGBA_8888);
@@ -104,7 +115,6 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
 
     mMatricesM.calculateMatrices(headset_fovY_full,framebuffer_size.width/2.0f/framebuffer_size.height);
     placeGLElements();
-
 }
 
 void GLRStereoDaydream::onSurfaceChanged(int width, int height) {
@@ -113,52 +123,35 @@ void GLRStereoDaydream::onSurfaceChanged(int width, int height) {
 }
 
 void GLRStereoDaydream::onDrawFrame() {
-
+    //Calculate & print fps
     mFPSCalculator.tick();
     LOGD("FPS: %f",mFPSCalculator.getCurrentFPS());
 
     mMatricesM.calculateNewHeadPoseIfNeeded(gvr_api_.get(), 16);
     Matrices& worldMatrices=mMatricesM.getWorldMatrices();
 
-    framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
-
-    //glViewport(0,0,framebuffer_size.width/2,framebuffer_size.height);
-    //gvr_bind_default_framebuffer(gvr_api_->GetContext());
-    //drawSimple(worldMatrices);
-    //LOGD("Draw");
-
     updateBufferViewports();
 
-
     gvr::Frame frame = swap_chain->AcquireFrame();
-    frame.BindBuffer(0);
+    frame.BindBuffer(0); //0 is the 0 from createSwapChain()
 
-    //gvr_frame_get_framebuffer_object()
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+    glClearColor(0.2f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+    //Video is handled by the async reprojection surface
     for(uint32_t eye=0;eye<2;eye++){
-        drawEye(eye,worldMatrices);
-        drawSimple(worldMatrices);
+        drawEyeOSD(eye, worldMatrices);
     }
     frame.Unbind();
     frame.Submit(buffer_viewports, worldMatrices.lastHeadPos);
-
-    /*gvr::Frame frame2 = swap_chain->AcquireFrame();
-    frame2.BindBuffer(0);
-    drawSimple(worldMatrices);
-    frame2.Unbind();
-    frame2.Submit(buffer_viewports, worldMatrices.lastHeadPos);*/
 
     GLHelper::checkGlError("GLRStereoDaydream::drawFrame");
 }
 
 
-void GLRStereoDaydream::drawEye(uint32_t eye,Matrices& worldMatrices) {
+void GLRStereoDaydream::drawEyeOSD(uint32_t eye, Matrices &worldMatrices) {
     buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
     const gvr::Rectf& rect = scratch_viewport.GetSourceUv();
     int left = static_cast<int>(rect.left * framebuffer_size.width);
@@ -166,40 +159,21 @@ void GLRStereoDaydream::drawEye(uint32_t eye,Matrices& worldMatrices) {
     int width = static_cast<int>((rect.right - rect.left) * framebuffer_size.width);
     int height = static_cast<int>((rect.top - rect.bottom) * framebuffer_size.height);
     glViewport(left, bottom, width, height);
-    //Matrices* worldMatrices=mMatricesM->getWorldMatrices();
-
-    //gvr::ClockTimePoint target_time = gvr::GvrApi::GetTimePointNow();
-    //target_time.monotonic_system_time_nanos+=10*1000*1000;
-    //glm::mat4x4 view=toGLM(gvr_api_->GetHeadSpaceFromStartSpaceRotation(target_time));
-
-    //gvr_distort_to_screen()
 
     glm::mat4x4 leftEye,rightEye,projection;
-
     leftEye=worldMatrices.leftEyeView;
     rightEye=worldMatrices.rightEyeView;
     projection=worldMatrices.projection;
 
     if(eye==0){
-        mVideoRenderer->punchHole(leftEye,projection);
+        //mVideoRenderer->punchHole(leftEye,projection);
         mOSDRenderer->updateAndDrawElementsGL(leftEye,projection);
     }else{
-        mVideoRenderer->punchHole(rightEye,projection);
+        //mVideoRenderer->punchHole(rightEye,projection);
         mOSDRenderer->drawElementsGL(rightEye,projection);
     }
-}
-
-void GLRStereoDaydream::drawSimple(Matrices& worldMatrices) {
-    glm::mat4x4 leftEye,rightEye,projection;
-    leftEye=worldMatrices.leftEyeView;
-    rightEye=worldMatrices.rightEyeView;
-    projection=worldMatrices.projection;
-
-    mVideoRenderer->punchHole2(leftEye,projection);
-
 
 }
-
 
 
 
