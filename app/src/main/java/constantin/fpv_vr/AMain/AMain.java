@@ -1,6 +1,7 @@
 package constantin.fpv_vr.AMain;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -112,7 +113,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
          */
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:
-                if(video360()){
+                if(video360(this)){
                     Intent i=new Intent().setClass(this, AMono360.class);
                     i.putExtra(AMono360.EXTRA_RENDER_OSD,false);
                     startActivity(i);
@@ -121,7 +122,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 }
                 break;
             case R.id.b_startMonoVideoOSD:
-                if(video360()){
+                if(video360(this)){
                     Intent i=new Intent().setClass(this, AMono360.class);
                     i.putExtra(AMono360.EXTRA_RENDER_OSD,true);
                     startActivity(i);
@@ -154,9 +155,9 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private boolean video360(){
-        final SharedPreferences pref_video=getSharedPreferences("pref_video",MODE_PRIVATE);
-        return pref_video.getInt(getString(R.string.VS_VIDEO_VIEW_TYPE),0)==2;
+    public static boolean video360(final Context c){
+        final SharedPreferences pref_video=c.getSharedPreferences("pref_video",MODE_PRIVATE);
+        return pref_video.getInt(c.getString(R.string.VS_VIDEO_VIEW_TYPE),0)==2;
     }
 
 

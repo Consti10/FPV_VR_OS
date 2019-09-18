@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import constantin.fpv_vr.AMain.AMain;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.ASettingsTelemetry;
@@ -177,8 +178,11 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 break;
             case CONNECTION_TYPE_TestFile:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_ASSETS);
-                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
-                pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
+                if(AMain.video360(context)){
+                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
+                }else{
+                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
+                }
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_ASSETS);
                 break;
             case CONNECTION_TYPE_RTSP:
