@@ -2,6 +2,7 @@ package constantin.fpv_vr.AMain;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -111,12 +112,24 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
          */
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:
-                startActivity(new Intent().setClass(this, AMonoVid.class));
+                if(video360()){
+                    Intent i=new Intent().setClass(this, AMono360.class);
+                    i.putExtra(AMono360.EXTRA_RENDER_OSD,false);
+                    startActivity(i);
+                }else{
+                    startActivity(new Intent().setClass(this, AMonoVid.class));
+                }
                 break;
             case R.id.b_startMonoVideoOSD:
-                startActivity(new Intent().setClass(this, AMonoVidOSD.class));
+                if(video360()){
+                    Intent i=new Intent().setClass(this, AMono360.class);
+                    i.putExtra(AMono360.EXTRA_RENDER_OSD,true);
+                    startActivity(i);
+                }else{
+                    startActivity(new Intent().setClass(this, AMonoVidOSD.class));
+                }
                 break;
-            case R.id.b_startStereo:
+            case R.id.b_startStereo: //360 not yet supported
                 Intent mStereoI = new Intent();
                 //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
                 //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
@@ -138,10 +151,12 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
             case R.id.b_VRSettings:
                 startActivity(new Intent().setClass(this, ASettingsVR.class));
                 break;
-            case R.id.b_startMonoVideoOSD360:
-                startActivity(new Intent().setClass(this, AMono360.class));
-                break;
         }
+    }
+
+    private boolean video360(){
+        final SharedPreferences pref_video=getSharedPreferences("pref_video",MODE_PRIVATE);
+        return pref_video.getInt(getString(R.string.VS_VIDEO_VIEW_TYPE),0)==2;
     }
 
 

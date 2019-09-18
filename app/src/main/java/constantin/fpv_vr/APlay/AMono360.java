@@ -11,7 +11,6 @@ import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
 
-import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.GLRenderer.GLRMono360;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingX.MyEGLConfigChooser;
@@ -29,13 +28,13 @@ public class AMono360 extends AppCompatActivity {
     private static final boolean useGvrLayout=true;
     private GvrApi gvrApi;
     private GvrLayout gvrLayout;
-    public static final String EXTRA_SHOW_OSD="EXTRA_SHOW_OSD"; //boolean weather OSD should be enabled
+    public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather OSD should be enabled
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
-        final boolean showOSD=getIntent().getBooleanExtra(EXTRA_SHOW_OSD,true);
+        final boolean renderOSD=getIntent().getBooleanExtra(EXTRA_RENDER_OSD,true);
         PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         mGLView = new GLSurfaceView(this);
         mGLView.setEGLContextClientVersion(2);
@@ -54,7 +53,7 @@ public class AMono360 extends AppCompatActivity {
             gvrApi.recenterTracking();
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,showOSD);
+        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,renderOSD);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);

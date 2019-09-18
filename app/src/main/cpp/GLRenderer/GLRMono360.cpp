@@ -57,7 +57,7 @@ extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver,jlong native_gvr_api,jboolean renderOSD) {
-    return jptr(new GLRMono360(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)false));
+    return jptr(new GLRMono360(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)renderOSD));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {

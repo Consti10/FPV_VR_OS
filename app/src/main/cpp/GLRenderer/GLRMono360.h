@@ -7,7 +7,6 @@
 #ifndef FPV_VR_GLRENDERERMONO360_H
 #define FPV_VR_GLRENDERERMONO360_H
 
-
 #include "GLRMono.h"
 #include <Video/VideoRenderer.h>
 
