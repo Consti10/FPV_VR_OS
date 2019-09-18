@@ -108,6 +108,7 @@ add_library( GLRMono SHARED
 target_link_libraries( GLRMono ${GLR_SOME_DEPENDENCIES} )
 
 add_library( GLRMono360 SHARED
+        src/main/cpp/GLRenderer/GLRMono.cpp
         src/main/cpp/GLRenderer/GLRMono360.cpp )
 target_link_libraries( GLRMono360 ${GLR_SOME_DEPENDENCIES} )
 

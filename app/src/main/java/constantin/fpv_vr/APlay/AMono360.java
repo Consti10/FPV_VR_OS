@@ -19,6 +19,7 @@ import constantin.renderingX.MyEGLWindowSurfaceFactory;
 import constantin.renderingX.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
+//The 360° video needs to be transformed by OpenGL regardless weather the user wants to see the OSD or not
 public class AMono360 extends AppCompatActivity {
     private Context mContext;
     private GLSurfaceView mGLView;
@@ -28,11 +29,13 @@ public class AMono360 extends AppCompatActivity {
     private static final boolean useGvrLayout=true;
     private GvrApi gvrApi;
     private GvrLayout gvrLayout;
+    public static final String EXTRA_SHOW_OSD="EXTRA_SHOW_OSD"; //boolean weather OSD should be enabled
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
+        final boolean showOSD=getIntent().getBooleanExtra(EXTRA_SHOW_OSD,true);
         PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         mGLView = new GLSurfaceView(this);
         mGLView.setEGLContextClientVersion(2);
@@ -51,7 +54,7 @@ public class AMono360 extends AppCompatActivity {
             gvrApi.recenterTracking();
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi);
+        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,showOSD);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);

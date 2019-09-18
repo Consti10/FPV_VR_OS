@@ -4,51 +4,28 @@
  * This is much more efficient than rendering via OpenGL texture
  ******************************************************/
 
-#ifndef FPV_VR_GLRENDERERMONO_H
-#define FPV_VR_GLRENDERERMONO_H
+#ifndef FPV_VR_GLRENDERERMONO360_H
+#define FPV_VR_GLRENDERERMONO360_H
 
 
-#include <EGL/egl.h>
-#include <GLES2/gl2.h>
-#include <jni.h>
-
-#include <memory>
-#include <string>
-#include <thread>
-#include <vector>
-#include <GLProgramVC.h>
-#include <GLProgramText.h>
-#include <GLProgramSpherical.cpp>
-#include <FPSCalculator.h>
-#include <MatricesManager.h>
-#include <OSD/OSDRenderer.h>
-#include <IVideoFormatChanged.hpp>
-#include <Chronometer.h>
+#include "GLRMono.h"
 #include <Video/VideoRenderer.h>
 
-#include "IGLRenderer.h"
-
-
-class GLRMono360 : public IGLRenderer{
+class GLRMono360 : private GLRMono{
 public:
-    explicit GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context);
+    explicit GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool renderOSD);
+public:
+    void onSurfaceCreated360(JNIEnv * env,jobject obj,jint videoTexture);
+    void onSurfaceChanged360(int width, int height);
+    //Draw the 360° video, optionally also the OSD as overlay
+    void onDrawFrame360();
 private:
-    void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture) override;
-    void onSurfaceChanged(int width, int height)override;
-    //Draw the transparent OSD scene.
-    void onDrawFrame()override ;
-private:
-    TelemetryReceiver& mTelemetryReceiver;
-    MatricesManager mMatricesM;
-    Chronometer cpuFrameTime;
-    FPSCalculator mFPSCalculator;
-    const SettingsVR mSettingsVR;
-    std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
-    std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
+    const int renderOSD;
     std::unique_ptr<GLProgramSpherical> mGLProgramSpherical=nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
+    Chronometer cpuFrameTimeVidOSD;
 };
 
 
-#endif //FPV_VR_GLRENDERERMONO_H
+#endif //FPV_VR_GLRENDERERMONO360_H

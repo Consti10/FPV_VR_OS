@@ -24,7 +24,7 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     static {
         System.loadLibrary("GLRMono360");
     }
-    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean renderOSD);
     private native void nativeDelete(long glRendererMonoP);
     private native void nativeOnSurfaceCreated(long glRendererP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height);
@@ -35,9 +35,9 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     private SurfaceTexture mSurfaceTexture;
     private MVideoPlayer mVideoPlayer;
 
-    public GLRMono360(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi){
+    public GLRMono360(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi,final boolean renderOSD){
         mContext=context;
-        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext());
+        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),renderOSD);
     }
 
     @Override
