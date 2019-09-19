@@ -63,7 +63,8 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     ViewPortW=width/2;
     ViewPortH=height;
     placeGLElements();
-    mMatricesM.calculateMatrices(MAX_FOV_USABLE_FOR_VDDC,((float) ViewPortW)/((float)ViewPortH));
+    mMatricesM.calculateProjectionAndDefaultView(MAX_FOV_USABLE_FOR_VDDC,
+                                                 ((float) ViewPortW) / ((float) ViewPortH));
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     //glDisable(GL_DEPTH_TEST);

@@ -18,6 +18,7 @@ public:
     void onSurfaceChanged360(int width, int height);
     //Draw the 360° video, optionally also the OSD as overlay
     void onDrawFrame360();
+    void setHomeOrientation();
 private:
     const int renderOSD;
     std::unique_ptr<GLProgramSpherical> mGLProgramSpherical=nullptr;

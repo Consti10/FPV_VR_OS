@@ -113,7 +113,8 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     mVideoRenderer=std::make_unique<VideoRenderer>(mBasicGLPrograms->vc);
 
-    mMatricesM.calculateMatrices(headset_fovY_full,framebuffer_size.width/2.0f/framebuffer_size.height);
+    mMatricesM.calculateProjectionAndDefaultView(headset_fovY_full, framebuffer_size.width / 2.0f /
+                                                                    framebuffer_size.height);
     placeGLElements();
 }
 

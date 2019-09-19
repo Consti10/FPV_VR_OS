@@ -19,11 +19,11 @@
 
 
 struct Matrices{
-    //the projection matrix. Same for left and right eye. Should be re calculated in each onSurfaceChanged via 'calculateMatrices()'
+    //the projection matrix. Same for left and right eye. Should be re calculated in each onSurfaceChanged via 'calculateProjectionAndDefaultView()'
     glm::mat4x4 projection;
     //the view matrix, without any IPD
     glm::mat4x4 eyeView;
-    //simple view matrices, without head tracking, but IPD. Also recalculated in onSurfaceHanged via 'calculateMatrices()'
+    //simple view matrices, without head tracking, but IPD. Also recalculated in onSurfaceHanged via 'calculateProjectionAndDefaultView()'
     //depends on the IPD set on initialisation
     glm::mat4x4 leftEyeView;
     glm::mat4x4 rightEyeView;
@@ -35,7 +35,7 @@ struct Matrices{
 
     gvr::Mat4f lastHeadPos;
     //360
-    glm::mat4x4 monoViewTracked;
+    glm::mat4x4 monoViewTracked360;
     // The view matrix the defines the forward orientation
     // This should be added into the rotation matrix
     glm::mat4x4 monoForward360;
@@ -49,11 +49,13 @@ public:
     static constexpr float MIN_Z_DISTANCE=1.0f;
     static constexpr int MODE_NONE=0; //No head tracking
     static constexpr int MODE_1PP=1; //first person perspective
-    void calculateMatrices(float fov,float ratio);
+    void calculateProjectionAndDefaultView(float fov, float ratio);
+    void calculateProjectionAndDefaultView360(float fov360Video,float ratio);
     void calculateNewHeadPoseIfNeeded(gvr::GvrApi *gvr_api, int predictMS);
     void calculateNewHeadPose360(gvr::GvrApi* gvr_api,const int predictMS);
     Matrices& getWorldMatrices(){ return worldMatrices;};
     const SettingsVR& settingsVR;
+    void setHomeOrientation360(gvr::GvrApi *gvr_api);
 private:
     Matrices worldMatrices;
 };

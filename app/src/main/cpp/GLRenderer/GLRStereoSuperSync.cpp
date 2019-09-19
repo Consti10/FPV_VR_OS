@@ -24,7 +24,7 @@ GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,Teleme
     std::function<void(JNIEnv *env2, bool whichEye, int64_t offsetNS)> f = [this](JNIEnv *env2, bool whichEye, int64_t offsetNS) {
         this->renderNewEyeCallback(env2,whichEye,offsetNS);
     };
-    mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,f, nullptr);
+    mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,true,f, nullptr);
 }
 
 void GLRStereoSuperSync::placeGLElements() {
@@ -61,7 +61,8 @@ void GLRStereoSuperSync::onSurfaceChanged(int width, int height) {
     ViewPortW=width/2;
     ViewPortH=height;
     placeGLElements();
-    mMatricesM.calculateMatrices(MAX_FOV_USABLE_FOR_VDDC,((float) ViewPortW)/((float)ViewPortH));
+    mMatricesM.calculateProjectionAndDefaultView(MAX_FOV_USABLE_FOR_VDDC,
+                                                 ((float) ViewPortW) / ((float) ViewPortH));
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f,0,0,0.0f);

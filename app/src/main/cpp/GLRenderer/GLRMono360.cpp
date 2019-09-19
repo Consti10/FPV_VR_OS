@@ -23,6 +23,8 @@ void GLRMono360::onSurfaceCreated360(JNIEnv* env,jobject androidContext,jint vid
 
 void GLRMono360::onSurfaceChanged360(int width, int height) {
     GLRMono::onSurfaceChanged(width,height);
+    const float displayRatio=(float) width/(float)height;
+    mMatricesM.calculateProjectionAndDefaultView360(40.0f,displayRatio);
     cpuFrameTimeVidOSD.reset();
 }
 
@@ -32,12 +34,16 @@ void GLRMono360::onDrawFrame360() {
     cpuFrameTimeVidOSD.start();
     mMatricesM.calculateNewHeadPose360(gvr_api_.get(),0);
     Matrices& worldMatrices=mMatricesM.getWorldMatrices();
-    mVideoRenderer->drawVideoCanvas360(worldMatrices.monoViewTracked,worldMatrices.projection360);
+    mVideoRenderer->drawVideoCanvas360(worldMatrices.monoViewTracked360,worldMatrices.projection360);
     if(renderOSD){
        GLRMono::onDrawFrame(false);
     }
     cpuFrameTimeVidOSD.stop();
     cpuFrameTimeVidOSD.printAvg(5000);
+}
+
+void GLRMono360::setHomeOrientation() {
+    mMatricesM.setHomeOrientation360(gvr_api_.get());
 }
 
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
@@ -75,5 +81,8 @@ JNI_METHOD(void, nativeOnDrawFrame)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {
     native(glRendererMono)->onDrawFrame360();
 }
-
+JNI_METHOD(void, nativeSetHomeOrientation)
+(JNIEnv *env, jobject obj, jlong glRendererMono) {
+    native(glRendererMono)->setHomeOrientation();
+}
 }

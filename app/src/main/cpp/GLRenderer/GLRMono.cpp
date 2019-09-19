@@ -25,7 +25,7 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext) {
 
 void GLRMono::onSurfaceChanged(int width, int height) {
     float displayRatio=(float) width/(float)height;
-    mMatricesM.calculateMatrices(45.0f,displayRatio);
+    mMatricesM.calculateProjectionAndDefaultView(45.0f, displayRatio);
     float videoZ=-10;
     float videoH=glm::tan(glm::radians(45.0f)*0.5f)*10*2;
     float videoW=videoH*displayRatio;
