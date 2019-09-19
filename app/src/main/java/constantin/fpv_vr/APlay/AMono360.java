@@ -28,7 +28,8 @@ public class AMono360 extends AppCompatActivity {
     private GLSurfaceView mGLView;
     private GLRMono360 mGLRenderer;
     private TelemetryReceiver telemetryReceiver;
-    //either create gvr api directly or use gvr layout as wrapper - first one introduces bug, e.g. "wrong 360° video orientation"
+    //either create gvr api directly or use gvr layout as wrapper
+    //First one caused bugs when not forwarding onResume/Pause to the DisplaySynchronizer, see https://github.com/googlevr/gvr-android-sdk/issues/556
     private static final boolean useGvrLayout=true;
     private GvrApi gvrApi;
     private GvrLayout gvrLayout;
@@ -52,6 +53,7 @@ public class AMono360 extends AppCompatActivity {
             gvrLayout.setStereoModeEnabled(false);
             gvrLayout.setPresentationView(mGLView);
         }else{
+            //gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
             displaySynchronizer=new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay());
             gvrApi = new GvrApi(this, displaySynchronizer);
             gvrApi.reconnectSensors();
@@ -132,6 +134,7 @@ public class AMono360 extends AppCompatActivity {
             gvrLayout.shutdown();
         }else{
             gvrApi.shutdown();
+            displaySynchronizer.shutdown();
         }
         mGLView=null;
         mGLRenderer =null;

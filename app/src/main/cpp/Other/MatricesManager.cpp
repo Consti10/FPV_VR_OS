@@ -67,16 +67,11 @@ void MatricesManager::calculateNewHeadPose360(gvr::GvrApi *gvr_api, const int pr
     worldMatrices.monoViewTracked360=toGLM(tmpHeadPose);
 }
 
-glm::mat4x4 startToHeadRotation(gvr::GvrApi *gvr_api) {
-    gvr::Mat4f mat = gvr_api->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow()); //we only want rotation, screw the mirage solo
-    glm::mat4x4 tmat=glm::make_mat4(reinterpret_cast<const float*>(&mat.m));
-    return glm::toMat4(glm::quat_cast(tmat));
-}
-
 void MatricesManager::setHomeOrientation360(gvr::GvrApi *gvr_api) {
     // Get the current start->head transformation
-    worldMatrices.monoForward360=worldMatrices.monoForward360*startToHeadRotation(gvr_api);
-    // Reset yaw back to start
-    //gvr_api->RecenterTracking();
+    gvr::Mat4f tmpHeadPose=gvr_api->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
+    gvr_api->ApplyNeckModel(tmpHeadPose,1);
+    glm::mat4 headView=toGLM(tmpHeadPose);
+    worldMatrices.monoForward360*=headView;
 }
 

@@ -15,15 +15,12 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <sstream>
 
-//convert between gvr / glm
-//really messy !
-//TODO: Add tests usw
 
-//gvr matrices are stored in row major order
+//1)gvr matrices are stored in row major order
 //See gvr_types.h:
 /// A floating point 4x4 matrix stored in row-major form. It needs to be
 /// transposed before being used with OpenGL.
-//glm matrices are stored in column major order (glm manual,section 4.11), as well as OpenGL matrices
+//2)glm matrices are stored in column major order (glm manual,section 4.11), as well as OpenGL matrices
 
 static glm::mat4 toGLM(const gvr::Mat4f &gvrMatrix){
     glm::mat4x4 ret=glm::make_mat4(reinterpret_cast<const float*>(&gvrMatrix.m));
