@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.google.vr.cardboard.DisplaySynchronizer;
@@ -12,6 +15,7 @@ import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
 
 import constantin.fpv_vr.GLRenderer.GLRMono360;
+import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingX.MyEGLConfigChooser;
 import constantin.renderingX.MyEGLWindowSurfaceFactory;
@@ -29,6 +33,7 @@ public class AMono360 extends AppCompatActivity {
     private GvrApi gvrApi;
     private GvrLayout gvrLayout;
     public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather OSD should be enabled
+    private DisplaySynchronizer displaySynchronizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,8 @@ public class AMono360 extends AppCompatActivity {
             gvrLayout.setStereoModeEnabled(false);
             gvrLayout.setPresentationView(mGLView);
         }else{
-            gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
+            displaySynchronizer=new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay());
+            gvrApi = new GvrApi(this, displaySynchronizer);
             gvrApi.reconnectSensors();
             gvrApi.clearError();
             gvrApi.recenterTracking();
@@ -57,8 +63,10 @@ public class AMono360 extends AppCompatActivity {
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);
+            registerForContextMenu(gvrLayout);
         }else{
             setContentView(mGLView);
+            registerForContextMenu(mGLView);
         }
     }
 
@@ -75,6 +83,7 @@ public class AMono360 extends AppCompatActivity {
             gvrLayout.onResume();
         }else{
             gvrApi.resumeTracking();
+            displaySynchronizer.onResume();
         }
     }
 
@@ -88,6 +97,31 @@ public class AMono360 extends AppCompatActivity {
             gvrLayout.onPause();
         }else{
             gvrApi.pauseTracking();
+            displaySynchronizer.onPause();
+
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Options");
+        getMenuInflater().inflate(R.menu.video_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_set_home:
+                mGLRenderer.setHomeOrientation();
+                return true;
+            case R.id.option_goto_home:
+                //mGLRenderer14Mono360.goToHomeOrientation();
+                GvrApi api=useGvrLayout ? gvrLayout.getGvrApi() : gvrApi;
+                api.recenterTracking();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 

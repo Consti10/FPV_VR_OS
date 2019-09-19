@@ -134,7 +134,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 Intent mStereoI = new Intent();
                 //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
                 //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
-                if (SJ.DEV_USE_GVR_VIDEO_TEXTURE(this) ) {
+                if (SJ.DEV_USE_GVR_VIDEO_TEXTURE(this)) {
                     mStereoI.setClass(this, AStereoDaydream.class);
                 } else if (SJ.SuperSync(this)) {
                     mStereoI.setClass(this, AStereoSuperSYNC.class);

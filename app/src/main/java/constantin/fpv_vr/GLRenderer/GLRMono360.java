@@ -29,6 +29,7 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     private native void nativeOnSurfaceCreated(long glRendererP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height);
     private native void nativeOnDrawFrame(long glRendererMonoP);
+    private native void nativeSetHomeOrientation(long glRendererMonoP);
 
     private final long nativeGLRendererMono;
     private final Context mContext;
@@ -97,5 +98,9 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     @Override
     public void onDecodingInfoChanged(DecodingInfo decodingInfo) {
 
+    }
+
+    public void setHomeOrientation(){
+        nativeSetHomeOrientation(nativeGLRendererMono);
     }
 }

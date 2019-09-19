@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="HardcodedText">
+  <item
+      android:id="@+id/option_set_home"
+      android:title="Set Home Orientation"
+      />
+  <item
+      android:id="@+id/option_goto_home"
+      android:title="Go To Home Orientation" />
+
+</menu>
