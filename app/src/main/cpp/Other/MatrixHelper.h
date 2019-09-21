@@ -7,12 +7,7 @@
 
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/ext.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
+#include "include_glm.h"
 #include <sstream>
 
 
@@ -23,7 +18,7 @@
 //2)glm matrices are stored in column major order (glm manual,section 4.11), as well as OpenGL matrices
 
 static glm::mat4 toGLM(const gvr::Mat4f &gvrMatrix){
-    glm::mat4x4 ret=glm::make_mat4(reinterpret_cast<const float*>(&gvrMatrix.m));
+    glm::mat4 ret=glm::make_mat4(reinterpret_cast<const float*>(&gvrMatrix.m));
     ret=glm::transpose(ret);
     return ret;
 }
@@ -35,7 +30,7 @@ static gvr::Mat4f toGVR(const glm::mat4 &glmMatrix){
     return ret;
 }
 
-static gvr::Mat4f MatrixMul(const glm::mat4x4 &m1, const gvr::Mat4f &m2){
+static gvr::Mat4f MatrixMul(const glm::mat4 &m1, const gvr::Mat4f &m2){
     glm::mat4 m2AsGLM=toGLM(m2);
     return toGVR(m1*m2AsGLM);
 }
@@ -84,11 +79,11 @@ static glm::mat4 removeRotationAroundSpecificAxes(const glm::mat4 mat,const bool
         euler.z=0;
     }
     glm::quat quat=glm::quat(euler);
-    glm::mat4x4 RotationMatrix = glm::toMat4(quat);
+    glm::mat4 RotationMatrix = glm::toMat4(quat);
     return mat*RotationMatrix;
 }
 
-static const std::string toString(const glm::mat4x4 matrix){
+static const std::string toString(const glm::mat4 matrix){
     std::stringstream ss;
     ss<<"\n";
     for (int i = 0; i < 4; ++i) {

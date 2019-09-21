@@ -30,8 +30,9 @@ void MatricesManager::calculateProjectionAndDefaultView(float fov, float ratio) 
 
 void MatricesManager::calculateProjectionAndDefaultView360(float fov360Video,float ratio) {
     worldMatrices.projection360=glm::perspective(glm::radians(fov360Video), ratio, 0.1f, MAX_Z_DISTANCE+5);
-    worldMatrices.monoViewTracked360=glm::mat4();
-    worldMatrices.monoForward360=glm::mat4();
+    worldMatrices.monoViewTracked360=glm::mat4(1.0f);
+    worldMatrices.monoForward360=glm::mat4(1.0f);
+    //worldMatrices.monoForward360 = glm::rotate(glm::mat4(1.0f),glm::radians(90.0f), glm::vec3(0,1,0));
 }
 
 void MatricesManager::calculateNewHeadPoseIfNeeded(gvr::GvrApi *gvr_api, const int predictMS) {
@@ -63,18 +64,18 @@ void MatricesManager::calculateNewHeadPose360(gvr::GvrApi *gvr_api, const int pr
     gvr::ClockTimePoint target_time = gvr::GvrApi::GetTimePointNow();
     target_time.monotonic_system_time_nanos+=predictMS*NANO_TO_MS;
     gvr::Mat4f tmpHeadPose = gvr_api->GetHeadSpaceFromStartSpaceRotation(target_time); //we only want rotation, screw the mirage solo
-    tmpHeadPose = MatrixMul(worldMatrices.monoForward360, tmpHeadPose);
-    //gvr_api->ApplyNeckModel(tmpHeadPose,1);
-    worldMatrices.monoViewTracked360=toGLM(tmpHeadPose);
+    gvr_api->ApplyNeckModel(tmpHeadPose,1);
+    const glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
+    worldMatrices.monoViewTracked360=tmpHeadPoseGLM*worldMatrices.monoForward360; //multiplication order is important
 }
 
 void MatricesManager::setHomeOrientation360(gvr::GvrApi *gvr_api) {
-    // Get the current start->head transformation
     gvr::Mat4f tmpHeadPose=gvr_api->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
-    //gvr_api->ApplyNeckModel(tmpHeadPose,1); We do not want to apply the neck model here,else the world shifts
+    gvr_api->ApplyNeckModel(tmpHeadPose,1);
     glm::mat4 headView=toGLM(tmpHeadPose);
-    headView=glm::toMat4(glm::quat_cast(headView));
+    //headView=glm::toMat4(glm::quat_cast(headView));
     worldMatrices.monoForward360=worldMatrices.monoForward360*headView;
+    //Reset tracking resets the rotation around the y axis, leaving everything else untouched
     gvr_api->RecenterTracking();
 }
 
@@ -83,4 +84,3 @@ void MatricesManager::setHomeOrientation360(gvr::GvrApi *gvr_api) {
    }else{
        LOGD("FAIL");
    }*/
-//Reset tracking resets the rotation around the y axis, leaving everything else untouched
