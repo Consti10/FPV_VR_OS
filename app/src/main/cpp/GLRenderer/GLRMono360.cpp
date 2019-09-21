@@ -21,10 +21,12 @@ void GLRMono360::onSurfaceCreated360(JNIEnv* env,jobject androidContext,jint vid
     mVideoRenderer=std::make_unique<VideoRenderer>(mBasicGLPrograms->vc, nullptr,mSettingsVR.DEV_3D_VIDEO,mGLProgramSpherical.get());
 }
 
-void GLRMono360::onSurfaceChanged360(int width, int height) {
+void GLRMono360::onSurfaceChanged360(int width, int height,float video360FOV) {
+    screenW=width;
+    screenH=height;
     GLRMono::onSurfaceChanged(width,height);
     const float displayRatio=(float) width/(float)height;
-    mMatricesM.calculateProjectionAndDefaultView360(40.0f,displayRatio);
+    mMatricesM.calculateProjectionAndDefaultView360(video360FOV,displayRatio);
     cpuFrameTimeVidOSD.reset();
 }
 
@@ -45,6 +47,7 @@ void GLRMono360::onDrawFrame360() {
 void GLRMono360::setHomeOrientation() {
     mMatricesM.setHomeOrientation360(gvr_api_.get());
 }
+
 
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 
@@ -74,8 +77,8 @@ JNI_METHOD(void, nativeOnSurfaceCreated)
     native(glRendererMono)->onSurfaceCreated360(env,androidContext,videoTexture);
 }
 JNI_METHOD(void, nativeOnSurfaceChanged)
-(JNIEnv *env, jobject obj, jlong glRendererMono,jint w,jint h) {
-    native(glRendererMono)->onSurfaceChanged360(w, h);
+(JNIEnv *env, jobject obj, jlong glRendererMono,jint w,jint h,jfloat video360FOV) {
+    native(glRendererMono)->onSurfaceChanged360(w, h,video360FOV);
 }
 JNI_METHOD(void, nativeOnDrawFrame)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {

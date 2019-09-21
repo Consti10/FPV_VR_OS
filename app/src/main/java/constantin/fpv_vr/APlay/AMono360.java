@@ -108,7 +108,7 @@ public class AMono360 extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Options");
-        getMenuInflater().inflate(R.menu.video_context_menu, menu);
+        getMenuInflater().inflate(R.menu.video360_context_menu, menu);
     }
 
     @Override

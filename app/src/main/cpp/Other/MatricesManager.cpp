@@ -2,12 +2,13 @@
 // Created by Constantin on 12.12.2017.
 //
 
+#include <android/log.h>
 #include "MatricesManager.h"
 #include "MatrixHelper.h"
 #include "SettingsVR.h"
 
-//#define TAG "HeadTrackerExtended"
-//#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
+constexpr auto TAG="HeadTrackerExtended";
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 constexpr auto NANO_TO_MS=1000*1000;
 
 MatricesManager::MatricesManager(const SettingsVR& settingsVR):
@@ -63,15 +64,23 @@ void MatricesManager::calculateNewHeadPose360(gvr::GvrApi *gvr_api, const int pr
     target_time.monotonic_system_time_nanos+=predictMS*NANO_TO_MS;
     gvr::Mat4f tmpHeadPose = gvr_api->GetHeadSpaceFromStartSpaceRotation(target_time); //we only want rotation, screw the mirage solo
     tmpHeadPose = MatrixMul(worldMatrices.monoForward360, tmpHeadPose);
-    gvr_api->ApplyNeckModel(tmpHeadPose,1);
+    //gvr_api->ApplyNeckModel(tmpHeadPose,1);
     worldMatrices.monoViewTracked360=toGLM(tmpHeadPose);
 }
 
 void MatricesManager::setHomeOrientation360(gvr::GvrApi *gvr_api) {
     // Get the current start->head transformation
     gvr::Mat4f tmpHeadPose=gvr_api->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
-    gvr_api->ApplyNeckModel(tmpHeadPose,1);
+    //gvr_api->ApplyNeckModel(tmpHeadPose,1); We do not want to apply the neck model here,else the world shifts
     glm::mat4 headView=toGLM(tmpHeadPose);
-    worldMatrices.monoForward360*=headView;
+    headView=glm::toMat4(glm::quat_cast(headView));
+    worldMatrices.monoForward360=worldMatrices.monoForward360*headView;
+    gvr_api->RecenterTracking();
 }
 
+/*if(TEST()){
+       LOGD("SUCCESS");
+   }else{
+       LOGD("FAIL");
+   }*/
+//Reset tracking resets the rotation around the y axis, leaving everything else untouched

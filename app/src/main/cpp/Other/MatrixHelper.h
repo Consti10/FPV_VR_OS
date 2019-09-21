@@ -40,6 +40,30 @@ static gvr::Mat4f MatrixMul(const glm::mat4x4 &m1, const gvr::Mat4f &m2){
     return toGVR(m1*m2AsGLM);
 }
 
+
+static bool TEST(){
+    float aaa[16];
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            int idx=i*4+j;
+            aaa[idx]=idx;
+        }
+    }
+    {
+        glm::mat4 glmMat=glm::make_mat4x4(aaa);
+        gvr::Mat4f gvrMat=toGVR(glmMat);
+        glm::mat4 glmMat2=toGLM(gvrMat);
+        if(glmMat != glmMat2) {
+            return false;
+        }
+    }
+    glm::mat4 glmMat=glm::make_mat4x4(aaa);
+    glm::mat4 glmMat2=glm::make_mat4x4(aaa);
+    glm::mat4 multiplyGLM=glmMat*glmMat2;
+    glm::mat4 multiplyGVR=toGLM(MatrixMul(glmMat,toGVR(glmMat2)));
+    return multiplyGLM==multiplyGVR;
+}
+
 //remove rotation around specific axes, but leaves
 //all other axes & translations intact
 //We can lock head tracking on specific axises. Therefore, we first calculate the inverse quaternion from the headView (rotation) matrix.

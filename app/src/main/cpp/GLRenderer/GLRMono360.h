@@ -15,12 +15,13 @@ public:
     explicit GLRMono360(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool renderOSD);
 public:
     void onSurfaceCreated360(JNIEnv * env,jobject obj,jint videoTexture);
-    void onSurfaceChanged360(int width, int height);
+    void onSurfaceChanged360(int width, int height,float video360FOV);
     //Draw the 360° video, optionally also the OSD as overlay
     void onDrawFrame360();
     void setHomeOrientation();
 private:
     const int renderOSD;
+    int screenW,screenH;
     std::unique_ptr<GLProgramSpherical> mGLProgramSpherical=nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;

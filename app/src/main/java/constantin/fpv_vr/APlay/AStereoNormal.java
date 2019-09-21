@@ -9,6 +9,10 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.google.vr.ndk.base.GvrLayout;
@@ -16,6 +20,7 @@ import com.google.vr.ndk.base.GvrUiLayout;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.GLRenderer.GLRStereoNormal;
+import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;
 import constantin.renderingX.MyEGLConfigChooser;
@@ -65,6 +70,8 @@ public class AStereoNormal extends AppCompatActivity {
         mGvrLayout.setPresentationView(mGLViewStereo);
         setContentView(mGvrLayout);
         airHeadTrackingSender=new AirHeadTrackingSender(this,mGvrLayout.getGvrApi());
+
+        registerForContextMenu(mGvrLayout);
     }
 
 
@@ -104,6 +111,24 @@ public class AStereoNormal extends AppCompatActivity {
         mGLRStereoNormal=null;
         airHeadTrackingSender=null;
         telemetryReceiver.delete();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Options");
+        getMenuInflater().inflate(R.menu.videovr_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_reset_tracking:
+               mGvrLayout.getGvrApi().recenterTracking();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 

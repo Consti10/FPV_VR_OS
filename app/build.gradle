@@ -56,7 +56,7 @@ dependencies {
     implementation project(path: ':preferences')
 
     implementation project(':VideoCore')
-    //implementation 'com.github.Consti10:LiveVideo10ms:v1.2'
+    //implementation 'com.github.Consti10:LiveVideo10ms:v1.3'
     implementation project(':TelemetryCore')
     implementation project(':RenderingXCore')
 

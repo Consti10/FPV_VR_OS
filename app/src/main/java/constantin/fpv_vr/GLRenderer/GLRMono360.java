@@ -12,6 +12,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.MVideoPlayer;
+import constantin.fpv_vr.R;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
@@ -27,7 +28,7 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean renderOSD);
     private native void nativeDelete(long glRendererMonoP);
     private native void nativeOnSurfaceCreated(long glRendererP,int videoTexture,Context androidContext);
-    private native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height);
+    private native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height,float video360FOV);
     private native void nativeOnDrawFrame(long glRendererMonoP);
     private native void nativeSetHomeOrientation(long glRendererMonoP);
 
@@ -35,9 +36,11 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     private final Context mContext;
     private SurfaceTexture mSurfaceTexture;
     private MVideoPlayer mVideoPlayer;
+    private final TelemetryReceiver telemetryReceiver;
 
     public GLRMono360(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi,final boolean renderOSD){
         mContext=context;
+        this.telemetryReceiver=telemetryReceiver;
         nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),renderOSD);
     }
 
@@ -52,7 +55,8 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        nativeOnSurfaceChanged(nativeGLRendererMono,width,height);
+        final float video360FOV=mContext.getSharedPreferences("pref_video",Context.MODE_PRIVATE).getFloat(mContext.getString(R.string.VS_360_VIDEO_FOV),50);
+        nativeOnSurfaceChanged(nativeGLRendererMono,width,height,video360FOV);
         //MyEGLConfigChooser.setEglSurfaceAttrib(EGL14.EGL_RENDER_BUFFER,EGL14.EGL_SINGLE_BUFFER);
     }
 
@@ -97,7 +101,10 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     @Override
     public void onDecodingInfoChanged(DecodingInfo decodingInfo) {
-
+        if(telemetryReceiver!=null){
+            telemetryReceiver.setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
+                    decodingInfo.avgHWDecodingTime_ms);
+        }
     }
 
     public void setHomeOrientation(){
