@@ -1,4 +1,4 @@
-package constantin.fpv_vr.APlay;
+package constantin.fpv_vr.PlayStereo;
 /* ************************************************************************
  * Renders Video & OSD Side by Side.
  * Pipeline h.264-->image on screen:
@@ -19,7 +19,6 @@ import com.google.vr.ndk.base.GvrLayout;
 import com.google.vr.ndk.base.GvrUiLayout;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.GLRenderer.GLRStereoNormal;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;

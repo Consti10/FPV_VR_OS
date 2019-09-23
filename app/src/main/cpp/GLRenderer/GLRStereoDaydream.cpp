@@ -184,7 +184,7 @@ void GLRStereoDaydream::drawEyeOSD(uint32_t eye, Matrices &worldMatrices) {
 
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
-      Java_constantin_fpv_1vr_GLRenderer_GLRStereoDaydream_##method_name
+      Java_constantin_fpv_1vr_PlayStereo_GLRStereoDaydream_##method_name
 
 inline jlong jptr(GLRStereoDaydream *glRenderer) {
     return reinterpret_cast<intptr_t>(glRenderer);

@@ -1,4 +1,4 @@
-package constantin.fpv_vr.GLRenderer;
+package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -17,11 +17,8 @@ import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
 
-/**
- * Renders OSD only
- */
 
-public class GLRMono360 extends GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
+public class GLRMono360 extends BaseGLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     private final long nativeGLRendererMono;
     private final Context mContext;

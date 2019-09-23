@@ -84,7 +84,7 @@ void GLRMono::setHomeOrientation360() {
 
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
-      Java_constantin_fpv_1vr_GLRenderer_GLRMono_##method_name
+      Java_constantin_fpv_1vr_PlayMono_BaseGLRMono_##method_name
 
 inline jlong jptr(GLRMono *glRendererMono) {
     return reinterpret_cast<intptr_t>(glRendererMono);

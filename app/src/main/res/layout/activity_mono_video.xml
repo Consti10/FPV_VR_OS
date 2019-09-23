@@ -9,7 +9,7 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     android:background="@android:color/black"
-    tools:context="constantin.fpv_vr.APlay.AMonoVid">
+    tools:context="constantin.fpv_vr.PlayMono.AMonoVid">
 
     <constantin.video.core.External.AspectFrameLayout
         android:id="@+id/videoOnly_AFL"

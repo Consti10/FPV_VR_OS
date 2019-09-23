@@ -1,4 +1,4 @@
-package constantin.fpv_vr.APlay;
+package constantin.fpv_vr.PlayStereo;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -13,7 +13,7 @@ import com.google.vr.ndk.base.GvrLayout;
 import com.google.vr.sdk.base.AndroidCompat;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.GLRenderer.GLRStereoDaydream;
+import constantin.fpv_vr.PlayStereo.GLRStereoDaydream;
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.telemetry.core.TelemetryReceiver;
 

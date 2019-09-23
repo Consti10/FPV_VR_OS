@@ -1,4 +1,4 @@
-package constantin.fpv_vr.APlay;
+package constantin.fpv_vr.PlayMono;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +14,6 @@ import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
 
-import constantin.fpv_vr.GLRenderer.GLRMono360;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingX.MyEGLConfigChooser;

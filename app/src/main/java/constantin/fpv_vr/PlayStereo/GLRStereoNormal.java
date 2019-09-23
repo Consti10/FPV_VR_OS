@@ -1,4 +1,4 @@
-package constantin.fpv_vr.GLRenderer;
+package constantin.fpv_vr.PlayStereo;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;

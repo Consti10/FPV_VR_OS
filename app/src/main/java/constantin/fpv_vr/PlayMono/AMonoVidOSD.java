@@ -1,4 +1,4 @@
-package constantin.fpv_vr.APlay;
+package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -15,7 +15,6 @@ import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.GLRenderer.GLRMonoOSD;
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;

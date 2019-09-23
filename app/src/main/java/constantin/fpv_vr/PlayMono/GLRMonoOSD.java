@@ -1,4 +1,4 @@
-package constantin.fpv_vr.GLRenderer;
+package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -14,7 +14,7 @@ import constantin.video.core.IVideoParamsChanged;
  * Renders OSD only
  */
 
-public class GLRMonoOSD extends GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
+public class GLRMonoOSD extends BaseGLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     private final long nativeGLRendererMono;
     private final Context mContext;

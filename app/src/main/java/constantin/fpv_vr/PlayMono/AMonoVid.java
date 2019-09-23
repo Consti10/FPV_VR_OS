@@ -1,4 +1,4 @@
-package constantin.fpv_vr.APlay;
+package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +22,9 @@ import constantin.video.core.IVideoParamsChanged;
 
 /*****************************************************************
  * Play video only in a Mono window (e.g. for Tablets,checking Video Quality).
+ * 'Normal' video is displayed with the Android HW composer
+ * 'Stereo' (e.g. one video frame for left eye,and one video frame for right eye) and
+ * '360 Degree video' is rendered with OpenGL.
  ******************************************************************/
 
 

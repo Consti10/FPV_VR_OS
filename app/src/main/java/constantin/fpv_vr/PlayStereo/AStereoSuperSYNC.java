@@ -1,4 +1,4 @@
-package constantin.fpv_vr.APlay;
+package constantin.fpv_vr.PlayStereo;
 import android.app.Activity;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.vr.ndk.base.GvrUiLayout;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.GLRenderer.GLRStereoSuperSync;
+import constantin.fpv_vr.PlayStereo.GLRStereoSuperSync;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;
 import constantin.renderingX.PerformanceHelper;

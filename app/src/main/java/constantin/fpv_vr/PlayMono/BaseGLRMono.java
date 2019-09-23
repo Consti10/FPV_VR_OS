@@ -1,14 +1,14 @@
-package constantin.fpv_vr.GLRenderer;
+package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
 
 
-class GLRMono {
+class BaseGLRMono {
     static final int VIDEO_MODE_NONE=0;
     static final int VIDEO_MODE_STEREO=1;
     static final int VIDEO_MODE_360=2;
     static {
-        System.loadLibrary("GLRMono");
+        System.loadLibrary("BaseGLRMono");
     }
     native long nativeConstruct(Context context,long nativeTelemetryReceiver,long nativeGvrContext,int videoMode,boolean enableOSD);
     native void nativeDelete(long glRendererMonoP);

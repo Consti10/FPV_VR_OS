@@ -1,8 +1,9 @@
 /*****************************************************
- * Renders OSD only onto a transparent GL Surface.
- * When playing normal video (no 360° or else) blending with video is done via Android (HW) composer.
- * This is much more efficient than rendering via a OpenGL texture
+ * Render OSD (optional) and Video (Optional) into a OpenGL ES Surface
+ * See @enableOSD for osd options
+ * See @VideoMode for video rendering modes
  ******************************************************/
+
 
 #ifndef FPV_VR_GLRENDERERMONO_H
 #define FPV_VR_GLRENDERERMONO_H
