@@ -19,23 +19,23 @@ constexpr auto TAG="VideoRenderer";
 
 VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
 mSphere(sphereRadius,36*1,18*2),
-mMode(Degree360),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
+mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
     mGLProgramSpherical=glPSpherical;
     switch (mMode){
-        case NORMAL:
+        case RM_NORMAL:
             glGenBuffers(1,&mGLBuffVid);
             break;
-        case STEREO:
+        case RM_STEREO:
             glGenBuffers(1,&mGLBuffVidLeft);
             glGenBuffers(1,&mGLBuffVidRight);
             break;
-        case Degree360:
+        case RM_Degree360:
             glGenBuffers(1,&mGLBuffSphereVertices);
             glGenBuffers(1,&mGLBuffSphereIndices);
             GLProgramSpherical::uploadToGPU(mSphere,mGLBuffSphereVertices,mGLBuffSphereIndices);
             break;
-        case PunchHole:
+        case RM_PunchHole:
             glGenBuffers(1,&mGLBuffVid);
             break;
     }
@@ -45,7 +45,7 @@ mMode(Degree360),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glR
 void VideoRenderer::setupPosition() {
     mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     //We need the indices unless 360 degree rendering
-    if(mMode==NORMAL ||mMode==STEREO){
+    if(mMode==RM_NORMAL ||mMode==RM_STEREO){
         GLProgramTextureExt::Vertex vertices[(TESSELATION_FACTOR+1)*(TESSELATION_FACTOR+1)];
         GLushort indices[6*TESSELATION_FACTOR*TESSELATION_FACTOR];
         TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
@@ -62,7 +62,7 @@ void VideoRenderer::setupPosition() {
                                                     0.5f);
         GLHelper::allocateGLBufferStatic(mGLBuffVidRight,vertices,sizeof(vertices));
         nIndicesVideoCanvas=6*TESSELATION_FACTOR*TESSELATION_FACTOR;
-    }else if(mMode==PunchHole){
+    }else if(mMode==RM_PunchHole){
         GLProgramVC::Vertex tmp[6];
         ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
                                          Color::TRANSPARENT);
@@ -87,11 +87,20 @@ void VideoRenderer::punchHole2(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
 }
 
 void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye) {
-    GLuint buff;
+    if(mMode==RM_Degree360){
+        drawVideoCanvas360(ViewM,ProjM);
+    }else if(mMode==RM_NORMAL || mMode==RM_STEREO){
+        GLuint buff=mMode==RM_NORMAL ? mGLBuffVid : leftEye ? mGLBuffVidLeft : mGLBuffVidRight;
+        mGLRenderTexEx->beforeDraw(buff);
+        mGLRenderTexEx->drawIndexed(ViewM,ProjM,0,nIndicesVideoCanvas,mIndexBuffer);
+        mGLRenderTexEx->afterDraw();
+    }
+    //punch hole handled differently
+    /*GLuint buff;
     switch(mMode){
-        case NORMAL: buff=mGLBuffVid; //no 3D video
+        case RM_NORMAL: buff=mGLBuffVid; //no 3D video
             break;
-        case STEREO:
+        case RM_STEREO:
             buff=leftEye ? mGLBuffVidLeft : mGLBuffVidRight; //3D video - left and right eye
             break;
         default:
@@ -100,14 +109,14 @@ void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool l
     }
     mGLRenderTexEx->beforeDraw(buff);
     mGLRenderTexEx->drawIndexed(ViewM,ProjM,0,nIndicesVideoCanvas,mIndexBuffer);
-    mGLRenderTexEx->afterDraw();
+    mGLRenderTexEx->afterDraw();*/
     //We render the debug rectangle after the other one such that it always appears when enabled (overdraw)
     mPositionDebug.drawGLDebug(ViewM,ProjM);
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas");
 }
 
 void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
-    if(mMode!=VIDEO_RENDERING_MODE::Degree360){
+    if(mMode!=VIDEO_RENDERING_MODE::RM_Degree360){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
     mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices,mGLBuffSphereIndices);

@@ -56,7 +56,8 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     mGLProgramSpherical=std::make_unique<GLProgramSpherical>((GLuint)videoTexture,10,mSettingsVR.VR_DistortionCorrection,&coeficients);
     mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>((GLuint)videoTexture,mSettingsVR.VR_DistortionCorrection,&coeficients);
-    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::NORMAL,mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),mGLProgramSpherical.get());
+    mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360 :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,
+            mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),mGLProgramSpherical.get(),10.0f);
 }
 
 
@@ -118,18 +119,10 @@ void GLRStereoNormal::drawEyes() {
         projection=worldMatrices.projection;
     }
     glViewport(0,0,ViewPortW,ViewPortH);
-    if(is360){
-        mVideoRenderer->drawVideoCanvas360(leftEye,projection);
-    }else{
-        mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
-    }
+    mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
     mOSDRenderer->updateAndDrawElementsGL(leftEye,projection);
     glViewport(ViewPortW,0,ViewPortW,ViewPortH);
-    if(is360){
-        mVideoRenderer->drawVideoCanvas360(rightEye,projection);
-    }else{
-        mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
-    }
+    mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
     mOSDRenderer->drawElementsGL(rightEye,projection);
 }
 
