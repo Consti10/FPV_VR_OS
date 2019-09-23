@@ -1,6 +1,7 @@
 package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.opengl.GLSurfaceView;
 
 import javax.microedition.khronos.egl.EGLConfig;

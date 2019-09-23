@@ -17,8 +17,9 @@
 constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,GLProgramSpherical *glPSpherical):
-mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
+VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
+mSphere(sphereRadius,36*1,18*2),
+mMode(Degree360),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
     mGLProgramSpherical=glPSpherical;
     switch (mMode){
@@ -30,6 +31,9 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
             glGenBuffers(1,&mGLBuffVidRight);
             break;
         case Degree360:
+            glGenBuffers(1,&mGLBuffSphereVertices);
+            glGenBuffers(1,&mGLBuffSphereIndices);
+            GLProgramSpherical::uploadToGPU(mSphere,mGLBuffSphereVertices,mGLBuffSphereIndices);
             break;
         case PunchHole:
             glGenBuffers(1,&mGLBuffVid);
@@ -42,42 +46,31 @@ void VideoRenderer::setupPosition() {
     mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     //We need the indices unless 360 degree rendering
     if(mMode==NORMAL ||mMode==STEREO){
+        GLProgramTextureExt::Vertex vertices[(TESSELATION_FACTOR+1)*(TESSELATION_FACTOR+1)];
+        GLushort indices[6*TESSELATION_FACTOR*TESSELATION_FACTOR];
+        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+                                                    1.0f);
+        GLHelper::allocateGLBufferStatic(mGLBuffVid,vertices,sizeof(vertices));
+        GLHelper::allocateGLBufferStatic(mIndexBuffer,indices,sizeof(indices));
+        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+                                                    0.5f);
+        GLHelper::allocateGLBufferStatic(mGLBuffVidLeft,vertices,sizeof(vertices));
+        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
+                                                    0.5f);
+        GLHelper::allocateGLBufferStatic(mGLBuffVidRight,vertices,sizeof(vertices));
+        nIndicesVideoCanvas=6*TESSELATION_FACTOR*TESSELATION_FACTOR;
+    }else if(mMode==PunchHole){
+        GLProgramVC::Vertex tmp[6];
+        ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
+                                         Color::TRANSPARENT);
+        GLHelper::allocateGLBufferStatic(mGLBuffVid,tmp,sizeof(tmp));
 
-    }
-    switch(mMode){
-        case NORMAL:
-        case STEREO:{
-            GLProgramTextureExt::Vertex vertices[(TESSELATION_FACTOR+1)*(TESSELATION_FACTOR+1)];
-            GLushort indices[6*TESSELATION_FACTOR*TESSELATION_FACTOR];
-            TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
-                                                        mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
-                                                        1.0f);
-            GLHelper::allocateGLBufferStatic(mGLBuffVid,vertices,sizeof(vertices));
-            GLHelper::allocateGLBufferStatic(mIndexBuffer,indices,sizeof(indices));
-            TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
-                                                        mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
-                                                        0.5f);
-            GLHelper::allocateGLBufferStatic(mGLBuffVidLeft,vertices,sizeof(vertices));
-            TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
-                                                        mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
-                                                        0.5f);
-            GLHelper::allocateGLBufferStatic(mGLBuffVidRight,vertices,sizeof(vertices));
-            nIndicesVideoCanvas=6*TESSELATION_FACTOR*TESSELATION_FACTOR;
-        }
-            break;
-        case PunchHole:{
-            GLProgramVC::Vertex tmp[6];
-            ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
-                                             Color::TRANSPARENT);
-            GLHelper::allocateGLBufferStatic(mGLBuffVid,tmp,sizeof(tmp));
-
-            ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth*5,0,0),glm::vec3(0,mHeight*10,0),
-                                             Color::RED);
-            GLHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
-        }
-            break;
-        case Degree360:
-            break;
+        ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth*5,0,0),glm::vec3(0,mHeight*10,0),
+                                         Color::RED);
+        GLHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
     }
 }
 
@@ -114,7 +107,12 @@ void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool l
 }
 
 void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
-    mGLProgramSpherical->draw(ViewM,ProjM);
+    if(mMode!=VIDEO_RENDERING_MODE::Degree360){
+        throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
+    }
+    mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices,mGLBuffSphereIndices);
+    mGLProgramSpherical->draw(ViewM,ProjM,mSphere.getIndexCount());
+    mGLProgramSpherical->afterDraw();
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
 }
 

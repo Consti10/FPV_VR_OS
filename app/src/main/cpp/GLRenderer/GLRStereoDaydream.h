@@ -37,7 +37,6 @@ private:
     void placeGLElements();
     void updateBufferViewports();
     void drawEyeOSD(uint32_t eye, Matrices &worldMatrices);
-    void drawSimple(Matrices& worldMatrices);
 private:
     TelemetryReceiver& mTelemetryReceiver;
     MatricesManager mMatricesM;

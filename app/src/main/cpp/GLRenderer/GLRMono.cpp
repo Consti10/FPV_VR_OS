@@ -28,6 +28,7 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
     if(videoMode==Degree360){
         mGLProgramSpherical=std::make_unique<GLProgramSpherical>((GLuint)optionalVideoTexture);
         mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::Degree360,mBasicGLPrograms->vc, nullptr,mGLProgramSpherical.get());
+        mVideoRenderer->setWorldPosition(0,0,0,0,0);
     }
     if(videoMode==STEREO){
 

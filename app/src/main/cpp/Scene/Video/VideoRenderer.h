@@ -21,7 +21,7 @@ public:
     //The daydream renderer handles external surfaces (like video) itself, but requires the application to
     //'punch a hole' into the scene by rendering a quad with alpha=0.0f
     enum VIDEO_RENDERING_MODE{NORMAL,STEREO,Degree360,PunchHole};
-    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx=nullptr,GLProgramSpherical *glPSpherical=nullptr);
+    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx=nullptr,GLProgramSpherical *glPSpherical=nullptr,float sphereRadius=1.0f);
     void initUpdateTexImageJAVA(JNIEnv * env,jobject obj,jobject surfaceTexture);
     void deleteUpdateTexImageJAVA(JNIEnv* env,jobject obj); //frees the global reference so java does not complain
     void updateTexImageJAVA(JNIEnv* env);
@@ -32,15 +32,18 @@ public:
 private:
     void setupPosition() override;
     PositionDebug mPositionDebug;
+    GLuint mGLBuffSphereVertices;
+    GLuint mGLBuffSphereIndices;
     GLuint mIndexBuffer;
     GLuint mGLBuffVidLeft; //left side of the video frame (u.v coordinates)
     GLuint mGLBuffVidRight; //right side of the video frame (u.v coordinates)
-    GLuint mGLBuffVid; //whole video frame (u.v coordinates)
+    GLuint mGLBuffVid; //whole video frame (u.v coordinates). Quad normally, sphere otherwise
     GLuint mGLBuffVidPunchHole;
     int nIndicesVideoCanvas;
     const GLProgramVC& mGLRenderGeometry;
     GLProgramTextureExt* mGLRenderTexEx= nullptr;
     GLProgramSpherical* mGLProgramSpherical=nullptr;
+    Sphere* sphere=nullptr;
 
     const int TESSELATION_FACTOR=10;
     jobject localRefSurfaceTexture;
@@ -48,6 +51,8 @@ private:
     jmethodID getTimestampMethodId;
     const VIDEO_RENDERING_MODE mMode;
     ASurfaceTexture* mSurfaceTexture;
+
+    const Sphere mSphere;
 };
 
 #endif

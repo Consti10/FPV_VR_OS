@@ -179,7 +179,8 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
             case CONNECTION_TYPE_TestFile:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_ASSETS);
                 if(VideoNative.video360(context)){
-                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
+                    //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "outfile.h264");
+                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264"); //video360
                 }else{
                     pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
                 }
