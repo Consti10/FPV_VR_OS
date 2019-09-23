@@ -18,7 +18,8 @@ constexpr auto TAG= "GLRendererStereo";
 
 #include <android/choreographer.h>
 
-GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context):
+GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool is360):
+is360(is360),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
@@ -117,12 +118,18 @@ void GLRStereoNormal::drawEyes() {
         projection=worldMatrices.projection;
     }
     glViewport(0,0,ViewPortW,ViewPortH);
-   // mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
-    mVideoRenderer->drawVideoCanvas360(leftEye,projection);
+    if(is360){
+        mVideoRenderer->drawVideoCanvas360(leftEye,projection);
+    }else{
+        mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
+    }
     mOSDRenderer->updateAndDrawElementsGL(leftEye,projection);
     glViewport(ViewPortW,0,ViewPortW,ViewPortH);
-    //mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
-    mVideoRenderer->drawVideoCanvas360(rightEye,projection);
+    if(is360){
+        mVideoRenderer->drawVideoCanvas360(rightEye,projection);
+    }else{
+        mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
+    }
     mOSDRenderer->drawElementsGL(rightEye,projection);
 }
 
@@ -143,9 +150,9 @@ inline GLRStereoNormal *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject instance,jobject androidContext,jfloatArray undistortionData,jlong telemetryReceiver, jlong native_gvr_api) {
+(JNIEnv *env, jobject instance,jobject androidContext,jfloatArray undistortionData,jlong telemetryReceiver, jlong native_gvr_api,jboolean is360) {
     return jptr(
-            new GLRStereoNormal(env,androidContext,undistortionData,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api)));
+            new GLRStereoNormal(env,androidContext,undistortionData,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),is360));
 }
 
 JNI_METHOD(void, nativeDelete)

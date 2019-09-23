@@ -18,6 +18,7 @@ import constantin.renderingX.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.VideoNative.VideoNative;
 
 import static constantin.renderingX.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
 
@@ -29,7 +30,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     static {
         System.loadLibrary("GLRStereoNormal");
     }
-    private native long nativeConstruct(Context context,float[] undistortionData,long telemetryReceiver,long nativeGvrContext);
+    private native long nativeConstruct(Context context,float[] undistortionData,long telemetryReceiver,long nativeGvrContext,boolean is360);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
@@ -48,7 +49,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         mContext=activityContext;
         this.telemetryReceiver=telemetryReceiver;
         nativeGLRendererStereo=nativeConstruct(activityContext, VRSettingsHelper.getUndistortionCoeficients(activityContext),telemetryReceiver.getNativeInstance(),
-                gvrApiNativeContext);
+                gvrApiNativeContext, VideoNative.video360(mContext));
     }
 
     @Override

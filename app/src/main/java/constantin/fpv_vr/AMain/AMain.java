@@ -113,7 +113,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
          */
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:
-                if(video360(this)){
+                if(VideoNative.video360(this)){
                     Intent i=new Intent().setClass(this, AMono360.class);
                     i.putExtra(AMono360.EXTRA_RENDER_OSD,false);
                     startActivity(i);
@@ -122,7 +122,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 }
                 break;
             case R.id.b_startMonoVideoOSD:
-                if(video360(this)){
+                if(VideoNative.video360(this)){
                     Intent i=new Intent().setClass(this, AMono360.class);
                     i.putExtra(AMono360.EXTRA_RENDER_OSD,true);
                     startActivity(i);
@@ -153,11 +153,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 startActivity(new Intent().setClass(this, ASettingsVR.class));
                 break;
         }
-    }
-
-    public static boolean video360(final Context c){
-        final SharedPreferences pref_video=c.getSharedPreferences("pref_video",MODE_PRIVATE);
-        return pref_video.getInt(c.getString(R.string.VS_VIDEO_VIEW_TYPE),0)==2;
     }
 
 

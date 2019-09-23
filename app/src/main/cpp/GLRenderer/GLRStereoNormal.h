@@ -25,7 +25,7 @@ public:
      * Create a GLRStereoNormal using a given |gvr_context|.
      * @param gvr_api The (non-owned) gvr_context.
      */
-    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context);
+    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool is360);
 private:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture) override;
     void onSurfaceChanged(int width, int height)override ;
@@ -47,6 +47,7 @@ private:
     int ViewPortW=0,ViewPortH=0;
     int swapColor=0;
     const float MAX_FOV_USABLE_FOR_VDDC=100;
+    const bool is360;
 };
 
 

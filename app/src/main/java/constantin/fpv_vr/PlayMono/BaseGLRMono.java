@@ -8,7 +8,7 @@ class BaseGLRMono {
     static final int VIDEO_MODE_STEREO=1;
     static final int VIDEO_MODE_360=2;
     static {
-        System.loadLibrary("BaseGLRMono");
+        System.loadLibrary("GLRMono");
     }
     native long nativeConstruct(Context context,long nativeTelemetryReceiver,long nativeGvrContext,int videoMode,boolean enableOSD);
     native void nativeDelete(long glRendererMonoP);
