@@ -14,10 +14,9 @@
 
 #define PRINT_LOGS
 //#define CHANGE_SWAP_COLOR
-#define TAG "GLRendererStereo"
+constexpr auto TAG= "GLRendererStereo";
 
 #include <android/choreographer.h>
-
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context):
         mTelemetryReceiver(telemetryReceiver),
@@ -54,8 +53,9 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>(enableDistCorrection,&coeficients);
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
+    mGLProgramSpherical=std::make_unique<GLProgramSpherical>((GLuint)videoTexture,10,mSettingsVR.VR_DistortionCorrection,&coeficients);
     mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>((GLuint)videoTexture,mSettingsVR.VR_DistortionCorrection,&coeficients);
-    mVideoRenderer=std::make_unique<VideoRenderer>(mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),mSettingsVR.DEV_3D_VIDEO);
+    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::NORMAL,mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),mGLProgramSpherical.get());
 }
 
 
@@ -65,10 +65,11 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     placeGLElements();
     mMatricesM.calculateProjectionAndDefaultView(MAX_FOV_USABLE_FOR_VDDC,
                                                  ((float) ViewPortW) / ((float) ViewPortH));
+    mMatricesM.calculateProjectionAndDefaultView360(40,((float) ViewPortW) / ((float) ViewPortH));
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     //glDisable(GL_DEPTH_TEST);
-    glClearColor(0,0,0,0.0f);
+    glClearColor(0,0,0,0.0F);
     //glClearColor(1,0,0,0.0f);
     cpuFrameTime.reset();
 }
@@ -101,6 +102,7 @@ void GLRStereoNormal::onDrawFrame() {
 
 void GLRStereoNormal::drawEyes() {
     mMatricesM.calculateNewHeadPoseIfNeeded(gvr_api_.get(), 16);
+    mMatricesM.calculateNewHeadPose360(gvr_api_.get(),0);
     //update and draw the eyes
     glm::mat4x4 leftEye,rightEye,projection;
     if(mMatricesM.settingsVR.GHT_MODE==MatricesManager::MODE_1PP){
@@ -115,10 +117,12 @@ void GLRStereoNormal::drawEyes() {
         projection=worldMatrices.projection;
     }
     glViewport(0,0,ViewPortW,ViewPortH);
-    mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
+   // mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
+    mVideoRenderer->drawVideoCanvas360(leftEye,projection);
     mOSDRenderer->updateAndDrawElementsGL(leftEye,projection);
     glViewport(ViewPortW,0,ViewPortW,ViewPortH);
-    mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
+    //mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
+    mVideoRenderer->drawVideoCanvas360(rightEye,projection);
     mOSDRenderer->drawElementsGL(rightEye,projection);
 }
 

@@ -46,7 +46,7 @@ class MatricesManager {
 public:
     explicit MatricesManager(const SettingsVR& settingsVR);
     static constexpr float MAX_Z_DISTANCE=20.0f;
-    static constexpr float MIN_Z_DISTANCE=1.0f;
+    static constexpr float MIN_Z_DISTANCE=0.1f;
     static constexpr int MODE_NONE=0; //No head tracking
     static constexpr int MODE_1PP=1; //first person perspective
     void calculateProjectionAndDefaultView(float fov, float ratio);

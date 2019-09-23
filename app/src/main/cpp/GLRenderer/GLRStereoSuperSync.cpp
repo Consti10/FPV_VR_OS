@@ -51,7 +51,7 @@ void GLRStereoSuperSync::onSurfaceCreated(JNIEnv *env, jobject androidContext, j
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>((GLuint)videoTexture,mSettingsVR.VR_DistortionCorrection,&coeficients);
-    mVideoRenderer=std::make_unique<VideoRenderer>(mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),mSettingsVR.DEV_3D_VIDEO);
+    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::NORMAL,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
     mFrameTimeAcc.reset();
     initOtherExtensions();
     videoFormatChanged=false;

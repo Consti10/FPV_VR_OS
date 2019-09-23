@@ -29,7 +29,7 @@ void MatricesManager::calculateProjectionAndDefaultView(float fov, float ratio) 
 }
 
 void MatricesManager::calculateProjectionAndDefaultView360(float fov360Video,float ratio) {
-    worldMatrices.projection360=glm::perspective(glm::radians(fov360Video), ratio, 0.1f, MAX_Z_DISTANCE+5);
+    worldMatrices.projection360=glm::perspective(glm::radians(fov360Video), ratio, MIN_Z_DISTANCE, MAX_Z_DISTANCE);
     worldMatrices.monoViewTracked360=glm::mat4(1.0f);
     worldMatrices.monoForward360=glm::mat4(1.0f);
     //worldMatrices.monoForward360 = glm::rotate(glm::mat4(1.0f),glm::radians(90.0f), glm::vec3(0,1,0));

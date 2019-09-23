@@ -21,16 +21,7 @@ import constantin.video.core.IVideoParamsChanged;
  * Renders OSD only
  */
 
-public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
-    static {
-        System.loadLibrary("GLRMono360");
-    }
-    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean renderOSD);
-    private native void nativeDelete(long glRendererMonoP);
-    private native void nativeOnSurfaceCreated(long glRendererP,int videoTexture,Context androidContext);
-    private native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height,float video360FOV);
-    private native void nativeOnDrawFrame(long glRendererMonoP);
-    private native void nativeSetHomeOrientation(long glRendererMonoP);
+public class GLRMono360 extends GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     private final long nativeGLRendererMono;
     private final Context mContext;
@@ -41,7 +32,7 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     public GLRMono360(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi,final boolean renderOSD){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
-        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),renderOSD);
+        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),VIDEO_MODE_360,renderOSD);
     }
 
     @Override
@@ -50,7 +41,7 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
         GLES20.glGenTextures(1, videoTexture, 0);
         final int mGLTextureVideo = videoTexture[0];
         mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
-        nativeOnSurfaceCreated(nativeGLRendererMono,mGLTextureVideo,mContext);
+        nativeOnSurfaceCreated(nativeGLRendererMono,mContext,mGLTextureVideo);
     }
 
     @Override
@@ -108,6 +99,6 @@ public class GLRMono360 implements GLSurfaceView.Renderer, IVideoParamsChanged {
     }
 
     public void setHomeOrientation(){
-        nativeSetHomeOrientation(nativeGLRendererMono);
+        nativeSetHomeOrientation360(nativeGLRendererMono);
     }
 }

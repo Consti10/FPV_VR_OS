@@ -15,9 +15,9 @@ import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.fpv_vr.GLRenderer.GLRMonoOSD;
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.GLRenderer.GLRMono;
 import constantin.fpv_vr.R;
 import constantin.renderingX.MyEGLConfigChooser;
 import constantin.renderingX.MyEGLWindowSurfaceFactory;
@@ -38,7 +38,7 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
     private Context mContext;
     private GLSurfaceView mGLView;
     private GvrApi gvrApi;
-    private GLRMono mGLRMono;
+    private GLRMonoOSD mGLRMonoOSD;
     private AirHeadTrackingSender airHeadTrackingSender;
     private TelemetryReceiver telemetryReceiver;
 
@@ -62,8 +62,8 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
             airHeadTrackingSender=new AirHeadTrackingSender(this,gvrApi);
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRMono=new GLRMono(mContext,telemetryReceiver);
-        mGLView.setRenderer(mGLRMono);
+        mGLRMonoOSD =new GLRMonoOSD(mContext,telemetryReceiver);
+        mGLView.setRenderer(mGLRMonoOSD);
         mGLView.setZOrderMediaOverlay(true);
         addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -103,7 +103,7 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
             gvrApi.shutdown();
         }
         mGLView=null;
-        mGLRMono=null;
+        mGLRMonoOSD =null;
         telemetryReceiver.delete();
     }
 

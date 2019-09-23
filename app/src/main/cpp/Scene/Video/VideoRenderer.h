@@ -14,8 +14,14 @@
 
 class VideoRenderer : public IPositionable{ //Does not inherit from IDrawable !
 public:
-    VideoRenderer(const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,int DEV_3D_VIDEO,GLProgramSpherical *glPSpherical=nullptr);
-    explicit VideoRenderer(const GLProgramVC& glRenderGeometry);
+    //Normal: Render a rectangle
+    //Stereo: One decoded frame contains images for left and right eye
+    //Render left frame into a rectangle with u->{0,0,5} and right frame int a rectangle with u->{0.5,1.0}
+    //Degree360: 360 degree video, rendered onto a sphere instead of a quad
+    //The daydream renderer handles external surfaces (like video) itself, but requires the application to
+    //'punch a hole' into the scene by rendering a quad with alpha=0.0f
+    enum VIDEO_RENDERING_MODE{NORMAL,STEREO,Degree360,PunchHole};
+    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx=nullptr,GLProgramSpherical *glPSpherical=nullptr);
     void initUpdateTexImageJAVA(JNIEnv * env,jobject obj,jobject surfaceTexture);
     void deleteUpdateTexImageJAVA(JNIEnv* env,jobject obj); //frees the global reference so java does not complain
     void updateTexImageJAVA(JNIEnv* env);
@@ -40,7 +46,7 @@ private:
     jobject localRefSurfaceTexture;
     jmethodID updateTexImageMethodId;
     jmethodID getTimestampMethodId;
-    const int DEV_3D_VIDEO;
+    const VIDEO_RENDERING_MODE mMode;
     ASurfaceTexture* mSurfaceTexture;
 };
 

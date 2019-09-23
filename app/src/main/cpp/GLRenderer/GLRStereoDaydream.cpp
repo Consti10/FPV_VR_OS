@@ -111,7 +111,7 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>();
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mVideoRenderer=std::make_unique<VideoRenderer>(mBasicGLPrograms->vc);
+    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::NORMAL,mBasicGLPrograms->vc);
 
     mMatricesM.calculateProjectionAndDefaultView(headset_fovY_full, framebuffer_size.width / 2.0f /
                                                                     framebuffer_size.height);

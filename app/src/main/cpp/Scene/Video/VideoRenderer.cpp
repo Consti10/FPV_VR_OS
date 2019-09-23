@@ -14,59 +14,70 @@
 #endif
 
 
-#define TAG "VideoRenderer"
+constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-VideoRenderer::VideoRenderer(const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,const int DEV_3D_VIDEO,GLProgramSpherical *glPSpherical):
-        mPositionDebug(glRenderGeometry,6, false),
-        DEV_3D_VIDEO(DEV_3D_VIDEO),
-        mGLRenderGeometry(glRenderGeometry){
+VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,GLProgramSpherical *glPSpherical):
+mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
     mGLProgramSpherical=glPSpherical;
-    glGenBuffers(1,&mGLBuffVid);
-    glGenBuffers(1,&mGLBuffVidLeft);
-    glGenBuffers(1,&mGLBuffVidRight);
+    switch (mMode){
+        case NORMAL:
+            glGenBuffers(1,&mGLBuffVid);
+            break;
+        case STEREO:
+            glGenBuffers(1,&mGLBuffVidLeft);
+            glGenBuffers(1,&mGLBuffVidRight);
+            break;
+        case Degree360:
+            break;
+        case PunchHole:
+            glGenBuffers(1,&mGLBuffVid);
+            break;
+    }
     glGenBuffers(1,&mIndexBuffer);
-    glGenBuffers(1,&mGLBuffVid);
-}
-
-VideoRenderer::VideoRenderer(const GLProgramVC& glRenderGeometry):
-        mPositionDebug(glRenderGeometry,6, true),
-        DEV_3D_VIDEO(0),
-        mGLRenderGeometry(glRenderGeometry){
-    glGenBuffers(1,&mGLBuffVid);
 }
 
 void VideoRenderer::setupPosition() {
     mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
-    //When we constructed the VideoRender with its second constructor, we only want to "punch a hole" into the scene
-    //for the video from the daydream async renderer to appear
-    if(mGLRenderTexEx==nullptr){
-        GLProgramVC::Vertex tmp[6];
-        ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
-                                         Color::TRANSPARENT);
-        GLHelper::allocateGLBufferStatic(mGLBuffVid,tmp,sizeof(tmp));
+    //We need the indices unless 360 degree rendering
+    if(mMode==NORMAL ||mMode==STEREO){
 
-        ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth*5,0,0),glm::vec3(0,mHeight*10,0),
-                                         Color::RED);
-        GLHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
-    }else{
-        GLProgramTextureExt::Vertex vertices[(TESSELATION_FACTOR+1)*(TESSELATION_FACTOR+1)];
-        GLushort indices[6*TESSELATION_FACTOR*TESSELATION_FACTOR];
-        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
-                                                         mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
-                                                         1.0f);
-        GLHelper::allocateGLBufferStatic(mGLBuffVid,vertices,sizeof(vertices));
-        GLHelper::allocateGLBufferStatic(mIndexBuffer,indices,sizeof(indices));
-        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
-                                                         mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
-                                                         0.5f);
-        GLHelper::allocateGLBufferStatic(mGLBuffVidLeft,vertices,sizeof(vertices));
-        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
-                                                         mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
-                                                         0.5f);
-        GLHelper::allocateGLBufferStatic(mGLBuffVidRight,vertices,sizeof(vertices));
-        nIndicesVideoCanvas=6*TESSELATION_FACTOR*TESSELATION_FACTOR;
+    }
+    switch(mMode){
+        case NORMAL:
+        case STEREO:{
+            GLProgramTextureExt::Vertex vertices[(TESSELATION_FACTOR+1)*(TESSELATION_FACTOR+1)];
+            GLushort indices[6*TESSELATION_FACTOR*TESSELATION_FACTOR];
+            TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+                                                        mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+                                                        1.0f);
+            GLHelper::allocateGLBufferStatic(mGLBuffVid,vertices,sizeof(vertices));
+            GLHelper::allocateGLBufferStatic(mIndexBuffer,indices,sizeof(indices));
+            TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+                                                        mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+                                                        0.5f);
+            GLHelper::allocateGLBufferStatic(mGLBuffVidLeft,vertices,sizeof(vertices));
+            TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+                                                        mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
+                                                        0.5f);
+            GLHelper::allocateGLBufferStatic(mGLBuffVidRight,vertices,sizeof(vertices));
+            nIndicesVideoCanvas=6*TESSELATION_FACTOR*TESSELATION_FACTOR;
+        }
+            break;
+        case PunchHole:{
+            GLProgramVC::Vertex tmp[6];
+            ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
+                                             Color::TRANSPARENT);
+            GLHelper::allocateGLBufferStatic(mGLBuffVid,tmp,sizeof(tmp));
+
+            ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth*5,0,0),glm::vec3(0,mHeight*10,0),
+                                             Color::RED);
+            GLHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
+        }
+            break;
+        case Degree360:
+            break;
     }
 }
 
@@ -84,12 +95,10 @@ void VideoRenderer::punchHole2(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
 
 void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye) {
     GLuint buff;
-    switch(DEV_3D_VIDEO){
-        case 0: buff=mGLBuffVid; //no 3D video
+    switch(mMode){
+        case NORMAL: buff=mGLBuffVid; //no 3D video
             break;
-        case 1: buff=mGLBuffVidLeft; //3D video - only use left eye
-            break;
-        case 2:
+        case STEREO:
             buff=leftEye ? mGLBuffVidLeft : mGLBuffVidRight; //3D video - left and right eye
             break;
         default:
