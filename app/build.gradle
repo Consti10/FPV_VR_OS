@@ -13,7 +13,9 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++17"  //,"-frtti","-fexceptions"
-                arguments "-DANDROID_STL=c++_static"   //, "-DCMAKE_VERBOSE_MAKEFILE=ON"
+                arguments "-DANDROID_STL=c++_static",   //, "-DCMAKE_VERBOSE_MAKEFILE=ON"
+                        "-DT_CORE_DIR=${project.rootDir}/..Telemetry/TelemetryCore"//,
+                        //"-DRX_CORE_DIR=${project.rootDir}/../RenderingX/RenderingXCore"
             }
         }
         ndk {

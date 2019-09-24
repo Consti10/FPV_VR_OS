@@ -9,6 +9,7 @@ include_directories(libs/other)
 ##########################################################################################################
 #Telemetry receiver is included as an imported libarary, e.g we don't compile it here, but rather use .so and .h files
 ##########################################################################################################
+#T_CORE_DIR is passed as an argument in app/build.gradle
 set(T_CORE_DIR ${CMAKE_SOURCE_DIR}/../../Telemetry/TelemetryCore)
 set(T_SOURCE_DIR ${T_CORE_DIR}/src/main/cpp/Telemetry)
 set(T_SO_FILES   ${T_CORE_DIR}/jniLibs)
@@ -26,6 +27,7 @@ set_target_properties( # Specifies the target library.
 ##########################################################################################################
 #we just include and buld here the files from RenderingXCore directly,except glm and gvr
 ##########################################################################################################
+#RX_CORE_DIR is passed as an argument in app/build.gradle
 set(RX_CORE_DIR ${CMAKE_SOURCE_DIR}/../../RenderingX/RenderingXCore)
 #first, get all the external libraries that come with RenderingXCore - glm and gvr
 #glm is header only, we only need to provide the path
@@ -57,6 +59,7 @@ add_library( GLPrograms SHARED
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTextureExt.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramLine.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/Sphere.cpp
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/Sphere2.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp)
 target_link_libraries( GLPrograms ${log-lib} android GLESv2)
 

@@ -18,7 +18,7 @@ constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
-mSphere(sphereRadius,36*1,18*2),
+mSphere(sphereRadius,36*1,18*0.5),
 mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
     mGLProgramSpherical=glPSpherical;
