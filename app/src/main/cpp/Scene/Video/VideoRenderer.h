@@ -33,7 +33,7 @@ private:
     void setupPosition() override;
     PositionDebug mPositionDebug;
     GLuint mGLBuffSphereVertices;
-    GLuint mGLBuffSphereIndices;
+    //GLuint mGLBuffSphereIndices;
     GLuint mIndexBuffer;
     GLuint mGLBuffVidLeft; //left side of the video frame (u.v coordinates)
     GLuint mGLBuffVidRight; //right side of the video frame (u.v coordinates)

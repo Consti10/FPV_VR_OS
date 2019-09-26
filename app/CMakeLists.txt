@@ -58,8 +58,8 @@ add_library( GLPrograms SHARED
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramText.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTextureExt.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramLine.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/Sphere.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/Sphere2.cpp
+        ${RX_CORE_DIR}/src/main/cpp/Sphere/Sphere.cpp
+        ${RX_CORE_DIR}/src/main/cpp/Sphere/GvrSphere.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp)
 target_link_libraries( GLPrograms ${log-lib} android GLESv2)
 

@@ -18,7 +18,7 @@ constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
-mSphere(sphereRadius,36*1,18*0.5),
+mSphere(sphereRadius,36*1,18*1),
 mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
     mGLProgramSpherical=glPSpherical;
@@ -32,8 +32,9 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
             break;
         case RM_Degree360:
             glGenBuffers(1,&mGLBuffSphereVertices);
-            glGenBuffers(1,&mGLBuffSphereIndices);
-            GLProgramSpherical::uploadToGPU(mSphere,mGLBuffSphereVertices,mGLBuffSphereIndices);
+            //glGenBuffers(1,&mGLBuffSphereIndices);
+            //GLProgramSpherical::uploadToGPU(mSphere,mGLBuffSphereVertices,mGLBuffSphereIndices);
+            mSphere.uploadToGPU(mGLBuffSphereVertices);
             break;
         case RM_PunchHole:
             glGenBuffers(1,&mGLBuffVid);
@@ -119,8 +120,8 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     if(mMode!=VIDEO_RENDERING_MODE::RM_Degree360){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
-    mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices,mGLBuffSphereIndices);
-    mGLProgramSpherical->draw(ViewM,ProjM,mSphere.getIndexCount());
+    mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices);
+    mGLProgramSpherical->draw(ViewM,ProjM,mSphere.getVertexCount());
     mGLProgramSpherical->afterDraw();
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
 }

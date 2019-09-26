@@ -95,10 +95,6 @@ static const std::string toString(const glm::mat4 matrix){
     return ss.str();
 }
 
-static float toRadians(double degree){
-    return (float)(degree * 3.141592653589793F / 180.0f);
-}
-
 
 /*static glm::mat4 toGLM(const gvr::Mat4f &matrix) {
     glm::mat4 result;
