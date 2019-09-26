@@ -44,7 +44,7 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0,0,width,height);
-    glClearColor(1.0f,0,0,0.0f);
+    glClearColor(0.0f,0,0,0.0f);
     setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
     cpuFrameTime.reset();
     //GLProgramLine* error=nullptr;

@@ -184,7 +184,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                     pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
                 }
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "outfile.h264");
-                pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
+                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "paris_by_diego.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "mono.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");

@@ -32,7 +32,7 @@ public:
      * Create a GLRenderer Stereo SuperSync using a given |gvr_context|.
      * @param gvr_api The (non-owned) gvr_context.
      */
-    GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable);
+    GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360);
     /**
     * Draw the Video and transparent OSD scene, synchronized with the VSYNC, directly into the Front Buffer
      * This has to be called on the GL thread.
@@ -77,6 +77,8 @@ private:
     int swapColor=0;
     void placeGLElements();
     const float MAX_FOV_USABLE_FOR_VDDC=70;
+
+    const bool is360;
 };
 
 

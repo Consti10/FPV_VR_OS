@@ -15,7 +15,8 @@
 
 //#define CHANGE_SWAP_COLOR
 
-GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable):
+GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360):
+is360(is360),
         mTelemetryReceiver(telemetryReceiver),
         mFrameTimeAcc(std::vector<std::string>{"startDR","updateTexImage1","clear","drawVideoCanvas","stopDR","updateTexImage2"}),
         mSettingsVR(env,androidContext),
@@ -51,7 +52,7 @@ void GLRStereoSuperSync::onSurfaceCreated(JNIEnv *env, jobject androidContext, j
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>((GLuint)videoTexture,mSettingsVR.VR_DistortionCorrection,&coeficients);
-    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
+    mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360 :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
     mFrameTimeAcc.reset();
     initOtherExtensions();
     videoFormatChanged=false;
@@ -188,9 +189,9 @@ inline GLRStereoSuperSync *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jboolean qcomTiledRenderingAvailable,jboolean reusableSyncAvailable) {
+(JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jboolean qcomTiledRenderingAvailable,jboolean reusableSyncAvailable,jboolean is360) {
     return jptr(
-            new GLRStereoSuperSync(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)qcomTiledRenderingAvailable,(bool)reusableSyncAvailable));
+            new GLRStereoSuperSync(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)qcomTiledRenderingAvailable,(bool)reusableSyncAvailable,(bool)is360));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {
