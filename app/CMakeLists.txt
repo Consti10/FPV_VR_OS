@@ -10,7 +10,7 @@ include_directories(libs/other)
 #Telemetry receiver is included as an imported libarary, e.g we don't compile it here, but rather use .so and .h files
 ##########################################################################################################
 #T_CORE_DIR is passed as an argument in app/build.gradle
-set(T_CORE_DIR ${CMAKE_SOURCE_DIR}/../../Telemetry/TelemetryCore)
+#set(T_CORE_DIR ${CMAKE_SOURCE_DIR}/../../Telemetry/TelemetryCore)
 set(T_SOURCE_DIR ${T_CORE_DIR}/src/main/cpp/Telemetry)
 set(T_SO_FILES   ${T_CORE_DIR}/jniLibs)
 include_directories(${T_SOURCE_DIR})
@@ -28,7 +28,7 @@ set_target_properties( # Specifies the target library.
 #we just include and buld here the files from RenderingXCore directly,except glm and gvr
 ##########################################################################################################
 #RX_CORE_DIR is passed as an argument in app/build.gradle
-set(RX_CORE_DIR ${CMAKE_SOURCE_DIR}/../../RenderingX/RenderingXCore)
+#set(RX_CORE_DIR ${CMAKE_SOURCE_DIR}/../../RenderingX/RenderingXCore)
 #first, get all the external libraries that come with RenderingXCore - glm and gvr
 #glm is header only, we only need to provide the path
 include_directories(${RX_CORE_DIR}/libs/glm)
@@ -116,11 +116,15 @@ target_link_libraries( GLRMono ${GLR_SOME_DEPENDENCIES} )
 #target_link_libraries( GLRMono360 ${GLR_SOME_DEPENDENCIES} )
 
 add_library( GLRStereoNormal SHARED
-        src/main/cpp/GLRenderer/GLRStereoNormal.cpp )
+        src/main/cpp/GLRenderer/GLRStereoNormal.cpp
+        src/main/cpp/GLRenderer/SceneStereoscopic.cpp
+        )
 target_link_libraries( GLRStereoNormal ${GLR_SOME_DEPENDENCIES} )
 
 add_library( GLRStereoSuperSync SHARED
-        src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp )
+        src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp
+        src/main/cpp/GLRenderer/SceneStereoscopic.cpp
+        )
 target_link_libraries( GLRStereoSuperSync ${GLR_SOME_DEPENDENCIES} SuperSync)
 
 add_library( GLRStereoDaydream SHARED
