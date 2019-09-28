@@ -32,7 +32,8 @@ void MatricesManager::calculateProjectionAndDefaultView360(float fov360Video,flo
     worldMatrices.projection360=glm::perspective(glm::radians(fov360Video), ratio, MIN_Z_DISTANCE, MAX_Z_DISTANCE);
     worldMatrices.monoViewTracked360=glm::mat4(1.0f);
     worldMatrices.monoForward360=glm::mat4(1.0f);
-    worldMatrices.monoForward360 = glm::rotate(glm::mat4(1.0f),glm::radians(90.0f), glm::vec3(0,1,0)); //Default- rotate 90 around y axis
+    //worldMatrices.monoForward360 = glm::rotate(glm::mat4(1.0f),glm::radians(90.0f), glm::vec3(0,0,-1)); //Default view direction, the gvr sphere is slightly different -
+    //For 'normal'video its layout is fine, but for insta360 video the default view direction is wrong
 }
 
 void MatricesManager::calculateNewHeadPoseIfNeeded(gvr::GvrApi *gvr_api, const int predictMS) {

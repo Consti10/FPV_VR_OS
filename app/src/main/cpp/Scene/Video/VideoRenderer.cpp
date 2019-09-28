@@ -120,8 +120,12 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     if(mMode!=VIDEO_RENDERING_MODE::RM_Degree360){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
+    //Default view direction, the gvr sphere is slightly different -
+    //For 'normal'video its layout is fine, but for insta360 video the default view direction is wrong
+    glm::mat4x4 modelMatrix=glm::rotate(glm::mat4(1.0F),glm::radians(90.0F), glm::vec3(0,0,-1));
+
     mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices);
-    mGLProgramSpherical->draw(ViewM,ProjM,mSphere.getVertexCount());
+    mGLProgramSpherical->draw(ViewM*modelMatrix,ProjM,mSphere.getVertexCount());
     mGLProgramSpherical->afterDraw();
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
 }
