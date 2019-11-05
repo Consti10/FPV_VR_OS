@@ -30,7 +30,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     static {
         System.loadLibrary("GLRStereoNormal");
     }
-    private native long nativeConstruct(Context context,float[] undistortionData,long telemetryReceiver,long nativeGvrContext,boolean is360);
+    private native long nativeConstruct(Context context,float[] radialUndistortionData,long telemetryReceiver,long nativeGvrContext,boolean is360);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);

@@ -10,7 +10,7 @@
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <GLProgramTextureExt.h>
+#include <GLProgramTexture.h>
 #include <TelemetryReceiver.h>
 #include <EGL/egl.h>
 #include <cinttypes>
@@ -32,7 +32,7 @@ public:
      * Create a GLRenderer Stereo SuperSync using a given |gvr_context|.
      * @param gvr_api The (non-owned) gvr_context.
      */
-    GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360);
+    GLRStereoSuperSync(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360);
     /**
     * Draw the Video and transparent OSD scene, synchronized with the VSYNC, directly into the Front Buffer
      * This has to be called on the GL thread.
@@ -70,7 +70,7 @@ private:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
-    std::unique_ptr<GLProgramTextureExt> mGLRenderTextureExternal= nullptr;
+    std::unique_ptr<GLProgramTexture> mGLRenderTextureExternal= nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<FBRManager> mFBRManager= nullptr;
     int ViewPortW=0,ViewPortH=0;

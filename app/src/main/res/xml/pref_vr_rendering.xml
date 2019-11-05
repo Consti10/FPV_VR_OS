@@ -63,14 +63,18 @@
                     android:defaultValue="50"
                     android:summary="Size of your VR Scene in % (replaced sceneDistance). Default:50, select values between 0 and 100"/>
             </PreferenceCategory>
+
             <PreferenceCategory
                 android:title="DistortionCorrection">
-                <SwitchPreference
-                    android:key="@string/VR_DistortionCorrection"
-                    android:title="@string/VR_DistortionCorrection"
-                    android:summary="enables/disables distortion correction. Using vertex displacement distortion correction."
-                    android:defaultValue="false" />
+                <com.mapzen.prefsplus.IntListPreference
+                    android:key="@string/VR_DISTORTION_CORRECTION_MODE"
+                    android:title="@string/VR_DISTORTION_CORRECTION_MODE"
+                    android:summary="enables/disables distortion correction. 2 modes available: radial and radial+tangential"
+                    android:entries="@array/entriesDistortionCorrection"
+                    android:entryValues="@array/valuesDistortionCorrection"
+                    android:defaultValue="0" />
             </PreferenceCategory>
+
         </PreferenceScreen>
 
     </PreferenceCategory>

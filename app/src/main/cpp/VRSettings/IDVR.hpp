@@ -22,6 +22,7 @@ public:
     static constexpr const char* VR_InterpupilaryDistance="VR_InterpupilaryDistance";
     static constexpr const char* VR_SceneScale="VR_SceneScale";
     static constexpr const char* VR_DistortionCorrection="VR_DistortionCorrection";
+    static constexpr const char* VR_DISTORTION_CORRECTION_MODE="VR_DISTORTION_CORRECTION_MODE";
 };
 
 #endif //CONSTI_10_100_IDVR

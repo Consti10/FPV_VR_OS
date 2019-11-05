@@ -20,6 +20,6 @@
     //VR or Stereo Settings
     <string name="VR_InterpupilaryDistance">VR_InterpupilaryDistance</string>
     <string name="VR_SceneScale">VR_SceneScale</string>
-    <string name="VR_DistortionCorrection">VR_DistortionCorrection</string>
+    <string name="VR_DISTORTION_CORRECTION_MODE">VR_DISTORTION_CORRECTION_MODE</string>
 
 </resources>

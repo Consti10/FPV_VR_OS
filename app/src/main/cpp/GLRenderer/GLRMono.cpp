@@ -9,13 +9,13 @@ constexpr auto TAG="GLRendererMono";
 
 
 GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VIDEO_MODE videoMode,bool enableOSD):
-videoMode(videoMode),
-enableOSD(enableOSD),
-        mFPSCalculator("OpenGL FPS",2000),
-        cpuFrameTime("CPU frame time"),
-        mTelemetryReceiver(telemetryReceiver),
-        mSettingsVR(env,androidContext),
-        mMatricesM(mSettingsVR){
+    videoMode(videoMode),
+    enableOSD(enableOSD),
+    mFPSCalculator("OpenGL FPS",2000),
+    cpuFrameTime("CPU frame time"),
+    mTelemetryReceiver(telemetryReceiver),
+    mSettingsVR(env,androidContext,nullptr,nullptr,true),
+    mMatricesM(mSettingsVR){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
 }
 
@@ -47,8 +47,6 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     glClearColor(0.0f,0,0,0.0f);
     setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
     cpuFrameTime.reset();
-    //GLProgramLine* error=nullptr;
-    //error->afterDraw();
     if(videoMode==VIDEO_MODE::Degree360){
         mMatricesM.calculateProjectionAndDefaultView360(optionalVideo360FOV,displayRatio);
     }

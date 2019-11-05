@@ -9,18 +9,26 @@
 #include <jni.h>
 #include <array>
 #include <string>
+#include <vr/gvr/capi/include/gvr.h>
+#include <DistortionCorrection/DistortionManager.h>
 
 class SettingsVR {
 public:
-    SettingsVR(JNIEnv *env, jobject androidContext,jfloatArray undistortionData= nullptr);
+    SettingsVR(JNIEnv *env, jobject androidContext,jfloatArray undistortionData= nullptr,gvr_context* gvrContext=nullptr,bool noDistortion=false);
     SettingsVR(SettingsVR const &) = delete;
     void operator=(SettingsVR const &)= delete;
 public:
     //Stereo and VR Rendering
     float VR_InterpupilaryDistance;
     float VR_SceneScale;
-    bool VR_DistortionCorrection;
-    std::array<float,7> VR_DC_UndistortionData;
+    int VR_DISTORTION_CORRECTION_MODE;
+private:
+    DistortionManager* distortionManager= nullptr;
+public:
+    //Might return null (if no distortion enabled)
+    DistortionManager* getDistortionManager()const{
+        return distortionManager;
+    }
 public:
     //Head tracking
     int GHT_MODE;
@@ -28,9 +36,7 @@ public:
     bool GHT_Y;
     bool GHT_Z;
 public:
-    int DEV_3D_VIDEO=0;
-public:
-    std::string coeficientsToString();
+    //std::string coeficientsToString();
 };
 
 

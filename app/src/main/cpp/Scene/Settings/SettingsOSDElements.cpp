@@ -4,14 +4,13 @@
 
 #include "SettingsOSDElements.h"
 #include "IDOSD.hpp"
-#include "SettingsN.hpp"
 #include <jni.h>
 
 #define TAG "OSDSettings"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 SettingsOSDElements::SettingsOSDElements(JNIEnv *env, jobject androidContext) {
-    SettingsN prefOSDElements(env,androidContext,"pref_osd");
+    SharedPreferences prefOSDElements(env,androidContext,"pref_osd");
     //Compass Ladder
     oCompassL.enable=prefOSDElements.getBoolean(IDOSD::CL_enable);
     oCompassL.scale=prefOSDElements.getInt(IDOSD::CL_scale);

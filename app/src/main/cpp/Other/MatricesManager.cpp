@@ -7,8 +7,7 @@
 #include "MatrixHelper.h"
 #include "SettingsVR.h"
 
-constexpr auto TAG="HeadTrackerExtended";
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
+
 constexpr auto NANO_TO_MS=1000*1000;
 
 MatricesManager::MatricesManager(const SettingsVR& settingsVR):

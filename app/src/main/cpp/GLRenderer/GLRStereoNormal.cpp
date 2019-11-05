@@ -5,7 +5,7 @@
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <GLProgramTextureExt.h>
+#include <GLProgramTexture.h>
 #include <TelemetryReceiver.h>
 #include "CPUPriorities.hpp"
 
@@ -23,22 +23,19 @@ is360(is360),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
-        mSettingsVR(env,androidContext,undistortionData),
+        mSettingsVR(env,androidContext,undistortionData,gvr_context),
         mMatricesM(mSettingsVR){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
 }
 
 void GLRStereoNormal::placeGLElements(){
-    if(mSettingsVR.DEV_3D_VIDEO>0){
-        lastVideoFormat=lastVideoFormat/2.0f;
-    }
     float videoW=10;
     float videoH=videoW*1.0f/lastVideoFormat;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
     float viewPortRatio=(float)ViewPortW/ViewPortH;
     float videoZ=-videoW/2.0f/viewPortRatio/glm::tan(glm::radians(MAX_FOV_USABLE_FOR_VDDC/2.0f));
-    videoZ*=1.1;
+    videoZ*=1.1f;
     //videoZ*=0.5f;
     videoZ*=(100-mSettingsVR.VR_SceneScale)/100.0f*2;
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
@@ -49,13 +46,14 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     setCPUPriority(CPU_PRIORITY_GLRENDERER_STEREO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    bool enableDistCorrection=mSettingsVR.VR_DistortionCorrection;
-    const auto coeficients=mSettingsVR.VR_DC_UndistortionData;
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(enableDistCorrection,&coeficients);
+    if(mSettingsVR.getDistortionManager()){
+        mSettingsVR.getDistortionManager()->generateTexturesIfNeeded();
+    }
+    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(mSettingsVR.getDistortionManager());
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mGLProgramSpherical=std::make_unique<GLProgramSpherical>((GLuint)videoTexture,10,mSettingsVR.VR_DistortionCorrection,&coeficients);
-    mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>((GLuint)videoTexture,mSettingsVR.VR_DistortionCorrection,&coeficients);
+    mGLProgramSpherical=std::make_unique<GLProgramSpherical>((GLuint)videoTexture,10,mSettingsVR.getDistortionManager());
+    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>((GLuint)videoTexture,true,mSettingsVR.getDistortionManager());
     mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360 :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,
             mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),mGLProgramSpherical.get(),10.0f);
 }
@@ -119,9 +117,15 @@ void GLRStereoNormal::drawEyes() {
         projection=worldMatrices.projection;
     }
     glViewport(0,0,ViewPortW,ViewPortH);
+    if(mSettingsVR.getDistortionManager()){
+        mSettingsVR.getDistortionManager()->leftEye=true;
+    }
     mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
     mOSDRenderer->updateAndDrawElementsGL(leftEye,projection);
     glViewport(ViewPortW,0,ViewPortW,ViewPortH);
+    if(mSettingsVR.getDistortionManager()){
+        mSettingsVR.getDistortionManager()->leftEye=false;
+    }
     mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
     mOSDRenderer->drawElementsGL(rightEye,projection);
 }
@@ -144,7 +148,7 @@ extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jobject instance,jobject androidContext,jfloatArray undistortionData,jlong telemetryReceiver, jlong native_gvr_api,jboolean is360) {
-    return jptr(
+        return jptr(
             new GLRStereoNormal(env,androidContext,undistortionData,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),is360));
 }
 

@@ -32,6 +32,9 @@ set_target_properties( # Specifies the target library.
 #first, get all the external libraries that come with RenderingXCore - glm and gvr
 #glm is header only, we only need to provide the path
 include_directories(${RX_CORE_DIR}/libs/glm)
+include_directories(${RX_CORE_DIR}/src/main/cpp/Color/)
+include_directories(${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/)
+include_directories(${RX_CORE_DIR}/src/main/cpp/Helper/)
 #gvr is a shared,imported library
 set(GVR_DIR ${RX_CORE_DIR}/libs/google/gvr)
 include_directories(${GVR_DIR}/headers)
@@ -56,12 +59,14 @@ include_directories(${RX_CORE_DIR}/src/main/cpp/GLPrograms)
 add_library( GLPrograms SHARED
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramVC.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramText.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTextureExt.cpp
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTexture.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramLine.cpp
         ${RX_CORE_DIR}/src/main/cpp/Sphere/Sphere.cpp
         ${RX_CORE_DIR}/src/main/cpp/Sphere/GvrSphere.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp)
-target_link_libraries( GLPrograms ${log-lib} android GLESv2)
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/DistortionManager.cpp
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/Distortion.cpp)
+target_link_libraries( GLPrograms ${log-lib} android GLESv2 gvr-lib)
 
 
 
@@ -102,7 +107,7 @@ target_link_libraries( Scene GLPrograms Telemetry-lib ${log-lib} android EGL GLE
 include_directories(src/main/cpp/VRSettings)
 add_library(VRSettings SHARED
         src/main/cpp/VRSettings/SettingsVR.cpp)
-target_link_libraries(VRSettings android log)
+target_link_libraries(VRSettings android log GLPrograms)
 
 set(GLR_SOME_DEPENDENCIES VRSettings OtherStuff GLPrograms Scene Telemetry-lib Time)
 

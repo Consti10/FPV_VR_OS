@@ -14,9 +14,9 @@ android {
             cmake {
                 cppFlags "-std=c++17"  //,"-frtti","-fexceptions"
                 arguments "-DANDROID_STL=c++_static",   //, "-DCMAKE_VERBOSE_MAKEFILE=ON"
-                        //Pass trough the location for cmake to find native (cpp) code of the RenderingXCore module
-                        "-DT_CORE_DIR=${project(':TelemetryCore').getProjectDir().getAbsolutePath().replace("\\","/")}",
                         //Pass trough the location for cmake to find native (cpp) code of the TelemetryCore module
+                        "-DT_CORE_DIR=${project(':TelemetryCore').getProjectDir().getAbsolutePath().replace("\\","/")}",
+                        //Pass trough the location for cmake to find native (cpp) code of the RenderingXCore module
                         "-DRX_CORE_DIR=${project(':RenderingXCore').getProjectDir().getAbsolutePath().replace("\\","/")}"
             }
         }

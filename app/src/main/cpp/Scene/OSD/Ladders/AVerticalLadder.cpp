@@ -4,6 +4,7 @@
 #include "AVerticalLadder.h"
 #include <Settings/SettingsOSDStyle.h>
 #include <Helper/StringHelper.hpp>
+#include <Helper/GLBufferHelper.hpp>
 #include "Helper/GLHelper.hpp"
 
 #define TAG "VerticalLadder"
@@ -56,7 +57,7 @@ void AVerticalLadder::setupPosition() {
                 GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
             }
         }
-        GLHelper::allocateGLBufferStatic(mLadderLines.glBuffer,tmpLinesB,sizeof(tmpLinesB));
+        GLBufferHelper::allocateGLBufferStatic(mLadderLines.glBuffer,tmpLinesB,sizeof(tmpLinesB));
     }
     //place the main value element
     outlineQuadWidth=mWidth*2.0f/3.0f;
@@ -112,7 +113,7 @@ void AVerticalLadder::updateLadderStringsRange(int newMiddleValue) {
         GLProgramText::convertStringToRenderingData(x,y,z,h, s,textColor, tmp,i * MAX_N_CHARS_PER_LADDER_STRING);
     }
     //LOGD("Size (in bytes) of ladder strings buffer: %d",(int)sizeof(tmp));
-    GLHelper::allocateGLBufferDynamic(mLadderStrings.glBuffer,tmp,sizeof(tmp));
+    GLBufferHelper::allocateGLBufferDynamic(mLadderStrings.glBuffer,tmp,sizeof(tmp));
     mLadderStrings.currentMiddleValue=newMiddleValue;
 }
 

@@ -4,10 +4,12 @@
 #define FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
 
 #include <Color/Color.hpp>
-#include <Helper/ColoredGeometry.hpp>
-#include <Helper/TexturedGeometry.hpp>
+#include <GeometryBuilder/ColoredGeometry.hpp>
+#include <GeometryBuilder/TexturedGeometry.hpp>
 #include "VideoRenderer.h"
 #include "Helper/GLHelper.hpp"
+#include "Helper/GLBufferHelper.hpp"
+
 #ifndef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
 #include <android/surface_texture.h>
 #include <android/surface_texture_jni.h>
@@ -17,7 +19,7 @@
 constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTextureExt *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
+VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
 mSphere(sphereRadius,36*1,18*1),
 mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
@@ -47,31 +49,29 @@ void VideoRenderer::setupPosition() {
     mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     //We need the indices unless 360 degree rendering
     if(mMode==RM_NORMAL ||mMode==RM_STEREO){
-        GLProgramTextureExt::Vertex vertices[(TESSELATION_FACTOR+1)*(TESSELATION_FACTOR+1)];
-        GLushort indices[6*TESSELATION_FACTOR*TESSELATION_FACTOR];
-        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+        const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(glm::vec3(mX, mY, mZ),
                                                     mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
                                                     1.0f);
-        GLHelper::allocateGLBufferStatic(mGLBuffVid,vertices,sizeof(vertices));
-        GLHelper::allocateGLBufferStatic(mIndexBuffer,indices,sizeof(indices));
-        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+        GLBufferHelper::allocateGLBufferStatic(mGLBuffVid,vid0.vertices);
+        GLBufferHelper::allocateGLBufferStatic(mIndexBuffer,vid0.indices);
+        const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(glm::vec3(mX, mY, mZ),
                                                     mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
                                                     0.5f);
-        GLHelper::allocateGLBufferStatic(mGLBuffVidLeft,vertices,sizeof(vertices));
-        TexturedGeometry::makeTesselatedVideoCanvas(vertices, indices, glm::vec3(mX, mY, mZ),
+        GLBufferHelper::allocateGLBufferStatic(mGLBuffVidLeft,vid1.vertices);
+        const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas( glm::vec3(mX, mY, mZ),
                                                     mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
                                                     0.5f);
-        GLHelper::allocateGLBufferStatic(mGLBuffVidRight,vertices,sizeof(vertices));
-        nIndicesVideoCanvas=6*TESSELATION_FACTOR*TESSELATION_FACTOR;
+        GLBufferHelper::allocateGLBufferStatic(mGLBuffVidRight,vid2.vertices);
+        nIndicesVideoCanvas=vid0.indices.size();
     }else if(mMode==RM_PunchHole){
         GLProgramVC::Vertex tmp[6];
         ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
                                          Color::TRANSPARENT);
-        GLHelper::allocateGLBufferStatic(mGLBuffVid,tmp,sizeof(tmp));
+        GLBufferHelper::allocateGLBufferStatic(mGLBuffVid,tmp,sizeof(tmp));
 
         ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth*5,0,0),glm::vec3(0,mHeight*10,0),
                                          Color::RED);
-        GLHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
+        GLBufferHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
     }
 }
 

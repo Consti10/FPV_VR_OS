@@ -83,9 +83,8 @@ static glm::mat4 removeRotationAroundSpecificAxes(const glm::mat4 mat,const bool
     return mat*RotationMatrix;
 }
 
-static const std::string toString(const glm::mat4 matrix){
+static const std::string toString(const glm::mat4& matrix){
     std::stringstream ss;
-    ss<<"\n";
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             ss<<matrix[i][j]<<",";

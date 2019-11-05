@@ -41,7 +41,7 @@ private:
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
-    std::unique_ptr<GLProgramTextureExt> mGLRenderTextureExternal= nullptr;
+    std::unique_ptr<GLProgramTexture> mGLRenderTextureExternal= nullptr;
     std::unique_ptr<GLProgramSpherical> mGLProgramSpherical= nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     int ViewPortW=0,ViewPortH=0;

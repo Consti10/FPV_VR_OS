@@ -13,13 +13,13 @@
 #define TAG "GLRendererN"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-//#define CHANGE_SWAP_COLOR
+#define CHANGE_SWAP_COLOR
 
-GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360):
+GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360):
 is360(is360),
         mTelemetryReceiver(telemetryReceiver),
         mFrameTimeAcc(std::vector<std::string>{"startDR","updateTexImage1","clear","drawVideoCanvas","stopDR","updateTexImage2"}),
-        mSettingsVR(env,androidContext),
+        mSettingsVR(env,androidContext,undistortionData,gvr_context),
         mMatricesM(mSettingsVR){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     std::function<void(JNIEnv *env2, bool whichEye, int64_t offsetNS)> f = [this](JNIEnv *env2, bool whichEye, int64_t offsetNS) {
@@ -41,17 +41,16 @@ void GLRStereoSuperSync::placeGLElements() {
     mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
 }
 
-
 void GLRStereoSuperSync::onSurfaceCreated(JNIEnv *env, jobject androidContext, jint videoTexture) {
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    bool enableDistCorrection=mSettingsVR.VR_DistortionCorrection;
-    const auto coeficients=mSettingsVR.VR_DC_UndistortionData;
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(enableDistCorrection,&coeficients);
-
+    if(mSettingsVR.getDistortionManager()){
+        mSettingsVR.getDistortionManager()->generateTexturesIfNeeded();
+    }
+    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(mSettingsVR.getDistortionManager());
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>((GLuint)videoTexture,mSettingsVR.VR_DistortionCorrection,&coeficients);
+    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>((GLuint)videoTexture,true,mSettingsVR.getDistortionManager());
     mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360 :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
     mFrameTimeAcc.reset();
     initOtherExtensions();
@@ -89,7 +88,7 @@ void GLRStereoSuperSync::exitSuperSyncLoop() {
 void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_t offsetNS) {
 #ifdef CHANGE_SWAP_COLOR
     swapColor++;
-        if(swapColor>1){
+        if(swapColor>2){
             glClearColor(0.0f,0.0f,0.0f,0.0f);
             swapColor=0;
         }else{
@@ -158,6 +157,9 @@ void GLRStereoSuperSync::drawEye(bool whichEye) {
         rightEye=worldMatrices.rightEyeView;
         projection=worldMatrices.projection;
     }
+    if(mSettingsVR.getDistortionManager()){
+        mSettingsVR.getDistortionManager()->leftEye=whichEye;
+    }
     if(whichEye){
         glViewport(0,0,ViewPortW,ViewPortH);
         mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
@@ -189,9 +191,9 @@ inline GLRStereoSuperSync *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jboolean qcomTiledRenderingAvailable,jboolean reusableSyncAvailable,jboolean is360) {
+(JNIEnv *env, jobject obj,jobject androidContext,jfloatArray undistortionData,jlong telemetryReceiver, jlong native_gvr_api,jboolean qcomTiledRenderingAvailable,jboolean reusableSyncAvailable,jboolean is360) {
     return jptr(
-            new GLRStereoSuperSync(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)qcomTiledRenderingAvailable,(bool)reusableSyncAvailable,(bool)is360));
+            new GLRStereoSuperSync(env,androidContext,undistortionData,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)qcomTiledRenderingAvailable,(bool)reusableSyncAvailable,(bool)is360));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {

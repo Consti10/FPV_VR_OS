@@ -15,8 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.vr.ndk.base.BufferViewport;
 import com.google.vr.ndk.base.GvrLayout;
 import com.google.vr.ndk.base.GvrUiLayout;
+import com.google.vr.sdk.base.GvrView;
+import com.google.vr.sdk.base.GvrViewerParams;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
@@ -71,6 +74,19 @@ public class AStereoNormal extends AppCompatActivity {
         airHeadTrackingSender=new AirHeadTrackingSender(this,mGvrLayout.getGvrApi());
 
         registerForContextMenu(mGvrLayout);
+
+
+        float[] input={0,0};
+        float[] output=mGvrLayout.getGvrApi().computeDistortedPoint(BufferViewport.EyeType.LEFT,input);
+        System.out.println("Distortion:("+output[0]+","+output[1]+","+output[2]+")");
+
+    }
+
+    public static void  bla(Context c){
+        GvrView view=new GvrView(c);
+        final GvrViewerParams params=view.getGvrViewerParams();
+        //params.getDistortion().getApproximateInverseDistortion()
+        //System.out.println("Model: "+params.getModel());
     }
 
 

@@ -3,7 +3,7 @@
 #define OSDTEXTOBJ
 
 
-#include <Helper/ColoredGeometry.hpp>
+#include <GeometryBuilder/ColoredGeometry.hpp>
 #include <Helper/MDebug.hpp>
 #include "StylizedString.hpp"
 #include "../ElementBatching/CpuGpuBuff.h"

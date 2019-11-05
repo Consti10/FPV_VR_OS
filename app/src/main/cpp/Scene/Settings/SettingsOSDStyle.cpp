@@ -3,9 +3,9 @@
 //
 
 #include "SettingsOSDStyle.h"
-#include "SettingsN.hpp"
 #include "IDOSD.hpp"
 #include <android/log.h>
+#include <Helper/SharedPreferences.hpp>
 
 #define TAG "SettingsOSDStyle"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
@@ -13,7 +13,7 @@
 
 SettingsOSDStyle::SettingsOSDStyle(JNIEnv *env, jobject androidContext) {
 //OSD style ------------
-    SettingsN prefOSDStyle(env,androidContext,"pref_osd");
+    SharedPreferences prefOSDStyle(env,androidContext,"pref_osd");
     OSD_MONO_LINE_WIDTH=prefOSDStyle.getInt(IDOSD::OSD_MONO_LINE_WIDTH);
     OSD_STEREO_LINE_WIDTH=prefOSDStyle.getInt(IDOSD::OSD_STEREO_LINE_WIDTH);
     OSD_LINE_FILL_COLOR=Color::fromAndroid(prefOSDStyle.getInt(IDOSD::OSD_LINE_FILL_COLOR));

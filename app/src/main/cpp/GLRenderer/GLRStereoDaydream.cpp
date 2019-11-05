@@ -7,7 +7,7 @@
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <GLProgramTextureExt.h>
+#include <GLProgramTexture.h>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <memory>
 #include "CPUPriorities.hpp"
@@ -81,9 +81,11 @@ void GLRStereoDaydream::updateBufferViewports() {
         //gvr::Rectf fov={45,45,45,45};
         //gvr::Rectf fov={33.15,33.15,33.15,33.15};
         //scratch_viewport.SetSourceFov(fov);
+        //scratch_viewport.Set
         scratch_viewport.SetExternalSurfaceId(videoSurfaceID);
         scratch_viewport.SetSourceBufferIndex(GVR_BUFFER_INDEX_EXTERNAL_SURFACE);
         scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
+        //scratch_viewport.SetTransform()
         buffer_viewports.SetBufferViewport(eye,scratch_viewport);
     }
     //
@@ -96,7 +98,6 @@ void GLRStereoDaydream::updateBufferViewports() {
         buffer_viewports.SetBufferViewport(eye+2,scratch_viewport);
     }
 }
-
 
 void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint optionalVideoTexture) {
     gvr_api_->InitializeGl();
