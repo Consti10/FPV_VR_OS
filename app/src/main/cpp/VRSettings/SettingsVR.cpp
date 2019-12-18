@@ -22,13 +22,8 @@ SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext,jfloatArray radialUnd
     GHT_Z=settingsN.getBoolean(IDVR::GroundHeadTrackingZ);
 
     //VR_DISTORTION_CORRECTION_MODE=2;
-    if(VR_DISTORTION_CORRECTION_MODE==0 || noDistortion){
-        distortionManager= nullptr;
-    }else if(VR_DISTORTION_CORRECTION_MODE==1){
-        distortionManager=new DistortionManager(env,radialUndistData);
-    }else if(VR_DISTORTION_CORRECTION_MODE==2){
-        distortionManager=DistortionManager::createFromFileIfAlreadyExisting("/storage/emulated/0/",gvrContext);
-    }
+    distortionManager=nullptr;
+
     //LOGD("Coeficients %s",coeficientsToString().c_str());
     //LOGD("HT Mode %d | X %d Y %d Z %d",GHT_MODE,GHT_X,GHT_Y,GHT_Z);
     LOGD("%f %f %d",VR_InterpupilaryDistance,VR_SceneScale,VR_DISTORTION_CORRECTION_MODE);

@@ -21,7 +21,7 @@ public:
     //The daydream renderer handles external surfaces (like video) itself, but requires the application to
     //'punch a hole' into the scene by rendering a quad with alpha=0.0f
     enum VIDEO_RENDERING_MODE{RM_NORMAL,RM_STEREO,RM_Degree360,RM_PunchHole};
-    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx=nullptr,GLProgramSpherical *glPSpherical=nullptr,float sphereRadius=1.0f);
+    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx=nullptr,GLProgramSpherical *glPSpherical=nullptr,float sphereRadius=1.0f);
     void initUpdateTexImageJAVA(JNIEnv * env,jobject obj,jobject surfaceTexture);
     void deleteUpdateTexImageJAVA(JNIEnv* env,jobject obj); //frees the global reference so java does not complain
     void updateTexImageJAVA(JNIEnv* env);
@@ -51,8 +51,9 @@ private:
     jmethodID getTimestampMethodId;
     const VIDEO_RENDERING_MODE mMode;
     ASurfaceTexture* mSurfaceTexture;
-
     const Sphere mSphere;
+
+    const GLuint mVideoTexture;
 };
 
 #endif

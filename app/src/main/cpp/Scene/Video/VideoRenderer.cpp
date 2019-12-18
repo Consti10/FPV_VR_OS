@@ -19,8 +19,8 @@
 constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
-mSphere(sphereRadius,36*1,18*1),
+VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
+mSphere(sphereRadius,36*1,18*1),mVideoTexture(videoTexture),
 mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
     mGLProgramSpherical=glPSpherical;
@@ -92,7 +92,7 @@ void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool l
         drawVideoCanvas360(ViewM,ProjM);
     }else if(mMode==RM_NORMAL || mMode==RM_STEREO){
         GLuint buff=mMode==RM_NORMAL ? mGLBuffVid : leftEye ? mGLBuffVidLeft : mGLBuffVidRight;
-        mGLRenderTexEx->beforeDraw(buff);
+        mGLRenderTexEx->beforeDraw(buff,mVideoTexture);
         mGLRenderTexEx->drawIndexed(ViewM,ProjM,0,nIndicesVideoCanvas,mIndexBuffer);
         mGLRenderTexEx->afterDraw();
     }
@@ -124,7 +124,7 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     //For 'normal'video its layout is fine, but for insta360 video the default view direction is wrong
     glm::mat4x4 modelMatrix=glm::rotate(glm::mat4(1.0F),glm::radians(90.0F), glm::vec3(0,0,-1));
 
-    mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices);
+    mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices,mVideoTexture);
     mGLProgramSpherical->draw(ViewM*modelMatrix,ProjM,mSphere.getVertexCount());
     mGLProgramSpherical->afterDraw();
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");

@@ -26,8 +26,8 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     if(videoMode==Degree360){
-        mGLProgramSpherical=std::make_unique<GLProgramSpherical>((GLuint)optionalVideoTexture);
-        mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360,mBasicGLPrograms->vc, nullptr,mGLProgramSpherical.get());
+        mGLProgramSpherical=std::make_unique<GLProgramSpherical>();
+        mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360,(GLuint)optionalVideoTexture,mBasicGLPrograms->vc, nullptr,mGLProgramSpherical.get());
         mVideoRenderer->setWorldPosition(0,0,0,0,0);
     }
 }

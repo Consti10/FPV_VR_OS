@@ -15,6 +15,7 @@ import com.google.vr.sdk.base.AndroidCompat;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.PlayStereo.GLRStereoDaydream;
 import constantin.fpv_vr.MVideoPlayer;
+import constantin.renderingX.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
 /**
@@ -37,22 +38,23 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
-        AndroidCompat.setVrModeEnabled(this, true);
+        //AndroidCompat.setVrModeEnabled(this, true);
         AndroidCompat.setSustainedPerformanceMode(this,true);
+        PerformanceHelper.setImmersiveSticky(this);
 
         mGvrLayout = new GvrLayout(this);
         mGvrLayout.setKeepScreenOn(true);
         //mGvrLayout.getUiLayout().setTransitionViewEnabled(false);
         //mGvrLayout.setAsyncReprojectionEnabled(false);
-        mGvrLayout.setAsyncReprojectionEnabled(true);
-        mGvrLayout.enableAsyncReprojectionVideoSurface(this,new Handler(Looper.getMainLooper()),false);
+        mGvrLayout.setAsyncReprojectionEnabled(false);
+        //mGvrLayout.enableAsyncReprojectionVideoSurface(this,new Handler(Looper.getMainLooper()),false);
 
         mGLView = new GLSurfaceView(this);
         mGLView.setEGLContextClientVersion(2);
         mGLView.setEGLConfigChooser(8, 8, 8, 0, 0, 0);
         mGLView.setPreserveEGLContextOnPause(true);
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRStereoDayDream =new GLRStereoDaydream(this,telemetryReceiver, mGvrLayout.getGvrApi(),mGvrLayout.getAsyncReprojectionVideoSurfaceId());
+        mGLRStereoDayDream =new GLRStereoDaydream(this,telemetryReceiver, mGvrLayout.getGvrApi(),0);//mGvrLayout.getAsyncReprojectionVideoSurfaceId()
         mGLView.setRenderer(mGLRStereoDayDream);
         mGvrLayout.setPresentationView(mGLView);
         setContentView(mGvrLayout);

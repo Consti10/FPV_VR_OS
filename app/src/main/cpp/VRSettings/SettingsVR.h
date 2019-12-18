@@ -23,7 +23,7 @@ public:
     float VR_SceneScale;
     int VR_DISTORTION_CORRECTION_MODE;
 private:
-    DistortionManager* distortionManager= nullptr;
+    DistortionManager* distortionManager;
 public:
     //Might return null (if no distortion enabled)
     DistortionManager* getDistortionManager()const{

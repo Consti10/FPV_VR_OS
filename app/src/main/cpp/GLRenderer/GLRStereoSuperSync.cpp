@@ -44,14 +44,13 @@ void GLRStereoSuperSync::placeGLElements() {
 void GLRStereoSuperSync::onSurfaceCreated(JNIEnv *env, jobject androidContext, jint videoTexture) {
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    if(mSettingsVR.getDistortionManager()){
-        mSettingsVR.getDistortionManager()->generateTexturesIfNeeded();
-    }
+
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>(mSettingsVR.getDistortionManager());
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>((GLuint)videoTexture,true,mSettingsVR.getDistortionManager());
-    mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360 :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
+    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>(true,mSettingsVR.getDistortionManager());
+    mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_Degree360 :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,
+            (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
     mFrameTimeAcc.reset();
     initOtherExtensions();
     videoFormatChanged=false;

@@ -65,7 +65,8 @@ add_library( GLPrograms SHARED
         ${RX_CORE_DIR}/src/main/cpp/Sphere/GvrSphere.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/DistortionManager.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/Distortion.cpp)
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/MLensDistortion.cpp
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/MPolynomialRadialDistortion.cpp)
 target_link_libraries( GLPrograms ${log-lib} android GLESv2 gvr-lib)
 
 
@@ -100,7 +101,6 @@ add_library( Scene
         ${SCENE_PATH}/Settings/SettingsOSDStyle.cpp)
 target_link_libraries( Scene GLPrograms Telemetry-lib ${log-lib} android EGL GLESv2 GLESv3 Time)
 
-
 ##########################################################################################################
 #Renderer Mono/Stereo (called from GLSurfaceView.Renderer)
 ##########################################################################################################
@@ -133,6 +133,8 @@ add_library( GLRStereoSuperSync SHARED
 target_link_libraries( GLRStereoSuperSync ${GLR_SOME_DEPENDENCIES} SuperSync)
 
 add_library( GLRStereoDaydream SHARED
-        src/main/cpp/GLRenderer/GLRStereoDaydream.cpp )
+        src/main/cpp/GLRenderer/GLRStereoDaydream.cpp
+        src/main/cpp/Other/gvr_util/util.cc
+        )
 target_link_libraries( GLRStereoDaydream ${GLR_SOME_DEPENDENCIES} )
 

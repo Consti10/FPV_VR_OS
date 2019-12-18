@@ -26,6 +26,7 @@ public:
      * @param gvr_api The (non-owned) gvr_context.
      */
     explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool is360);
+    void updateHeadsetParams(const MDeviceParams& deviceParams);
 private:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture) override;
     void onSurfaceChanged(int width, int height)override ;
@@ -48,6 +49,12 @@ private:
     int swapColor=0;
     const float MAX_FOV_USABLE_FOR_VDDC=100;
     const bool is360;
+private:
+    DistortionManager distortionManager;
+    glm::mat4 mViewM[2];
+    glm::mat4 mProjectionM[2];
+    static constexpr float MIN_Z_DISTANCE=0.1f;
+    static constexpr float MAX_Z_DISTANCE=100.0f;
 };
 
 

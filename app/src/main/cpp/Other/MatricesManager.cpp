@@ -7,7 +7,6 @@
 #include "MatrixHelper.h"
 #include "SettingsVR.h"
 
-
 constexpr auto NANO_TO_MS=1000*1000;
 
 MatricesManager::MatricesManager(const SettingsVR& settingsVR):

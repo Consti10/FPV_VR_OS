@@ -8,6 +8,9 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.view.Surface;
 
+import com.google.vr.sdk.base.GvrView;
+import com.google.vr.sdk.base.GvrViewerParams;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -36,6 +39,14 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
     private native void nativeOnDrawFrame(long glRendererStereoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
+    private native void nativeUpdateHeadsetParams(long nativePointer,float screen_width_meters,
+                                                  float screen_height_meters,
+                                                  float screen_to_lens_distance,
+                                                  float inter_lens_distance,
+                                                  int vertical_alignment,
+                                                  float tray_to_lens_distance,
+                                                  float[] device_fov_left,
+                                                  float[] radial_distortion_params);
 
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoNormal instance.
@@ -50,6 +61,21 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         this.telemetryReceiver=telemetryReceiver;
         nativeGLRendererStereo=nativeConstruct(activityContext, VRSettingsHelper.getUndistortionCoeficients(activityContext),telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoNative.video360(mContext));
+
+        GvrView view=new GvrView(activityContext);
+        GvrViewerParams params=view.getGvrViewerParams();
+
+        float[] fov=new float[4];
+        fov[0]=params.getLeftEyeMaxFov().getLeft();
+        fov[1]=params.getLeftEyeMaxFov().getRight();
+        fov[2]=params.getLeftEyeMaxFov().getBottom();
+        fov[3]=params.getLeftEyeMaxFov().getTop();
+
+        float[] kN=params.getDistortion().getCoefficients();
+
+        nativeUpdateHeadsetParams(nativeGLRendererStereo,view.getScreenParams().getWidthMeters(),view.getScreenParams().getHeightMeters(),
+                params.getScreenToLensDistance(),params.getInterLensDistance(),params.getVerticalAlignment().ordinal(),params.getVerticalDistanceToLensCenter(),
+                fov,kN);
     }
 
     @Override
