@@ -39,7 +39,7 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
         super.onCreate(savedInstanceState);
         mContext=this;
         //AndroidCompat.setVrModeEnabled(this, true);
-        AndroidCompat.setSustainedPerformanceMode(this,true);
+        //AndroidCompat.setSustainedPerformanceMode(this,true);
         PerformanceHelper.setImmersiveSticky(this);
 
         mGvrLayout = new GvrLayout(this);
@@ -60,8 +60,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
         setContentView(mGvrLayout);
         airHeadTrackingSender=new AirHeadTrackingSender(mContext,mGvrLayout.getGvrApi());
     }
-
-
 
     @Override
     protected void onResume(){

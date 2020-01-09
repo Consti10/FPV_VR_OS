@@ -12,11 +12,11 @@
 #include <memory>
 #include <Helper/GLBufferHelper.hpp>
 #include <MatrixHelper.h>
-#include <gvr_util/util.h>
 #include "CPUPriorities.hpp"
 
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
+#include <gvr_util/util.h>
 
 #include "Helper/GLHelper.hpp"
 
@@ -51,56 +51,12 @@ void GLRStereoDaydream::placeGLElements() {
 
 void GLRStereoDaydream::updateBufferViewports() {
     Matrices& t=mMatricesM.getWorldMatrices();
-    //recommended_buffer_viewports.SetToRecommendedBufferViewports();
-    //First the view ports for the video, handled by the async reprojection
-    /*for(size_t eye=0;eye<2;eye++){
-        recommended_buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
-        //scratch_viewport.SetSourceBufferIndex(GVR_BUFFER_INDEX_EXTERNAL_SURFACE);
-        //scratch_viewport.SetExternalSurfaceId(videoSurfaceID);
-        //scratch_viewport.SetExternalSurfaceId(GVR_EXTERNAL_SURFACE_ID_NONE);
-
-        glm::mat4x4 glmM=glm::mat4x4(1);
-        glmM=glm::scale(glmM,glm::vec3(1.6f,0.9f,1.0f));
-        glmM=glm::translate(glmM,glm::vec3(0.0f,0.0f,-4));
-
-        gvr::ClockTimePoint target_time = gvr::GvrApi::GetTimePointNow();
-        target_time.monotonic_system_time_nanos+=10*1000*1000;
-        glm::mat4x4 view=toGLM(gvr_api_->GetHeadSpaceFromStartSpaceRotation(target_time));
-        glmM*=(eye==0 ? t.leftEyeView : t.rightEyeView);
-        gvr::Mat4f gvrM=toGVR(glmM);
-        scratch_viewport.SetTransform(gvrM);
-        gvr::Rectf fov={50,50,30,30};
-        scratch_viewport.SetSourceFov(fov);
-        //auto b=scratch_viewport.GetSourceUv();
-        //LOGDX("%f %f",b.bottom,b.top);
-        //LOGDX("%f %f",b.left,b.right);
-        gvr::Rectf uv={0,1,0,1}; //sample the same, full frame for left / right eye (video is not stereo)
-        scratch_viewport.SetSourceUv(uv);
-        scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
-        buffer_viewports.SetBufferViewport(eye,scratch_viewport);
-    }*/
     recommended_buffer_viewports.SetToRecommendedBufferViewports();
     //
     for(size_t eye=0;eye<2;eye++){
         recommended_buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
-        //gvr::Rectf fov={45,45,45,45};
-        //gvr::Rectf fov={33.15,33.15,33.15,33.15};
-        //scratch_viewport.SetSourceFov(fov);
-        //scratch_viewport.Set
-        //scratch_viewport.SetExternalSurfaceId(videoSurfaceID);
-        //scratch_viewport.SetSourceBufferIndex(GVR_BUFFER_INDEX_EXTERNAL_SURFACE);
-        //scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
-        //scratch_viewport.SetTransform()
+        scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
         buffer_viewports.SetBufferViewport(eye,scratch_viewport);
-    }
-    //
-    for(size_t eye=0;eye<2;eye++){
-        recommended_buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
-        //gvr::Rectf fov={45,45,45,45};
-        //gvr::Rectf fov={33.15,33.15,33.15,33.15};
-        //scratch_viewport.SetSourceFov(fov);
-        scratch_viewport.SetReprojection(GVR_REPROJECTION_FULL);
-        buffer_viewports.SetBufferViewport(eye+2,scratch_viewport);
     }
 }
 
@@ -148,7 +104,7 @@ void GLRStereoDaydream::onDrawFrame() {
 
     updateBufferViewports();
 
-    /*gvr::Frame frame = swap_chain->AcquireFrame();
+    gvr::Frame frame = swap_chain->AcquireFrame();
     frame.BindBuffer(0); //0 is the 0 from createSwapChain()
 
     glDisable(GL_DEPTH_TEST);
@@ -156,7 +112,6 @@ void GLRStereoDaydream::onDrawFrame() {
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    //Video is handled by the async reprojection surface
     distortionManager.updateDistortionWithIdentity();
     for(uint32_t eye=0;eye<2;eye++){
         drawEyeOSD(eye, worldMatrices);
@@ -170,14 +125,12 @@ void GLRStereoDaydream::onDrawFrame() {
 
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);*/
-
+    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     distortionManager.updateDistortion(mInverse,MAX_RAD_SQ,screen_params,texture_params);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     for(int eye=0;eye<2;eye++){
         drawEyeOSDVDDC(eye);
     }
-
     GLHelper::checkGlError("GLRStereoDaydream::drawFrame");
 }
 
@@ -272,7 +225,7 @@ void GLRStereoDaydream::updateHeadsetParams(const MDeviceParams& mDP) {
         LOGD("Max Rad Sq%f",MAX_RAD_SQ);
         for(float r=0;r<MAX_RAD_SQ;r+=0.01f) {
             const float deviation = MPolynomialRadialDistortion::calculateDeviation(r,polynomialRadialDistortion,inverse);
-            //LOGD("r %f | Deviation %f",r,deviation);
+            LOGD("r %f | Deviation %f",r,deviation);
             if (deviation > 0.001f) {
                 done = true;
                 MAX_RAD_SQ-= 0.01f;
@@ -283,10 +236,6 @@ void GLRStereoDaydream::updateHeadsetParams(const MDeviceParams& mDP) {
     }
     LOGD("Max Rad Sq%f",MAX_RAD_SQ);
     mInverse=polynomialRadialDistortion.getApproximateInverseDistortion(MAX_RAD_SQ,DistortionManager::N_RADIAL_UNDISTORTION_COEFICIENTS);
-
-    distortionManager.updateDistortion(mInverse,MAX_RAD_SQ,screen_params,texture_params);
-    distortionManager.updateDistortionWithIdentity();
-
     mProjectionM[0]=perspective(fovLeft,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     mProjectionM[1]=perspective(fovRight,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     const float inter_lens_distance=mDP.inter_lens_distance;

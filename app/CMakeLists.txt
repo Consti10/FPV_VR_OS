@@ -32,15 +32,17 @@ set_target_properties( # Specifies the target library.
 #first, get all the external libraries that come with RenderingXCore - glm and gvr
 #glm is header only, we only need to provide the path
 include_directories(${RX_CORE_DIR}/libs/glm)
-include_directories(${RX_CORE_DIR}/src/main/cpp/Color/)
-include_directories(${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/)
-include_directories(${RX_CORE_DIR}/src/main/cpp/Helper/)
+include_directories(${RX_CORE_DIR}/src/main/cpp)
+include_directories(${RX_CORE_DIR}/src/main/cpp/Color)
+include_directories(${RX_CORE_DIR}/src/main/cpp/Other)
+include_directories(${RX_CORE_DIR}/src/main/cpp/Helper)
 #gvr is a shared,imported library
 set(GVR_DIR ${RX_CORE_DIR}/libs/google/gvr)
 include_directories(${GVR_DIR}/headers)
 add_library( gvr-lib SHARED IMPORTED )
 set_target_properties(gvr-lib PROPERTIES IMPORTED_LOCATION
         ${GVR_DIR}/jni/${ANDROID_ABI}/libgvr.so )
+
 #now build our libraries
 #Time library
 include_directories(${RX_CORE_DIR}/src/main/cpp/Time)
@@ -57,16 +59,16 @@ target_link_libraries( SuperSync ${log-lib} android Time log EGL GLESv2)
 #OpenGL Programs
 include_directories(${RX_CORE_DIR}/src/main/cpp/GLPrograms)
 add_library( GLPrograms SHARED
+        ${RX_CORE_DIR}/src/main/cpp/DistortionCorrection/DistortionManager.cpp
+        ${RX_CORE_DIR}/src/main/cpp/DistortionCorrection/MLensDistortion.cpp
+        ${RX_CORE_DIR}/src/main/cpp/DistortionCorrection/MPolynomialRadialDistortion.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramVC.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramText.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTexture.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramLine.cpp
-        ${RX_CORE_DIR}/src/main/cpp/Sphere/Sphere.cpp
-        ${RX_CORE_DIR}/src/main/cpp/Sphere/GvrSphere.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/DistortionManager.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/MLensDistortion.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/DistortionCorrection/MPolynomialRadialDistortion.cpp)
+        ${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/Sphere.cpp
+        ${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/GvrSphere.cpp
+        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp )
 target_link_libraries( GLPrograms ${log-lib} android GLESv2 gvr-lib)
 
 
@@ -133,8 +135,7 @@ add_library( GLRStereoSuperSync SHARED
 target_link_libraries( GLRStereoSuperSync ${GLR_SOME_DEPENDENCIES} SuperSync)
 
 add_library( GLRStereoDaydream SHARED
-        src/main/cpp/GLRenderer/GLRStereoDaydream.cpp
-        src/main/cpp/Other/gvr_util/util.cc
-        )
+        ${RX_CORE_DIR}/src/main/cpp/Other/gvr_util/util.cc
+        src/main/cpp/GLRenderer/GLRStereoDaydream.cpp )
 target_link_libraries( GLRStereoDaydream ${GLR_SOME_DEPENDENCIES} )
 
