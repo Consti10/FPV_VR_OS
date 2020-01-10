@@ -88,7 +88,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

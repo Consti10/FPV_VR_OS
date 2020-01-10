@@ -17,28 +17,25 @@
 #include <MatricesManager.h>
 #include <FPSCalculator.h>
 #include <Video/VideoRenderer.h>
+#include <DistortionCorrection/VRHeadsetParams.h>
 
 class GLRStereoDaydream: public IGLRenderer,public IVideoFormatChanged {
 public:
     GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP);
-    void updateHeadsetParams(const MDeviceParams& deviceParams);
 private:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture)override;
     void onSurfaceChanged(int width, int height)override ;
     void onDrawFrame()override;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
-    //-----
     gvr::BufferViewportList buffer_viewports;
     gvr::BufferViewportList recommended_buffer_viewports;
     gvr::BufferViewport scratch_viewport;
     std::unique_ptr<gvr::SwapChain> swap_chain;
     gvr::Sizei framebuffer_size;
-    //----------
-private:
     void placeGLElements();
     void updateBufferViewports();
-    void drawEyeOSD(uint32_t eye, Matrices &worldMatrices);
-    void drawEyeOSDVDDC(uint32_t eye);
+    void drawEyeOSD(gvr::Eye eye);
+    void drawEyeOSDVDDC(gvr::Eye eye);
 private:
     TelemetryReceiver& mTelemetryReceiver;
     MatricesManager mMatricesM;
@@ -58,19 +55,9 @@ private:
     GLuint glBufferVCX;
     int nColoredVertices;
 private:
-    const int screenWidthP;
-    const int screenHeightP;
-private:
     DistortionManager distortionManager;
-    glm::mat4 mViewM[2];
-    glm::mat4 mProjectionM[2];
-    static constexpr float MIN_Z_DISTANCE=0.1f;
-    static constexpr float MAX_Z_DISTANCE=100.0f;
-private:
-    std::array<MLensDistortion::ViewportParams,2> screen_params;
-    std::array<MLensDistortion::ViewportParams,2> texture_params;
-    MPolynomialRadialDistortion mInverse{{0}};
-    float MAX_RAD_SQ;
+public:
+    VRHeadsetParams vrHeadsetParams;
 };
 
 

@@ -28,8 +28,9 @@ GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,Telemetr
         mMatricesM(mSettingsVR),
         mFPSCalculator("OpenGL FPS",2000),
         distortionManager(DistortionManager::RADIAL_2),
-        screenWidthP(screenWidthP),screenHeightP(screenHeightP){
+        vrHeadsetParams(screenWidthP,screenHeightP){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
+    vrHeadsetParams.setGvrApi(gvr_api_.get());
     this->videoSurfaceID=videoSurfaceID;
     //----------
     buffer_viewports = gvr_api_->CreateEmptyBufferViewportList();
@@ -50,9 +51,7 @@ void GLRStereoDaydream::placeGLElements() {
 }
 
 void GLRStereoDaydream::updateBufferViewports() {
-    Matrices& t=mMatricesM.getWorldMatrices();
     recommended_buffer_viewports.SetToRecommendedBufferViewports();
-    //
     for(size_t eye=0;eye<2;eye++){
         recommended_buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
         scratch_viewport.SetReprojection(GVR_REPROJECTION_NONE);
@@ -98,9 +97,7 @@ void GLRStereoDaydream::onDrawFrame() {
     //Calculate & print fps
     mFPSCalculator.tick();
     //LOGD("FPS: %f",mFPSCalculator.getCurrentFPS());
-
-    mMatricesM.calculateNewHeadPoseIfNeeded(gvr_api_.get(), 16);
-    Matrices& worldMatrices=mMatricesM.getWorldMatrices();
+    vrHeadsetParams.updateHeadView();
 
     updateBufferViewports();
 
@@ -114,10 +111,10 @@ void GLRStereoDaydream::onDrawFrame() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     distortionManager.updateDistortionWithIdentity();
     for(uint32_t eye=0;eye<2;eye++){
-        drawEyeOSD(eye, worldMatrices);
+        drawEyeOSD(static_cast<gvr::Eye>(eye));
     }
     frame.Unbind();
-    frame.Submit(buffer_viewports, worldMatrices.lastHeadPos);
+    frame.Submit(buffer_viewports, vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation_());
 
     //
     //glClearColor(0.3f, 0.0f, 0.0f, 0.0f);
@@ -126,16 +123,16 @@ void GLRStereoDaydream::onDrawFrame() {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-    distortionManager.updateDistortion(mInverse,MAX_RAD_SQ,screen_params,texture_params);
+    vrHeadsetParams.updateDistortionManager(distortionManager);
     //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     for(int eye=0;eye<2;eye++){
-        drawEyeOSDVDDC(eye);
+        drawEyeOSDVDDC(static_cast<gvr::Eye>(eye));
     }
     GLHelper::checkGlError("GLRStereoDaydream::drawFrame");
 }
 
 
-void GLRStereoDaydream::drawEyeOSD(uint32_t eye, Matrices &worldMatrices) {
+void GLRStereoDaydream::drawEyeOSD(gvr::Eye eye) {
     buffer_viewports.GetBufferViewport(eye, &scratch_viewport);
 
     const gvr::Rectf& rect = scratch_viewport.GetSourceUv();
@@ -146,7 +143,7 @@ void GLRStereoDaydream::drawEyeOSD(uint32_t eye, Matrices &worldMatrices) {
     glViewport(left, bottom, width, height);
 
     const gvr_rectf fov = scratch_viewport.GetSourceFov();
-    const gvr::Mat4f perspective =ndk_hello_vr::PerspectiveMatrixFromView(fov, MIN_Z_DISTANCE, MAX_Z_DISTANCE);
+    const gvr::Mat4f perspective =ndk_hello_vr::PerspectiveMatrixFromView(fov, vrHeadsetParams.MIN_Z_DISTANCE,vrHeadsetParams.MAX_Z_DISTANCE);
     const auto eyeM=gvr_api_->GetEyeFromHeadMatrix(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     const auto rotM=gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
     const auto viewM=toGLM(ndk_hello_vr::MatrixMul(eyeM,rotM));
@@ -165,18 +162,12 @@ void GLRStereoDaydream::drawEyeOSD(uint32_t eye, Matrices &worldMatrices) {
     mBasicGLPrograms->vc.afterDraw();*/
 }
 
-void GLRStereoDaydream::drawEyeOSDVDDC(uint32_t eye) {
-    const int ViewPortW=(int)(screenWidthP/2.0f);
-    const int ViewPortH=(int)(screenHeightP);
-    if(eye==0){
-        glViewport(0,0,ViewPortW,ViewPortH);
-    }else{
-        glViewport(ViewPortW,0,ViewPortW,ViewPortH);
-    }
+void GLRStereoDaydream::drawEyeOSDVDDC(gvr::Eye eye) {
+    vrHeadsetParams.setOpenGLViewport(eye);
     distortionManager.leftEye=eye==0;
     const auto rotM=toGLM(gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow()));
-    auto viewM=mViewM[eye]*rotM;
-    auto projM=mProjectionM[eye];
+    auto viewM=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotM;
+    auto projM=vrHeadsetParams.GetProjectionMatrix(eye);
 
     if(eye==0){
         mOSDRenderer->updateAndDrawElementsGL(viewM,projM);
@@ -188,59 +179,6 @@ void GLRStereoDaydream::drawEyeOSDVDDC(uint32_t eye) {
     /*mBasicGLPrograms->vc.beforeDraw(glBufferVCX);
     mBasicGLPrograms->vc.draw(viewM,projM,0,nColoredVertices,GL_LINES);
     mBasicGLPrograms->vc.afterDraw();*/
-}
-
-void GLRStereoDaydream::updateHeadsetParams(const MDeviceParams& mDP) {
-    LOGD("%s",MLensDistortion::MDeviceParamsAsString(mDP).c_str());
-    auto polynomialRadialDistortion=MPolynomialRadialDistortion(mDP.radial_distortion_params);
-    //auto polynomialRadialDistortion=MPolynomialRadialDistortion({0.441, 0.156});
-
-    const auto GetYEyeOffsetMeters= MLensDistortion::GetYEyeOffsetMeters(mDP.vertical_alignment,
-                                                                         mDP.tray_to_lens_distance,
-                                                                         mDP.screen_height_meters);
-    const auto fovLeft= MLensDistortion::CalculateFov(mDP.device_fov_left, GetYEyeOffsetMeters,
-                                                      mDP.screen_to_lens_distance,
-                                                      mDP.inter_lens_distance,
-                                                      polynomialRadialDistortion,
-                                                      mDP.screen_width_meters, mDP.screen_height_meters);
-    const auto fovRight=MLensDistortion::reverseFOV(fovLeft);
-
-
-    MLensDistortion::CalculateViewportParameters_NDC(0, GetYEyeOffsetMeters,
-                                                     mDP.screen_to_lens_distance,
-                                                     mDP.inter_lens_distance, fovLeft,
-                                                     mDP.screen_width_meters, mDP.screen_height_meters,
-                                                     &screen_params[0], &texture_params[0]);
-    MLensDistortion::CalculateViewportParameters_NDC(1, GetYEyeOffsetMeters,
-                                                     mDP.screen_to_lens_distance,
-                                                     mDP.inter_lens_distance, fovRight,
-                                                     mDP.screen_width_meters, mDP.screen_height_meters,
-                                                     &screen_params[1], &texture_params[1]);
-
-
-    MAX_RAD_SQ=1.0f;
-    bool done=false;
-    while(MAX_RAD_SQ<2.0f && !done){
-        const auto& inverse=polynomialRadialDistortion.getApproximateInverseDistortion(MAX_RAD_SQ,DistortionManager::N_RADIAL_UNDISTORTION_COEFICIENTS);
-        LOGD("Max Rad Sq%f",MAX_RAD_SQ);
-        for(float r=0;r<MAX_RAD_SQ;r+=0.01f) {
-            const float deviation = MPolynomialRadialDistortion::calculateDeviation(r,polynomialRadialDistortion,inverse);
-            LOGD("r %f | Deviation %f",r,deviation);
-            if (deviation > 0.001f) {
-                done = true;
-                MAX_RAD_SQ-= 0.01f;
-                break;
-            }
-        }
-        MAX_RAD_SQ+=0.01f;
-    }
-    LOGD("Max Rad Sq%f",MAX_RAD_SQ);
-    mInverse=polynomialRadialDistortion.getApproximateInverseDistortion(MAX_RAD_SQ,DistortionManager::N_RADIAL_UNDISTORTION_COEFICIENTS);
-    mProjectionM[0]=perspective(fovLeft,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
-    mProjectionM[1]=perspective(fovRight,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
-    const float inter_lens_distance=mDP.inter_lens_distance;
-    mViewM[0]=glm::translate(glm::mat4(1.0f),glm::vec3(inter_lens_distance*0.5f,0,0));
-    mViewM[1]=glm::translate(glm::mat4(1.0f),glm::vec3(-inter_lens_distance*0.5f,0,0));
 }
 
 
@@ -310,8 +248,7 @@ JNI_METHOD(void, nativeUpdateHeadsetParams)
 
     const MDeviceParams deviceParams{screen_width_meters,screen_height_meters,screen_to_lens_distance,inter_lens_distance,vertical_alignment,tray_to_lens_distance,
                                      device_fov_left1,radial_distortion_params1};
-
-    native(glRendererStereo)->updateHeadsetParams(deviceParams);
+    native(glRendererStereo)->vrHeadsetParams.updateHeadsetParams(deviceParams);
 }
 
 }
