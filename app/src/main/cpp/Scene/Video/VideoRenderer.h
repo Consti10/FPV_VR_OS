@@ -4,13 +4,16 @@
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 #include <GLProgramTexture.h>
 #include <GLProgramVC.h>
 #include <android/surface_texture.h>
-#include <GLProgramSpherical.h>
+#include <GeometryBuilder/Sphere.h>
+#include <Helper/GLBufferHelper.hpp>
 #include "../General/IPositionable.hpp"
 #include "../General/IDrawable.hpp"
 #include "../General/PositionDebug.hpp"
+
 
 class VideoRenderer : public IPositionable{ //Does not inherit from IDrawable !
 public:
@@ -20,8 +23,8 @@ public:
     //Degree360: 360 degree video, rendered onto a sphere instead of a quad
     //The daydream renderer handles external surfaces (like video) itself, but requires the application to
     //'punch a hole' into the scene by rendering a quad with alpha=0.0f
-    enum VIDEO_RENDERING_MODE{RM_NORMAL,RM_STEREO,RM_Degree360,RM_PunchHole};
-    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx=nullptr,GLProgramSpherical *glPSpherical=nullptr,float sphereRadius=1.0f);
+    enum VIDEO_RENDERING_MODE{RM_NORMAL,RM_STEREO,RM_360_EQUIRECTANGULAR,RM_PunchHole};
+    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx=nullptr,float sphereRadius=1.0f);
     void initUpdateTexImageJAVA(JNIEnv * env,jobject obj,jobject surfaceTexture);
     void deleteUpdateTexImageJAVA(JNIEnv* env,jobject obj); //frees the global reference so java does not complain
     void updateTexImageJAVA(JNIEnv* env);
@@ -32,8 +35,6 @@ public:
 private:
     void setupPosition() override;
     PositionDebug mPositionDebug;
-    GLuint mGLBuffSphereVertices;
-    //GLuint mGLBuffSphereIndices;
     GLuint mIndexBuffer;
     GLuint mGLBuffVidLeft; //left side of the video frame (u.v coordinates)
     GLuint mGLBuffVidRight; //right side of the video frame (u.v coordinates)
@@ -42,8 +43,8 @@ private:
     int nIndicesVideoCanvas;
     const GLProgramVC& mGLRenderGeometry;
     GLProgramTexture* mGLRenderTexEx= nullptr;
-    GLProgramSpherical* mGLProgramSpherical=nullptr;
-    Sphere* sphere=nullptr;
+
+    GLBufferHelper::VertexIndexBuffer mEquirectangularSphere;
 
     const int TESSELATION_FACTOR=10;
     jobject localRefSurfaceTexture;
@@ -51,7 +52,6 @@ private:
     jmethodID getTimestampMethodId;
     const VIDEO_RENDERING_MODE mMode;
     ASurfaceTexture* mSurfaceTexture;
-    const Sphere mSphere;
 
     const GLuint mVideoTexture;
 };

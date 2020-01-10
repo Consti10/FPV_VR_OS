@@ -19,6 +19,9 @@
 #include <IVideoFormatChanged.hpp>
 #include <MatricesManager.h>
 
+#include <GeometryBuilder/EquirectangularSphere.hpp>
+#include <DistortionCorrection/VRHeadsetParams.h>
+
 class GLRStereoNormal : public IGLRenderer, public IVideoFormatChanged {
 public:
     /**
@@ -26,7 +29,6 @@ public:
      * @param gvr_api The (non-owned) gvr_context.
      */
     explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool is360);
-    void updateHeadsetParams(const MDeviceParams& deviceParams);
 private:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture) override;
     void onSurfaceChanged(int width, int height)override ;
@@ -35,7 +37,6 @@ private:
     void placeGLElements();
 private:
     TelemetryReceiver& mTelemetryReceiver;
-    MatricesManager mMatricesM;
     Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
     const SettingsVR mSettingsVR;
@@ -43,7 +44,6 @@ private:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<GLProgramTexture> mGLRenderTextureExternal= nullptr;
-    std::unique_ptr<GLProgramSpherical> mGLProgramSpherical= nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     int ViewPortW=0,ViewPortH=0;
     int swapColor=0;
@@ -51,10 +51,8 @@ private:
     const bool is360;
 private:
     DistortionManager distortionManager;
-    glm::mat4 mViewM[2];
-    glm::mat4 mProjectionM[2];
-    static constexpr float MIN_Z_DISTANCE=0.1f;
-    static constexpr float MAX_Z_DISTANCE=100.0f;
+public:
+    VRHeadsetParams vrHeadsetParams;
 };
 
 

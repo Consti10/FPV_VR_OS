@@ -68,8 +68,7 @@ add_library( GLPrograms SHARED
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTexture.cpp
         ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramLine.cpp
         ${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/Sphere.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/GvrSphere.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramSpherical.cpp )
+        ${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/GvrSphere.cpp)
 target_link_libraries( GLPrograms ${log-lib} android GLESv2 gvr-lib)
 
 
@@ -125,13 +124,11 @@ target_link_libraries( GLRMono ${GLR_SOME_DEPENDENCIES} )
 
 add_library( GLRStereoNormal SHARED
         src/main/cpp/GLRenderer/GLRStereoNormal.cpp
-        src/main/cpp/GLRenderer/SceneStereoscopic.cpp
         )
 target_link_libraries( GLRStereoNormal ${GLR_SOME_DEPENDENCIES} )
 
 add_library( GLRStereoSuperSync SHARED
         src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp
-        src/main/cpp/GLRenderer/SceneStereoscopic.cpp
         )
 target_link_libraries( GLRStereoSuperSync ${GLR_SOME_DEPENDENCIES} SuperSync)
 

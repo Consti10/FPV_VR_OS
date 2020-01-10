@@ -6,6 +6,7 @@
 #include <Color/Color.hpp>
 #include <GeometryBuilder/ColoredGeometry.hpp>
 #include <GeometryBuilder/TexturedGeometry.hpp>
+#include <GeometryBuilder/EquirectangularSphere.hpp>
 #include "VideoRenderer.h"
 #include "Helper/GLHelper.hpp"
 #include "Helper/GLBufferHelper.hpp"
@@ -19,11 +20,10 @@
 constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx,GLProgramSpherical *glPSpherical,float sphereRadius):
-mSphere(sphereRadius,36*1,18*1),mVideoTexture(videoTexture),
+VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx,float sphereRadius):
+mVideoTexture(videoTexture),
 mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
-    mGLProgramSpherical=glPSpherical;
     switch (mMode){
         case RM_NORMAL:
             glGenBuffers(1,&mGLBuffVid);
@@ -32,11 +32,13 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
             glGenBuffers(1,&mGLBuffVidLeft);
             glGenBuffers(1,&mGLBuffVidRight);
             break;
-        case RM_Degree360:
-            glGenBuffers(1,&mGLBuffSphereVertices);
-            //glGenBuffers(1,&mGLBuffSphereIndices);
-            //GLProgramSpherical::uploadToGPU(mSphere,mGLBuffSphereVertices,mGLBuffSphereIndices);
-            mSphere.uploadToGPU(mGLBuffSphereVertices);
+        case RM_360_EQUIRECTANGULAR:
+            {
+                std::vector<GLProgramTexture::Vertex> vertices;
+                std::vector<GLProgramTexture::INDEX_DATA > indices;
+                EquirectangularSphere::create_sphere(vertices,indices,2560,1280);
+                GLBufferHelper::createAllocateVertexIndexBuffer(vertices, indices, mEquirectangularSphere);
+            }
             break;
         case RM_PunchHole:
             glGenBuffers(1,&mGLBuffVid);
@@ -88,45 +90,29 @@ void VideoRenderer::punchHole2(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
 }
 
 void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye) {
-    if(mMode==RM_Degree360){
+    if(mMode==RM_360_EQUIRECTANGULAR){
         drawVideoCanvas360(ViewM,ProjM);
     }else if(mMode==RM_NORMAL || mMode==RM_STEREO){
         GLuint buff=mMode==RM_NORMAL ? mGLBuffVid : leftEye ? mGLBuffVidLeft : mGLBuffVidRight;
         mGLRenderTexEx->beforeDraw(buff,mVideoTexture);
-        mGLRenderTexEx->drawIndexed(ViewM,ProjM,0,nIndicesVideoCanvas,mIndexBuffer);
+        mGLRenderTexEx->drawIndexed(mIndexBuffer,ViewM,ProjM,0,nIndicesVideoCanvas,GL_TRIANGLES);
         mGLRenderTexEx->afterDraw();
     }
-    //punch hole handled differently
-    /*GLuint buff;
-    switch(mMode){
-        case RM_NORMAL: buff=mGLBuffVid; //no 3D video
-            break;
-        case RM_STEREO:
-            buff=leftEye ? mGLBuffVidLeft : mGLBuffVidRight; //3D video - left and right eye
-            break;
-        default:
-            buff=0;
-            break;
-    }
-    mGLRenderTexEx->beforeDraw(buff);
-    mGLRenderTexEx->drawIndexed(ViewM,ProjM,0,nIndicesVideoCanvas,mIndexBuffer);
-    mGLRenderTexEx->afterDraw();*/
     //We render the debug rectangle after the other one such that it always appears when enabled (overdraw)
     mPositionDebug.drawGLDebug(ViewM,ProjM);
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas");
 }
 
 void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
-    if(mMode!=VIDEO_RENDERING_MODE::RM_Degree360){
+    if(mMode!=VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
-    //Default view direction, the gvr sphere is slightly different -
-    //For 'normal'video its layout is fine, but for insta360 video the default view direction is wrong
-    glm::mat4x4 modelMatrix=glm::rotate(glm::mat4(1.0F),glm::radians(90.0F), glm::vec3(0,0,-1));
+    glm::mat4 scale=glm::scale(glm::vec3(2.0f, 2.0f, 2.0f));
 
-    mGLProgramSpherical->beforeDraw(mGLBuffSphereVertices,mVideoTexture);
-    mGLProgramSpherical->draw(ViewM*modelMatrix,ProjM,mSphere.getVertexCount());
-    mGLProgramSpherical->afterDraw();
+    mGLRenderTexEx->beforeDraw(mEquirectangularSphere.vertexB,mVideoTexture);
+    mGLRenderTexEx->drawIndexed(mEquirectangularSphere.indexB,ViewM*scale,ProjM,0,mEquirectangularSphere.nIndices,GL_TRIANGLE_STRIP);
+    mGLRenderTexEx->afterDraw();
+
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
 }
 

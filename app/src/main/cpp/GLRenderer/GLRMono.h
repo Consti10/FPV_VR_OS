@@ -48,9 +48,9 @@ public:
     const SettingsVR mSettingsVR;
     MatricesManager mMatricesM;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
+    std::unique_ptr<GLProgramTexture> mGLProgramTexture=nullptr;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     //These fields are only active when also rendering video
-    std::unique_ptr<GLProgramSpherical> mGLProgramSpherical=nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
 };
