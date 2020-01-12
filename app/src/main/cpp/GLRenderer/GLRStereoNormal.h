@@ -22,20 +22,23 @@
 #include <GeometryBuilder/EquirectangularSphere.hpp>
 #include <DistortionCorrection/VRHeadsetParams.h>
 
-class GLRStereoNormal : public IGLRenderer, public IVideoFormatChanged {
+class GLRStereoNormal :  public IVideoFormatChanged {
 public:
     /**
      * Create a GLRStereoNormal using a given |gvr_context|.
      * @param gvr_api The (non-owned) gvr_context.
      */
-    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool is360);
-private:
-    void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture) override;
-    void onSurfaceChanged(int width, int height)override ;
-    void onDrawFrame()override ;
-    void drawEyes();
+    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool is360);
+public:
+    void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture);
+    void onSurfaceChanged(int width, int height);
+    void onDrawFrame();
+    //All OpenGL calls required to draw one eye (video and osd)
+    void drawEye(gvr::Eye eye,bool updateOSDBetweenEyes);
+    //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,
+    //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
-private:
+public:
     TelemetryReceiver& mTelemetryReceiver;
     Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
@@ -45,13 +48,10 @@ private:
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<GLProgramTexture> mGLRenderTextureExternal= nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
-    int ViewPortW=0,ViewPortH=0;
     int swapColor=0;
-    const float MAX_FOV_USABLE_FOR_VDDC=100;
     const bool is360;
-private:
-    DistortionManager distortionManager;
 public:
+    DistortionManager distortionManager;
     VRHeadsetParams vrHeadsetParams;
 };
 

@@ -129,6 +129,7 @@ target_link_libraries( GLRStereoNormal ${GLR_SOME_DEPENDENCIES} )
 
 add_library( GLRStereoSuperSync SHARED
         src/main/cpp/GLRenderer/GLRStereoSuperSync.cpp
+        src/main/cpp/GLRenderer/GLRStereoNormal.cpp
         )
 target_link_libraries( GLRStereoSuperSync ${GLR_SOME_DEPENDENCIES} SuperSync)
 

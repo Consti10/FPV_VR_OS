@@ -16,55 +16,22 @@
 #define CHANGE_SWAP_COLOR
 
 GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360):
-is360(is360),
-        mTelemetryReceiver(telemetryReceiver),
-        mFrameTimeAcc(std::vector<std::string>{"startDR","updateTexImage1","clear","drawVideoCanvas","stopDR","updateTexImage2"}),
-        mSettingsVR(env,androidContext,undistortionData,gvr_context),
-        mMatricesM(mSettingsVR){
-    gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
+GLRStereoNormal(env,androidContext,telemetryReceiver,gvr_context,is360),
+        mFrameTimeAcc(std::vector<std::string>{"startDR","updateTexImage1","clear","drawVideoCanvas","stopDR","updateTexImage2"}){
     std::function<void(JNIEnv *env2, bool whichEye, int64_t offsetNS)> f = [this](JNIEnv *env2, bool whichEye, int64_t offsetNS) {
         this->renderNewEyeCallback(env2,whichEye,offsetNS);
     };
     mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,true,f, nullptr);
 }
 
-void GLRStereoSuperSync::placeGLElements() {
-    float videoW=10;
-    float videoH=videoW*1.0f/lastVideoFormat;
-    float videoX=-videoW/2.0f;
-    float videoY=-videoH/2.0f;
-    float viewPortRatio=(float)ViewPortW/ViewPortH;
-    float videoZ=-videoW/2.0f/viewPortRatio/glm::tan(glm::radians(MAX_FOV_USABLE_FOR_VDDC/2.0f));
-    videoZ*=1.1;
-    videoZ*=(100-mSettingsVR.VR_SceneScale)/100.0f*2;
-    mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
-    mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
-}
-
-void GLRStereoSuperSync::onSurfaceCreated(JNIEnv *env, jobject androidContext, jint videoTexture) {
-    //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
-    //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(mSettingsVR.getDistortionManager());
-    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
-    mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>(true,mSettingsVR.getDistortionManager());
-    mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,
-            (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
+void GLRStereoSuperSync::onSurfaceCreatedX(JNIEnv *env, jobject androidContext, jint videoTexture) {
+   GLRStereoNormal::onSurfaceCreated(env,androidContext,videoTexture);
     mFrameTimeAcc.reset();
     initOtherExtensions();
-    videoFormatChanged=false;
 }
 
-void GLRStereoSuperSync::onSurfaceChanged(int width, int height) {
-    ViewPortW=width/2;
-    ViewPortH=height;
-    placeGLElements();
-    mMatricesM.calculateProjectionAndDefaultView(MAX_FOV_USABLE_FOR_VDDC,
-                                                 ((float) ViewPortW) / ((float) ViewPortH));
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(0.0f,0,0,0.0f);
+void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
+    GLRStereoNormal::onSurfaceChanged(width,height);
     glEnable(GL_SCISSOR_TEST);
 }
 
@@ -102,7 +69,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
 
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //when using QCOM tiled rendering, we call 'startDirectRendering()' before 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye,ViewPortW,ViewPortH);
+        mFBRManager->startDirectRendering(whichEye,vrHeadsetParams.screenWidthP/2,vrHeadsetParams.screenHeightP);
     }
     vrEyeTimeStamps.setTimestamp("startDR");
     //this probably implies a glFlush(). The problem is that a glFlush() also implies a glEndTilingQcom
@@ -112,7 +79,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     vrEyeTimeStamps.setTimestamp("updateTexImage1");
     if(mFBRManager->directRenderingMode!=FBRManager::QCOM_TILED_RENDERING){
         //when not using QCOM tiled rendering, we call 'startDirectRendering()' after 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye,ViewPortW,ViewPortH);
+        mFBRManager->startDirectRendering(whichEye,vrHeadsetParams.screenWidthP/2,vrHeadsetParams.screenHeightP);
     }
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //so we have to call glClear() before any OpenGL calls that affect framebuffer contents (e.g. draw())
@@ -125,7 +92,8 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
         //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
     vrEyeTimeStamps.setTimestamp("clear");
-    drawEye(whichEye);
+    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
+    GLRStereoNormal::drawEye(whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE,true);
     vrEyeTimeStamps.setTimestamp("drawVideoCanvas");
     mFBRManager->stopDirectRendering(whichEye);
     vrEyeTimeStamps.setTimestamp("stopDR");
@@ -142,33 +110,6 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     mFrameTimeAcc.printEveryXSeconds(5);
 }
 
-void GLRStereoSuperSync::drawEye(bool whichEye) {
-    mMatricesM.calculateNewHeadPoseIfNeeded(gvr_api_.get(), 16);
-    glm::mat4x4 leftEye,rightEye,projection;
-    if(mMatricesM.settingsVR.GHT_MODE==MatricesManager::MODE_1PP){
-        Matrices& worldMatrices=mMatricesM.getWorldMatrices();
-        leftEye=worldMatrices.leftEyeViewTracked;
-        rightEye=worldMatrices.rightEyeViewTracked;
-        projection=worldMatrices.projection;
-    }else{
-        Matrices& worldMatrices=mMatricesM.getWorldMatrices();
-        leftEye=worldMatrices.leftEyeView;
-        rightEye=worldMatrices.rightEyeView;
-        projection=worldMatrices.projection;
-    }
-    if(mSettingsVR.getDistortionManager()){
-        mSettingsVR.getDistortionManager()->leftEye=whichEye;
-    }
-    if(whichEye){
-        glViewport(0,0,ViewPortW,ViewPortH);
-        mVideoRenderer->drawVideoCanvas(leftEye,projection,true);
-        mOSDRenderer->updateAndDrawElementsGL(leftEye,projection);
-    }else{
-        glViewport(ViewPortW,0,ViewPortW,ViewPortH);
-        mVideoRenderer->drawVideoCanvas(rightEye,projection,false);
-        mOSDRenderer->updateAndDrawElementsGL(rightEye,projection);
-    }
-}
 
 void GLRStereoSuperSync::setLastVSYNC(int64_t lastVSYNC) {
     mFBRManager->setLastVSYNC(lastVSYNC);
@@ -201,11 +142,11 @@ JNI_METHOD(void, nativeDelete)
 
 JNI_METHOD(void, nativeOnSurfaceCreated)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoTexture,jobject androidContext) {
-    native(glRendererStereo)->OnSurfaceCreated(env,androidContext,videoTexture);
+    native(glRendererStereo)->onSurfaceCreatedX(env,androidContext,videoTexture);
 }
 JNI_METHOD(void, nativeOnSurfaceChanged)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint w,jint h) {
-    native(glRendererStereo)->OnSurfaceChanged(w, h);
+    native(glRendererStereo)->onSurfaceChangedX(w, h);
 }
 JNI_METHOD(void, nativeEnterSuperSyncLoop)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jobject surfaceTexture,jint exclusiveVRCore) {
@@ -225,4 +166,33 @@ JNI_METHOD(void, nativeOnVideoRatioChanged)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoW,jint videoH) {
     native(glRendererStereo)->SetVideoRatio((int)videoW,(int)videoH);
 }
+
+JNI_METHOD(void, nativeUpdateHeadsetParams)
+(JNIEnv *env, jobject obj, jlong instance,
+ jfloat screen_width_meters,
+ jfloat screen_height_meters,
+ jfloat screen_to_lens_distance,
+ jfloat inter_lens_distance,
+ jint vertical_alignment,
+ jfloat tray_to_lens_distance,
+ jfloatArray device_fov_left,
+ jfloatArray radial_distortion_params,
+ jint screenWidthP,jint screenHeightP
+) {
+    std::array<float,4> device_fov_left1{};
+    std::vector<float> radial_distortion_params1(2);
+
+    jfloat *arrayP=env->GetFloatArrayElements(device_fov_left, nullptr);
+    std::memcpy(device_fov_left1.data(),&arrayP[0],4*sizeof(float));
+    env->ReleaseFloatArrayElements(device_fov_left,arrayP,0);
+    arrayP=env->GetFloatArrayElements(radial_distortion_params, nullptr);
+    std::memcpy(radial_distortion_params1.data(),&arrayP[0],2*sizeof(float));
+    env->ReleaseFloatArrayElements(radial_distortion_params,arrayP,0);
+
+    const MDeviceParams deviceParams{screen_width_meters,screen_height_meters,screen_to_lens_distance,inter_lens_distance,vertical_alignment,tray_to_lens_distance,
+                                     device_fov_left1,radial_distortion_params1};
+    native(instance)->vrHeadsetParams.updateHeadsetParams(deviceParams,screenWidthP,screenHeightP);
+    native(instance)->vrHeadsetParams.updateDistortionManager(native(instance)->distortionManager);
+}
+
 }

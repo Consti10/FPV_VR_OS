@@ -5,6 +5,9 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.view.Surface;
 
+import com.google.vr.sdk.base.GvrView;
+import com.google.vr.sdk.base.GvrViewerParams;
+
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.Settings.VRSettingsHelper;
 import constantin.renderingX.GLESInfo.GLESInfo;
@@ -31,6 +34,15 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     private native void nativeExitSuperSyncLoop(long glRendererMonoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
     private native void nativeDoFrame(long glRendererStereoP,long lastVsync);
+    private native void nativeUpdateHeadsetParams(long nativePointer,float screen_width_meters,
+                                                  float screen_height_meters,
+                                                  float screen_to_lens_distance,
+                                                  float inter_lens_distance,
+                                                  int vertical_alignment,
+                                                  float tray_to_lens_distance,
+                                                  float[] device_fov_left,
+                                                  float[] radial_distortion_params,
+                                                  int screenWidthP,int screenHeightP);
 
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoSuperSync instance.
@@ -48,6 +60,18 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context, VRSettingsHelper.getUndistortionCoeficients(context),telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoNative.video360(mContext));
+
+        GvrView view=new GvrView(context);
+        GvrViewerParams params=view.getGvrViewerParams();
+        float[] fov=new float[4];
+        fov[0]=params.getLeftEyeMaxFov().getLeft();
+        fov[1]=params.getLeftEyeMaxFov().getRight();
+        fov[2]=params.getLeftEyeMaxFov().getBottom();
+        fov[3]=params.getLeftEyeMaxFov().getTop();
+        float[] kN=params.getDistortion().getCoefficients();
+        nativeUpdateHeadsetParams(nativeGLRSuperSync,view.getScreenParams().getWidthMeters(),view.getScreenParams().getHeightMeters(),
+                params.getScreenToLensDistance(),params.getInterLensDistance(),params.getVerticalAlignment().ordinal(),params.getVerticalDistanceToLensCenter(),
+                fov,kN,view.getScreenParams().getWidth(),view.getScreenParams().getHeight());
     }
 
     @Override

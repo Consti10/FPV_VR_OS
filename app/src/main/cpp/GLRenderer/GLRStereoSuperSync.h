@@ -26,7 +26,9 @@
 #include <VRFrameCPUChronometer.h>
 #include <MatricesManager.h>
 
-class GLRStereoSuperSync : public IGLRenderer,public IVideoFormatChanged{
+#include "GLRStereoNormal.h"
+
+class GLRStereoSuperSync : public GLRStereoNormal{
 public:
     /**
      * Create a GLRenderer Stereo SuperSync using a given |gvr_context|.
@@ -49,36 +51,22 @@ public:
      * @param lastVSYNC last reported vsync, in ns
      */
     void setLastVSYNC(int64_t lastVSYNC);
-private:
-    void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture) override ;
-    void onSurfaceChanged(int width, int height)override;
-    void onDrawFrame()override{};//unused. using FBRManager, lambda and drawEye() instead
-    void drawEye(bool whichEye);
+public:
+    void onSurfaceCreatedX(JNIEnv * env,jobject obj,jint videoTexture);
+    void onSurfaceChangedX(int width, int height);
+    //void drawEye(gvr::Eye eye);
     /**
      * Called by the SuperSync manager
      * @param env
      * @param whichEye left/right eye
      * @param offsetNS  time since eye event
+     * NOTE: In SuperSync we do not use the onDrawFrame callback
      */
     void renderNewEyeCallback(JNIEnv* env,bool whichEye,int64_t offsetNS);
 private:
-    TelemetryReceiver& mTelemetryReceiver;
-    MatricesManager mMatricesM;
     VRFrameTimeAccumulator mFrameTimeAcc;
-
-    const SettingsVR mSettingsVR;
-    std::unique_ptr<gvr::GvrApi> gvr_api_;
-    std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
-    std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
-    std::unique_ptr<GLProgramTexture> mGLRenderTextureExternal= nullptr;
-    std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<FBRManager> mFBRManager= nullptr;
-    int ViewPortW=0,ViewPortH=0;
     int swapColor=0;
-    void placeGLElements();
-    const float MAX_FOV_USABLE_FOR_VDDC=70;
-
-    const bool is360;
 };
 
 
