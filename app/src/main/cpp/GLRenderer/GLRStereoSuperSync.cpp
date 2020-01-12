@@ -10,7 +10,7 @@
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
 
-#define TAG "GLRendererN"
+constexpr auto TAG="GLRStereoSuperSync";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 #define CHANGE_SWAP_COLOR

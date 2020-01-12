@@ -54,7 +54,7 @@ public:
 public:
     void onSurfaceCreatedX(JNIEnv * env,jobject obj,jint videoTexture);
     void onSurfaceChangedX(int width, int height);
-    //void drawEye(gvr::Eye eye);
+    // we use the drawEye from GLRStereoNormal void drawEye(gvr::Eye eye);
     /**
      * Called by the SuperSync manager
      * @param env

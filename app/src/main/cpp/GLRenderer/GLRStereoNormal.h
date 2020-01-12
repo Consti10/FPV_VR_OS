@@ -38,7 +38,7 @@ public:
     //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,
     //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
-public:
+protected:
     TelemetryReceiver& mTelemetryReceiver;
     Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
