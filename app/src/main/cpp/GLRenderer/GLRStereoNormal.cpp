@@ -19,14 +19,13 @@ constexpr auto TAG= "GLRendererStereo";
 #include <android/choreographer.h>
 #include <MatrixHelper.h>
 
-GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool is360):
+GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool is360):
 is360(is360),
 distortionManager(DistortionManager::RADIAL_2),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
-        mSettingsVR(env,androidContext,undistortionData,gvr_context),
-        vrHeadsetParams(2560,1440){
+        mSettingsVR(env,androidContext,nullptr,gvr_context){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     vrHeadsetParams.setGvrApi(gvr_api_.get());
 }
@@ -36,11 +35,10 @@ void GLRStereoNormal::placeGLElements(){
     float videoH=videoW*1.0f/lastVideoFormat;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
-    float viewPortRatio=(float)ViewPortW/ViewPortH;
-    float videoZ=-videoW/2.0f/viewPortRatio/glm::tan(glm::radians(MAX_FOV_USABLE_FOR_VDDC/2.0f));
-    videoZ*=1.1f;
-    //videoZ*=0.5f;
-    videoZ*=(100-mSettingsVR.VR_SceneScale)/100.0f*2;
+    //The video width defaults to 10(cm). Calculate tze z value such that the video fills a FOV
+    //of exactly DEFAULT_FOV_FILLED_BY_SCENE
+    float videoZ=-videoW/2.0f/glm::tan(glm::radians(SettingsVR::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
+    videoZ*=mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f;
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
 }
@@ -57,16 +55,11 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
             (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),10.0f);
 }
 
-
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
-    ViewPortW=width/2;
-    ViewPortH=height;
     placeGLElements();
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-    //glDisable(GL_DEPTH_TEST);
     glClearColor(0,0,0,0.0F);
-    //glClearColor(1,0,0,0.0f);
     cpuFrameTime.reset();
 }
 
@@ -85,48 +78,31 @@ void GLRStereoNormal::onDrawFrame() {
         videoFormatChanged=false;
     }
     mFPSCalculator.tick();
-    vrHeadsetParams.updateDistortionManager(distortionManager);
-    //glScissor(0,0,WindowW,WindowH);
-    //glViewport(0,0,WindowW,WindowH);
+    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
+    //start rendering the frame
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     cpuFrameTime.start();
-    drawEyes();
+    drawEye(GVR_LEFT_EYE,false);
+    drawEye(GVR_RIGHT_EYE, false);
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     cpuFrameTime.stop();
     cpuFrameTime.printAvg(5000);
 }
 
 
-void GLRStereoNormal::drawEyes() {
-    vrHeadsetParams.updateHeadView();
-    //update and draw the eyes
-    glm::mat4x4 view,projection;
-    /*if(mMatricesM.settingsVR.GHT_MODE==MatricesManager::MODE_1PP){
-        Matrices& worldMatrices=mMatricesM.getWorldMatrices();
-        leftEye=worldMatrices.leftEyeViewTracked;
-        rightEye=worldMatrices.rightEyeViewTracked;
-        projection=worldMatrices.projection;
-    }else{
-        Matrices& worldMatrices=mMatricesM.getWorldMatrices();
-        leftEye=worldMatrices.leftEyeView;
-        rightEye=worldMatrices.rightEyeView;
-        projection=worldMatrices.projection;
-    }*/
+void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
+    distortionManager.leftEye=eye==GVR_LEFT_EYE;
+    vrHeadsetParams.setOpenGLViewport(eye);
+    //Now draw
     const auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
-    gvr::Eye eye=GVR_LEFT_EYE;
-    view=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
-    projection=vrHeadsetParams.GetProjectionMatrix(eye);
-    glViewport(0,0,ViewPortW,ViewPortH);
-    distortionManager.leftEye=true;
-    mVideoRenderer->drawVideoCanvas(view,projection,true);
-    mOSDRenderer->updateAndDrawElementsGL(view,projection);
-    eye=GVR_RIGHT_EYE;
-    view=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
-    projection=vrHeadsetParams.GetProjectionMatrix(eye);
-    glViewport(ViewPortW,0,ViewPortW,ViewPortH);
-    distortionManager.leftEye=false;
-    mVideoRenderer->drawVideoCanvas(view,projection,false);
-    mOSDRenderer->drawElementsGL(view,projection);
+    glm::mat4 view=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
+    glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
+    mVideoRenderer->drawVideoCanvas(view,projection,eye==GVR_LEFT_EYE);
+    if(eye==GVR_LEFT_EYE || updateOSDBetweenEyes){
+        mOSDRenderer->updateAndDrawElementsGL(view,projection);
+    }else{
+        mOSDRenderer->drawElementsGL(view,projection);
+    }
 }
 
 
@@ -145,9 +121,9 @@ inline GLRStereoNormal *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject instance,jobject androidContext,jfloatArray undistortionData,jlong telemetryReceiver, jlong native_gvr_api,jboolean is360) {
+(JNIEnv *env, jobject instance,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jboolean is360) {
         return jptr(
-            new GLRStereoNormal(env,androidContext,undistortionData,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),is360));
+            new GLRStereoNormal(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),is360));
 }
 
 JNI_METHOD(void, nativeDelete)
@@ -157,17 +133,17 @@ JNI_METHOD(void, nativeDelete)
 
 JNI_METHOD(void, nativeOnSurfaceCreated)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoTexture,jobject androidContext) {
-    native(glRendererStereo)->OnSurfaceCreated(env,androidContext,videoTexture);
+    native(glRendererStereo)->onSurfaceCreated(env,androidContext,videoTexture);
 }
 
 JNI_METHOD(void, nativeOnSurfaceChanged)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint w,jint h) {
-    native(glRendererStereo)->OnSurfaceChanged(w, h);
+    native(glRendererStereo)->onSurfaceChanged(w, h);
 }
 
 JNI_METHOD(void, nativeOnDrawFrame)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {
-    native(glRendererStereo)->OnDrawFrame();
+    native(glRendererStereo)->onDrawFrame();
 }
 
 JNI_METHOD(void, nativeOnVideoRatioChanged)
@@ -177,18 +153,19 @@ JNI_METHOD(void, nativeOnVideoRatioChanged)
 
 
 JNI_METHOD(void, nativeUpdateHeadsetParams)
-(JNIEnv *env, jobject obj, jlong glRendererStereo,
-jfloat screen_width_meters,
-jfloat screen_height_meters,
-jfloat screen_to_lens_distance,
-jfloat inter_lens_distance,
-jint vertical_alignment,
-jfloat tray_to_lens_distance,
-jfloatArray device_fov_left,
-jfloatArray radial_distortion_params
-        ) {
-    std::array<float,4> device_fov_left1{40,40,40,40};
-    std::vector<float> radial_distortion_params1{0,0};
+(JNIEnv *env, jobject obj, jlong instance,
+ jfloat screen_width_meters,
+ jfloat screen_height_meters,
+ jfloat screen_to_lens_distance,
+ jfloat inter_lens_distance,
+ jint vertical_alignment,
+ jfloat tray_to_lens_distance,
+ jfloatArray device_fov_left,
+ jfloatArray radial_distortion_params,
+ jint screenWidthP,jint screenHeightP
+) {
+    std::array<float,4> device_fov_left1{};
+    std::vector<float> radial_distortion_params1(2);
 
     jfloat *arrayP=env->GetFloatArrayElements(device_fov_left, nullptr);
     std::memcpy(device_fov_left1.data(),&arrayP[0],4*sizeof(float));
@@ -199,9 +176,9 @@ jfloatArray radial_distortion_params
 
     const MDeviceParams deviceParams{screen_width_meters,screen_height_meters,screen_to_lens_distance,inter_lens_distance,vertical_alignment,tray_to_lens_distance,
                                      device_fov_left1,radial_distortion_params1};
-    native(glRendererStereo)->vrHeadsetParams.updateHeadsetParams(deviceParams);
+    native(instance)->vrHeadsetParams.updateHeadsetParams(deviceParams,screenWidthP,screenHeightP);
+    native(instance)->vrHeadsetParams.updateDistortionManager(native(instance)->distortionManager);
 }
-
 
 }
 

@@ -17,7 +17,7 @@ public class GLRStereoDaydream implements GLSurfaceView.Renderer{
     static {
         System.loadLibrary("GLRStereoDaydream");
     }
-    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoSurfaceID,int screenWidthP,int screenHeightP);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoSurfaceID);
     private native void nativeDelete(long glRendererP);
     private native void nativeOnSurfaceCreated(long glRendererP,float fovY_full,float ipd_full,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererP,int width,int height);
@@ -30,7 +30,8 @@ public class GLRStereoDaydream implements GLSurfaceView.Renderer{
                                                   int vertical_alignment,
                                                   float tray_to_lens_distance,
                                                   float[] device_fov_left,
-                                                  float[] radial_distortion_params);
+                                                  float[] radial_distortion_params,
+                                                  int screenWidthP,int screenHeightP);
 
     // Opaque native pointer to the native GLRStereoNormal instance.
     private final long nativeGLRendererDaydream;
@@ -42,7 +43,7 @@ public class GLRStereoDaydream implements GLSurfaceView.Renderer{
         final GvrViewerParams params=view.getGvrViewerParams();
 
         nativeGLRendererDaydream=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
-                api.getNativeGvrContext(),videoSurfaceID,view.getScreenParams().getWidth(),view.getScreenParams().getHeight());
+                api.getNativeGvrContext(),videoSurfaceID);
 
 
         float[] fov=new float[4];
@@ -55,7 +56,7 @@ public class GLRStereoDaydream implements GLSurfaceView.Renderer{
 
         nativeUpdateHeadsetParams(nativeGLRendererDaydream,view.getScreenParams().getWidthMeters(),view.getScreenParams().getHeightMeters(),
                 params.getScreenToLensDistance(),params.getInterLensDistance(),params.getVerticalAlignment().ordinal(),params.getVerticalDistanceToLensCenter(),
-                fov,kN);
+                fov,kN,view.getScreenParams().getWidth(),view.getScreenParams().getHeight());
     }
 
     @Override

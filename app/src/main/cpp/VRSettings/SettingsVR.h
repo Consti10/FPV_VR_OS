@@ -19,9 +19,8 @@ public:
     void operator=(SettingsVR const &)= delete;
 public:
     //Stereo and VR Rendering
-    float VR_InterpupilaryDistance;
-    float VR_SceneScale;
     int VR_DISTORTION_CORRECTION_MODE;
+    float VR_SCENE_SCALE_PERCENTAGE;
 private:
     DistortionManager* distortionManager;
 public:
@@ -37,6 +36,7 @@ public:
     bool GHT_Z;
 public:
     //std::string coeficientsToString();
+    static constexpr const float DEFAULT_FOV_FILLED_BY_SCENE=60;
 };
 
 

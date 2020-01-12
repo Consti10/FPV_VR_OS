@@ -22,8 +22,8 @@ MatricesManager::MatricesManager(const SettingsVR& settingsVR):
 
 void MatricesManager::calculateProjectionAndDefaultView(float fov, float ratio) {
     worldMatrices.projection=glm::perspective(glm::radians(fov), ratio, MIN_Z_DISTANCE, MAX_Z_DISTANCE);
-    worldMatrices.leftEyeView=glm::translate(worldMatrices.eyeView,glm::vec3(-settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
-    worldMatrices.rightEyeView=glm::translate(worldMatrices.eyeView,glm::vec3(settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
+    //LOL worldMatrices.leftEyeView=glm::translate(worldMatrices.eyeView,glm::vec3(-settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
+    //LOL worldMatrices.rightEyeView=glm::translate(worldMatrices.eyeView,glm::vec3(settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
 }
 
 void MatricesManager::calculateProjectionAndDefaultView360(float fov360Video,float ratio) {
@@ -53,8 +53,8 @@ void MatricesManager::calculateNewHeadPoseIfNeeded(gvr::GvrApi *gvr_api, const i
     glm::mat4x4 headView=toGLM(worldMatrices.lastHeadPos);
     headView=removeRotationAroundSpecificAxes(headView,true, true,true);
 
-    worldMatrices.leftEyeViewTracked=glm::translate(headView,glm::vec3(-settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
-    worldMatrices.rightEyeViewTracked=glm::translate(headView,glm::vec3(settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
+    //LOL worldMatrices.leftEyeViewTracked=glm::translate(headView,glm::vec3(-settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
+    //LOL worldMatrices.rightEyeViewTracked=glm::translate(headView,glm::vec3(settingsVR.VR_InterpupilaryDistance/2.0f,0,0));
     //LOGD("%s",toString(worldMatrices.leftEyeViewTracked).c_str());
 }
 

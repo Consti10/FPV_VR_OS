@@ -33,12 +33,7 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
             glGenBuffers(1,&mGLBuffVidRight);
             break;
         case RM_360_EQUIRECTANGULAR:
-            {
-                std::vector<GLProgramTexture::Vertex> vertices;
-                std::vector<GLProgramTexture::INDEX_DATA > indices;
-                EquirectangularSphere::create_sphere(vertices,indices,2560,1280);
-                GLBufferHelper::createAllocateVertexIndexBuffer(vertices, indices, mEquirectangularSphere);
-            }
+            EquirectangularSphere::create_sphere(mEquirectangularSphereB,2560,1280);
             break;
         case RM_PunchHole:
             glGenBuffers(1,&mGLBuffVid);
@@ -109,8 +104,8 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     }
     glm::mat4 scale=glm::scale(glm::vec3(2.0f, 2.0f, 2.0f));
 
-    mGLRenderTexEx->beforeDraw(mEquirectangularSphere.vertexB,mVideoTexture);
-    mGLRenderTexEx->drawIndexed(mEquirectangularSphere.indexB,ViewM*scale,ProjM,0,mEquirectangularSphere.nIndices,GL_TRIANGLE_STRIP);
+    mGLRenderTexEx->beforeDraw(mEquirectangularSphereB.vertexB,mVideoTexture);
+    mGLRenderTexEx->drawIndexed(mEquirectangularSphereB.indexB,ViewM*scale,ProjM,0,mEquirectangularSphereB.nIndices,GL_TRIANGLE_STRIP);
     mGLRenderTexEx->afterDraw();
 
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");

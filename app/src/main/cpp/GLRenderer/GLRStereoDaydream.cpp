@@ -27,8 +27,7 @@ GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,Telemetr
         mSettingsVR(env,androidContext,nullptr,gvr_context),
         mMatricesM(mSettingsVR),
         mFPSCalculator("OpenGL FPS",2000),
-        distortionManager(DistortionManager::RADIAL_2),
-        vrHeadsetParams(screenWidthP,screenHeightP){
+        distortionManager(DistortionManager::RADIAL_2){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     vrHeadsetParams.setGvrApi(gvr_api_.get());
     this->videoSurfaceID=videoSurfaceID;
@@ -97,7 +96,7 @@ void GLRStereoDaydream::onDrawFrame() {
     //Calculate & print fps
     mFPSCalculator.tick();
     //LOGD("FPS: %f",mFPSCalculator.getCurrentFPS());
-    vrHeadsetParams.updateHeadView();
+    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
 
     updateBufferViewports();
 
@@ -234,7 +233,8 @@ JNI_METHOD(void, nativeUpdateHeadsetParams)
  jint vertical_alignment,
  jfloat tray_to_lens_distance,
  jfloatArray device_fov_left,
- jfloatArray radial_distortion_params
+ jfloatArray radial_distortion_params,
+jint screenWidthP,jint screenHeightP
 ) {
     std::array<float,4> device_fov_left1{};
     std::vector<float> radial_distortion_params1(2);
@@ -248,7 +248,7 @@ JNI_METHOD(void, nativeUpdateHeadsetParams)
 
     const MDeviceParams deviceParams{screen_width_meters,screen_height_meters,screen_to_lens_distance,inter_lens_distance,vertical_alignment,tray_to_lens_distance,
                                      device_fov_left1,radial_distortion_params1};
-    native(glRendererStereo)->vrHeadsetParams.updateHeadsetParams(deviceParams);
+    native(glRendererStereo)->vrHeadsetParams.updateHeadsetParams(deviceParams,screenWidthP,screenHeightP);
 }
 
 }

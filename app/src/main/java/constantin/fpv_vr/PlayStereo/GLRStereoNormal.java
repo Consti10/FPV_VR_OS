@@ -33,7 +33,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     static {
         System.loadLibrary("GLRStereoNormal");
     }
-    private native long nativeConstruct(Context context,float[] radialUndistortionData,long telemetryReceiver,long nativeGvrContext,boolean is360);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean is360);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
@@ -46,7 +46,8 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
                                                   int vertical_alignment,
                                                   float tray_to_lens_distance,
                                                   float[] device_fov_left,
-                                                  float[] radial_distortion_params);
+                                                  float[] radial_distortion_params,
+                                                  int screenWidthP,int screenHeightP);
 
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoNormal instance.
@@ -59,23 +60,20 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     public GLRStereoNormal(final Context activityContext,final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=activityContext;
         this.telemetryReceiver=telemetryReceiver;
-        nativeGLRendererStereo=nativeConstruct(activityContext, VRSettingsHelper.getUndistortionCoeficients(activityContext),telemetryReceiver.getNativeInstance(),
+        nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoNative.video360(mContext));
 
         GvrView view=new GvrView(activityContext);
         GvrViewerParams params=view.getGvrViewerParams();
-
         float[] fov=new float[4];
         fov[0]=params.getLeftEyeMaxFov().getLeft();
         fov[1]=params.getLeftEyeMaxFov().getRight();
         fov[2]=params.getLeftEyeMaxFov().getBottom();
         fov[3]=params.getLeftEyeMaxFov().getTop();
-
         float[] kN=params.getDistortion().getCoefficients();
-
         nativeUpdateHeadsetParams(nativeGLRendererStereo,view.getScreenParams().getWidthMeters(),view.getScreenParams().getHeightMeters(),
                 params.getScreenToLensDistance(),params.getInterLensDistance(),params.getVerticalAlignment().ordinal(),params.getVerticalDistanceToLensCenter(),
-                fov,kN);
+                fov,kN,view.getScreenParams().getWidth(),view.getScreenParams().getHeight());
     }
 
     @Override

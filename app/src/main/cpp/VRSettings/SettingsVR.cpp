@@ -12,8 +12,7 @@
 SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext,jfloatArray radialUndistData,gvr_context* gvrContext,bool noDistortion) {
     SharedPreferences settingsN(env,androidContext,"pref_vr_rendering");
 
-    VR_InterpupilaryDistance=settingsN.getFloat(IDVR::VR_InterpupilaryDistance,0.2f);
-    VR_SceneScale=settingsN.getFloat(IDVR::VR_SceneScale,50.0f);
+    VR_SCENE_SCALE_PERCENTAGE=settingsN.getFloat(IDVR::VR_SCENE_SCALE_PERCENTAGE,100.0F);
     VR_DISTORTION_CORRECTION_MODE=settingsN.getInt(IDVR::VR_DISTORTION_CORRECTION_MODE);
 
     GHT_MODE=settingsN.getInt(IDVR::GroundHeadTrackingMode);
@@ -21,22 +20,10 @@ SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext,jfloatArray radialUnd
     GHT_Y=settingsN.getBoolean(IDVR::GroundHeadTrackingY);
     GHT_Z=settingsN.getBoolean(IDVR::GroundHeadTrackingZ);
 
-    //VR_DISTORTION_CORRECTION_MODE=2;
-    distortionManager=nullptr;
-
     //LOGD("Coeficients %s",coeficientsToString().c_str());
     //LOGD("HT Mode %d | X %d Y %d Z %d",GHT_MODE,GHT_X,GHT_Y,GHT_Z);
-    LOGD("%f %f %d",VR_InterpupilaryDistance,VR_SceneScale,VR_DISTORTION_CORRECTION_MODE);
+    LOGD("%f %d",VR_SCENE_SCALE_PERCENTAGE,VR_DISTORTION_CORRECTION_MODE);
 }
-
-
-/*std::string SettingsVR::coeficientsToString() {
-    std::stringstream ss;
-    ss<<VR_DC_UndistortionData[0]<<", "<<VR_DC_UndistortionData[1]<<", "<<VR_DC_UndistortionData[2]<<", "<<VR_DC_UndistortionData[3]<<", "<<VR_DC_UndistortionData[4]<<", ";
-    ss<<VR_DC_UndistortionData[5]<<", "<<VR_DC_UndistortionData[6]<<", "<<VR_DC_UndistortionData[7];
-    return ss.str();
-}
-*/
 
 
 
@@ -69,17 +56,5 @@ JNI_METHOD(void, refresh)
     VRSettingsHelper::getInstance().refresh(env, androidContext);
 }
 
-JNI_METHOD(void, setUndistortionData)
-(JNIEnv *env, jclass unused, jfloat maxRSq, jfloat k1, jfloat k2, jfloat k3, jfloat k4, jfloat k5,
- jfloat k6//,jfloat k7,jfloat k8) {
-    VRSettingsHelper &instance = VRSettingsHelper::getInstance();
-    instance.VR_DC_UndistortionData[0] = maxRSq;
-    instance.VR_DC_UndistortionData[1] = k1;
-    instance.VR_DC_UndistortionData[2] = k2;
-    instance.VR_DC_UndistortionData[3] = k3;
-    instance.VR_DC_UndistortionData[4] = k4;
-    instance.VR_DC_UndistortionData[5] = k5;
-    instance.VR_DC_UndistortionData[6] = k6;
-}
 
 }*/

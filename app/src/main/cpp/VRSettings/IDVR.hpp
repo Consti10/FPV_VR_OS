@@ -23,6 +23,7 @@ public:
     static constexpr const char* VR_SceneScale="VR_SceneScale";
     static constexpr const char* VR_DistortionCorrection="VR_DistortionCorrection";
     static constexpr const char* VR_DISTORTION_CORRECTION_MODE="VR_DISTORTION_CORRECTION_MODE";
+    static constexpr const char* VR_SCENE_SCALE_PERCENTAGE="VR_SCENE_SCALE_PERCENTAGE";
 };
 
 #endif //CONSTI_10_100_IDVR

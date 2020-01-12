@@ -42,10 +42,8 @@ private:
     GLuint mGLBuffVidPunchHole;
     int nIndicesVideoCanvas;
     const GLProgramVC& mGLRenderGeometry;
-    GLProgramTexture* mGLRenderTexEx= nullptr;
-
-    GLBufferHelper::VertexIndexBuffer mEquirectangularSphere;
-
+    GLProgramTexture* mGLRenderTexEx=nullptr;
+    GLBufferHelper::VertexIndexBuffer mEquirectangularSphereB;
     const int TESSELATION_FACTOR=10;
     jobject localRefSurfaceTexture;
     jmethodID updateTexImageMethodId;

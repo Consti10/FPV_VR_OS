@@ -8,8 +8,8 @@ android {
         applicationId "constantin.fpv_vr.wifibroadcast"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 29
-        versionName "1.19"
+        versionCode 30
+        versionName "2.0"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++17"  //,"-frtti","-fexceptions"
