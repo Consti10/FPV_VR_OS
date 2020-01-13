@@ -104,7 +104,6 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     }else{
         mOSDRenderer->drawElementsGL(view,projection);
     }
-    
 }
 
 
