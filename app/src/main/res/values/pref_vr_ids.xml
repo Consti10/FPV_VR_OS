@@ -16,10 +16,9 @@
     <string name="DisableVSYNC">DisableVSYNC</string>
     <string name="Disable60FPSLock">Disable60FPSLock</string>
     <string name="MultiSampleAntiAliasing">MultiSampleAntiAliasing</string>
-    <string name="DISABLE_LOW_PERSISTENCE">Disable low persistence mode</string>
+    <string name="ENABLE_LOW_PERSISTENCE">Enable low persistence mode</string>
     //VR or Stereo Settings
-    <string name="VR_InterpupilaryDistance">VR_InterpupilaryDistance</string>
-    <string name="VR_SceneScale">VR_SceneScale</string>
+    <string name="VR_SCENE_SCALE_PERCENTAGE">VR_SCENE_SCALE_PERCENTAGE</string>
     <string name="VR_DISTORTION_CORRECTION_MODE">VR_DISTORTION_CORRECTION_MODE</string>
 
 </resources>

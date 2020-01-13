@@ -37,7 +37,7 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
     private Context mContext;
     private GLSurfaceView mGLView;
     private GvrApi gvrApi;
-    private GLRMonoOSD mGLRMonoOSD;
+    private GLRMono mGLRMonoOSD;
     private AirHeadTrackingSender airHeadTrackingSender;
     private TelemetryReceiver telemetryReceiver;
 
@@ -61,7 +61,7 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
             airHeadTrackingSender=new AirHeadTrackingSender(this,gvrApi);
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRMonoOSD =new GLRMonoOSD(mContext,telemetryReceiver);
+        mGLRMonoOSD =new GLRMono(mContext,telemetryReceiver,null,GLRMono.VIDEO_MODE_NONE,true);
         mGLView.setRenderer(mGLRMonoOSD);
         mGLView.setZOrderMediaOverlay(true);
         addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,

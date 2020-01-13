@@ -21,7 +21,7 @@ constexpr auto TAG= "GLRendererStereo";
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool is360):
 is360(is360),
-distortionManager(DistortionManager::RADIAL_2),
+distortionManager(DistortionManager::RADIAL_CARDBOARD),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
@@ -47,10 +47,10 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     setCPUPriority(CPU_PRIORITY_GLRENDERER_STEREO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
+    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(distortionManager);
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>(true,&distortionManager);
+    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>(true,distortionManager);
     mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,
             (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),10.0f);
 }
@@ -94,7 +94,8 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     distortionManager.leftEye=eye==GVR_LEFT_EYE;
     vrHeadsetParams.setOpenGLViewport(eye);
     //Now draw
-    const auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
+    auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
+    rotation=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
     glm::mat4 view=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
     glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
     mVideoRenderer->drawVideoCanvas(view,projection,eye==GVR_LEFT_EYE);

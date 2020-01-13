@@ -18,26 +18,46 @@ import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
 
 
-public class GLRMono360 extends BaseGLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
+public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
+    static final int VIDEO_MODE_NONE=0;
+    static final int VIDEO_MODE_STEREO=1;
+    static final int VIDEO_MODE_360=2;
+    static {
+        System.loadLibrary("GLRMono");
+    }
+    native long nativeConstruct(Context context,long nativeTelemetryReceiver,long nativeGvrContext,int videoMode,boolean enableOSD);
+    native void nativeDelete(long glRendererMonoP);
+    native void nativeOnSurfaceCreated(long glRendererMonoP,Context androidContext,int optionalVideoTexture);
+    native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height,float optionalVideo360FOV);
+    native void nativeOnDrawFrame(long glRendererMonoP);
+    native void nativeSetHomeOrientation360(long glRendererMonoP);
+
 
     private final long nativeGLRendererMono;
     private final Context mContext;
+    private final TelemetryReceiver telemetryReceiver;
+    //Optional, only when playing video that cannot be displayed by a 'normal' android surface
+    //(e.g. 360° video)
     private SurfaceTexture mSurfaceTexture;
     private MVideoPlayer mVideoPlayer;
-    private final TelemetryReceiver telemetryReceiver;
+    private final int videoMode;
 
-    public GLRMono360(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi,final boolean renderOSD){
+    public GLRMono(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD){
+        this.videoMode=videoMode;
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
-        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),VIDEO_MODE_360,renderOSD);
+        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi!=null ? gvrApi.getNativeGvrContext() : 0,videoMode,renderOSD);
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        int[] videoTexture=new int[1];
-        GLES20.glGenTextures(1, videoTexture, 0);
-        final int mGLTextureVideo = videoTexture[0];
-        mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
+        int mGLTextureVideo=0;
+        if(videoMode!=VIDEO_MODE_NONE){
+            int[] videoTexture=new int[1];
+            GLES20.glGenTextures(1, videoTexture, 0);
+            mGLTextureVideo = videoTexture[0];
+            mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
+        }
         nativeOnSurfaceCreated(nativeGLRendererMono,mContext,mGLTextureVideo);
     }
 
@@ -50,18 +70,22 @@ public class GLRMono360 extends BaseGLRMono implements GLSurfaceView.Renderer, I
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        startVideoPlayerIfNotAlreadyRunning();
-        if(mSurfaceTexture!=null){
-            mSurfaceTexture.updateTexImage();
+        if(videoMode!=VIDEO_MODE_NONE){
+            startVideoPlayerIfNotAlreadyRunning();
+            if(mSurfaceTexture!=null){
+                mSurfaceTexture.updateTexImage();
+            }
         }
         nativeOnDrawFrame(nativeGLRendererMono);
     }
 
     public void onPause(){
         System.out.println("onPause()");
-        if(mVideoPlayer!=null){
-            mVideoPlayer.stop();
-            mVideoPlayer=null;
+        if(videoMode!=VIDEO_MODE_NONE){
+            if(mVideoPlayer!=null){
+                mVideoPlayer.stop();
+                mVideoPlayer=null;
+            }
         }
     }
 

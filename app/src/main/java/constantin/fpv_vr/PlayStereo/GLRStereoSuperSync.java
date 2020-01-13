@@ -9,7 +9,6 @@ import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.GvrViewerParams;
 
 import constantin.fpv_vr.MVideoPlayer;
-import constantin.fpv_vr.Settings.VRSettingsHelper;
 import constantin.renderingX.GLESInfo.GLESInfo;
 import constantin.renderingX.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
@@ -26,7 +25,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     static {
         System.loadLibrary("GLRStereoSuperSync");
     }
-    private native long nativeConstruct(Context context,float[] radialUndistortionData,long telemetryReceiver,long nativeGvrContext,boolean qcomTiledRenderingAvailable,boolean reusableSyncAvailable,boolean is360);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean qcomTiledRenderingAvailable,boolean reusableSyncAvailable,boolean is360);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
@@ -58,7 +57,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         this.telemetryReceiver=telemetryReceiver;
         final boolean qcomTiledRenderingAvailable= GLESInfo.isExtensionAvailable(context, GLESInfo.GL_QCOM_tiled_rendering);
         final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
-        nativeGLRSuperSync=nativeConstruct(context, VRSettingsHelper.getUndistortionCoeficients(context),telemetryReceiver.getNativeInstance(),
+        nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoNative.video360(mContext));
 
         GvrView view=new GvrView(context);

@@ -32,6 +32,7 @@ public:
     void punchHole2(glm::mat4x4 ViewM,glm::mat4x4 ProjM);
     void drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye);
     void drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM);
+    void updateEquirectangularSphere(int videoW,int videoH);
 private:
     void setupPosition() override;
     PositionDebug mPositionDebug;

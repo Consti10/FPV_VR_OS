@@ -30,9 +30,11 @@ public:
      */
     explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool is360);
 public:
+    //not protected because unused by GLRStereoSuperSync
+    void onDrawFrame();
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture);
     void onSurfaceChanged(int width, int height);
-    void onDrawFrame();
+protected:
     //All OpenGL calls required to draw one eye (video and osd)
     void drawEye(gvr::Eye eye,bool updateOSDBetweenEyes);
     //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,

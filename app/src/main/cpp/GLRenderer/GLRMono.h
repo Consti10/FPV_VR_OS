@@ -46,13 +46,19 @@ private:
     const bool enableOSD;
 public:
     const SettingsVR mSettingsVR;
-    MatricesManager mMatricesM;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<GLProgramTexture> mGLProgramTexture=nullptr;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     //These fields are only active when also rendering video
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
+private:
+    const glm::mat4 mViewM=glm::mat4(1.0f);
+    glm::mat4 mOSDProjectionM=glm::mat4(1.0f);
+    glm::mat4 m360ProjectionM=glm::mat4(1.0f);
+    glm::mat4 monoForward360=glm::mat4(1.0f);
+    static constexpr const float MIN_Z_DISTANCE=0.01f;
+    static constexpr const float MAX_Z_DISTANCE=100.0f;
 };
 
 

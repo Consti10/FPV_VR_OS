@@ -1,6 +1,7 @@
 
 
 #include <vr/gvr/capi/include/gvr.h>
+#include <Helper/MatrixHelper.h>
 #include "GLRMono.h"
 #include "CPUPriorities.hpp"
 
@@ -14,19 +15,23 @@ GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetry
     mFPSCalculator("OpenGL FPS",2000),
     cpuFrameTime("CPU frame time"),
     mTelemetryReceiver(telemetryReceiver),
-    mSettingsVR(env,androidContext,nullptr,nullptr,true),
-    mMatricesM(mSettingsVR){
-    gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
+    mSettingsVR(env,androidContext,nullptr,nullptr,true)
+    {
+    if(gvr_context!= nullptr) {
+        gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
+    }
 }
 
 void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalVideoTexture) {
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>();
-    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
+    if(enableOSD){
+        mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
+    }
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     if(videoMode==Degree360){
-        mGLProgramTexture=std::make_unique<GLProgramTexture>(true, nullptr);
+        mGLProgramTexture=std::make_unique<GLProgramTexture>(true);
         mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR,(GLuint)optionalVideoTexture,mBasicGLPrograms->vc,mGLProgramTexture.get());
         mVideoRenderer->setWorldPosition(0,0,0,0,0);
     }
@@ -34,36 +39,38 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
 
 void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) {
     float displayRatio=(float) width/(float)height;
-    mMatricesM.calculateProjectionAndDefaultView(45.0f, displayRatio);
+    mOSDProjectionM=glm::perspective(glm::radians(45.0f),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
+    m360ProjectionM=glm::perspective(glm::radians(optionalVideo360FOV),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
+    const float videoRatio=4.0f/3.0f;
     float videoZ=-10;
     float videoH=glm::tan(glm::radians(45.0f)*0.5f)*10*2;
     float videoW=videoH*displayRatio;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
-    mOSDRenderer->placeGLElementsMono(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
+    if(enableOSD){
+        mOSDRenderer->placeGLElementsMono(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
+    }
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0,0,width,height);
     glClearColor(0.0f,0,0,0.0f);
     setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
     cpuFrameTime.reset();
-    if(videoMode==VIDEO_MODE::Degree360){
-        mMatricesM.calculateProjectionAndDefaultView360(optionalVideo360FOV,displayRatio);
-    }
 }
 
 void GLRMono::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     cpuFrameTime.start();
-    Matrices& worldMatrices=mMatricesM.getWorldMatrices();
     if(videoMode==Degree360){
-        mMatricesM.calculateNewHeadPose360(gvr_api_.get(),0);
-        mVideoRenderer->drawVideoCanvas360(worldMatrices.monoViewTracked360,worldMatrices.projection360);
+        const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
+        glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
+        //tmpHeadPoseGLM= tmpHeadPoseGLM*monoForward360;
+        mVideoRenderer->drawVideoCanvas360(tmpHeadPoseGLM,m360ProjectionM);
     }else if(videoMode==STEREO){
         //mVideoRenderer->drawVideoCanvas(worldMatrices.leftEyeView,worldMatrices.projection, true);
     }
     if(enableOSD){
-        mOSDRenderer->updateAndDrawElementsGL(worldMatrices.eyeView,worldMatrices.projection);
+        mOSDRenderer->updateAndDrawElementsGL(mViewM,mOSDProjectionM);
     }
     mFPSCalculator.tick();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
@@ -72,7 +79,12 @@ void GLRMono::onDrawFrame() {
 }
 
 void GLRMono::setHomeOrientation360() {
-    mMatricesM.setHomeOrientation360(gvr_api_.get());
+    gvr::Mat4f tmpHeadPose=gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
+    glm::mat4 headView=toGLM(tmpHeadPose);
+    //headView=glm::toMat4(glm::quat_cast(headView));
+    monoForward360=monoForward360*headView;
+    //Reset tracking resets the rotation around the y axis, leaving everything else untouched
+    gvr_api_->RecenterTracking();
 }
 
 
@@ -80,7 +92,7 @@ void GLRMono::setHomeOrientation360() {
 
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
-      Java_constantin_fpv_1vr_PlayMono_BaseGLRMono_##method_name
+      Java_constantin_fpv_1vr_PlayMono_GLRMono_##method_name
 
 inline jlong jptr(GLRMono *glRendererMono) {
     return reinterpret_cast<intptr_t>(glRendererMono);

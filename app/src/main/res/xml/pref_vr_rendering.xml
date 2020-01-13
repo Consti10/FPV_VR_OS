@@ -41,10 +41,10 @@
             </PreferenceCategory>
 
             <SwitchPreference
-                android:key="@string/DISABLE_LOW_PERSISTENCE"
-                android:title="@string/DISABLE_LOW_PERSISTENCE"
+                android:key="@string/ENABLE_LOW_PERSISTENCE"
+                android:title="@string/ENABLE_LOW_PERSISTENCE"
                 android:summary="@string/DisbaleLowPersistenceModeDescription"
-                android:defaultValue="true"/>
+                android:defaultValue="false"/>
         </PreferenceScreen>
 
         <PreferenceScreen
@@ -53,15 +53,10 @@
             <PreferenceCategory
                 android:title="General">
                 <com.mapzen.prefsplus.EditFloatPreference
-                    android:key="@string/VR_InterpupilaryDistance"
-                    android:title="@string/VR_InterpupilaryDistance"
-                    android:defaultValue="0.2"
-                    android:summary="@string/IPDDescription"/>
-                <com.mapzen.prefsplus.EditFloatPreference
-                    android:key="@string/VR_SceneScale"
-                    android:title="@string/VR_SceneScale"
-                    android:defaultValue="50"
-                    android:summary="Size of your VR Scene in % (replaced sceneDistance). Default:50, select values between 0 and 100"/>
+                    android:key="@string/VR_SCENE_SCALE_PERCENTAGE"
+                    android:title="@string/VR_SCENE_SCALE_PERCENTAGE"
+                    android:defaultValue="100"
+                    android:summary="Size of your VR Scene in %. Default 100, which means the video fills a fov of 60 degrees"/>
             </PreferenceCategory>
 
             <PreferenceCategory

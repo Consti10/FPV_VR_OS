@@ -15,7 +15,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.Settings.VRSettingsHelper;
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.renderingX.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;

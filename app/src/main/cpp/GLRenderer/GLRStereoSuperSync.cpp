@@ -15,7 +15,7 @@ constexpr auto TAG="GLRStereoSuperSync";
 
 #define CHANGE_SWAP_COLOR
 
-GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,jfloatArray undistortionData,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360):
+GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,bool reusableSyncAvailable,bool is360):
 GLRStereoNormal(env,androidContext,telemetryReceiver,gvr_context,is360),
         mFrameTimeAcc(std::vector<std::string>{"startDR","updateTexImage1","clear","drawVideoCanvas","stopDR","updateTexImage2"}){
     std::function<void(JNIEnv *env2, bool whichEye, int64_t offsetNS)> f = [this](JNIEnv *env2, bool whichEye, int64_t offsetNS) {
@@ -131,9 +131,9 @@ inline GLRStereoSuperSync *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject obj,jobject androidContext,jfloatArray undistortionData,jlong telemetryReceiver, jlong native_gvr_api,jboolean qcomTiledRenderingAvailable,jboolean reusableSyncAvailable,jboolean is360) {
+(JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jboolean qcomTiledRenderingAvailable,jboolean reusableSyncAvailable,jboolean is360) {
     return jptr(
-            new GLRStereoSuperSync(env,androidContext,undistortionData,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)qcomTiledRenderingAvailable,(bool)reusableSyncAvailable,(bool)is360));
+            new GLRStereoSuperSync(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),(bool)qcomTiledRenderingAvailable,(bool)reusableSyncAvailable,(bool)is360));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {

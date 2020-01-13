@@ -21,11 +21,11 @@ import constantin.renderingX.MyEGLWindowSurfaceFactory;
 import constantin.renderingX.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
-//The 360° video needs to be transformed by OpenGL regardless weather the user wants to see the OSD or not
+//The 360° video needs to be rendered with OpenGL regardless weather the user wants to see the OSD or not
 public class AMono360 extends AppCompatActivity {
     private Context mContext;
     private GLSurfaceView mGLView;
-    private GLRMono360 mGLRenderer;
+    private GLRMono mGLRenderer;
     private TelemetryReceiver telemetryReceiver;
     //either create gvr api directly or use gvr layout as wrapper
     //First one caused bugs when not forwarding onResume/Pause to the DisplaySynchronizer, see https://github.com/googlevr/gvr-android-sdk/issues/556
@@ -60,7 +60,7 @@ public class AMono360 extends AppCompatActivity {
             gvrApi.recenterTracking();
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono360(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,renderOSD);
+        mGLRenderer =new GLRMono(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,GLRMono.VIDEO_MODE_360,renderOSD);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);

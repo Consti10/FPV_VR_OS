@@ -66,9 +66,9 @@ public class SJ {
         return pref_connect.getInt(context.getString(R.string.AHTPort),5200);
     }
 
-    public static boolean DISABLE_LOW_PERSISTENCE(final Context context){
+    public static boolean ENABLE_LOW_PERSISTENCE(final Context context){
         final SharedPreferences pref_vr = context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
-        return pref_vr.getBoolean(context.getString(R.string.DISABLE_LOW_PERSISTENCE),true);
+        return pref_vr.getBoolean(context.getString(R.string.ENABLE_LOW_PERSISTENCE),false);
     }
     //Developer
     public static boolean DEV_OVERRIDE_RENDERING_MODE_CHECK(final Context context,final SharedPreferences pref_default){

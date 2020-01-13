@@ -102,13 +102,23 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     if(mMode!=VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
-    glm::mat4 scale=glm::scale(glm::vec3(2.0f, 2.0f, 2.0f));
+    const float scale=1.0f;
+    glm::mat4 scaleM=glm::scale(glm::vec3(scale,scale,scale));
 
     mGLRenderTexEx->beforeDraw(mEquirectangularSphereB.vertexB,mVideoTexture);
-    mGLRenderTexEx->drawIndexed(mEquirectangularSphereB.indexB,ViewM*scale,ProjM,0,mEquirectangularSphereB.nIndices,GL_TRIANGLE_STRIP);
+    mGLRenderTexEx->drawIndexed(mEquirectangularSphereB.indexB,ViewM*scaleM,ProjM,0,mEquirectangularSphereB.nIndices,GL_TRIANGLE_STRIP);
     mGLRenderTexEx->afterDraw();
 
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
+}
+
+//We need to recalculate the sphere vertices when the video ratio changes
+void VideoRenderer::updateEquirectangularSphere(int videoW, int videoH) {
+    if(mMode==RM_360_EQUIRECTANGULAR){
+        //delete and create new one
+        GLBufferHelper::deleteVertexIndexBuffer(mEquirectangularSphereB);
+        EquirectangularSphere::create_sphere(mEquirectangularSphereB,videoW,videoH);
+    }
 }
 
 void VideoRenderer::initUpdateTexImageJAVA(JNIEnv *env, jobject obj,jobject surfaceTexture) {
@@ -156,6 +166,7 @@ void VideoRenderer::updateTexImageJAVA(JNIEnv* env) {
     ASurfaceTexture_updateTexImage(mSurfaceTexture);
 #endif
 }
+
 
 
 
