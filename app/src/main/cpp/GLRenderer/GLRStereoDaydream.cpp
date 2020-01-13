@@ -24,7 +24,7 @@
 
 GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP):
         mTelemetryReceiver(telemetryReceiver),
-        mSettingsVR(env,androidContext,nullptr,gvr_context),
+        mSettingsVR(env,androidContext),
         mMatricesM(mSettingsVR),
         mFPSCalculator("OpenGL FPS",2000),
         distortionManager(DistortionManager::RADIAL_CARDBOARD){

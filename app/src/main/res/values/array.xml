@@ -148,13 +148,11 @@
 
     <string-array name="entriesDistortionCorrection" >
         <item>Disable</item>
-        <item>Enable v1 (radial)</item>
-        <item>Enable v2 (radial+tangential)</item>
+        <item>Enable (Default)</item>
     </string-array>
     <string-array name="valuesDistortionCorrection" >
         <item>0</item>
         <item>1</item>
-        <item>2</item>
     </string-array>
 
 

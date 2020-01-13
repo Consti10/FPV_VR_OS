@@ -14,7 +14,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class UpdateHelper {
 
-    private static final String FIRST_START_29 ="FIRST_START_29";
+    private static final String FIRST_START_30 ="FIRST_START_30";
 
     //set default values for all preference files of the fpv-vr library/module
     private static void setAllDefaultValues(final Context c, final boolean readAgain){
@@ -41,12 +41,12 @@ public class UpdateHelper {
     }
 
     @SuppressLint("ApplySharedPref")
-    public static void checkForFreshInstall(final Context c){
+    public static void checkForFreshInstallOrUpdate(final Context c){
         final SharedPreferences pref_default= PreferenceManager.getDefaultSharedPreferences(c);
-        if(pref_default.getBoolean(FIRST_START_29,true)){
+        if(pref_default.getBoolean(FIRST_START_30,true)){
             clearPreviousPreferences(c);
             setAllDefaultValues(c,true);
-            pref_default.edit().putBoolean(FIRST_START_29,false).commit();
+            pref_default.edit().putBoolean(FIRST_START_30,false).commit();
         }
     }
 

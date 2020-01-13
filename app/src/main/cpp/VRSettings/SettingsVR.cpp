@@ -6,14 +6,16 @@
 #include <array>
 #include <sstream>
 #include <Helper/SharedPreferences.hpp>
+#include <Helper/MDebug.hpp>
 #include "SettingsVR.h"
 #include "IDVR.hpp"
 
-SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext,jfloatArray radialUndistData,gvr_context* gvrContext,bool noDistortion) {
+SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext) {
     SharedPreferences settingsN(env,androidContext,"pref_vr_rendering");
 
     VR_SCENE_SCALE_PERCENTAGE=settingsN.getFloat(IDVR::VR_SCENE_SCALE_PERCENTAGE,100.0F);
-    VR_DISTORTION_CORRECTION_MODE=settingsN.getInt(IDVR::VR_DISTORTION_CORRECTION_MODE);
+    //Default on (0==0ff, 1==On)
+    VR_DISTORTION_CORRECTION_MODE=settingsN.getInt(IDVR::VR_DISTORTION_CORRECTION_MODE,1);
 
     GHT_MODE=settingsN.getInt(IDVR::GroundHeadTrackingMode);
     bool headTracking=GHT_MODE!=0;

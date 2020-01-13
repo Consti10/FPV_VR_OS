@@ -14,8 +14,7 @@ GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetry
     enableOSD(enableOSD),
     mFPSCalculator("OpenGL FPS",2000),
     cpuFrameTime("CPU frame time"),
-    mTelemetryReceiver(telemetryReceiver),
-    mSettingsVR(env,androidContext,nullptr,nullptr,true)
+    mTelemetryReceiver(telemetryReceiver)
     {
     if(gvr_context!= nullptr) {
         gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);

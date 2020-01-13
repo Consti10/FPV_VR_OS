@@ -20,12 +20,11 @@ constexpr auto TAG= "GLRendererStereo";
 #include <MatrixHelper.h>
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool is360):
-is360(is360),
-distortionManager(DistortionManager::RADIAL_CARDBOARD),
+is360(is360),mSettingsVR(env,androidContext),
+distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? DistortionManager::NONE : DistortionManager::RADIAL_CARDBOARD),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
-        cpuFrameTime("CPU frame time"),
-        mSettingsVR(env,androidContext,nullptr,gvr_context){
+        cpuFrameTime("CPU frame time"){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     vrHeadsetParams.setGvrApi(gvr_api_.get());
 }
@@ -38,7 +37,7 @@ void GLRStereoNormal::placeGLElements(){
     //The video width defaults to 10(cm). Calculate tze z value such that the video fills a FOV
     //of exactly DEFAULT_FOV_FILLED_BY_SCENE
     float videoZ=-videoW/2.0f/glm::tan(glm::radians(SettingsVR::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
-    videoZ*=mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f;
+    videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
 }

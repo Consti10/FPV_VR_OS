@@ -50,25 +50,21 @@
         <PreferenceScreen
             android:title="Stereo/VR rendering"
             android:summary="General settings for stereo rendering/VR rendering">
-            <PreferenceCategory
-                android:title="General">
+
                 <com.mapzen.prefsplus.EditFloatPreference
                     android:key="@string/VR_SCENE_SCALE_PERCENTAGE"
                     android:title="@string/VR_SCENE_SCALE_PERCENTAGE"
                     android:defaultValue="100"
-                    android:summary="Size of your VR Scene in %. Default 100, which means the video fills a fov of 60 degrees"/>
-            </PreferenceCategory>
+                    android:dialogTitle="Size of your VR Scene in %. Default 100, which means the video fills a fov of 60 degrees"/>
 
-            <PreferenceCategory
-                android:title="DistortionCorrection">
                 <com.mapzen.prefsplus.IntListPreference
                     android:key="@string/VR_DISTORTION_CORRECTION_MODE"
                     android:title="@string/VR_DISTORTION_CORRECTION_MODE"
-                    android:summary="enables/disables distortion correction. 2 modes available: radial and radial+tangential"
+                    android:dialogTitle="enables/disables distortion correction."
                     android:entries="@array/entriesDistortionCorrection"
                     android:entryValues="@array/valuesDistortionCorrection"
-                    android:defaultValue="0" />
-            </PreferenceCategory>
+                    android:defaultValue="1" />
+
 
         </PreferenceScreen>
 

@@ -45,7 +45,6 @@ private:
     const VIDEO_MODE videoMode;
     const bool enableOSD;
 public:
-    const SettingsVR mSettingsVR;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<GLProgramTexture> mGLProgramTexture=nullptr;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;

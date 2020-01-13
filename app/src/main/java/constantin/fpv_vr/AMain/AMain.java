@@ -1,9 +1,7 @@
 package constantin.fpv_vr.AMain;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -59,7 +57,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
         /*
          * Check ( and do the appropriate actions ) on a fresh install or update
          */
-        UpdateHelper.checkForFreshInstall(this);
+        UpdateHelper.checkForFreshInstallOrUpdate(this);
         AWriteGLESInfo.writeGLESInfoIfNeeded(this);
         /*
          * Same for the permissions (required in >=android X)

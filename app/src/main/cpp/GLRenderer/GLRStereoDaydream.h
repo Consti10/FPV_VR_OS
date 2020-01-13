@@ -19,6 +19,8 @@
 #include <Video/VideoRenderer.h>
 #include <DistortionCorrection/VRHeadsetParams.h>
 
+//Only fulfills testing purpose(s)
+
 class GLRStereoDaydream: public IGLRenderer,public IVideoFormatChanged {
 public:
     GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP);
