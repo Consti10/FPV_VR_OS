@@ -32,7 +32,7 @@ distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? DistortionManag
 
 void GLRStereoNormal::placeGLElements(){
     float videoW=10;
-    float videoH=videoW*1.0f/lastVideoFormat;
+    float videoH=videoW*1.0f/1.77777f;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
     //The video width defaults to 10(cm). Calculate tze z value such that the video fills a FOV

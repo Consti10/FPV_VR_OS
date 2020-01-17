@@ -98,7 +98,7 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     if(mMode!=VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
-    const float scale=1.0f;
+    const float scale=200.0f;
     glm::mat4 scaleM=glm::scale(glm::vec3(scale,scale,scale));
 
     mGLRenderTexEx->beforeDraw(mEquirectangularSphereB.vertexB,mVideoTexture);
