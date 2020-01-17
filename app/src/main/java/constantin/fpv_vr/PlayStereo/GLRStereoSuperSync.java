@@ -25,7 +25,8 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     static {
         System.loadLibrary("GLRStereoSuperSync");
     }
-    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean qcomTiledRenderingAvailable,boolean reusableSyncAvailable,boolean is360);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean qcomTiledRenderingAvailable,
+                                        boolean reusableSyncAvailable,int videoMode);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
@@ -58,7 +59,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         final boolean qcomTiledRenderingAvailable= GLESInfo.isExtensionAvailable(context, GLESInfo.GL_QCOM_tiled_rendering);
         final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
-                gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoNative.video360(mContext));
+                gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoNative.videoMode(mContext));
 
         GvrView view=new GvrView(context);
         GvrViewerParams params=view.getGvrViewerParams();

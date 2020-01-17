@@ -18,9 +18,10 @@ constexpr auto TAG= "GLRendererStereo";
 
 #include <android/choreographer.h>
 #include <MatrixHelper.h>
+#include <GeometryBuilder/CardboardViewportOcclusion.h>
 
-GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool is360):
-is360(is360),mSettingsVR(env,androidContext),
+GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
+videoMode(videoMode),mSettingsVR(env,androidContext),
 distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? DistortionManager::NONE : DistortionManager::RADIAL_CARDBOARD),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
@@ -50,8 +51,11 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     mGLRenderTextureExternal=std::make_unique<GLProgramTexture>(true,distortionManager);
-    mVideoRenderer=std::make_unique<VideoRenderer>(is360 ? VideoRenderer::VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR :VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,
-            (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get(),10.0f);
+    mVideoRenderer=std::make_unique<VideoRenderer>(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode),
+            (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
+    const TrueColor color=Color::BLACK;
+    mOcclusionMesh[0].initializeAndUploadGL(CardboardViewportOcclusion::makeMesh(vrHeadsetParams,0,color));
+    mOcclusionMesh[1].initializeAndUploadGL(CardboardViewportOcclusion::makeMesh(vrHeadsetParams,1,color));
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -103,6 +107,13 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     }else{
         mOSDRenderer->drawElementsGL(view,projection);
     }
+    //Render the mesh that occludes everything except the part actually visible inside the headset
+    if(mSettingsVR.VR_DISTORTION_CORRECTION_MODE!=0){
+        int idx=eye==GVR_LEFT_EYE ? 0 : 1;
+        mBasicGLPrograms->vc2D.beforeDraw(mOcclusionMesh[idx].vertexB);
+        mBasicGLPrograms->vc2D.draw(glm::mat4(1.0f),glm::mat4(1.0f),0,mOcclusionMesh[idx].nVertices,GL_TRIANGLE_STRIP);
+        mBasicGLPrograms->vc2D.afterDraw();
+    }
 }
 
 
@@ -121,9 +132,9 @@ inline GLRStereoNormal *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject instance,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jboolean is360) {
+(JNIEnv *env, jobject instance,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jint videoMode) {
         return jptr(
-            new GLRStereoNormal(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),is360));
+            new GLRStereoNormal(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),videoMode));
 }
 
 JNI_METHOD(void, nativeDelete)

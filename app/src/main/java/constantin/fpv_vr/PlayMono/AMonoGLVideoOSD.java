@@ -20,9 +20,12 @@ import constantin.renderingX.MyEGLConfigChooser;
 import constantin.renderingX.MyEGLWindowSurfaceFactory;
 import constantin.renderingX.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.video.core.VideoNative.VideoNative;
 
 //The 360° video needs to be rendered with OpenGL regardless weather the user wants to see the OSD or not
-public class AMono360 extends AppCompatActivity {
+//as well as stereo video
+
+public class AMonoGLVideoOSD extends AppCompatActivity {
     private Context mContext;
     private GLSurfaceView mGLView;
     private GLRMono mGLRenderer;
@@ -60,7 +63,10 @@ public class AMono360 extends AppCompatActivity {
             gvrApi.recenterTracking();
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,GLRMono.VIDEO_MODE_360,renderOSD);
+        mGLRenderer =new GLRMono(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,
+                VideoNative.videoMode(mContext)==1 ?
+                        GLRMono.VIDEO_MODE_STEREO:
+                        GLRMono.VIDEO_MODE_360 ,renderOSD);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);

@@ -27,7 +27,7 @@
             android:name=".PlayMono.AMonoVid"
             android:screenOrientation="landscape"
             android:theme="@style/MyStyleFullscreen" />
-        <activity android:name=".PlayMono.AMono360"
+        <activity android:name=".PlayMono.AMonoGLVideoOSD"
             android:screenOrientation="landscape"
             android:theme="@style/MyStyleFullscreen" />
         <activity

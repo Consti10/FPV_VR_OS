@@ -20,47 +20,43 @@
 constexpr auto TAG="VideoRenderer";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx,float sphereRadius):
+VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx):
 mVideoTexture(videoTexture),
 mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRenderGeometry){
     mGLRenderTexEx=glRenderTexEx;
     switch (mMode){
         case RM_NORMAL:
-            glGenBuffers(1,&mGLBuffVid);
+            mVideoCanvasB.initializeGL();
             break;
         case RM_STEREO:
-            glGenBuffers(1,&mGLBuffVidLeft);
-            glGenBuffers(1,&mGLBuffVidRight);
+            mVideoCanvasLeftEyeB.initializeGL();
+            mVideoCanvasRightEyeB.initializeGL();
             break;
         case RM_360_EQUIRECTANGULAR:
-            EquirectangularSphere::create_sphere(mEquirectangularSphereB,2560,1280);
-            break;
-        case RM_PunchHole:
-            glGenBuffers(1,&mGLBuffVid);
+            mEquirectangularSphereB.initializeGL();
+            EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,2560,1280);
             break;
     }
-    glGenBuffers(1,&mIndexBuffer);
 }
 
 void VideoRenderer::setupPosition() {
     mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     //We need the indices unless 360 degree rendering
-    if(mMode==RM_NORMAL ||mMode==RM_STEREO){
+    if(mMode==RM_NORMAL){
         const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(glm::vec3(mX, mY, mZ),
-                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
-                                                    1.0f);
-        GLBufferHelper::allocateGLBufferStatic(mGLBuffVid,vid0.vertices);
-        GLBufferHelper::allocateGLBufferStatic(mIndexBuffer,vid0.indices);
+                                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+                                                                    1.0f);
+        mVideoCanvasB.initializeAndUploadGL(vid0.vertices,vid0.indices);
+    }else if(mMode==RM_STEREO){
         const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(glm::vec3(mX, mY, mZ),
-                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
-                                                    0.5f);
-        GLBufferHelper::allocateGLBufferStatic(mGLBuffVidLeft,vid1.vertices);
+                                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+                                                                    0.5f);
+        mVideoCanvasLeftEyeB.initializeAndUploadGL(vid1.vertices,vid1.indices);
         const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas( glm::vec3(mX, mY, mZ),
-                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
-                                                    0.5f);
-        GLBufferHelper::allocateGLBufferStatic(mGLBuffVidRight,vid2.vertices);
-        nIndicesVideoCanvas=vid0.indices.size();
-    }else if(mMode==RM_PunchHole){
+                                                                     mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
+                                                                     0.5f);
+        mVideoCanvasRightEyeB.initializeAndUploadGL(vid2.vertices,vid2.indices);
+    }/*else if(mMode==RM_PunchHole){
         GLProgramVC::Vertex tmp[6];
         ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
                                          Color::TRANSPARENT);
@@ -69,10 +65,10 @@ void VideoRenderer::setupPosition() {
         ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth*5,0,0),glm::vec3(0,mHeight*10,0),
                                          Color::RED);
         GLBufferHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
-    }
+    }*/
 }
 
-void VideoRenderer::punchHole(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
+/*void VideoRenderer::punchHole(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     mGLRenderGeometry.beforeDraw(mGLBuffVid);
     mGLRenderGeometry.draw(glm::value_ptr(ViewM), glm::value_ptr(ProjM), 0, 2 * 3,GL_TRIANGLES);
     mGLRenderGeometry.afterDraw();
@@ -82,15 +78,15 @@ void VideoRenderer::punchHole2(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     mGLRenderGeometry.beforeDraw(mGLBuffVidPunchHole);
     mGLRenderGeometry.draw(glm::value_ptr(ViewM), glm::value_ptr(ProjM), 0, 2 * 3,GL_TRIANGLES);
     mGLRenderGeometry.afterDraw();
-}
+}*/
 
 void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye) {
     if(mMode==RM_360_EQUIRECTANGULAR){
         drawVideoCanvas360(ViewM,ProjM);
     }else if(mMode==RM_NORMAL || mMode==RM_STEREO){
-        GLuint buff=mMode==RM_NORMAL ? mGLBuffVid : leftEye ? mGLBuffVidLeft : mGLBuffVidRight;
-        mGLRenderTexEx->beforeDraw(buff,mVideoTexture);
-        mGLRenderTexEx->drawIndexed(mIndexBuffer,ViewM,ProjM,0,nIndicesVideoCanvas,GL_TRIANGLES);
+        const auto buff=mMode==RM_NORMAL ? mVideoCanvasB : leftEye ? mVideoCanvasLeftEyeB : mVideoCanvasRightEyeB;
+        mGLRenderTexEx->beforeDraw(buff.vertexB,mVideoTexture);
+        mGLRenderTexEx->drawIndexed(buff.indexB,ViewM,ProjM,0,buff.nIndices,GL_TRIANGLES);
         mGLRenderTexEx->afterDraw();
     }
     //We render the debug rectangle after the other one such that it always appears when enabled (overdraw)
@@ -108,16 +104,14 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     mGLRenderTexEx->beforeDraw(mEquirectangularSphereB.vertexB,mVideoTexture);
     mGLRenderTexEx->drawIndexed(mEquirectangularSphereB.indexB,ViewM*scaleM,ProjM,0,mEquirectangularSphereB.nIndices,GL_TRIANGLE_STRIP);
     mGLRenderTexEx->afterDraw();
-
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
 }
 
 //We need to recalculate the sphere vertices when the video ratio changes
 void VideoRenderer::updateEquirectangularSphere(int videoW, int videoH) {
     if(mMode==RM_360_EQUIRECTANGULAR){
-        //delete and create new one
-        GLBufferHelper::deleteVertexIndexBuffer(mEquirectangularSphereB);
-        EquirectangularSphere::create_sphere(mEquirectangularSphereB,videoW,videoH);
+        //update
+        EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,videoW,videoH);
     }
 }
 

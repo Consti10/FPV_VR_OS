@@ -38,7 +38,7 @@ void AHorizon::setupPosition() {
         const glm::vec3 start=glm::vec3(-lineW/2.0f-outline/2.0f,-lineH/2.0f-outline/2.0f,0);
         const glm::vec3 end=start+glm::vec3(lineW,0,0);
         GLProgramLine::convertLineToRenderingData(start,end,lineH,tmp,0,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-        GLBufferHelper::allocateGLBufferStatic(mGLBuffLadders,tmp,sizeof(tmp));
+        GLBufferHelper::uploadGLBufferStatic(mGLBuffLadders, tmp, sizeof(tmp));
         LadderLines[0].vertOffset=0;
         LadderLines[0].vertCount=6;
     }
@@ -55,7 +55,8 @@ void AHorizon::setupPosition() {
         float hW=mWidth/2.0f;
         float sixtW=mWidth/6.0f;
         auto modelData=create3DModelData(hW,sixtW);
-        GLBufferHelper::allocateGLBufferStatic(mGLBuff3DModel,modelData.data(),modelData.size()*sizeof(GLProgramVC::Vertex));
+        GLBufferHelper::uploadGLBufferStatic(mGLBuff3DModel, modelData.data(),
+                                             modelData.size() * sizeof(GLProgramVC::Vertex));
     }
 }
 

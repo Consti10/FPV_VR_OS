@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import constantin.fpv_vr.AConnect.AConnect;
-import constantin.fpv_vr.PlayMono.AMono360;
+import constantin.fpv_vr.PlayMono.AMonoGLVideoOSD;
 import constantin.fpv_vr.Settings.ASettingsOSD;
 import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
@@ -111,21 +111,22 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
          */
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:
-                if(VideoNative.video360(this)){
-                    Intent i=new Intent().setClass(this, AMono360.class);
-                    i.putExtra(AMono360.EXTRA_RENDER_OSD,false);
-                    startActivity(i);
-                }else{
+                //With normal video we can use a android surface instead of OpenGL
+                if(VideoNative.videoMode(this)==0){
                     startActivity(new Intent().setClass(this, AMonoVid.class));
+                }else{
+                    Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
+                    i.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,false);
+                    startActivity(i);
                 }
                 break;
             case R.id.b_startMonoVideoOSD:
-                if(VideoNative.video360(this)){
-                    Intent i=new Intent().setClass(this, AMono360.class);
-                    i.putExtra(AMono360.EXTRA_RENDER_OSD,true);
-                    startActivity(i);
-                }else{
+                if(VideoNative.videoMode(this)==0){
                     startActivity(new Intent().setClass(this, AMonoVidOSD.class));
+                }else{
+                    Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
+                    i.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,true);
+                    startActivity(i);
                 }
                 break;
             case R.id.b_startStereo: //360 not yet supported

@@ -53,6 +53,7 @@ public class AStereoNormal extends AppCompatActivity {
                 Toaster.makeToast(mContext,"Changing your vr viewer requires an activity restart",true);
             }
         });
+
         mGvrLayout.getUiLayout().setTransitionViewEnabled(false);
         mGvrLayout.setAsyncReprojectionEnabled(false);
 

@@ -32,7 +32,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     static {
         System.loadLibrary("GLRStereoNormal");
     }
-    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean is360);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
@@ -60,7 +60,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         mContext=activityContext;
         this.telemetryReceiver=telemetryReceiver;
         nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
-                gvrApiNativeContext, VideoNative.video360(mContext));
+                gvrApiNativeContext, VideoNative.videoMode(mContext));
 
         GvrView view=new GvrView(activityContext);
         GvrViewerParams params=view.getGvrViewerParams();

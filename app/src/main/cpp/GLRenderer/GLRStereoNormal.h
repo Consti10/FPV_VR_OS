@@ -28,7 +28,7 @@ public:
      * Create a GLRStereoNormal using a given |gvr_context|.
      * @param gvr_api The (non-owned) gvr_context.
      */
-    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,bool is360);
+    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoMode);
 public:
     //not protected because unused by GLRStereoSuperSync
     void onDrawFrame();
@@ -50,8 +50,10 @@ protected:
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<GLProgramTexture> mGLRenderTextureExternal= nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
+    //One for left and right eye each
+    VertexBuffer mOcclusionMesh[2];
     int swapColor=0;
-    const bool is360;
+    const int videoMode;
 public:
     DistortionManager distortionManager;
     VRHeadsetParams vrHeadsetParams;

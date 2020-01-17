@@ -22,6 +22,8 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
     static final int VIDEO_MODE_NONE=0;
     static final int VIDEO_MODE_STEREO=1;
     static final int VIDEO_MODE_360=2;
+
+
     static {
         System.loadLibrary("GLRMono");
     }

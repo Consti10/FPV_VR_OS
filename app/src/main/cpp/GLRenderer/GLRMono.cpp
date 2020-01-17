@@ -27,11 +27,13 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>();
     if(enableOSD){
         mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
+        mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     }
-    mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    if(videoMode==Degree360){
+    if(videoMode==STEREO || videoMode==Degree360){
         mGLProgramTexture=std::make_unique<GLProgramTexture>(true);
-        mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_360_EQUIRECTANGULAR,(GLuint)optionalVideoTexture,mBasicGLPrograms->vc,mGLProgramTexture.get());
+        mVideoRenderer=std::make_unique<VideoRenderer>(
+                videoMode==STEREO ? VideoRenderer::RM_STEREO :VideoRenderer::RM_360_EQUIRECTANGULAR,
+                (GLuint)optionalVideoTexture,mBasicGLPrograms->vc,mGLProgramTexture.get());
         mVideoRenderer->setWorldPosition(0,0,0,0,0);
     }
 }
@@ -63,7 +65,7 @@ void GLRMono::onDrawFrame() {
     if(videoMode==Degree360){
         const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
         glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
-        //tmpHeadPoseGLM= tmpHeadPoseGLM*monoForward360;
+        tmpHeadPoseGLM= tmpHeadPoseGLM*monoForward360;
         mVideoRenderer->drawVideoCanvas360(tmpHeadPoseGLM,m360ProjectionM);
     }else if(videoMode==STEREO){
         //mVideoRenderer->drawVideoCanvas(worldMatrices.leftEyeView,worldMatrices.projection, true);
