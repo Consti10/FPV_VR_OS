@@ -225,7 +225,7 @@ void CompassLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //Render the home icon
     mGLPrograms.text.beforeDraw(mGLHomeIconB[0]);
     if(mOptions.homeArrow){
-        mGLPrograms.text.draw(mHomeArrowTM*ViewM,ProjM,0,6);
+        mGLPrograms.text.draw(ViewM*mHomeArrowTM,ProjM,0,6);
     }
     mGLPrograms.text.afterDraw();
 }
