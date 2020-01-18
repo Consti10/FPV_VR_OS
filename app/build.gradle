@@ -8,8 +8,8 @@ android {
         applicationId "constantin.fpv_vr.wifibroadcast"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 30
-        versionName "2.0"
+        versionCode 31
+        versionName "2.1"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++17"  //,"-frtti","-fexceptions"
@@ -22,7 +22,7 @@ android {
         }
 
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86','x86_64'
+            abiFilters 'armeabi-v7a', 'arm64-v8a'//, 'x86','x86_64'
         }
         testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
     }
