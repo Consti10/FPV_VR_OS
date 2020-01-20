@@ -17,6 +17,7 @@
 #include <Settings/SettingsOSDStyle.h>
 #include "General/IDrawable.hpp"
 #include "General/IPositionable.hpp"
+#include <GLBufferHelper.hpp>
 
 /**
  * Artificial horizon using Ladders
@@ -50,7 +51,7 @@ private:
     const TelemetryReceiver& mTelemetryReceiver;
     const Options& mOptions;
     PositionDebug mPositionDebug;
-    GLuint mGLBuffLadders;
+    VertexBuffer mGLBuffLadders;
     ModifiableArray<GLProgramVC::Vertex>* mMiddleTriangleBuff;
     glm::mat4x4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;
@@ -61,9 +62,8 @@ private:
     LadderLine LadderLines[1];
     float degreeToYTranslationFactor;
     //
-    GLuint mGLBuff3DModel;
+    VertexBuffer mGLBuff3DModel;
     glm::mat4x4 mModelM3DModel;
-    const int MODEL3D_N_VERTICES=3+4*3;
 };
 
 #endif //FPV_VR_ARTIFICIALHORIZON_H

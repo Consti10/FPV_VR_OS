@@ -21,8 +21,8 @@ AHorizon::AHorizon(const AHorizon::Options& options,const SettingsOSDStyle& sett
         mPositionDebug(basicGLPrograms.vc,0, true),
         mMiddleTriangleBuff(batchingManager.allocateVCTriangles(3)),
         mOptions(options){
-    glGenBuffers(1,&mGLBuffLadders);
-    glGenBuffers(1,&mGLBuff3DModel);
+    mGLBuffLadders.initializeGL();
+    mGLBuff3DModel.initializeGL();
 }
 
 //
@@ -38,7 +38,8 @@ void AHorizon::setupPosition() {
         const glm::vec3 start=glm::vec3(-lineW/2.0f-outline/2.0f,-lineH/2.0f-outline/2.0f,0);
         const glm::vec3 end=start+glm::vec3(lineW,0,0);
         GLProgramLine::convertLineToRenderingData(start,end,lineH,tmp,0,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-        GLBufferHelper::uploadGLBufferStatic(mGLBuffLadders, tmp, sizeof(tmp));
+        mGLBuffLadders.uploadGL(std::vector<GLProgramLine::Vertex>{std::begin(tmp),std::end(tmp)});
+
         LadderLines[0].vertOffset=0;
         LadderLines[0].vertCount=6;
     }
@@ -55,8 +56,9 @@ void AHorizon::setupPosition() {
         float hW=mWidth/2.0f;
         float sixtW=mWidth/6.0f;
         auto modelData=create3DModelData(hW,sixtW);
-        GLBufferHelper::uploadGLBufferStatic(mGLBuff3DModel, modelData.data(),
-                                             modelData.size() * sizeof(GLProgramVC::Vertex));
+        mGLBuff3DModel.uploadGL(modelData);
+        //GLBufferHelper::uploadGLBufferStatic(mGLBuff3DModel, modelData.data(),
+        //                                     modelData.size() * sizeof(GLProgramVC::Vertex));
     }
 }
 
@@ -111,15 +113,15 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //Render the 3D Quadcopter representation
     if(mOptions.mode==MODE_3D_QUADCOPTER
        || mOptions.mode==MODE_BOTH_TOGETHER){
-        mGLPrograms.vc.beforeDraw(mGLBuff3DModel);
-        mGLPrograms.vc.draw(glm::value_ptr(ViewM * mModelM3DModel), glm::value_ptr(ProjM), 0, MODEL3D_N_VERTICES,GL_TRIANGLES);
+        mGLPrograms.vc.beforeDraw(mGLBuff3DModel.vertexB);
+        mGLPrograms.vc.draw(glm::value_ptr(ViewM * mModelM3DModel), glm::value_ptr(ProjM), 0,mGLBuff3DModel.nVertices,GL_TRIANGLES);
         mGLPrograms.vc.afterDraw();
     }
 
     //Render the lines
     if(mOptions.mode==MODE_2D_LADDERS
        || mOptions.mode==MODE_BOTH_TOGETHER){
-        mGLPrograms.line.beforeDraw(mGLBuffLadders);
+        mGLPrograms.line.beforeDraw(mGLBuffLadders.vertexB);
         mGLPrograms.line.draw(ViewM*mModelMLadders,ProjM,LadderLines[0].vertOffset,LadderLines[0].vertCount);
         mGLPrograms.line.afterDraw();
     }

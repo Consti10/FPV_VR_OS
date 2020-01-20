@@ -18,6 +18,7 @@
 #include <OSD/ElementBatching/BatchingManager.h>
 #include <Settings/SettingsOSDElements.h>
 #include <Settings/SettingsOSDStyle.h>
+#include <GLBufferHelper.hpp>
 
 /**
  * This class exists to make the GLRendererXXX much more slim, since positioning all the OSD elements

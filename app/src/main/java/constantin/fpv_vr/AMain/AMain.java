@@ -23,8 +23,7 @@ import constantin.fpv_vr.PlayMono.AMonoGLVideoOSD;
 import constantin.fpv_vr.Settings.ASettingsOSD;
 import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.PlayMono.AMonoVid;
-import constantin.fpv_vr.PlayMono.AMonoVidOSD;
+import constantin.fpv_vr.PlayMono.AMonoVideoOSD;
 import constantin.fpv_vr.PlayStereo.AStereoDaydream;
 import constantin.fpv_vr.PlayStereo.AStereoNormal;
 import constantin.fpv_vr.PlayStereo.AStereoSuperSYNC;
@@ -113,16 +112,18 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
             case R.id.b_startMonoVideoOnly:
                 //With normal video we can use a android surface instead of OpenGL
                 if(VideoNative.videoMode(this)==0){
-                    startActivity(new Intent().setClass(this, AMonoVid.class));
+                    final Intent i=new Intent().setClass(this, AMonoVideoOSD.class);
+                    i.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,false);
+                    startActivity(i);
                 }else{
-                    Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
+                    final Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
                     i.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,false);
                     startActivity(i);
                 }
                 break;
             case R.id.b_startMonoVideoOSD:
                 if(VideoNative.videoMode(this)==0){
-                    startActivity(new Intent().setClass(this, AMonoVidOSD.class));
+                    startActivity(new Intent().setClass(this, AMonoVideoOSD.class));
                 }else{
                     Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
                     i.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,true);

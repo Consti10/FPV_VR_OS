@@ -15,9 +15,9 @@ CompassLadder::CompassLadder(CompassLadder::Options options,const SettingsOSDSty
         mTextObjTelemetryValue(N_CHARS_PER_TEXT_OBJ,false, Color::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
         mBackgroundObj(batchingManager,SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH)),
         mMiddleArrow(batchingManager.allocateVCTriangles(3)){
-    glGenBuffers(1,mGLLadderLinesB);
-    glGenBuffers(1,mGLLadderTextB);
-    glGenBuffers(1,mGLHomeIconB);
+    mGLLadderLinesB.initializeGL();
+    mGLLadderTextB.initializeGL();
+    mGLHomeIconB.initializeGL();
 }
 
 
@@ -59,10 +59,7 @@ void CompassLadder::setupPosition() {
             start=glm::vec3(mX + (3 + i) * d_between_lines,ladderLinesStartY, mZ);
             GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp,offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
         }
-        glBindBuffer(GL_ARRAY_BUFFER, mGLLadderLinesB[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(tmp),
-                     tmp, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        mGLLadderLinesB.uploadGL(std::vector<GLProgramLine::Vertex>{std::begin(tmp),std::end(tmp)});
     }
 //create the S W N E chars
     {
@@ -117,10 +114,7 @@ void CompassLadder::setupPosition() {
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"E",
                                                     textColor,
                                                     tmp, 7);
-        glBindBuffer(GL_ARRAY_BUFFER, mGLLadderTextB[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(tmp),
-                     tmp, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        mGLLadderTextB.uploadGL(std::vector<GLProgramText::Character>{std::begin(tmp),std::end(tmp)});
     }
 //create the home symbol icon
     {
@@ -133,10 +127,7 @@ void CompassLadder::setupPosition() {
                                                     haStartY, mZ,
                                                     home_arrow_width_height, wstring1,
                                                     Color::GREEN, tmp, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, mGLHomeIconB[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(tmp),
-                     tmp, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        mGLHomeIconB.uploadGL(std::vector<GLProgramText::Character>{std::begin(tmp),std::end(tmp)});
     }
     //create the middle arrow
     {
@@ -213,17 +204,17 @@ void CompassLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //Middle arrow is drawn by BatchingManager
 
     //Render all the ladder lines
-    mGLPrograms.line.beforeDraw(mGLLadderLinesB[0]);
+    mGLPrograms.line.beforeDraw(mGLLadderLinesB.vertexB);
     mGLPrograms.line.draw(ViewM*mHeadingTranslM,ProjM,6*linesOffset,6*nLinesToDraw);
     mGLPrograms.line.afterDraw();
 
     //Render the N W S E chars
-    mGLPrograms.text.beforeDraw(mGLLadderTextB[0]);
+    mGLPrograms.text.beforeDraw(mGLLadderTextB.vertexB);
     mGLPrograms.text.draw(ViewM*mHeadingTranslM,ProjM,6*charOffset,6*nCharsToDraw);
     mGLPrograms.text.afterDraw();
 
     //Render the home icon
-    mGLPrograms.text.beforeDraw(mGLHomeIconB[0]);
+    mGLPrograms.text.beforeDraw(mGLHomeIconB.vertexB);
     if(mOptions.homeArrow){
         mGLPrograms.text.draw(ViewM*mHomeArrowTM,ProjM,0,6);
     }

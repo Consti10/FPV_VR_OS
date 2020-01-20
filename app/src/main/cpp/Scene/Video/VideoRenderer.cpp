@@ -110,7 +110,6 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
 //We need to recalculate the sphere vertices when the video ratio changes
 void VideoRenderer::updateEquirectangularSphere(int videoW, int videoH) {
     if(mMode==RM_360_EQUIRECTANGULAR){
-        //update
         EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,videoW,videoH);
     }
 }

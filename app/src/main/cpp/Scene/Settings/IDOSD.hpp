@@ -1,5 +1,3 @@
-//Created by SettingsParser on ...
-
 #ifndef CONSTI_10_100_IDOSD
 #define CONSTI_10_100_IDOSD
 

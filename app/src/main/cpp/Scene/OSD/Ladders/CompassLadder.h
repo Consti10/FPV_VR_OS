@@ -16,6 +16,7 @@
 #include <OSD/ATextElements/OSDTextObj.hpp>
 #include <OSD/ATextElements/OSDBackgroundObj.hpp>
 #include <Settings/SettingsOSDStyle.h>
+#include <Helper/GLBufferHelper.hpp>
 #include "../../General/IDrawable.hpp"
 #include "../../General/IPositionable.hpp"
 #include "../../General/PositionDebug.hpp"
@@ -52,9 +53,9 @@ private:
     OSDTextObj mTextObjTelemetryValue;
     OSDBackgroundObject mBackgroundObj;
     PositionDebug mPositionDebug;
-    GLuint mGLLadderLinesB[1];
-    GLuint mGLLadderTextB[1];
-    GLuint mGLHomeIconB[1];
+    VertexBuffer mGLLadderLinesB;
+    VertexBuffer mGLLadderTextB;
+    VertexBuffer mGLHomeIconB;
     ModifiableArray<GLProgramVC::Vertex>* mMiddleArrow;
     glm::mat4x4 mHeadingTranslM;
     glm::mat4x4 mHomeArrowTM;

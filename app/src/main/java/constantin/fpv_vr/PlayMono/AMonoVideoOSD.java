@@ -28,44 +28,53 @@ import constantin.video.core.IVideoParamsChanged;
 
 /*****************************************************************
  * Play video blended with OSD in a Mono window (e.g. for Tablets usw)
+ * The video is displayed with the Android HW composer, not OpenGL
+ * See @AMonoGLVideoOSD for rendering video with OpenGL
+ * OSD can be fully disabled
  ***************************************************************** */
 
 
-public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Callback, IVideoParamsChanged {
+public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Callback, IVideoParamsChanged {
+    public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
     private AspectFrameLayout mAspectFrameLayout;
     private MVideoPlayer mVideoPlayer;
     private Context mContext;
-    private GLSurfaceView mGLView;
     private GvrApi gvrApi;
-    private GLRMono mGLRMonoOSD;
     private AirHeadTrackingSender airHeadTrackingSender;
+    //Only !=null when ENABLE_OSD is enabled
+    private GLSurfaceView mGLView;
+    private GLRMono mGLRMonoOSD;
     private TelemetryReceiver telemetryReceiver;
+    private boolean ENABLE_OSD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ENABLE_OSD =getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD,true);
         mContext=this;
         setContentView(R.layout.activity_mono_vid_osd);
         SurfaceView mSurfaceView = findViewById(R.id.VideoSurfaceBelow);
         mSurfaceView.getHolder().addCallback(this);
         mAspectFrameLayout =  findViewById(R.id.VideoSurface_AFL);
-        mGLView = new GLSurfaceView(this);
-        mGLView.setEGLContextClientVersion(2);
-        mGLView.setEGLConfigChooser(new MyEGLConfigChooser(false,SJ.MultiSampleAntiAliasing(this),true));
-        mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
-
-        mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        mGLView.setPreserveEGLContextOnPause(true);
+        if(ENABLE_OSD){
+            mGLView = new GLSurfaceView(this);
+            mGLView.setEGLContextClientVersion(2);
+            //Do not use msaa in mono mode
+            mGLView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
+            mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
+            mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+            mGLView.setPreserveEGLContextOnPause(true);
+            telemetryReceiver=new TelemetryReceiver(this);
+            mGLRMonoOSD =new GLRMono(mContext,telemetryReceiver,null,GLRMono.VIDEO_MODE_NONE,true,false);
+            mGLView.setRenderer(mGLRMonoOSD);
+            mGLView.setZOrderMediaOverlay(true);
+            addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
         if(SJ.EnableAHT(mContext)){
             gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
             airHeadTrackingSender=new AirHeadTrackingSender(this,gvrApi);
         }
-        telemetryReceiver=new TelemetryReceiver(this);
-        mGLRMonoOSD =new GLRMono(mContext,telemetryReceiver,null,GLRMono.VIDEO_MODE_NONE,true);
-        mGLView.setRenderer(mGLRMonoOSD);
-        mGLView.setZOrderMediaOverlay(true);
-        addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
 
@@ -75,8 +84,10 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
         //Log.d(TAG, "onResume");
         PerformanceHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        telemetryReceiver.startReceiving();
-        mGLView.onResume();
+        if(ENABLE_OSD){
+            telemetryReceiver.startReceiving();
+            mGLView.onResume();
+        }
         if(gvrApi!=null){
             gvrApi.resumeTracking();
             airHeadTrackingSender.startSendingDataIfEnabled();
@@ -91,8 +102,10 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
             airHeadTrackingSender.stopSendingDataIfEnabled();
             gvrApi.pauseTracking();
         }
-        telemetryReceiver.stopReceiving();
-        mGLView.onPause();
+        if(ENABLE_OSD){
+            telemetryReceiver.stopReceiving();
+            mGLView.onPause();
+        }
     }
 
     @Override
@@ -101,9 +114,11 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
         if(gvrApi!=null){
             gvrApi.shutdown();
         }
-        mGLView=null;
-        mGLRMonoOSD =null;
-        telemetryReceiver.delete();
+        if(ENABLE_OSD){
+            mGLView=null;
+            mGLRMonoOSD =null;
+            telemetryReceiver.delete();
+        }
     }
 
 
@@ -117,12 +132,14 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
             mVideoPlayer.start();
         }
     }
+
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         // ignore
         //Log.d(TAG, "Video surfaceChanged fmt=" + format + " size=" + width + "x" + height);
         //format 4= rgb565
     }
+
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         //Log.d(TAG, "Video Surface destroyed");
@@ -145,8 +162,10 @@ public class AMonoVidOSD extends AppCompatActivity implements SurfaceHolder.Call
 
     @Override
     public void onDecodingInfoChanged(DecodingInfo decodingInfo) {
-        telemetryReceiver.setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
-                decodingInfo.avgHWDecodingTime_ms);
+        if(ENABLE_OSD){
+            telemetryReceiver.setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
+                    decodingInfo.avgHWDecodingTime_ms);
+        }
     }
 
 }

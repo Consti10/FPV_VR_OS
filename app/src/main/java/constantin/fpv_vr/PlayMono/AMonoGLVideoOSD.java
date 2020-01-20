@@ -22,8 +22,12 @@ import constantin.renderingX.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoNative.VideoNative;
 
-//The 360° video needs to be rendered with OpenGL regardless weather the user wants to see the OSD or not
-//as well as stereo video
+
+/*****************************************************************
+ * Play video blended with OSD in a Mono window, but without using the HW composer for video
+ * 360° or stereo video needs to be rendered with OpenGL regardless weather the user wants to see the OSD or not
+ * OSD can be fully disabled
+ ***************************************************************** */
 
 public class AMonoGLVideoOSD extends AppCompatActivity {
     private Context mContext;
@@ -35,8 +39,9 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
     private static final boolean useGvrLayout=true;
     private GvrApi gvrApi;
     private GvrLayout gvrLayout;
-    public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather OSD should be enabled
+    public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather ENABLE_OSD should be enabled
     private DisplaySynchronizer displaySynchronizer;
+    private boolean disableVSYNC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,10 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
         PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         mGLView = new GLSurfaceView(this);
         mGLView.setEGLContextClientVersion(2);
-        mGLView.setEGLConfigChooser(new MyEGLConfigChooser(false, SJ.MultiSampleAntiAliasing(this),true));
+        //for now do not differentiate
+        disableVSYNC=SJ.DisableVSYNC(this);
+        //do not use MSAA in mono mode
+        mGLView.setEGLConfigChooser(new MyEGLConfigChooser(disableVSYNC, 0,true));
         mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
         mGLView.setPreserveEGLContextOnPause(true);
         if(useGvrLayout){
@@ -66,7 +74,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
         mGLRenderer =new GLRMono(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,
                 VideoNative.videoMode(mContext)==1 ?
                         GLRMono.VIDEO_MODE_STEREO:
-                        GLRMono.VIDEO_MODE_360 ,renderOSD);
+                        GLRMono.VIDEO_MODE_360 ,renderOSD,disableVSYNC);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);
