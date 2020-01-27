@@ -73,7 +73,7 @@
             android:name="constantin.video.core.AVideoSettings"
             android:screenOrientation="behind" />
         <activity
-            android:name="constantin.renderingX.GLESInfo.AWriteGLESInfo"
+            android:name="constantin.renderingx.core.GLESInfo.AWriteGLESInfo"
             android:screenOrientation="behind" />
         <meta-data
             android:name="google_analytics_adid_collection_enabled"

@@ -9,8 +9,8 @@ import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.PlayStereo.GLRStereoSuperSync;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;
-import constantin.renderingX.PerformanceHelper;
-import constantin.renderingX.ViewSuperSync;
+import constantin.renderingx.core.PerformanceHelper;
+import constantin.renderingx.core.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 
 /*****************************************

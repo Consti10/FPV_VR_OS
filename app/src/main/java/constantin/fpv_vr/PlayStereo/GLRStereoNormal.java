@@ -16,13 +16,13 @@ import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.MVideoPlayer;
-import constantin.renderingX.MyEGLConfigChooser;
+import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoNative.VideoNative;
 
-import static constantin.renderingX.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
+import static constantin.renderingx.core.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
 
 /** Open GL renderer stereo in normal mode (normal==no SuperSync or daydream, but possibly VSYNC disabled)
  * Description: see AStereoNormal

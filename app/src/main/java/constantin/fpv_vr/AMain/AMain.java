@@ -29,7 +29,7 @@ import constantin.fpv_vr.PlayStereo.AStereoNormal;
 import constantin.fpv_vr.PlayStereo.AStereoSuperSYNC;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.UpdateHelper;
-import constantin.renderingX.GLESInfo.AWriteGLESInfo;
+import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.VideoNative.VideoNative;
 

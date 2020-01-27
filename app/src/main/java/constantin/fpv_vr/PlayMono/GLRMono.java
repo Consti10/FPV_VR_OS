@@ -14,12 +14,12 @@ import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.R;
-import constantin.renderingX.MyEGLConfigChooser;
+import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
 
-import static constantin.renderingX.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
+import static constantin.renderingx.core.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
 
 /*
  * Renders OSD and/or video in monoscopic view

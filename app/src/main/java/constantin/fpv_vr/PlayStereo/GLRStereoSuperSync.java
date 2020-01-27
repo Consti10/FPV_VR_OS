@@ -9,8 +9,8 @@ import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.GvrViewerParams;
 
 import constantin.fpv_vr.MVideoPlayer;
-import constantin.renderingX.GLESInfo.GLESInfo;
-import constantin.renderingX.ViewSuperSync;
+import constantin.renderingx.core.GLESInfo.GLESInfo;
+import constantin.renderingx.core.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;

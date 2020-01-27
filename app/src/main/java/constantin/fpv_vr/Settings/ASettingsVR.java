@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import constantin.fpv_vr.R;
-import constantin.renderingX.GLESInfo.GLESInfo;
+import constantin.renderingx.core.GLESInfo.GLESInfo;
 
 
 public class ASettingsVR extends AppCompatActivity {

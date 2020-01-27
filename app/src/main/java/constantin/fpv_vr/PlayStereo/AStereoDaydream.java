@@ -15,7 +15,7 @@ import com.google.vr.sdk.base.AndroidCompat;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.PlayStereo.GLRStereoDaydream;
 import constantin.fpv_vr.MVideoPlayer;
-import constantin.renderingX.PerformanceHelper;
+import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
 /**

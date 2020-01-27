@@ -32,7 +32,7 @@ allprojects {
         compileSdkVersion = 28
         targetSdkVersion = 28
         appcompatVersion = '1.1.0'
-        materialVersion = '1.2.0-alpha03'
+        materialVersion = '1.2.0-alpha04'
         constraintlayoutVersion='1.1.3'
         androidxpreferenceVersion='1.1.0'
         mGvrVersion = '1.180.0'

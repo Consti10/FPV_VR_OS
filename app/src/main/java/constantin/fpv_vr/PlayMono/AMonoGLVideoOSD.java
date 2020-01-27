@@ -16,9 +16,9 @@ import com.google.vr.ndk.base.GvrLayout;
 
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.renderingX.MyEGLConfigChooser;
-import constantin.renderingX.MyEGLWindowSurfaceFactory;
-import constantin.renderingX.PerformanceHelper;
+import constantin.renderingx.core.MyEGLConfigChooser;
+import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
+import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoNative.VideoNative;
 

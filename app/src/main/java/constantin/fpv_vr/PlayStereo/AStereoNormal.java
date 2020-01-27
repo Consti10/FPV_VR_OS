@@ -25,8 +25,8 @@ import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;
-import constantin.renderingX.MyEGLConfigChooser;
-import constantin.renderingX.PerformanceHelper;
+import constantin.renderingx.core.MyEGLConfigChooser;
+import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
 public class AStereoNormal extends AppCompatActivity {
