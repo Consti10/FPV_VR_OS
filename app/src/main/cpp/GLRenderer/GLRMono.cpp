@@ -34,7 +34,6 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
         mVideoRenderer=std::make_unique<VideoRenderer>(
                 videoMode==STEREO ? VideoRenderer::RM_STEREO :VideoRenderer::RM_360_EQUIRECTANGULAR,
                 (GLuint)optionalVideoTexture,mBasicGLPrograms->vc,mGLProgramTexture.get());
-        mVideoRenderer->setWorldPosition(0,0,0,10,10);
     }
 }
 
@@ -42,6 +41,12 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     float displayRatio=(float) width/(float)height;
     mOSDProjectionM=glm::perspective(glm::radians(45.0f),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     m360ProjectionM=glm::perspective(glm::radians(optionalVideo360FOV),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glViewport(0,0,width,height);
+    glClearColor(0.0f,0,0,0.0f);
+    setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
+    cpuFrameTime.reset();
     const float videoRatio=4.0f/3.0f;
     float videoZ=-10;
     float videoH=glm::tan(glm::radians(45.0f)*0.5f)*10*2;
@@ -51,16 +56,16 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     if(enableOSD){
         mOSDRenderer->placeGLElementsMono(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     }
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    glViewport(0,0,width,height);
-    glClearColor(0.0f,0,0,0.0f);
-    setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
-    cpuFrameTime.reset();
 }
+
 
 void GLRMono::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    if(checkAndResetVideoFormatChanged()){
+        if(mVideoRenderer){
+            mVideoRenderer->updateEquirectangularSphereIfNeeded(lastVideoWidthPx,lastVideoHeightPx);
+        }
+    }
     cpuFrameTime.start();
     if(videoMode==Degree360){
         const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
@@ -87,6 +92,7 @@ void GLRMono::setHomeOrientation360() {
     //Reset tracking resets the rotation around the y axis, leaving everything else untouched
     gvr_api_->RecenterTracking();
 }
+
 
 
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
@@ -128,4 +134,10 @@ JNI_METHOD(void, nativeSetHomeOrientation360)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {
     native(glRendererMono)->setHomeOrientation360();
 }
+//Only called if also rendering video
+JNI_METHOD(void, nativeOnVideoRatioChanged)
+(JNIEnv *env, jobject obj, jlong glRenderer,jint videoW,jint videoH) {
+    native(glRenderer)->SetVideoRatio((int)videoW,(int)videoH);
+}
+
 }

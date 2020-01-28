@@ -14,10 +14,10 @@
 #include <OSD/OSDRenderer.h>
 #include <IGLRenderer.h>
 #include <IVideoFormatChanged.hpp>
-#include <MatricesManager.h>
 #include <FPSCalculator.h>
 #include <Video/VideoRenderer.h>
 #include <DistortionCorrection/VRHeadsetParams.h>
+#include <SettingsVR.h>
 
 //Only fulfills testing purpose(s)
 
@@ -40,7 +40,6 @@ private:
     void drawEyeOSDVDDC(gvr::Eye eye);
 private:
     TelemetryReceiver& mTelemetryReceiver;
-    MatricesManager mMatricesM;
     const SettingsVR mSettingsVR;
     FPSCalculator mFPSCalculator;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;

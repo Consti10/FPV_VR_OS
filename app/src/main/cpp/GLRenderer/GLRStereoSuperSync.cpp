@@ -62,9 +62,8 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
             glClearColor(1.0f,1.0f,0.0f,0.0f);
         }
 #endif
-    if(videoFormatChanged){
+    if(checkAndResetVideoFormatChanged()){
         placeGLElements();
-        videoFormatChanged=false;
     }
     VREyeDurations vrEyeTimeStamps{whichEye};
 

@@ -34,7 +34,7 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
             break;
         case RM_360_EQUIRECTANGULAR:
             mEquirectangularSphereB.initializeGL();
-            EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,2560,1280);
+            updateEquirectangularSphereIfNeeded(2560, 1280);
             break;
     }
 }
@@ -100,7 +100,6 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     }
     const float scale=200.0f;
     glm::mat4 scaleM=glm::scale(glm::vec3(scale,scale,scale));
-
     mGLRenderTexEx->beforeDraw(mEquirectangularSphereB.vertexB,mVideoTexture);
     mGLRenderTexEx->drawIndexed(mEquirectangularSphereB.indexB,ViewM*scaleM,ProjM,0,mEquirectangularSphereB.nIndices,GL_TRIANGLE_STRIP);
     mGLRenderTexEx->afterDraw();
@@ -108,7 +107,8 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
 }
 
 //We need to recalculate the sphere vertices when the video ratio changes
-void VideoRenderer::updateEquirectangularSphere(int videoW, int videoH) {
+//but only if RM==Equirectangular
+void VideoRenderer::updateEquirectangularSphereIfNeeded(int videoW, int videoH) {
     if(mMode==RM_360_EQUIRECTANGULAR){
         EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,videoW,videoH);
     }

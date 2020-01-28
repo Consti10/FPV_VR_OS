@@ -25,7 +25,6 @@
 GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP):
         mTelemetryReceiver(telemetryReceiver),
         mSettingsVR(env,androidContext),
-        mMatricesM(mSettingsVR),
         mFPSCalculator("OpenGL FPS",2000),
         distortionManager(DistortionManager::RADIAL_CARDBOARD){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
@@ -73,9 +72,6 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
 
     mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,0,mBasicGLPrograms->vc);
-
-    mMatricesM.calculateProjectionAndDefaultView(headset_fovY_full, framebuffer_size.width / 2.0f /
-                                                                    framebuffer_size.height);
     placeGLElements();
     //
     float tesselatedRectSize=2.5; //6.2f

@@ -17,10 +17,10 @@
 #include <OSD/OSDRenderer.h>
 #include <IGLRenderer.h>
 #include <IVideoFormatChanged.hpp>
-#include <MatricesManager.h>
 
 #include <GeometryBuilder/EquirectangularSphere.hpp>
 #include <DistortionCorrection/VRHeadsetParams.h>
+#include <SettingsVR.h>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:

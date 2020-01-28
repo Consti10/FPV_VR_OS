@@ -41,6 +41,7 @@ void GLRStereoNormal::placeGLElements(){
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
+    mVideoRenderer->updateEquirectangularSphereIfNeeded(lastVideoWidthPx,lastVideoHeightPx);
 }
 
 void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint videoTexture) {
@@ -76,9 +77,8 @@ void GLRStereoNormal::onDrawFrame() {
             glClearColor(1.0f,1.0f,0.0f,0.0f);
         }
 #endif
-    if(videoFormatChanged){
+    if(checkAndResetVideoFormatChanged()){
         placeGLElements();
-        videoFormatChanged=false;
     }
     mFPSCalculator.tick();
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();

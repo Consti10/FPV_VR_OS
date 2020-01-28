@@ -24,7 +24,6 @@
 #include <IGLRenderer.h>
 #include <IVideoFormatChanged.hpp>
 #include <VRFrameCPUChronometer.h>
-#include <MatricesManager.h>
 
 #include "GLRStereoNormal.h"
 

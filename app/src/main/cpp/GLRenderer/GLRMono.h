@@ -20,13 +20,12 @@
 #include <GLProgramVC.h>
 #include <GLProgramText.h>
 #include <FPSCalculator.h>
-#include <MatricesManager.h>
 #include <OSD/OSDRenderer.h>
 #include <IVideoFormatChanged.hpp>
 #include <Chronometer.h>
 #include <Video/VideoRenderer.h>
 
-class GLRMono{
+class GLRMono: public IVideoFormatChanged{
 public:
     enum VIDEO_MODE{NONE,STEREO,Degree360};
 public:

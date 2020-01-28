@@ -37,6 +37,7 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
     native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height,float optionalVideo360FOV);
     native void nativeOnDrawFrame(long glRendererMonoP);
     native void nativeSetHomeOrientation360(long glRendererMonoP);
+    private native void nativeOnVideoRatioChanged(long glRenderer,int videoW,int videoH);
 
 
     private final long nativeGLRendererMono;
@@ -122,7 +123,7 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     @Override
     public void onVideoRatioChanged(int videoW, int videoH) {
-
+        nativeOnVideoRatioChanged(nativeGLRendererMono,videoW,videoH);
     }
 
     @Override

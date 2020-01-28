@@ -7,7 +7,10 @@
 
 class IVideoFormatChanged{
 protected:
-    float lastVideoFormat=1.77777f;
+    int lastVideoWidthPx=1920;
+    int lastVideoHeightPx=1080;
+    float lastVideoFormat=((float)lastVideoWidthPx)/(float)lastVideoHeightPx;
+private:
     std::atomic_bool videoFormatChanged{false};
 public:
     IVideoFormatChanged()= default;
@@ -21,8 +24,19 @@ public:
      * But this function may be called from an non-OpenGL thread
      */
     void SetVideoRatio(int videoW,int videoH){
-        lastVideoFormat=((float)videoW)/(float)videoH;
-        videoFormatChanged=true;
+        if(lastVideoWidthPx!=videoW || lastVideoHeightPx!=videoH){
+            lastVideoWidthPx=videoW;
+            lastVideoHeightPx=videoH;
+            lastVideoFormat=((float)lastVideoWidthPx)/(float)lastVideoHeightPx;
+            videoFormatChanged=true;
+        }
+    }
+    bool checkAndResetVideoFormatChanged(){
+        if(videoFormatChanged){
+            videoFormatChanged=false;
+            return true;
+        }
+        return false;
     }
 private:
 };

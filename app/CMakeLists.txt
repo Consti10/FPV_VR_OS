@@ -76,7 +76,7 @@ target_link_libraries( GLPrograms ${log-lib} android GLESv2 gvr-lib)
 include_directories(src/main/cpp/Other)
 add_library(OtherStuff SHARED
         src/main/cpp/Other/IGLRenderer.cpp
-        src/main/cpp/Other/MatricesManager.cpp)
+        )
 target_link_libraries(OtherStuff android log gvr-lib)
 
 ##########################################################################################################
