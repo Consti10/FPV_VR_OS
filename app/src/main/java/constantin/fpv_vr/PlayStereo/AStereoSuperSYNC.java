@@ -61,7 +61,7 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         airHeadTrackingSender.stopSendingDataIfEnabled();
         mViewSuperSync.onPause();
         PerformanceHelper.disableSustainedPerformanceIfEnabled(this);
-        PerformanceHelper.disableAndroidVRModeIfEnabled(this);
+        //PerformanceHelper.disableAndroidVRModeIfEnabled(this);
     }
 
     @Override
