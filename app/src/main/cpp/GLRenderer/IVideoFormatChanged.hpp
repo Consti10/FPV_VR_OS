@@ -5,6 +5,8 @@
 #ifndef FPV_VR_IVIDEOFORMATCHANGED_H
 #define FPV_VR_IVIDEOFORMATCHANGED_H
 
+#include <atomic>
+
 class IVideoFormatChanged{
 protected:
     int lastVideoWidthPx=1920;
@@ -38,7 +40,6 @@ public:
         }
         return false;
     }
-private:
 };
 
 #endif //FPV_VR_IVIDEOFORMATCHANGED_H

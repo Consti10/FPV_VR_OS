@@ -21,8 +21,7 @@
 #include "vr/gvr/capi/include/gvr_types.h"
 #include <vector>
 #include <OSD/OSDRenderer.h>
-#include <IGLRenderer.h>
-#include <IVideoFormatChanged.hpp>
+#include "IVideoFormatChanged.hpp"
 #include <VRFrameCPUChronometer.h>
 
 #include "GLRStereoNormal.h"

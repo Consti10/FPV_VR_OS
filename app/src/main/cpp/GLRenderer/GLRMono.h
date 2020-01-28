@@ -21,7 +21,7 @@
 #include <GLProgramText.h>
 #include <FPSCalculator.h>
 #include <OSD/OSDRenderer.h>
-#include <IVideoFormatChanged.hpp>
+#include "IVideoFormatChanged.hpp"
 #include <Chronometer.h>
 #include <Video/VideoRenderer.h>
 

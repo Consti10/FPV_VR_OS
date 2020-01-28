@@ -206,17 +206,17 @@ JNI_METHOD(void, nativeDelete)
 
 JNI_METHOD(void, nativeOnSurfaceCreated)
         (JNIEnv *env, jobject instance, jlong glRenderer,jfloat fovY_full,jfloat ipd_full,jobject androidContext) {
-    native(glRenderer)->OnSurfaceCreated(env,androidContext,0);
+    native(glRenderer)->onSurfaceCreated(env,androidContext,0);
 }
 
 JNI_METHOD(void, nativeOnSurfaceChanged)
         (JNIEnv *env, jobject obj, jlong glRendererStereo,jint w,jint h) {
-    native(glRendererStereo)->OnSurfaceChanged(w, h);
+    native(glRendererStereo)->onSurfaceChanged(w, h);
 }
 
 JNI_METHOD(void, nativeOnDrawFrame)
         (JNIEnv *env, jobject obj, jlong glRenderer) {
-    native(glRenderer)->OnDrawFrame();
+    native(glRenderer)->onDrawFrame();
 }
 
 

@@ -12,8 +12,7 @@
 #include "vr/gvr/capi/include/gvr.h"
 #include <vector>
 #include <OSD/OSDRenderer.h>
-#include <IGLRenderer.h>
-#include <IVideoFormatChanged.hpp>
+#include "IVideoFormatChanged.hpp"
 #include <FPSCalculator.h>
 #include <Video/VideoRenderer.h>
 #include <DistortionCorrection/VRHeadsetParams.h>
@@ -21,13 +20,13 @@
 
 //Only fulfills testing purpose(s)
 
-class GLRStereoDaydream: public IGLRenderer,public IVideoFormatChanged {
+class GLRStereoDaydream: public IVideoFormatChanged {
 public:
     GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP);
+    void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture);
+    void onSurfaceChanged(int width, int height);
+    void onDrawFrame();
 private:
-    void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture)override;
-    void onSurfaceChanged(int width, int height)override ;
-    void onDrawFrame()override;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     gvr::BufferViewportList buffer_viewports;
     gvr::BufferViewportList recommended_buffer_viewports;

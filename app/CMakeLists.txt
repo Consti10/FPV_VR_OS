@@ -70,15 +70,6 @@ add_library( GLPrograms SHARED
         ${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/GvrSphere.cpp)
 target_link_libraries( GLPrograms ${log-lib} android GLESv2 gvr-lib)
 
-
-
-##Other stuff (cannot really be generalized)
-include_directories(src/main/cpp/Other)
-add_library(OtherStuff SHARED
-        src/main/cpp/Other/IGLRenderer.cpp
-        )
-target_link_libraries(OtherStuff android log gvr-lib)
-
 ##########################################################################################################
 #Scene (Engine) Stuff (OSD and video rendering)
 ##########################################################################################################
