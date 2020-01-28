@@ -45,7 +45,7 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         System.out.println("YYY onResume()");
         PerformanceHelper.setImmersiveSticky(this);
         if(!SJ.ENABLE_LOW_PERSISTENCE(this)){
-            PerformanceHelper.enableAndroidVRModeIfPossible(this);
+            //PerformanceHelper.enableAndroidVRModeIfPossible(this);
         }
         PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         telemetryReceiver.startReceiving();
