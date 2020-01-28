@@ -31,14 +31,6 @@ public class AStereoSuperSYNC extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewSuperSync=new ViewSuperSync(this);
-        final Activity instance=this;
-        mViewSuperSync.getUiLayout().setSettingsButtonListener(new Runnable() {
-            @Override
-            public void run() {
-                GvrUiLayout.launchOrInstallGvrApp(instance);
-                Toaster.makeToast(instance,"VR Headset changes require an app restart",true);
-            }
-        });
         telemetryReceiver=new TelemetryReceiver(this);
         mGLRStereoSuperSync = new GLRStereoSuperSync(this,telemetryReceiver,mViewSuperSync.getGvrApi().getNativeGvrContext());
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
@@ -57,7 +49,7 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         }
         PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         telemetryReceiver.startReceiving();
-        mViewSuperSync.resume();
+        mViewSuperSync.onResume();
         airHeadTrackingSender.startSendingDataIfEnabled();
     }
 
@@ -67,7 +59,7 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         System.out.println("YYY onPause()");
         telemetryReceiver.stopReceiving();
         airHeadTrackingSender.stopSendingDataIfEnabled();
-        mViewSuperSync.pause();
+        mViewSuperSync.onPause();
         PerformanceHelper.disableSustainedPerformanceIfEnabled(this);
         PerformanceHelper.disableAndroidVRModeIfEnabled(this);
     }

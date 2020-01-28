@@ -26,11 +26,13 @@ import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Toaster;
 import constantin.renderingx.core.MyEGLConfigChooser;
+import constantin.renderingx.core.MyVRLayout;
 import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
 public class AStereoNormal extends AppCompatActivity {
-    private GvrLayout mGvrLayout;
+    //private GvrLayout mGvrLayout;
+    private MyVRLayout mGvrLayout;
     private GLSurfaceView mGLViewStereo;
 
     private GLRStereoNormal mGLRStereoNormal;
@@ -43,22 +45,8 @@ public class AStereoNormal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
-        mGvrLayout = new GvrLayout(this);
-        final AStereoNormal instance=this;
-
-        mGvrLayout.getUiLayout().setSettingsButtonListener(new Runnable() {
-            @Override
-            public void run() {
-                GvrUiLayout.launchOrInstallGvrApp(instance);
-                Toaster.makeToast(mContext,"Changing your vr viewer requires an activity restart",true);
-            }
-        });
-
-        mGvrLayout.getUiLayout().setTransitionViewEnabled(false);
-        mGvrLayout.setAsyncReprojectionEnabled(false);
-
-        PerformanceHelper.enableSustainedPerformanceIfPossible(this);
-
+        //mGvrLayout = new GvrLayout(this);
+        mGvrLayout=new MyVRLayout(this);
         mGLViewStereo=new GLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
@@ -99,7 +87,7 @@ public class AStereoNormal extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         telemetryReceiver.startReceiving();
-        mGvrLayout.onResume();
+        mGvrLayout.onResumeX();
         mGLViewStereo.onResume();
         airHeadTrackingSender.startSendingDataIfEnabled();
     }
@@ -112,7 +100,7 @@ public class AStereoNormal extends AppCompatActivity {
         mGLRStereoNormal.onPause();
         telemetryReceiver.stopReceiving();
         airHeadTrackingSender.stopSendingDataIfEnabled();
-        mGvrLayout.onPause();
+        mGvrLayout.onPauseX();
         mGLViewStereo.onPause();
         PerformanceHelper.disableSustainedPerformanceIfEnabled(this);
     }

@@ -72,6 +72,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         nativeUpdateHeadsetParams(nativeGLRSuperSync,view.getScreenParams().getWidthMeters(),view.getScreenParams().getHeightMeters(),
                 params.getScreenToLensDistance(),params.getInterLensDistance(),params.getVerticalAlignment().ordinal(),params.getVerticalDistanceToLensCenter(),
                 fov,kN,view.getScreenParams().getWidth(),view.getScreenParams().getHeight());
+        view.shutdown();
     }
 
     @Override
