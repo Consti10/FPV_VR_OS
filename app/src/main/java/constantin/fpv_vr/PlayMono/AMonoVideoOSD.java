@@ -59,7 +59,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         if(ENABLE_OSD){
             mGLView = new GLSurfaceView(this);
             mGLView.setEGLContextClientVersion(2);
-            //Do not use msaa in mono mode
+            //Do not use MSAA in mono mode
             mGLView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
             mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
             mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
