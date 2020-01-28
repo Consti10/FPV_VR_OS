@@ -30,7 +30,7 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
         mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     }
     if(videoMode!=NONE){
-        mGLProgramTexture=std::make_unique<GLProgramTexture>(true);
+        mGLProgramTexture=std::make_unique<GLProgramTextureExt>(nullptr);
         mVideoRenderer=std::make_unique<VideoRenderer>(
                 videoMode==STEREO ? VideoRenderer::RM_STEREO :VideoRenderer::RM_360_EQUIRECTANGULAR,
                 (GLuint)optionalVideoTexture,mBasicGLPrograms->vc,mGLProgramTexture.get());
@@ -63,7 +63,7 @@ void GLRMono::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     if(checkAndResetVideoFormatChanged()){
         if(mVideoRenderer){
-            mVideoRenderer->updateEquirectangularSphereIfNeeded(lastVideoWidthPx,lastVideoHeightPx);
+            //mVideoRenderer->updateEquirectangularSphereIfNeeded(lastVideoWidthPx,lastVideoHeightPx);
         }
     }
     cpuFrameTime.start();

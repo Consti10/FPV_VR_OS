@@ -48,10 +48,10 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     setCPUPriority(CPU_PRIORITY_GLRENDERER_STEREO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(distortionManager);
+    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mGLRenderTextureExternal=std::make_unique<GLProgramTexture>(true,distortionManager);
+    mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>(&distortionManager);
     mVideoRenderer=std::make_unique<VideoRenderer>(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode),
             (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
     const TrueColor color=Color::BLACK;

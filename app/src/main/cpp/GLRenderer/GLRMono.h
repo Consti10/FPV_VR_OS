@@ -45,7 +45,7 @@ private:
     const bool enableOSD;
 public:
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
-    std::unique_ptr<GLProgramTexture> mGLProgramTexture=nullptr;
+    std::unique_ptr<GLProgramTextureExt> mGLProgramTexture=nullptr;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     //These fields are only active when also rendering video
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;

@@ -101,7 +101,7 @@ add_library(VRSettings SHARED
         src/main/cpp/VRSettings/SettingsVR.cpp)
 target_link_libraries(VRSettings android log GLPrograms)
 
-set(GLR_SOME_DEPENDENCIES VRSettings OtherStuff GLPrograms Scene Telemetry-lib Time)
+set(GLR_SOME_DEPENDENCIES VRSettings GLPrograms Scene Telemetry-lib Time)
 
 add_library( GLRMono SHARED
         src/main/cpp/GLRenderer/GLRMono.cpp )

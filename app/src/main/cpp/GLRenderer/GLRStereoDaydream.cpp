@@ -67,7 +67,7 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     specs[0].SetDepthStencilFormat(GVR_DEPTH_STENCIL_FORMAT_DEPTH_16);
     swap_chain = std::make_unique<gvr::SwapChain>(gvr_api_->CreateSwapChain(specs));
 
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(distortionManager);
+    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
 
