@@ -36,6 +36,7 @@ include_directories(${RX_CORE_DIR}/src/main/cpp)
 include_directories(${RX_CORE_DIR}/src/main/cpp/Color)
 include_directories(${RX_CORE_DIR}/src/main/cpp/Other)
 include_directories(${RX_CORE_DIR}/src/main/cpp/Helper)
+include_directories(${RX_CORE_DIR}/src/main/cpp/GeometryBuilder)
 #gvr is a shared,imported library
 set(GVR_DIR ${RX_CORE_DIR}/libs/google/gvr)
 include_directories(${GVR_DIR}/headers)

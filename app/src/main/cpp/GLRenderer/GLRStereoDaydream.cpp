@@ -45,7 +45,7 @@ void GLRStereoDaydream::placeGLElements() {
     videoZ*=1.1f;
     videoZ*=2;
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
-    mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
+    mVideoRenderer->updatePosition(glm::vec3(videoX,videoY,videoZ),videoW,videoH,1920,1080);
 }
 
 void GLRStereoDaydream::updateBufferViewports() {

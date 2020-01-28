@@ -34,39 +34,32 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
             break;
         case RM_360_EQUIRECTANGULAR:
             mEquirectangularSphereB.initializeGL();
-            updateEquirectangularSphereIfNeeded(2560, 1280);
             break;
     }
 }
 
-void VideoRenderer::setupPosition() {
-    mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
+void VideoRenderer::updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,const int optionalVideoWidthPx,const int optionalVideoHeightPx) {
     //We need the indices unless 360 degree rendering
     if(mMode==RM_NORMAL){
-        const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(glm::vec3(mX, mY, mZ),
-                                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+        const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
+                                                                    width,height, TESSELATION_FACTOR, 0.0f,
                                                                     1.0f);
         mVideoCanvasB.initializeAndUploadGL(vid0.vertices,vid0.indices);
     }else if(mMode==RM_STEREO){
-        const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(glm::vec3(mX, mY, mZ),
-                                                                    mWidth, mHeight, TESSELATION_FACTOR, 0.0f,
+        const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
+                                                                    width,height, TESSELATION_FACTOR, 0.0f,
                                                                     0.5f);
         mVideoCanvasLeftEyeB.initializeAndUploadGL(vid1.vertices,vid1.indices);
-        const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas( glm::vec3(mX, mY, mZ),
-                                                                     mWidth, mHeight, TESSELATION_FACTOR, 0.5f,
+        const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
+                                                                     width,height, TESSELATION_FACTOR, 0.5f,
                                                                      0.5f);
         mVideoCanvasRightEyeB.initializeAndUploadGL(vid2.vertices,vid2.indices);
-    }/*else if(mMode==RM_PunchHole){
-        GLProgramVC::Vertex tmp[6];
-        ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth,0,0),glm::vec3(0,mHeight,0),
-                                         Color::TRANSPARENT);
-        GLBufferHelper::allocateGLBufferStatic(mGLBuffVid,tmp,sizeof(tmp));
-
-        ColoredGeometry::makeColoredRect(tmp,glm::vec3(mX,mY,mZ),glm::vec3(mWidth*5,0,0),glm::vec3(0,mHeight*10,0),
-                                         Color::RED);
-        GLBufferHelper::allocateGLBufferStatic(mGLBuffVidPunchHole,tmp,sizeof(tmp));
-    }*/
+    }else if(mMode==RM_360_EQUIRECTANGULAR){
+        //We need to recalculate the sphere u,v coordinates when the video ratio changes
+        EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,optionalVideoWidthPx,optionalVideoHeightPx);
+    }
 }
+
 
 /*void VideoRenderer::punchHole(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     mGLRenderGeometry.beforeDraw(mGLBuffVid);
@@ -104,14 +97,6 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     mGLRenderTexEx->drawIndexed(mEquirectangularSphereB.indexB,ViewM*scaleM,ProjM,0,mEquirectangularSphereB.nIndices,GL_TRIANGLE_STRIP);
     mGLRenderTexEx->afterDraw();
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
-}
-
-//We need to recalculate the sphere vertices when the video ratio changes
-//but only if RM==Equirectangular
-void VideoRenderer::updateEquirectangularSphereIfNeeded(int videoW, int videoH) {
-    if(mMode==RM_360_EQUIRECTANGULAR){
-        EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,videoW,videoH);
-    }
 }
 
 void VideoRenderer::initUpdateTexImageJAVA(JNIEnv *env, jobject obj,jobject surfaceTexture) {

@@ -14,7 +14,7 @@
 #include "../General/PositionDebug.hpp"
 
 
-class VideoRenderer : public IPositionable{ //Does not inherit from IDrawable !
+class VideoRenderer{ //Does not inherit from IDrawable !
 public:
     //Normal: Render a rectangle
     //Stereo: One decoded frame contains images for left and right eye
@@ -31,9 +31,9 @@ public:
     //void punchHole2(glm::mat4x4 ViewM,glm::mat4x4 ProjM);
     void drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye);
     void drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM);
-    void updateEquirectangularSphereIfNeeded(int videoW, int videoH);
+    //For 360 equirectangular we need the video vidth and height in px
+    void updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,int optionalVideoWidthPx,int optionalVideoHeightPx);
 private:
-    void setupPosition() override;
     PositionDebug mPositionDebug;
     VertexIndexBuffer mEquirectangularSphereB; //Equirectangular Sphere
     VertexIndexBuffer mVideoCanvasB;//whole video frame (u.v coordinates). Tesselated

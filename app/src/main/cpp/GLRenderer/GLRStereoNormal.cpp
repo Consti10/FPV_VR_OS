@@ -40,8 +40,7 @@ void GLRStereoNormal::placeGLElements(){
     float videoZ=-videoW/2.0f/glm::tan(glm::radians(SettingsVR::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
-    mVideoRenderer->setWorldPosition(videoX,videoY,videoZ,videoW,videoH);
-    mVideoRenderer->updateEquirectangularSphereIfNeeded(lastVideoWidthPx,lastVideoHeightPx);
+    mVideoRenderer->updatePosition(glm::vec3(videoX,videoY,videoZ),videoW,videoH,lastVideoWidthPx,lastVideoHeightPx);
 }
 
 void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint videoTexture) {

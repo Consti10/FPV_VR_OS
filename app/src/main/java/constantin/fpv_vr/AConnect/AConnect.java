@@ -178,10 +178,13 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 break;
             case CONNECTION_TYPE_TestFile:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_ASSETS);
-                if(VideoNative.videoMode(context)==2){
-                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
-                }else{
+                final int vm=VideoNative.videoMode(context);
+                if(vm==0){
                     pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
+                }else if(vm==1){
+                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "stereo.h264");
+                }else{
+                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
                 }
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "outfile.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
