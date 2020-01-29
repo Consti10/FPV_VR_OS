@@ -1,7 +1,10 @@
 
 //It is complete bullshit to call java code via ndk that is then calling ndk code again - but when building
 //for pre-android 9, there is no other way around
+#include <android/api-level.h>
+#if __ANDROID_API__> __ANDROID_API_P__ //28
 #define FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
+#endif
 
 #include <Color/Color.hpp>
 #include <GeometryBuilder/ColoredGeometry.hpp>

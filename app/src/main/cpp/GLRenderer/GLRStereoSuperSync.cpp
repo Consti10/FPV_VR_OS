@@ -13,7 +13,7 @@
 constexpr auto TAG="GLRStereoSuperSync";
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
-#define CHANGE_SWAP_COLOR
+//#define CHANGE_SWAP_COLOR
 
 GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,bool qcomTiledRenderingAvailable,
         bool reusableSyncAvailable,int videoMode):
