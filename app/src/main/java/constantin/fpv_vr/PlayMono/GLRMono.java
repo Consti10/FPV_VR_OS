@@ -106,7 +106,7 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     private void startVideoPlayerIfNotAlreadyRunning(){
         if(mVideoPlayer==null){
-            Surface mVideoSurface=new Surface(mSurfaceTexture);
+            final Surface mVideoSurface=new Surface(mSurfaceTexture);
             mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,this);
             mVideoPlayer.start();
         }

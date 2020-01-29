@@ -14,7 +14,7 @@ public class MVideoPlayer implements IVideoParamsChanged {
     private final Surface mSurface;
 
 
-    public MVideoPlayer(final Context context, Surface surface, final IVideoParamsChanged vpc){
+    public MVideoPlayer(final Context context,final Surface surface, final IVideoParamsChanged vpc){
         mVideoParamsChangedI=vpc;
         mSurface=surface;
         videoPlayer=new VideoPlayer(context,this);

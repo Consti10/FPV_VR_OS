@@ -27,7 +27,6 @@ public:
     bool GHT_Y;
     bool GHT_Z;
 public:
-    //std::string coeficientsToString();
     static constexpr const float DEFAULT_FOV_FILLED_BY_SCENE=60;
 };
 

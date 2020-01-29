@@ -23,8 +23,6 @@ SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext) {
     GHT_Y=settingsN.getBoolean(IDVR::GroundHeadTrackingY) && headTracking;
     GHT_Z=settingsN.getBoolean(IDVR::GroundHeadTrackingZ) && headTracking;
 
-    //LOGD("Coeficients %s",coeficientsToString().c_str());
-    //LOGD("HT Mode %d | X %d Y %d Z %d",GHT_MODE,GHT_X,GHT_Y,GHT_Z);
     LOGD("%f %d",VR_SCENE_SCALE_PERCENTAGE,VR_DISTORTION_CORRECTION_MODE);
 }
 

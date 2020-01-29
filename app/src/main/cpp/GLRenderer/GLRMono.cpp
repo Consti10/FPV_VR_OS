@@ -66,7 +66,7 @@ void GLRMono::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     if(checkAndResetVideoFormatChanged()){
         if(mVideoRenderer){
-            //mVideoRenderer->updateEquirectangularSphereIfNeeded(lastVideoWidthPx,lastVideoHeightPx);
+            //mVideoRenderer->updatePosition(glm::vec3(0),0,0,lastVideoWidthPx,lastVideoHeightPx);
         }
     }
     cpuFrameTime.start();

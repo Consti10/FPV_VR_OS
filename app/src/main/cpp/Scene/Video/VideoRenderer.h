@@ -1,16 +1,14 @@
-#ifndef VIDEORECEIVERRENDERER
-#define VIDEORECEIVERRENDERER
+#ifndef CONSTI10_FPV_VR_OS_VIDEO_RENDERER
+#define CONSTI10_FPV_VR_OS_VIDEO_RENDERER
 
 #include <GLES2/gl2.h>
+#include <android/surface_texture.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <GLProgramTexture.h>
 #include <GLProgramVC.h>
-#include <android/surface_texture.h>
 #include <Helper/GLBufferHelper.hpp>
-#include "../General/IPositionable.hpp"
-#include "../General/IDrawable.hpp"
 #include "../General/PositionDebug.hpp"
 
 
@@ -24,9 +22,6 @@ public:
     //RM_PunchHole 'punch a hole' into the scene by rendering a quad with alpha=0.0f deprecated
     enum VIDEO_RENDERING_MODE{RM_NORMAL,RM_STEREO,RM_360_EQUIRECTANGULAR};
     VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx=nullptr);
-    void initUpdateTexImageJAVA(JNIEnv * env,jobject obj,jobject surfaceTexture);
-    void deleteUpdateTexImageJAVA(JNIEnv* env,jobject obj); //frees the global reference so java does not complain
-    void updateTexImageJAVA(JNIEnv* env);
     //void punchHole(glm::mat4x4 ViewM,glm::mat4x4 ProjM);
     //void punchHole2(glm::mat4x4 ViewM,glm::mat4x4 ProjM);
     void drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye);
@@ -51,6 +46,11 @@ private:
     ASurfaceTexture* mSurfaceTexture;
 
     const GLuint mVideoTexture;
+public:
+    //Only SuperSync needs this one, else we can call updateTexImage() in java
+    void initUpdateTexImageJAVA(JNIEnv * env,jobject obj,jobject surfaceTexture);
+    void deleteUpdateTexImageJAVA(JNIEnv* env,jobject obj); //frees the global reference so java does not complain
+    void updateTexImageJAVA(JNIEnv* env);
 };
 
-#endif
+#endif //CONSTI10_FPV_VR_OS_VIDEO_RENDERER

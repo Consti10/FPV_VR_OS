@@ -1,10 +1,11 @@
 
 //It is complete bullshit to call java code via ndk that is then calling ndk code again - but when building
 //for pre-android 9, there is no other way around
-#include <android/api-level.h>
-#if __ANDROID_API__> __ANDROID_API_P__ //28
+//If api<28 we have to use java to update the surface texture
+//#include <android/api-level.h>
+//#if __ANDROID_API__< __ANDROID_API_P__ //28
 #define FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
-#endif
+//#endif
 
 #include <Color/Color.hpp>
 #include <GeometryBuilder/ColoredGeometry.hpp>
@@ -12,16 +13,12 @@
 #include <GeometryBuilder/EquirectangularSphere.hpp>
 #include "VideoRenderer.h"
 #include "Helper/GLHelper.hpp"
-#include "Helper/GLBufferHelper.hpp"
 
 #ifndef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
-#include <android/surface_texture.h>
 #include <android/surface_texture_jni.h>
 #endif
 
-
 constexpr auto TAG="VideoRenderer";
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const GLProgramVC& glRenderGeometry,GLProgramTexture *glRenderTexEx):
 mVideoTexture(videoTexture),
@@ -124,6 +121,8 @@ void VideoRenderer::initUpdateTexImageJAVA(JNIEnv *env, jobject obj,jobject surf
 void VideoRenderer::deleteUpdateTexImageJAVA(JNIEnv *env, jobject obj) {
 #ifdef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
     env->DeleteGlobalRef(localRefSurfaceTexture);
+#else
+    ASurfaceTexture_release(mSurfaceTexture);
 #endif
 }
 

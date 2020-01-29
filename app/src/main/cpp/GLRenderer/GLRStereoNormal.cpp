@@ -97,7 +97,10 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     vrHeadsetParams.setOpenGLViewport(eye);
     //Now draw
     auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
-    rotation=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
+    //Always enable head tracking if 360 degree
+    if(videoMode!=2){
+        rotation=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
+    }
     glm::mat4 view=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
     glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
     mVideoRenderer->drawVideoCanvas(view,projection,eye==GVR_LEFT_EYE);
