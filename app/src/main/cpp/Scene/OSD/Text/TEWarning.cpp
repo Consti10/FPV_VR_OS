@@ -2,7 +2,7 @@
 // Created by Constantin on 8/10/2018.
 //
 #include "TEWarning.h"
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #define TAG "TEWarning"
 
 TEWarning::TEWarning(const TEWarning::Options& options,const BasicGLPrograms &basicGLPrograms,BatchingManager& batchingManager,TelemetryReceiver &telemetryReceiver):

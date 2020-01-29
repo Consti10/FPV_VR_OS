@@ -15,7 +15,7 @@
 #include <OSD/ElementBatching/BatchingManager.h>
 #include <OSD/ATextElements/OSDTextObj.hpp>
 #include <OSD/ATextElements/OSDBackgroundObj.hpp>
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #include <Helper/GLBufferHelper.hpp>
 #include "../../General/IDrawable.hpp"
 #include "../../General/IPositionable.hpp"

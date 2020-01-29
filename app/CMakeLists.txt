@@ -89,10 +89,11 @@ add_library( Scene
         ${SCENE_PATH}/OSD/Text/TextElements2.cpp
         ${SCENE_PATH}/OSD/Text/TEWarning.cpp
         ${SCENE_PATH}/OSD/OSDRenderer.cpp
-        ${SCENE_PATH}/Video/VideoRenderer.cpp
-        ${SCENE_PATH}/Settings/SettingsOSDElements.cpp
-        ${SCENE_PATH}/Settings/SettingsOSDStyle.cpp)
+        ${SCENE_PATH}/OSD/Settings/SettingsOSDElements.cpp
+        ${SCENE_PATH}/OSD/Settings/SettingsOSDStyle.cpp
+        ${SCENE_PATH}/Video/VideoRenderer.cpp)
 target_link_libraries( Scene GLPrograms Telemetry-lib ${log-lib} android EGL GLESv2 GLESv3 Time)
+include_directories(${SCENE_PATH}/OSD/Settings)
 
 ##########################################################################################################
 #Renderer Mono/Stereo (called from GLSurfaceView.Renderer)

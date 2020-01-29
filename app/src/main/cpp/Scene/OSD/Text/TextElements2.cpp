@@ -1,7 +1,7 @@
 //
 // Created by Constantin on 6/10/2018.
 //
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #include "TextElements2.h"
 #include "Helper/GLHelper.hpp"
 

@@ -14,7 +14,7 @@
 #include <General/IUpdateable.hpp>
 #include <Helper/BasicGLPrograms.hpp>
 #include <OSD/ElementBatching/BatchingManager.h>
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #include "General/IDrawable.hpp"
 #include "General/IPositionable.hpp"
 #include <GLBufferHelper.hpp>

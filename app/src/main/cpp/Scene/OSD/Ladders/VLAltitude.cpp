@@ -3,7 +3,7 @@
 //
 
 #include "VLAltitude.h"
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 
 VLAltitude::VLAltitude(const VLAltitude::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms &basicGLPrograms, BatchingManager &batchingManager,
                      const TelemetryReceiver &telemetryReceiver) : AVerticalLadder(settingsOSDStyle,

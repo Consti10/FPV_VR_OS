@@ -18,7 +18,7 @@
 #include <OSD/ElementBatching/BatchingManager.h>
 #include <OSD/ATextElements/OSDTextObj.hpp>
 #include <OSD/ATextElements/OSDBackgroundObj.hpp>
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 
 class AVerticalLadder : public IDrawable, public IPositionable, public IUpdateable  {
 public:

@@ -1,4 +1,4 @@
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #include "TextElements1.h"
 #include "CPUPriorities.hpp"
 

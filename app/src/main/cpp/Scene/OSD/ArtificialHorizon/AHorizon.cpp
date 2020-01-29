@@ -3,7 +3,7 @@
 //
 
 #include <GLProgramText.h>
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #include <Color/Color.hpp>
 #include <GeometryBuilder/ColoredGeometry.hpp>
 #include <Helper/GLBufferHelper.hpp>

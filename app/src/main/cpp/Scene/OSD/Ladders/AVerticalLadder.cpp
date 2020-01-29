@@ -2,7 +2,7 @@
 // Created by Constantin on 8/17/2018.
 //
 #include "AVerticalLadder.h"
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #include <Helper/StringHelper.hpp>
 #include <Helper/GLBufferHelper.hpp>
 #include "Helper/GLHelper.hpp"

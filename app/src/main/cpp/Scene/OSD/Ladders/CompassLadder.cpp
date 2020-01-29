@@ -1,6 +1,6 @@
 
 #include "CompassLadder.h"
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 #include "Helper/GLHelper.hpp"
 
 #define TAG "CompassLadder"

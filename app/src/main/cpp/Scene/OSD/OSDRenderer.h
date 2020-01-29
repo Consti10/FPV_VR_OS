@@ -16,8 +16,8 @@
 #include <OSD/Ladders/VLAltitude.h>
 #include <OSD/Ladders/VLSpeed.h>
 #include <OSD/ElementBatching/BatchingManager.h>
-#include <Settings/SettingsOSDElements.h>
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDElements.h>
+#include <SettingsOSDStyle.h>
 #include <GLBufferHelper.hpp>
 
 /**

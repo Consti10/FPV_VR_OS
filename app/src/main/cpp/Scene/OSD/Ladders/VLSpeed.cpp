@@ -3,7 +3,7 @@
 //
 
 #include "VLSpeed.h"
-#include <Settings/SettingsOSDStyle.h>
+#include <SettingsOSDStyle.h>
 
 
 VLSpeed::VLSpeed(const VLSpeed::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms &basicGLPrograms, BatchingManager &batchingManager,
