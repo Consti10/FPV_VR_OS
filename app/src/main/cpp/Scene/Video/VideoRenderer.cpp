@@ -38,8 +38,8 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
     }
 }
 
-void VideoRenderer::updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,const int optionalVideoWidthPx,const int optionalVideoHeightPx) {
-    //We need the indices unless 360 degree rendering
+void VideoRenderer::updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,
+        const int optionalVideoWidthPx,const int optionalVideoHeightPx) {
     if(mMode==RM_NORMAL){
         const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
                                                                     width,height, TESSELATION_FACTOR, 0.0f,
