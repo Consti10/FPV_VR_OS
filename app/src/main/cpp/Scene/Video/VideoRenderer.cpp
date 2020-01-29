@@ -60,19 +60,6 @@ void VideoRenderer::updatePosition(const glm::vec3& lowerLeftCorner,const float 
     }
 }
 
-
-/*void VideoRenderer::punchHole(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
-    mGLRenderGeometry.beforeDraw(mGLBuffVid);
-    mGLRenderGeometry.draw(glm::value_ptr(ViewM), glm::value_ptr(ProjM), 0, 2 * 3,GL_TRIANGLES);
-    mGLRenderGeometry.afterDraw();
-}
-
-void VideoRenderer::punchHole2(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
-    mGLRenderGeometry.beforeDraw(mGLBuffVidPunchHole);
-    mGLRenderGeometry.draw(glm::value_ptr(ViewM), glm::value_ptr(ProjM), 0, 2 * 3,GL_TRIANGLES);
-    mGLRenderGeometry.afterDraw();
-}*/
-
 void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye) {
     if(mMode==RM_360_EQUIRECTANGULAR){
         drawVideoCanvas360(ViewM,ProjM);

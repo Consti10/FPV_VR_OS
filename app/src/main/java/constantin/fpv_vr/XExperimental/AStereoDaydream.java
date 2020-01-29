@@ -1,19 +1,15 @@
-package constantin.fpv_vr.PlayStereo;
+package constantin.fpv_vr.XExperimental;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.Surface;
 
 import com.google.vr.ndk.base.GvrLayout;
-import com.google.vr.sdk.base.AndroidCompat;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.PlayStereo.GLRStereoDaydream;
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
@@ -25,6 +21,7 @@ import constantin.telemetry.core.TelemetryReceiver;
  * Pipeline h.264-->image on screen:
  * h.264 NALUs->VideoDecoder->GvrApi video texture (maybe external texture ? unclear)->Rendering with OpenGL in the async timewarp thread (by GvrApi)
  */
+
 public class AStereoDaydream extends AppCompatActivity implements GvrLayout.ExternalSurfaceListener{
     private GvrLayout mGvrLayout;
     private GLSurfaceView mGLView;

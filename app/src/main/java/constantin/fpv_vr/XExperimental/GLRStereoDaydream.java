@@ -1,4 +1,4 @@
-package constantin.fpv_vr.PlayStereo;
+package constantin.fpv_vr.XExperimental;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;

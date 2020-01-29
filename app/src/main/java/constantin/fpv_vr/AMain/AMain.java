@@ -24,7 +24,7 @@ import constantin.fpv_vr.Settings.ASettingsOSD;
 import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.PlayMono.AMonoVideoOSD;
-import constantin.fpv_vr.PlayStereo.AStereoDaydream;
+import constantin.fpv_vr.XExperimental.AStereoDaydream;
 import constantin.fpv_vr.PlayStereo.AStereoNormal;
 import constantin.fpv_vr.PlayStereo.AStereoSuperSYNC;
 import constantin.fpv_vr.R;
