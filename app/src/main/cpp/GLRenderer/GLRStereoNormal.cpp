@@ -21,7 +21,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <GeometryBuilder/CardboardViewportOcclusion.h>
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
-videoMode(videoMode),mSettingsVR(env,androidContext),
+videoMode(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),
 distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? DistortionManager::NONE : DistortionManager::RADIAL_CARDBOARD),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
@@ -51,11 +51,11 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>(&distortionManager);
-    mVideoRenderer=std::make_unique<VideoRenderer>(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode),
-            (GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
+    mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
     const TrueColor color=Color::BLACK;
-    mOcclusionMesh[0].initializeAndUploadGL(CardboardViewportOcclusion::makeMesh(vrHeadsetParams,0,color));
-    mOcclusionMesh[1].initializeAndUploadGL(CardboardViewportOcclusion::makeMesh(vrHeadsetParams,1,color));
+    mOcclusionMesh[0].initializeGL();
+    mOcclusionMesh[1].initializeGL();
+    CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -96,25 +96,23 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     distortionManager.leftEye=eye==GVR_LEFT_EYE;
     vrHeadsetParams.setOpenGLViewport(eye);
     //Now draw
-    auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
-    //Always enable head tracking if 360 degree
-    if(videoMode!=2){
-        rotation=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
-    }
-    glm::mat4 view=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
-    glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
-    mVideoRenderer->drawVideoCanvas(view,projection,eye==GVR_LEFT_EYE);
+    const auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
+    const auto rotationWithAxesDisabled=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
+    const glm::mat4 viewVideo=videoMode==VideoRenderer::RM_360_EQUIRECTANGULAR ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled :
+                              vrHeadsetParams.GetEyeFromHeadMatrix(eye);
+    const glm::mat4 viewOSD= mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)
+                                                               : vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;
+    const glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
+    mVideoRenderer->drawVideoCanvas(viewVideo,projection,eye==GVR_LEFT_EYE);
     if(eye==GVR_LEFT_EYE || updateOSDBetweenEyes){
-        mOSDRenderer->updateAndDrawElementsGL(view,projection);
+        mOSDRenderer->updateAndDrawElementsGL(viewOSD,projection);
     }else{
-        mOSDRenderer->drawElementsGL(view,projection);
+        mOSDRenderer->drawElementsGL(viewOSD,projection);
     }
     //Render the mesh that occludes everything except the part actually visible inside the headset
     if(mSettingsVR.VR_DISTORTION_CORRECTION_MODE!=0){
         int idx=eye==GVR_LEFT_EYE ? 0 : 1;
-        mBasicGLPrograms->vc2D.beforeDraw(mOcclusionMesh[idx].vertexB);
-        mBasicGLPrograms->vc2D.draw(glm::mat4(1.0f),glm::mat4(1.0f),0,mOcclusionMesh[idx].nVertices,GL_TRIANGLE_STRIP);
-        mBasicGLPrograms->vc2D.afterDraw();
+        mBasicGLPrograms->vc2D.drawX(glm::mat4(1.0f),glm::mat4(1.0f),mOcclusionMesh[idx]);
     }
 }
 

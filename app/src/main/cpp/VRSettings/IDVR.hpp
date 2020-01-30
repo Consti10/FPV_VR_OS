@@ -12,6 +12,7 @@ public:
     static constexpr const char* AirHeadTrackingRoll="AirHeadTrackingRoll";
     static constexpr const char* AirHeadTrackingPitch="AirHeadTrackingPitch";
     static constexpr const char* AHTRefreshRateMs="AHTRefreshRateMs";
+    static constexpr const char* GHT_OSD_FIXED_TO_HEAD="GHT_OSD_FIXED_TO_HEAD";
     static constexpr const char* SuperSync="SuperSync";
     static constexpr const char* DisableVSYNC="DisableVSYNC";
     static constexpr const char* Disable60FPSLock="Disable60FPSLock";

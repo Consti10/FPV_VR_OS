@@ -77,9 +77,9 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     float tesselatedRectSize=2.5; //6.2f
     const float offsetY=0.0f;
     auto tmp=ColoredGeometry::makeTesselatedColoredRectLines(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::BLUE);
-    nColoredVertices= GLBufferHelper::createUploadGLBufferStatic(glBufferVC, tmp);
+    nColoredVertices= GLBufferHelper::createUploadGLBuffer(glBufferVC, tmp);
     tmp=ColoredGeometry::makeTesselatedColoredRectLines(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::GREEN);
-    GLBufferHelper::createUploadGLBufferStatic(glBufferVCX, tmp);
+    GLBufferHelper::createUploadGLBuffer(glBufferVCX, tmp);
 }
 
 

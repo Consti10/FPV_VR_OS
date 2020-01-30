@@ -26,6 +26,8 @@ public:
     bool GHT_X;
     bool GHT_Y;
     bool GHT_Z;
+    //
+    bool GHT_OSD_FIXED_TO_HEAD;
 public:
     static constexpr const float DEFAULT_FOV_FILLED_BY_SCENE=60;
 };

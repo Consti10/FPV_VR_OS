@@ -34,11 +34,11 @@ void AHorizon::setupPosition() {
         const float lineH=mWidth*0.015f;
         const float lineW=mWidth;
         const float outline=lineH*0.5f;
-        GLProgramLine::Vertex tmp[6];
+        std::vector<GLProgramLine::Vertex> tmp(6);
         const glm::vec3 start=glm::vec3(-lineW/2.0f-outline/2.0f,-lineH/2.0f-outline/2.0f,0);
         const glm::vec3 end=start+glm::vec3(lineW,0,0);
-        GLProgramLine::convertLineToRenderingData(start,end,lineH,tmp,0,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-        mGLBuffLadders.uploadGL(std::vector<GLProgramLine::Vertex>{std::begin(tmp),std::end(tmp)});
+        GLProgramLine::convertLineToRenderingData(start,end,lineH,tmp.data(),0,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+        mGLBuffLadders.uploadGL(tmp);
 
         LadderLines[0].vertOffset=0;
         LadderLines[0].vertCount=6;
@@ -113,9 +113,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //Render the 3D Quadcopter representation
     if(mOptions.mode==MODE_3D_QUADCOPTER
        || mOptions.mode==MODE_BOTH_TOGETHER){
-        mGLPrograms.vc.beforeDraw(mGLBuff3DModel.vertexB);
-        mGLPrograms.vc.draw(glm::value_ptr(ViewM * mModelM3DModel), glm::value_ptr(ProjM), 0,mGLBuff3DModel.nVertices,GL_TRIANGLES);
-        mGLPrograms.vc.afterDraw();
+        mGLPrograms.vc.drawX(ViewM*mModelM3DModel,ProjM,mGLBuff3DModel);
     }
 
     //Render the lines

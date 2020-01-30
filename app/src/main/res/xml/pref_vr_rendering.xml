@@ -126,6 +126,14 @@
                     android:entryValues="@array/valuesAHTRefreshRateMs"
                     android:defaultValue="100"/>
             </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Special">
+                <SwitchPreference
+                    android:key="@string/GHT_OSD_FIXED_TO_HEAD"
+                    android:title="@string/GHT_OSD_FIXED_TO_HEAD"
+                    android:summary="If enabled, the OSD is fixed to the Head position,regardless of the video. Default false."
+                    android:defaultValue="false"/>
+            </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
 

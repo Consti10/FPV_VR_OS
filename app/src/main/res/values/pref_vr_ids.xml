@@ -11,6 +11,9 @@
     <string name="AirHeadTrackingRoll">AirHeadTrackingRoll</string>
     <string name="AirHeadTrackingPitch">AirHeadTrackingPitch</string>
     <string name="AHTRefreshRateMs">AHTRefreshRateMs</string>
+    //for 360° video the user can also differentiate between tracking of the world and the OSD
+    <string name="GHT_OSD_FIXED_TO_HEAD">GHT_OSD_FIXED_TO_HEAD</string>
+
     //Performance "Hacks"
     <string name="SuperSync">SuperSync</string>
     <string name="DisableVSYNC">DisableVSYNC</string>

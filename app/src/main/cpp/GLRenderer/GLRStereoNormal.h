@@ -50,9 +50,9 @@ protected:
     std::unique_ptr<GLProgramTextureExt> mGLRenderTextureExternal= nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     //One for left and right eye each
-    VertexBuffer mOcclusionMesh[2];
+    std::array<VertexBuffer,2> mOcclusionMesh;
     int swapColor=0;
-    const int videoMode;
+    const VideoRenderer::VIDEO_RENDERING_MODE videoMode;
 public:
     DistortionManager distortionManager;
     VRHeadsetParams vrHeadsetParams;

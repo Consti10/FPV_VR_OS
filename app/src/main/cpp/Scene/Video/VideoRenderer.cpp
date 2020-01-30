@@ -65,9 +65,7 @@ void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool l
         drawVideoCanvas360(ViewM,ProjM);
     }else if(mMode==RM_NORMAL || mMode==RM_STEREO){
         const auto buff=mMode==RM_NORMAL ? mVideoCanvasB : leftEye ? mVideoCanvasLeftEyeB : mVideoCanvasRightEyeB;
-        mGLRenderTexEx->beforeDraw(buff.vertexB,mVideoTexture);
-        mGLRenderTexEx->drawIndexed(buff.indexB,ViewM,ProjM,0,buff.nIndices,GL_TRIANGLES);
-        mGLRenderTexEx->afterDraw();
+        mGLRenderTexEx->drawX(mVideoTexture,ViewM,ProjM,buff);
     }
     //We render the debug rectangle after the other one such that it always appears when enabled (overdraw)
     mPositionDebug.drawGLDebug(ViewM,ProjM);
@@ -80,9 +78,7 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     }
     const float scale=200.0f;
     glm::mat4 scaleM=glm::scale(glm::vec3(scale,scale,scale));
-    mGLRenderTexEx->beforeDraw(mEquirectangularSphereB.vertexB,mVideoTexture);
-    mGLRenderTexEx->drawIndexed(mEquirectangularSphereB.indexB,ViewM*scaleM,ProjM,0,mEquirectangularSphereB.nIndices,GL_TRIANGLE_STRIP);
-    mGLRenderTexEx->afterDraw();
+    mGLRenderTexEx->drawX(mVideoTexture,ViewM*scaleM,ProjM,mEquirectangularSphereB);
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
 }
 
