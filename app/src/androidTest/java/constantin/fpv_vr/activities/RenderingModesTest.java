@@ -1,6 +1,8 @@
 package constantin.fpv_vr.activities;
 
 
+import android.content.Intent;
+
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.matcher.PreferenceMatchers;
 import androidx.test.filters.LargeTest;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import constantin.fpv_vr.AMain.AMain;
 import constantin.fpv_vr.R;
+import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -28,10 +31,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class RenderingModesTest {
 
     private static final int WAIT_TIME_LONG=10000;
-    private static final int WAIT_TIME_SHORT=1000;
+    private static final int WAIT_TIME_SHORT=10000;
 
     @Rule
     public ActivityTestRule<AMain> mActivityTestRule = new ActivityTestRule<>(AMain.class);
+    @Rule
+    public ActivityTestRule<AWriteGLESInfo> mGLESInfoRule = new ActivityTestRule<>(AWriteGLESInfo.class,false,false);
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule =
@@ -39,9 +44,15 @@ public class RenderingModesTest {
                     "android.permission.ACCESS_FINE_LOCATION",
                     "android.permission.WRITE_EXTERNAL_STORAGE");
 
+    private void startGLESInfo(){
+        Intent i = new Intent();
+        mGLESInfoRule.launchActivity(i);
+        mGLESInfoRule.finishActivity();
+    }
+
     @Test
     public void renderingModesTest() {
-
+        startGLESInfo();
         try {
             onView(withText("Okay")).perform(scrollTo(),click());
             onView(withText("Okay")).perform(scrollTo(),click());
@@ -62,7 +73,7 @@ public class RenderingModesTest {
         /*
          * Change rendering mode to disable60fpsCap
          */
-        onView(withId(R.id.b_VRSettings)).perform(click());
+        /*onView(withId(R.id.b_VRSettings)).perform(click());
         onData(PreferenceMatchers.withTitleText("Stereo/VR rendering 'Hacks'")).perform(scrollTo(),click());
         onData(PreferenceMatchers.withTitleText("Disable 60 OpenGL fps cap")).perform(scrollTo(),click());
         pressBack();
@@ -74,12 +85,12 @@ public class RenderingModesTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        pressBack();
+        pressBack();*/
 
 
 
         //change rendering mode to 'disable VSYNC"
-        onView(withId(R.id.b_VRSettings)).perform(click());
+        /*onView(withId(R.id.b_VRSettings)).perform(click());
         onData(PreferenceMatchers.withTitleText("Stereo/VR rendering 'Hacks'")).perform(scrollTo(),click());
         onData(PreferenceMatchers.withTitleText("Disable VSYNC")).perform(scrollTo(),click());
         pressBack();
@@ -91,11 +102,11 @@ public class RenderingModesTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        pressBack();
+        pressBack();*/
 
 
         //Change rendering mode to 'SuperSync'
-        onView(withId(R.id.b_VRSettings)).perform(click());
+        /*onView(withId(R.id.b_VRSettings)).perform(click());
         onData(PreferenceMatchers.withTitleText("Stereo/VR rendering 'Hacks'")).perform(scrollTo(),click());
         onData(PreferenceMatchers.withTitleText("SuperSync")).perform(scrollTo(),click());
         pressBack();
@@ -107,7 +118,7 @@ public class RenderingModesTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        pressBack();
+        pressBack();*/
 
     }
 
