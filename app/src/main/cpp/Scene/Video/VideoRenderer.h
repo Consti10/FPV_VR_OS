@@ -2,7 +2,6 @@
 #define CONSTI10_FPV_VR_OS_VIDEO_RENDERER
 
 #include <GLES2/gl2.h>
-#include <android/surface_texture.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -39,18 +38,8 @@ private:
     GLProgramTexture* mGLRenderTexEx=nullptr;
 
     const int TESSELATION_FACTOR=10;
-    jobject localRefSurfaceTexture;
-    jmethodID updateTexImageMethodId;
-    jmethodID getTimestampMethodId;
     const VIDEO_RENDERING_MODE mMode;
-    ASurfaceTexture* mSurfaceTexture;
-
     const GLuint mVideoTexture;
-public:
-    //Only SuperSync needs this one, else we can call updateTexImage() in java
-    void initUpdateTexImageJAVA(JNIEnv * env,jobject obj,jobject surfaceTexture);
-    void deleteUpdateTexImageJAVA(JNIEnv* env,jobject obj); //frees the global reference so java does not complain
-    void updateTexImageJAVA(JNIEnv* env);
 };
 
 #endif //CONSTI10_FPV_VR_OS_VIDEO_RENDERER

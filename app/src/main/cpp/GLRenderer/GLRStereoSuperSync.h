@@ -5,26 +5,12 @@
 #ifndef FPV_VR_GLRSUPERSYNC_H
 #define FPV_VR_GLRSUPERSYNC_H
 
-#include "jni.h"
-#include "../Scene/Video/VideoRenderer.h"
-#include <GLES2/gl2.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <GLProgramTexture.h>
-#include <TelemetryReceiver.h>
-#include <EGL/egl.h>
-#include <cinttypes>
+#include "GLRStereoNormal.h"
 #include "Extensions.hpp"
 #include "CPUPriorities.hpp"
-#include <sys/resource.h>
 #include <FBRManager.h>
-#include "vr/gvr/capi/include/gvr_types.h"
-#include <vector>
-#include <OSD/OSDRenderer.h>
-#include "IVideoFormatChanged.hpp"
 #include <VRFrameCPUChronometer.h>
-
-#include "GLRStereoNormal.h"
+#include "../Scene/Video/SurfaceTextureUpdate.hpp"
 
 class GLRStereoSuperSync : public GLRStereoNormal{
 public:
@@ -66,6 +52,7 @@ private:
     VRFrameTimeAccumulator mFrameTimeAcc;
     std::unique_ptr<FBRManager> mFBRManager= nullptr;
     int swapColor=0;
+    SurfaceTextureUpdate mSurfaceTextureUpdate;
 };
 
 

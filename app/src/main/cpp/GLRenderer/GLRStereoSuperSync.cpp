@@ -37,7 +37,7 @@ void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
 }
 
 void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject surfaceTexture,int exclusiveVRCore) {
-    mVideoRenderer->initUpdateTexImageJAVA(env,obj,surfaceTexture);
+    mSurfaceTextureUpdate.initUpdateTexImageJAVA(env,obj,surfaceTexture);
     setAffinity(exclusiveVRCore);
     setCPUPriority(CPU_PRIORITY_GLRENDERER_STEREO_FB,"GLRStereoSuperSync");
     mTelemetryReceiver.setOpenGLFPS(-1);
@@ -45,7 +45,7 @@ void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject su
     LOGD("entering superSync loop. GLThread will be blocked");
     mFBRManager->enterDirectRenderingLoop(env);
     LOGD("exited superSync loop. GLThread unblocked");
-    mVideoRenderer->deleteUpdateTexImageJAVA(env,obj);
+    mSurfaceTextureUpdate.deleteUpdateTexImageJAVA(env,obj);
 }
 
 void GLRStereoSuperSync::exitSuperSyncLoop() {
@@ -75,7 +75,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     //this probably implies a glFlush(). The problem is that a glFlush() also implies a glEndTilingQcom
     //So we should not call glClear() (or any glCalls that may affect the fb values) before updateTexImageJAVA().
     //or else the GPU might have to copy tiles 2 times
-    mVideoRenderer->updateTexImageJAVA(env);
+    mSurfaceTextureUpdate.updateTexImageJAVA(env);
     vrEyeTimeStamps.setTimestamp("updateTexImage1");
     if(mFBRManager->directRenderingMode!=FBRManager::QCOM_TILED_RENDERING){
         //when not using QCOM tiled rendering, we call 'startDirectRendering()' after 'updateTexImage()'
@@ -102,7 +102,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     //I don't expect the video stream to have >120fps for a real-time live video feed
     //I am also not quite sure, if the 'updateTexImage()' at the beginning of the frame actually makes it to the eye that is drawn after it
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
-        mVideoRenderer->updateTexImageJAVA(env);
+        mSurfaceTextureUpdate.updateTexImageJAVA(env);
     }
     vrEyeTimeStamps.setTimestamp("updateTexImage2");
     //vrEyeTimeStamps.print();

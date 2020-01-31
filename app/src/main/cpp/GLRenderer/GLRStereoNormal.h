@@ -16,7 +16,6 @@
 #include <Video/VideoRenderer.h>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
-
 #include <GeometryBuilder/EquirectangularSphere.hpp>
 #include <DistortionCorrection/VRHeadsetParams.h>
 #include <SettingsVR.h>
