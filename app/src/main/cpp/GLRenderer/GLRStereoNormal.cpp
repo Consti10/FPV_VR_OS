@@ -93,7 +93,7 @@ void GLRStereoNormal::onDrawFrame() {
 
 
 void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
-    distortionManager.leftEye=eye==GVR_LEFT_EYE;
+    distortionManager.setEye(eye==GVR_LEFT_EYE);
     vrHeadsetParams.setOpenGLViewport(eye);
     //Now draw
     const auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();

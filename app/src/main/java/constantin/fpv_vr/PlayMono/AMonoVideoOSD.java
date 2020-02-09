@@ -18,9 +18,9 @@ import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;
+import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
-import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.External.AspectFrameLayout;
@@ -82,7 +82,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
     protected void onResume() {
         super.onResume();
         //Log.d(TAG, "onResume");
-        PerformanceHelper.setImmersiveSticky(this);
+        FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if(ENABLE_OSD){
             telemetryReceiver.startReceiving();

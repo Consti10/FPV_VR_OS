@@ -32,16 +32,16 @@ void VideoRenderer::updatePosition(const glm::vec3& lowerLeftCorner,const float 
         const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
                                                                     width,height, TESSELATION_FACTOR, 0.0f,
                                                                     1.0f);
-        mVideoCanvasB.initializeAndUploadGL(vid0.vertices,vid0.indices);
+        mVideoCanvasB.initializeAndUploadGL(vid0.first,vid0.second);
     }else if(mMode==RM_STEREO){
         const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
                                                                     width,height, TESSELATION_FACTOR, 0.0f,
                                                                     0.5f);
-        mVideoCanvasLeftEyeB.initializeAndUploadGL(vid1.vertices,vid1.indices);
+        mVideoCanvasLeftEyeB.initializeAndUploadGL(vid1.first,vid1.second);
         const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
                                                                      width,height, TESSELATION_FACTOR, 0.5f,
                                                                      0.5f);
-        mVideoCanvasRightEyeB.initializeAndUploadGL(vid2.vertices,vid2.indices);
+        mVideoCanvasRightEyeB.initializeAndUploadGL(vid2.first,vid2.second);
     }else if(mMode==RM_360_EQUIRECTANGULAR){
         //We need to recalculate the sphere u,v coordinates when the video ratio changes
         EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,optionalVideoWidthPx,optionalVideoHeightPx);

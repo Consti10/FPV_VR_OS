@@ -16,9 +16,10 @@ import com.google.vr.ndk.base.GvrLayout;
 
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
+import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
-import constantin.renderingx.core.PerformanceHelper;
+import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoNative.VideoNative;
 
@@ -48,7 +49,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext=this;
         final boolean renderOSD=getIntent().getBooleanExtra(EXTRA_RENDER_OSD,true);
-        PerformanceHelper.enableSustainedPerformanceIfPossible(this);
+        MyVRLayout.enableSustainedPerformanceIfPossible(this);
         mGLView = new GLSurfaceView(this);
         mGLView.setEGLContextClientVersion(2);
         //for now do not differentiate
@@ -90,7 +91,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //Log.d(TAG, "onResume");
-        PerformanceHelper.setImmersiveSticky(this);
+        FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         telemetryReceiver.startReceiving();
         mGLView.onResume();

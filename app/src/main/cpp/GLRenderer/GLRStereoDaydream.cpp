@@ -76,9 +76,9 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     //
     float tesselatedRectSize=2.5; //6.2f
     const float offsetY=0.0f;
-    auto tmp=ColoredGeometry::makeTesselatedColoredRectLines(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::BLUE);
+    auto tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::BLUE);
     nColoredVertices= GLBufferHelper::createUploadGLBuffer(glBufferVC, tmp);
-    tmp=ColoredGeometry::makeTesselatedColoredRectLines(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::GREEN);
+    tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::GREEN);
     GLBufferHelper::createUploadGLBuffer(glBufferVCX, tmp);
 }
 
@@ -159,7 +159,7 @@ void GLRStereoDaydream::drawEyeOSD(gvr::Eye eye) {
 
 void GLRStereoDaydream::drawEyeOSDVDDC(gvr::Eye eye) {
     vrHeadsetParams.setOpenGLViewport(eye);
-    distortionManager.leftEye=eye==0;
+    distortionManager.setEye(eye==0);
     const auto rotM=toGLM(gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow()));
     auto viewM=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotM;
     auto projM=vrHeadsetParams.GetProjectionMatrix(eye);

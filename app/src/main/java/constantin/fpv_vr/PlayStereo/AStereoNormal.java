@@ -22,9 +22,9 @@ import com.google.vr.sdk.base.GvrViewerParams;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
+import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyVRLayout;
-import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
 public class AStereoNormal extends AppCompatActivity {
@@ -79,9 +79,8 @@ public class AStereoNormal extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         System.out.println("YYY onResume()");
-        PerformanceHelper.setImmersiveSticky(this);
+        FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        PerformanceHelper.enableSustainedPerformanceIfPossible(this);
         telemetryReceiver.startReceiving();
         mVrLayout.onResumeX();
         mGLViewStereo.onResume();
@@ -98,7 +97,6 @@ public class AStereoNormal extends AppCompatActivity {
         airHeadTrackingSender.stopSendingDataIfEnabled();
         mVrLayout.onPauseX();
         mGLViewStereo.onPause();
-        PerformanceHelper.disableSustainedPerformanceIfEnabled(this);
     }
 
 
