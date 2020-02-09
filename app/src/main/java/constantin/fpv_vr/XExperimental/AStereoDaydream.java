@@ -11,7 +11,6 @@ import com.google.vr.ndk.base.GvrLayout;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.MVideoPlayer;
-import constantin.renderingx.core.PerformanceHelper;
 import constantin.telemetry.core.TelemetryReceiver;
 
 /**
@@ -37,7 +36,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
         mContext=this;
         //AndroidCompat.setVrModeEnabled(this, true);
         //AndroidCompat.setSustainedPerformanceMode(this,true);
-        PerformanceHelper.setImmersiveSticky(this);
 
         mGvrLayout = new GvrLayout(this);
         mGvrLayout.setKeepScreenOn(true);
