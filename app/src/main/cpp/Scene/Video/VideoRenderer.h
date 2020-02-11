@@ -29,7 +29,8 @@ public:
     void updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,int optionalVideoWidthPx,int optionalVideoHeightPx);
 private:
     PositionDebug mPositionDebug;
-    VertexIndexBuffer mEquirectangularSphereB; //Equirectangular Sphere
+    VertexBuffer mEquirectangularSphereB; //Equirectangular Sphere
+    VertexBuffer mInsta360SphereB;
     VertexIndexBuffer mVideoCanvasB;//whole video frame (u.v coordinates). Tesselated
     VertexIndexBuffer mVideoCanvasLeftEyeB;//left side of the video frame (u.v coordinates) Tesselated
     VertexIndexBuffer mVideoCanvasRightEyeB; //right side of the video frame (u.v coordinates) Tesselated

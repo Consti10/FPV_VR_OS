@@ -76,8 +76,6 @@ public:
         ASurfaceTexture_updateTexImage(mSurfaceTexture);
 #endif
     };
-
-
 };
 
 

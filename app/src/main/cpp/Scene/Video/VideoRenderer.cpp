@@ -2,7 +2,7 @@
 #include <Color/Color.hpp>
 #include <GeometryBuilder/ColoredGeometry.hpp>
 #include <GeometryBuilder/TexturedGeometry.hpp>
-#include <GeometryBuilder/EquirectangularSphere.hpp>
+#include <GeometryBuilder/SphereBuilder.hpp>
 #include "VideoRenderer.h"
 #include "Helper/GLHelper.hpp"
 
@@ -22,6 +22,7 @@ mMode(mode),mPositionDebug(glRenderGeometry,6, false),mGLRenderGeometry(glRender
             break;
         case RM_360_EQUIRECTANGULAR:
             mEquirectangularSphereB.initializeGL();
+            mInsta360SphereB.initializeGL();
             break;
     }
 }
@@ -44,7 +45,8 @@ void VideoRenderer::updatePosition(const glm::vec3& lowerLeftCorner,const float 
         mVideoCanvasRightEyeB.initializeAndUploadGL(vid2.first,vid2.second);
     }else if(mMode==RM_360_EQUIRECTANGULAR){
         //We need to recalculate the sphere u,v coordinates when the video ratio changes
-        EquirectangularSphere::uploadSphereGL(mEquirectangularSphereB,optionalVideoWidthPx,optionalVideoHeightPx);
+        mEquirectangularSphereB.uploadGL(SphereBuilder::createSphereEquirectangularMonoscopic(),GL_TRIANGLE_STRIP);
+        mInsta360SphereB.uploadGL(SphereBuilder::createSphereDualFisheyeInsta360(),GL_TRIANGLE_STRIP);
     }
 }
 
