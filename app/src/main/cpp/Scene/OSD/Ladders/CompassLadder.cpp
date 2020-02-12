@@ -135,7 +135,7 @@ void CompassLadder::setupPosition() {
         const glm::vec3 p1(mX+mWidth/2.0f,mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-middle_arrow_width_height/2.0f,mZ);
         const glm::vec3 p2(p1.x+middle_arrow_width_height,p1.y+middle_arrow_width_height,p1.z);
         const glm::vec3 p3(p1.x-middle_arrow_width_height,p1.y+middle_arrow_width_height,p1.z);
-        ColoredGeometry::makeColoredTriangle(mMiddleArrow->modify(),0,p1,p2,p3,lineColor,lineColor,lineColor);
+        ColoredGeometry::makeColoredTriangle(mMiddleArrow->modify(),p1,p2,p3,lineColor,lineColor,lineColor);
     }
 //create the background rectangle
     mBackgroundObj.setPosition(mX,mY,mZ,mWidth,mHeight);
