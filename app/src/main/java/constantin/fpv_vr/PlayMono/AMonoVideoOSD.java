@@ -43,7 +43,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
     private AirHeadTrackingSender airHeadTrackingSender;
     //Only !=null when ENABLE_OSD is enabled
     private GLSurfaceView mGLView;
-    private GLRMono mGLRMonoOSD;
     private TelemetryReceiver telemetryReceiver;
     private boolean ENABLE_OSD;
 
@@ -65,7 +64,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
             mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             mGLView.setPreserveEGLContextOnPause(true);
             telemetryReceiver=new TelemetryReceiver(this);
-            mGLRMonoOSD =new GLRMono(mContext,null,telemetryReceiver,null,GLRMono.VIDEO_MODE_2D_MONOSCOPIC,true,false);
+            final GLRMono mGLRMonoOSD = new GLRMono(mContext, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
             mGLView.setRenderer(mGLRMonoOSD);
             mGLView.setZOrderMediaOverlay(true);
             addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -116,7 +115,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         }
         if(ENABLE_OSD){
             mGLView=null;
-            mGLRMonoOSD =null;
             telemetryReceiver.delete();
         }
     }
