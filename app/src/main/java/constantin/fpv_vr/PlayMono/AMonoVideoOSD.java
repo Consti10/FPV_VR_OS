@@ -65,7 +65,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
             mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             mGLView.setPreserveEGLContextOnPause(true);
             telemetryReceiver=new TelemetryReceiver(this);
-            mGLRMonoOSD =new GLRMono(mContext,telemetryReceiver,null,GLRMono.VIDEO_MODE_NONE,true,false);
+            mGLRMonoOSD =new GLRMono(mContext,null,telemetryReceiver,null,GLRMono.VIDEO_MODE_2D_MONOSCOPIC,true,false);
             mGLView.setRenderer(mGLRMonoOSD);
             mGLView.setZOrderMediaOverlay(true);
             addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,

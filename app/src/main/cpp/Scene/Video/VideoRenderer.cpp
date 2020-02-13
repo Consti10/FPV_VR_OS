@@ -67,13 +67,13 @@ void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
     if(!(is360Video())){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
-    const float scale=200.0f;
-    glm::mat4 scaleM=glm::scale(glm::vec3(scale,scale,scale));
+    const float scale=100.0f;
+    const glm::mat4 scaleM=glm::scale(glm::vec3(scale,scale,scale));
+    const glm::mat4x4 modelMatrix=glm::rotate(glm::mat4(1.0F),glm::radians(90.0F), glm::vec3(0,0,-1))*scaleM;
     if(mMode==RM_360_DUAL_FISHEYE_INSTA1){
-        glm::mat4x4 modelMatrix=glm::rotate(glm::mat4(1.0F),glm::radians(90.0F), glm::vec3(0,0,-1))*scaleM;
         mGLProgramTextureExtMappingEnabled->drawX(mVideoTexture,ViewM*modelMatrix,ProjM,mEquirectangularSphereB);
     }else{
-        mGLProgramTextureExt->drawX(mVideoTexture,ViewM*scaleM,ProjM,mInsta360SphereB);
+        mGLProgramTextureExt->drawX(mVideoTexture,ViewM*modelMatrix,ProjM,mInsta360SphereB);
     }
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas360");
 }

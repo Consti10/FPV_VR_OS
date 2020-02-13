@@ -16,8 +16,6 @@ public:
     //Stereo: One decoded frame contains images for left and right eye
     //Render left frame into a rectangle with u->{0,0,5} and right frame int a rectangle with u->{0.5,1.0}
     //Degree360: 360 degree video, rendered onto a sphere instead of a quad
-    //The daydream renderer handles external surfaces (like video) itself, but requires the application to
-    //RM_PunchHole 'punch a hole' into the scene by rendering a quad with alpha=0.0f deprecated
     enum VIDEO_RENDERING_MODE{RM_2D_MONOSCOPIC,RM_2D_STEREO,RM_360_DUAL_FISHEYE_INSTA1,RM_360_DUAL_FISHEYE_INSTA2};
     /*
      * @param VIDEO_RENDERING_MODE one of the rendering modes above

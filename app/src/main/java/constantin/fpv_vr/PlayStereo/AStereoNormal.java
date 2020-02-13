@@ -5,21 +5,24 @@ package constantin.fpv_vr.PlayStereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.google.vr.ndk.base.BufferViewport;
-import com.google.vr.sdk.base.GvrView;
-import com.google.vr.sdk.base.GvrViewerParams;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.renderingx.core.ISurfaceTextureAvailable;
+import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
@@ -27,7 +30,7 @@ import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
 
-public class AStereoNormal extends AppCompatActivity {
+public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureAvailable {
     //private GvrLayout mVrLayout;
     private MyVRLayout mVrLayout;
     private GLSurfaceView mGLViewStereo;
@@ -36,7 +39,8 @@ public class AStereoNormal extends AppCompatActivity {
     private AirHeadTrackingSender airHeadTrackingSender;
     private Context mContext;
     private TelemetryReceiver telemetryReceiver;
-
+    private MVideoPlayer mVideoPlayer;
+    private SurfaceTexture surfaceTexture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class AStereoNormal extends AppCompatActivity {
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
         //mGLViewStereo.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory(true));
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRStereoNormal = new GLRStereoNormal(this,telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+        mGLRStereoNormal = new GLRStereoNormal(this,this,telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
 
         mGLViewStereo.setRenderer(mGLRStereoNormal);
         mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -60,20 +64,11 @@ public class AStereoNormal extends AppCompatActivity {
 
         registerForContextMenu(mVrLayout);
 
-
         float[] input={0,0};
         float[] output= mVrLayout.getGvrApi().computeDistortedPoint(BufferViewport.EyeType.LEFT,input);
         System.out.println("Distortion:("+output[0]+","+output[1]+","+output[2]+")");
 
     }
-
-    public static void  bla(Context c){
-        GvrView view=new GvrView(c);
-        final GvrViewerParams params=view.getGvrViewerParams();
-        //params.getDistortion().getApproximateInverseDistortion()
-        //System.out.println("Model: "+params.getModel());
-    }
-
 
     @Override
     protected void onResume() {
@@ -92,13 +87,33 @@ public class AStereoNormal extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
         System.out.println("YYY onPause()");
-        mGLRStereoNormal.onPause();
+        mGLViewStereo.onPause();
         telemetryReceiver.stopReceiving();
         airHeadTrackingSender.stopSendingDataIfEnabled();
         mVrLayout.onPauseX();
-        mGLViewStereo.onPause();
+        //hmm...
+        if(mVideoPlayer!=null){
+            mVideoPlayer.stop();
+            mVideoPlayer=null;
+        }
     }
 
+
+    @Override
+    public void onSurfaceTextureAvailable(final SurfaceTexture surfaceTexture) {
+        //Set the surface texture to 'available' on the GL Thread !
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((AStereoNormal)mContext).surfaceTexture=surfaceTexture;
+                if(mVideoPlayer==null){
+                    Surface mVideoSurface=new Surface(surfaceTexture);
+                    mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,mGLRStereoNormal);
+                    mVideoPlayer.start();
+                }
+            }
+        });
+    }
 
     @Override
     protected void onDestroy(){
@@ -128,6 +143,5 @@ public class AStereoNormal extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
-
 
 }

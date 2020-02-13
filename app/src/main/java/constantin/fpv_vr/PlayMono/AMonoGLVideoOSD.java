@@ -3,10 +3,12 @@ package constantin.fpv_vr.PlayMono;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -14,6 +16,8 @@ import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
 
+import constantin.renderingx.core.ISurfaceTextureAvailable;
+import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
@@ -30,7 +34,8 @@ import constantin.video.core.VideoNative.VideoNative;
  * OSD can be fully disabled
  ***************************************************************** */
 
-public class AMonoGLVideoOSD extends AppCompatActivity {
+public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextureAvailable {
+    private static final String TAG="AMonoGLVideoOSD";
     private Context mContext;
     private GLSurfaceView mGLView;
     private GLRMono mGLRenderer;
@@ -43,6 +48,9 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
     public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather ENABLE_OSD should be enabled
     private DisplaySynchronizer displaySynchronizer;
     private boolean disableVSYNC;
+    //
+    private MVideoPlayer mVideoPlayer;
+    private SurfaceTexture surfaceTexture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +80,8 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
             gvrApi.recenterTracking();
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono(mContext,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,
-                VideoNative.videoMode(mContext)==1 ?
-                        GLRMono.VIDEO_MODE_STEREO:
-                        GLRMono.VIDEO_MODE_360 ,renderOSD,disableVSYNC);
+        mGLRenderer =new GLRMono(mContext,this,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,
+                VideoNative.videoMode(mContext),renderOSD,disableVSYNC);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);
@@ -101,20 +107,28 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
             gvrApi.resumeTracking();
             displaySynchronizer.onResume();
         }
+        if(surfaceTexture!=null && mVideoPlayer==null){
+            final Surface mVideoSurface=new Surface(surfaceTexture);
+            mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,mGLRenderer);
+            mVideoPlayer.start();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         telemetryReceiver.stopReceiving();
-        mGLRenderer.onPause();
         mGLView.onPause();
         if(useGvrLayout){
             gvrLayout.onPause();
         }else{
             gvrApi.pauseTracking();
             displaySynchronizer.onPause();
-
+        }
+        //hmm....
+        if(mVideoPlayer!=null){
+            mVideoPlayer.stop();
+            mVideoPlayer=null;
         }
     }
 
@@ -155,4 +169,13 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
         telemetryReceiver.delete();
     }
 
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture) {
+        if(mVideoPlayer==null){
+            final Surface mVideoSurface=new Surface(surfaceTexture);
+            mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,mGLRenderer);
+            mVideoPlayer.start();
+        }
+        this.surfaceTexture=surfaceTexture;
+    }
 }

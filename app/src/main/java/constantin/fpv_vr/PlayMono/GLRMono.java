@@ -5,14 +5,13 @@ import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.view.Surface;
 
 import com.google.vr.ndk.base.GvrApi;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import constantin.fpv_vr.MVideoPlayer;
+import constantin.renderingx.core.ISurfaceTextureAvailable;
 import constantin.fpv_vr.R;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
@@ -24,10 +23,8 @@ import static constantin.renderingx.core.MyEGLWindowSurfaceFactory.EGL_ANDROID_f
 /*
  * Renders OSD and/or video in monoscopic view
  */
-public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
-    static final int VIDEO_MODE_NONE=0;
-    static final int VIDEO_MODE_STEREO=1;
-    static final int VIDEO_MODE_360=2;
+public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
+    static final int VIDEO_MODE_2D_MONOSCOPIC=0;
     static {
         System.loadLibrary("GLRMono");
     }
@@ -46,12 +43,14 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
     //Optional, only when playing video that cannot be displayed by a 'normal' android surface
     //(e.g. 360° video)
     private SurfaceTexture mSurfaceTexture;
-    private MVideoPlayer mVideoPlayer;
     private final int videoMode;
     private final boolean disableVSYNC;
 
-    public GLRMono(final Context context, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
+    private final ISurfaceTextureAvailable iSurfaceTextureAvailable;
+
+    public GLRMono(final Context context,final ISurfaceTextureAvailable iSurfaceTextureAvailable, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
                    final boolean disableVSYNC){
+        this.iSurfaceTextureAvailable=iSurfaceTextureAvailable;
         this.videoMode=videoMode;
         mContext=context;
         this.disableVSYNC=disableVSYNC;
@@ -62,11 +61,12 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         int mGLTextureVideo=0;
-        if(videoMode!=VIDEO_MODE_NONE){
+        if(videoMode!=VIDEO_MODE_2D_MONOSCOPIC){
             int[] videoTexture=new int[1];
             GLES20.glGenTextures(1, videoTexture, 0);
             mGLTextureVideo = videoTexture[0];
             mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
+            iSurfaceTextureAvailable.onSurfaceTextureAvailable(mSurfaceTexture);
         }
         if(disableVSYNC){
             MyEGLConfigChooser.setEglSurfaceAttrib(EGL14.EGL_RENDER_BUFFER,EGL14.EGL_SINGLE_BUFFER);
@@ -85,32 +85,12 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        if(videoMode!=VIDEO_MODE_NONE){
-            startVideoPlayerIfNotAlreadyRunning();
-            if(mSurfaceTexture!=null){
-                mSurfaceTexture.updateTexImage();
-            }
+        if(mSurfaceTexture!=null){
+            mSurfaceTexture.updateTexImage();
         }
         nativeOnDrawFrame(nativeGLRendererMono);
     }
 
-    public void onPause(){
-        System.out.println("onPause()");
-        if(videoMode!=VIDEO_MODE_NONE){
-            if(mVideoPlayer!=null){
-                mVideoPlayer.stop();
-                mVideoPlayer=null;
-            }
-        }
-    }
-
-    private void startVideoPlayerIfNotAlreadyRunning(){
-        if(mVideoPlayer==null){
-            final Surface mVideoSurface=new Surface(mSurfaceTexture);
-            mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,this);
-            mVideoPlayer.start();
-        }
-    }
 
     @Override
     protected void finalize() throws Throwable {

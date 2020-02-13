@@ -6,7 +6,6 @@ import android.opengl.EGL14;
 import android.opengl.EGLExt;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.view.Surface;
 
 import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.GvrViewerParams;
@@ -14,8 +13,8 @@ import com.google.vr.sdk.base.GvrViewerParams;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import constantin.renderingx.core.ISurfaceTextureAvailable;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.MVideoPlayer;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
@@ -52,12 +51,13 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     // Opaque native pointer to the native GLRStereoNormal instance.
     private final long nativeGLRendererStereo;
     private SurfaceTexture mSurfaceTexture;
-    private MVideoPlayer mVideoPlayer;
     private final TelemetryReceiver telemetryReceiver;
+    private final ISurfaceTextureAvailable iSurfaceTextureAvailable;
 
 
-    public GLRStereoNormal(final Context activityContext,final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
+    public GLRStereoNormal(final Context activityContext, final ISurfaceTextureAvailable iSurfaceTextureAvailable,final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=activityContext;
+        this.iSurfaceTextureAvailable=iSurfaceTextureAvailable;
         this.telemetryReceiver=telemetryReceiver;
         nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoNative.videoMode(mContext));
@@ -82,6 +82,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         GLES20.glGenTextures(1, videoTexture, 0);
         final int mGLTextureVideo = videoTexture[0];
         mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
+        iSurfaceTextureAvailable.onSurfaceTextureAvailable(mSurfaceTexture);
         nativeOnSurfaceCreated(nativeGLRendererStereo,mGLTextureVideo,mContext);
     }
 
@@ -97,13 +98,10 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        startVideoPlayerIfNotAlreadyRunning();
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
-        if(mSurfaceTexture!=null){
-            mSurfaceTexture.updateTexImage();
-        }
+        mSurfaceTexture.updateTexImage();
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
@@ -111,22 +109,6 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         //EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
     }
 
-
-    public void onPause(){
-        System.out.println("onPause()");
-        if(mVideoPlayer!=null){
-            mVideoPlayer.stop();
-            mVideoPlayer=null;
-        }
-    }
-
-    private void startVideoPlayerIfNotAlreadyRunning(){
-        if(mVideoPlayer==null){
-            Surface mVideoSurface=new Surface(mSurfaceTexture);
-            mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,this);
-            mVideoPlayer.start();
-        }
-    }
 
     @Override
     public void onVideoRatioChanged(int videoW, int videoH) {

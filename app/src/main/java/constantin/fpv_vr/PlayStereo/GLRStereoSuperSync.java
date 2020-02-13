@@ -94,7 +94,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
 
         nativeEnterSuperSyncLoop(nativeGLRSuperSync,mSurfaceTexture,exclusiveVRCore);
 
-        stopVideoPlayerIfNotAlreadyRunning();
+        stopVideoPlayerIfNotAlreadyStopped();
     }
 
 
@@ -113,7 +113,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         }
     }
 
-    private void stopVideoPlayerIfNotAlreadyRunning(){
+    private void stopVideoPlayerIfNotAlreadyStopped(){
         if(mVideoPlayer!=null){
             mVideoPlayer.stop();
             mVideoPlayer=null;
