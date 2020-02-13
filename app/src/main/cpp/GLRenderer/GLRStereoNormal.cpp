@@ -50,8 +50,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mGLRenderTextureExternal=std::make_unique<GLProgramTextureExt>(&distortionManager);
-    mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)videoTexture,mBasicGLPrograms->vc,mGLRenderTextureExternal.get());
+    mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)videoTexture,&distortionManager);
     const TrueColor color=Color::BLACK;
     mOcclusionMesh[0].initializeGL();
     mOcclusionMesh[1].initializeGL();
@@ -98,7 +97,7 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     //Now draw
     const auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
     const auto rotationWithAxesDisabled=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
-    const glm::mat4 viewVideo=videoMode==VideoRenderer::RM_360_EQUIRECTANGULAR ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled :
+    const glm::mat4 viewVideo=mVideoRenderer->is360Video() ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled :
                               vrHeadsetParams.GetEyeFromHeadMatrix(eye);
     const glm::mat4 viewOSD= mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)
                                                                : vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;

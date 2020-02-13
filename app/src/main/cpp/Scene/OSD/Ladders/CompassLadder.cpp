@@ -45,80 +45,80 @@ void CompassLadder::setupPosition() {
         const float ladderLinesHeight=mCalcTextHeight*0.2f*3.5f;
         const float ladderLinesWidth=ladderLinesHeight*0.3f;
         float ladderLinesStartY=mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-ladderLinesHeight;//in relation to the top !
-        GLProgramLine::Vertex tmp[N_EXISTING_LADDER_LINES*6];
+        std::vector<GLProgramLine::Vertex> tmp(N_EXISTING_LADDER_LINES*6);
         glm::vec3 color=glm::vec3(1,1,1);
         int offset=0;
         for(int i=0;i<N_EXISTING_LADDER_LINES;i+=4){
             glm::vec3 start;
             start=glm::vec3(mX + (0 + i) * d_between_lines,ladderLinesStartY, mZ);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp,offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
             start=glm::vec3(mX + (1 + i) * d_between_lines,ladderLinesStartY, mZ);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp,offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
             start=glm::vec3(mX + (2 + i) * d_between_lines,ladderLinesStartY, mZ);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp,offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
             start=glm::vec3(mX + (3 + i) * d_between_lines,ladderLinesStartY, mZ);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp,offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
         }
-        mGLLadderLinesB.uploadGL(std::vector<GLProgramLine::Vertex>{std::begin(tmp),std::end(tmp)});
+        mGLLadderLinesB.uploadGL(tmp);
     }
 //create the S W N E chars
     {
         float nwseCharsHeight=mCalcTextHeight*TEXT_UPSCALE;
         float nwseCharsStartY=mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-nwseCharsHeight*1.1f;
-        GLProgramText::Character tmp[N_EXISTING_CHARS];
+        std::vector<GLProgramText::Character> tmp(N_EXISTING_CHARS);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"S",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 0,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"S",
                                                     textColor,
-                                                    tmp, 0);
+                                                    tmp.data(), 0);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"W",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 1,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"W",
                                                     textColor,
-                                                    tmp, 1);
+                                                    tmp.data(), 1);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"N",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 2,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"N",
                                                     textColor,
-                                                    tmp, 2);
+                                                    tmp.data(), 2);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"E",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 3,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"E",
                                                     textColor,
-                                                    tmp, 3);
+                                                    tmp.data(), 3);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"S",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 4,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"S",
                                                     textColor,
-                                                    tmp, 4);
+                                                    tmp.data(), 4);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"W",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 5,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"W",
                                                     textColor,
-                                                    tmp, 5);
+                                                    tmp.data(), 5);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"N",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 6,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"N",
                                                     textColor,
-                                                    tmp, 6);
+                                                    tmp.data(), 6);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"E",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 7,
                                                     nwseCharsStartY, mZ, nwseCharsHeight, L"E",
                                                     textColor,
-                                                    tmp, 7);
-        mGLLadderTextB.uploadGL(std::vector<GLProgramText::Character>{std::begin(tmp),std::end(tmp)});
+                                                    tmp.data(), 7);
+        mGLLadderTextB.uploadGL(tmp);
     }
 //create the home symbol icon
     {
-        GLProgramText::Character tmp[1];
+        std::vector<GLProgramText::Character> tmp(1);
         float home_arrow_width_height=mHeight/3.0f;
         float haStartY=mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-longLinesHeight-home_arrow_width_height;
         std::wstring wstring1;
@@ -126,8 +126,8 @@ void CompassLadder::setupPosition() {
         GLProgramText::convertStringToRenderingData(mX - home_arrow_width_height / 2.0f,
                                                     haStartY, mZ,
                                                     home_arrow_width_height, wstring1,
-                                                    Color::GREEN, tmp, 0);
-        mGLHomeIconB.uploadGL(std::vector<GLProgramText::Character>{std::begin(tmp),std::end(tmp)});
+                                                    Color::GREEN, tmp.data(), 0);
+        mGLHomeIconB.uploadGL(tmp);
     }
     //create the middle arrow
     {

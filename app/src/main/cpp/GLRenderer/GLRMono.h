@@ -27,9 +27,7 @@
 
 class GLRMono: public IVideoFormatChanged{
 public:
-    enum VIDEO_MODE{NONE,STEREO,Degree360};
-public:
-    GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VIDEO_MODE videoMode,bool enableOSD);
+    GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoRenderer::VIDEO_RENDERING_MODE videoMode,bool enableOSD);
 public:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture=0);
     void onSurfaceChanged(int width, int height,float optionalVideo360FOV=0);
@@ -41,11 +39,10 @@ private:
     TelemetryReceiver& mTelemetryReceiver;
     Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
-    const VIDEO_MODE videoMode;
+    const VideoRenderer::VIDEO_RENDERING_MODE videoMode;
     const bool enableOSD;
 public:
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
-    std::unique_ptr<GLProgramTextureExt> mGLProgramTextureExt=nullptr;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     //These fields are only active when also rendering video
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;

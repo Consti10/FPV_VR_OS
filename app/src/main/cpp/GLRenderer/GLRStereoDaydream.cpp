@@ -71,7 +71,7 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
 
-    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_NORMAL,0,mBasicGLPrograms->vc);
+    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_2D_STEREO,0,nullptr);
     placeGLElements();
     //
     float tesselatedRectSize=2.5; //6.2f

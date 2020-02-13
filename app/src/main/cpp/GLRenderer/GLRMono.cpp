@@ -9,7 +9,7 @@
 constexpr auto TAG="GLRendererMono";
 
 
-GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VIDEO_MODE videoMode,bool enableOSD):
+GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoRenderer::VIDEO_RENDERING_MODE videoMode,bool enableOSD):
     videoMode(videoMode),
     enableOSD(enableOSD),
     mFPSCalculator("OpenGL FPS",2000),
@@ -29,11 +29,9 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
         mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
         mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     }
-    if(videoMode!=NONE){
-        mGLProgramTextureExt=std::make_unique<GLProgramTextureExt>(nullptr);
-        mVideoRenderer=std::make_unique<VideoRenderer>(
-                videoMode==STEREO ? VideoRenderer::RM_STEREO :VideoRenderer::RM_360_EQUIRECTANGULAR,
-                (GLuint)optionalVideoTexture,mBasicGLPrograms->vc,mGLProgramTextureExt.get());
+    //RM_2D_MONOSCOPIC is handled by the android hw composer in monoscopic 2d rendering
+    if(videoMode!=VideoRenderer::RM_2D_MONOSCOPIC){
+        mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)optionalVideoTexture, nullptr);
     }
 }
 
@@ -70,13 +68,15 @@ void GLRMono::onDrawFrame() {
         }
     }
     cpuFrameTime.start();
-    if(videoMode==Degree360){
-        const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
-        glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
-        tmpHeadPoseGLM= tmpHeadPoseGLM*monoForward360;
-        mVideoRenderer->drawVideoCanvas360(tmpHeadPoseGLM,m360ProjectionM);
-    }else if(videoMode==STEREO){
-        mVideoRenderer->drawVideoCanvas(mViewM,mOSDProjectionM, true);
+    if(mVideoRenderer.get()!=nullptr){
+        if(mVideoRenderer->is360Video()){
+            const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
+            glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
+            tmpHeadPoseGLM= tmpHeadPoseGLM*monoForward360;
+            mVideoRenderer->drawVideoCanvas360(tmpHeadPoseGLM,m360ProjectionM);
+        }else{
+            mVideoRenderer->drawVideoCanvas(mViewM,mOSDProjectionM, true);
+        }
     }
     if(enableOSD){
         mOSDRenderer->updateAndDrawElementsGL(mViewM,mOSDProjectionM);
@@ -115,7 +115,7 @@ extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver,jlong nativeGvrContext,jint videoMode,jboolean enableOSD) {
-    return jptr(new GLRMono(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(nativeGvrContext), static_cast<GLRMono::VIDEO_MODE>(videoMode),enableOSD));
+    return jptr(new GLRMono(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(nativeGvrContext), static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode),enableOSD));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {

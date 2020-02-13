@@ -45,7 +45,6 @@ protected:
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
-    std::unique_ptr<GLProgramTextureExt> mGLRenderTextureExternal= nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     //One for left and right eye each
     std::array<VertexBuffer,2> mOcclusionMesh;
