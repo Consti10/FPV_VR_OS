@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
@@ -45,14 +46,16 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
     private GLSurfaceView mGLView;
     private TelemetryReceiver telemetryReceiver;
     private boolean ENABLE_OSD;
+    private boolean ENABLE_VIDEO_VIA_OPENGL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ENABLE_OSD =getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD,true);
+        ENABLE_VIDEO_VIA_OPENGL=false;
         mContext=this;
         setContentView(R.layout.activity_mono_vid_osd);
-        SurfaceView mSurfaceView = findViewById(R.id.VideoSurfaceBelow);
+        SurfaceView mSurfaceView = findViewById(R.id.SurfaceView_monoscopicVideo);
         mSurfaceView.getHolder().addCallback(this);
         mAspectFrameLayout =  findViewById(R.id.VideoSurface_AFL);
         if(ENABLE_OSD){
@@ -73,6 +76,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         if(SJ.EnableAHT(mContext)){
             gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
             airHeadTrackingSender=new AirHeadTrackingSender(this,gvrApi);
+            Log.d("TAG","AHT LOL");
         }
     }
 

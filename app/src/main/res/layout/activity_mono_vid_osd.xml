@@ -17,11 +17,12 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true" >
         <SurfaceView
-            android:id="@+id/VideoSurfaceBelow"
+            android:id="@+id/SurfaceView_monoscopicVideo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
     </constantin.video.core.External.AspectFrameLayout>
+
 
 </RelativeLayout>
 

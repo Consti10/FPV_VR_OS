@@ -45,7 +45,6 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
     private SurfaceTexture mSurfaceTexture;
     private final int videoMode;
     private final boolean disableVSYNC;
-
     private final ISurfaceTextureAvailable iSurfaceTextureAvailable;
 
     public GLRMono(final Context context,final ISurfaceTextureAvailable iSurfaceTextureAvailable, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,

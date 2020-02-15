@@ -40,15 +40,10 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
     private GLSurfaceView mGLView;
     private GLRMono mGLRenderer;
     private TelemetryReceiver telemetryReceiver;
-    //either create gvr api directly or use gvr layout as wrapper
-    //First one caused bugs when not forwarding onResume/Pause to the DisplaySynchronizer, see https://github.com/googlevr/gvr-android-sdk/issues/556
-    private static final boolean useGvrLayout=true;
-    private GvrApi gvrApi;
+    private static final boolean useGvrLayout=false;
     private GvrLayout gvrLayout;
+    private MyVRLayout myVRLayout;
     public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather ENABLE_OSD should be enabled
-    private DisplaySynchronizer displaySynchronizer;
-    private boolean disableVSYNC;
-    //
     private MVideoPlayer mVideoPlayer;
     private SurfaceTexture surfaceTexture;
 
@@ -61,7 +56,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         mGLView = new GLSurfaceView(this);
         mGLView.setEGLContextClientVersion(2);
         //for now do not differentiate
-        disableVSYNC=SJ.DisableVSYNC(this);
+        final boolean disableVSYNC = SJ.DisableVSYNC(this);
         //do not use MSAA in mono mode
         mGLView.setEGLConfigChooser(new MyEGLConfigChooser(disableVSYNC, 0,true));
         mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
@@ -72,23 +67,20 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
             gvrLayout.setStereoModeEnabled(false);
             gvrLayout.setPresentationView(mGLView);
         }else{
-            //gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
-            displaySynchronizer=new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay());
-            gvrApi = new GvrApi(this, displaySynchronizer);
-            gvrApi.reconnectSensors();
-            gvrApi.clearError();
-            gvrApi.recenterTracking();
+            myVRLayout=new MyVRLayout(this);
+            myVRLayout.setVrOverlayEnabled(false);
+            myVRLayout.setPresentationView(mGLView);
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono(mContext,this,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : gvrApi,
-                VideoNative.videoMode(mContext),renderOSD,disableVSYNC);
+        mGLRenderer =new GLRMono(mContext,this,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
+                VideoNative.videoMode(mContext),renderOSD, disableVSYNC);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);
             registerForContextMenu(gvrLayout);
         }else{
-            setContentView(mGLView);
-            registerForContextMenu(mGLView);
+            setContentView(myVRLayout);
+            registerForContextMenu(myVRLayout);
         }
     }
 
@@ -104,14 +96,9 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         if(useGvrLayout){
             gvrLayout.onResume();
         }else{
-            gvrApi.resumeTracking();
-            displaySynchronizer.onResume();
+            myVRLayout.onResumeX();
         }
-        if(surfaceTexture!=null && mVideoPlayer==null){
-            final Surface mVideoSurface=new Surface(surfaceTexture);
-            mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,mGLRenderer);
-            mVideoPlayer.start();
-        }
+        startVideoIfNotYetStarted();
     }
 
     @Override
@@ -122,14 +109,20 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         if(useGvrLayout){
             gvrLayout.onPause();
         }else{
-            gvrApi.pauseTracking();
-            displaySynchronizer.onPause();
+            myVRLayout.onPauseX();
         }
-        //hmm....
-        if(mVideoPlayer!=null){
-            mVideoPlayer.stop();
-            mVideoPlayer=null;
+        stopVideoIfNotYetSopped();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(useGvrLayout){
+            gvrLayout.shutdown();
+        }else{
+            myVRLayout.shutdown();
         }
+        telemetryReceiver.delete();
     }
 
     @Override
@@ -147,7 +140,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
                 return true;
             case R.id.option_goto_home:
                 //mGLRenderer14Mono360.goToHomeOrientation();
-                GvrApi api=useGvrLayout ? gvrLayout.getGvrApi() : gvrApi;
+                GvrApi api=useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi();
                 api.recenterTracking();
                 return true;
             default:
@@ -156,26 +149,32 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(useGvrLayout){
-            gvrLayout.shutdown();
-        }else{
-            gvrApi.shutdown();
-            displaySynchronizer.shutdown();
-        }
-        mGLView=null;
-        mGLRenderer =null;
-        telemetryReceiver.delete();
+    public void onSurfaceTextureAvailable(final SurfaceTexture surfaceTexture) {
+        //Start and stop the video on the UI thread only
+        final AMonoGLVideoOSD instance=this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                instance.surfaceTexture=surfaceTexture;
+                startVideoIfNotYetStarted();
+            }
+        });
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture) {
-        if(mVideoPlayer==null){
+    //Needs to be called on the UI thread !
+    private void startVideoIfNotYetStarted(){
+        if(surfaceTexture!=null && mVideoPlayer==null){
             final Surface mVideoSurface=new Surface(surfaceTexture);
             mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,mGLRenderer);
             mVideoPlayer.start();
         }
-        this.surfaceTexture=surfaceTexture;
+    }
+
+    //Needs to be called on the UI thread !
+    private void stopVideoIfNotYetSopped(){
+        if(mVideoPlayer!=null){
+            mVideoPlayer.stop();
+            mVideoPlayer=null;
+        }
     }
 }
