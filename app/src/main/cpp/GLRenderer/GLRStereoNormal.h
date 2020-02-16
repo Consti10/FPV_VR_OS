@@ -23,7 +23,10 @@ class GLRStereoNormal :  public IVideoFormatChanged {
 public:
     /**
      * Create a GLRStereoNormal using a given |gvr_context|.
+     * @param androidContext java context
+     * @param telemetryReceiver a non-owned reference to TelemetryReceiver instance
      * @param gvr_api The (non-owned) gvr_context.
+     * @param videoMode The selected video mode, see @class VideoRenderer.cpp
      */
     explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoMode);
 public:
