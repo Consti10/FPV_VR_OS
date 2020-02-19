@@ -37,7 +37,7 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
         receivedVideoDataTV =rootView.findViewById(R.id.FM_ReceivedVideoDataTV);
         receivedTelemetryDataTV=rootView.findViewById(R.id.FM_ReceivedTelemetryDataTV);
         TextView tv=rootView.findViewById(R.id.ipAdressesTV);
-        //tv.setText(getActiveInetAddresses());
+        tv.setText(getActiveInetAddresses());
         mContext=getActivity();
         Button InfoB=rootView.findViewById(R.id.ManuallyInfoB);
         InfoB.setOnClickListener(this);
