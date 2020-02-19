@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import constantin.fpv_vr.R;
@@ -35,7 +37,7 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
         receivedVideoDataTV =rootView.findViewById(R.id.FM_ReceivedVideoDataTV);
         receivedTelemetryDataTV=rootView.findViewById(R.id.FM_ReceivedTelemetryDataTV);
         TextView tv=rootView.findViewById(R.id.ipAdressesTV);
-        tv.setText(getNetworkInterfacesIPAddresses());
+        tv.setText(getActiveInetAddresses());
         mContext=getActivity();
         Button InfoB=rootView.findViewById(R.id.ManuallyInfoB);
         InfoB.setOnClickListener(this);
@@ -60,15 +62,22 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
         mTestReceiverTelemetry =null;
     }
 
-    private static String getNetworkInterfacesIPAddresses(){
+    //get all Inet4Addresses that are
+    //either wifi or wifi hotspot or usb tethering
+    private static String getActiveInetAddresses(){
         StringBuilder s= new StringBuilder();
         try{
-            for(Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();){
-                NetworkInterface intf=en.nextElement();
-                for(Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();){
-                    InetAddress inetAddress=enumIpAddr.nextElement();
-                    if(!intf.isLoopback() && !intf.getName().contains("dummy0")){
-                        s.append("Interface ").append(intf.getName()).append(": ").append(inetAddress.getHostAddress()).append("\n");
+            final Enumeration<NetworkInterface> networkInterfacesEnumeration=NetworkInterface.getNetworkInterfaces();
+            while (networkInterfacesEnumeration.hasMoreElements()){
+                final NetworkInterface networkInterface=networkInterfacesEnumeration.nextElement();
+                if(!networkInterface.isUp() || networkInterface.getName().contains("dummy0") || networkInterface.isLoopback()){
+                    continue;
+                }
+                final Enumeration<InetAddress> inetAddressesEnumeration=networkInterface.getInetAddresses();
+                while (inetAddressesEnumeration.hasMoreElements()){
+                    InetAddress inetAddress=inetAddressesEnumeration.nextElement();
+                    if(inetAddress instanceof Inet4Address){
+                        s.append("Interface ").append(networkInterface.getName()).append(": ").append(inetAddress.getHostAddress()).append("\n");
                     }
                 }
             }
@@ -76,6 +85,7 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
         }catch(Exception e){e.printStackTrace();}
         return "";
     }
+
 
     @Override
     public void onClick(View v) {
