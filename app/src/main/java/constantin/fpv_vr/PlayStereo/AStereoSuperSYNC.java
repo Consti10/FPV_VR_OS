@@ -41,28 +41,20 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         super.onResume();
         System.out.println("YYY onResume()");
         FullscreenHelper.setImmersiveSticky(this);
-        telemetryReceiver.startReceiving();
-        mViewSuperSync.onResume();
-        airHeadTrackingSender.startSendingDataIfEnabled();
     }
 
     @Override
     protected void onPause(){
         super.onPause();
         System.out.println("YYY onPause()");
-        telemetryReceiver.stopReceiving();
-        airHeadTrackingSender.stopSendingDataIfEnabled();
-        mViewSuperSync.onPause();
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        mViewSuperSync.destroy();
         mViewSuperSync=null;
         mGLRStereoSuperSync=null;
         airHeadTrackingSender=null;
-        telemetryReceiver.delete();
     }
 
 }

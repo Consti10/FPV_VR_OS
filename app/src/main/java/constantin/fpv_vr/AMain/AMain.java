@@ -83,8 +83,10 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 break;
             case CONNECTION_TYPE_Manually:
             case CONNECTION_TYPE_EZWB:
-                mTestReceiverVideo=new TestReceiverVideo(this,null,connectB);
-                mTestReceiverVideo.startReceiving();
+                if(mTestReceiverVideo==null){
+                    mTestReceiverVideo=new TestReceiverVideo(this);
+                }
+                mTestReceiverVideo.setViews(null,connectB);
                 break;
             case CONNECTION_TYPE_RTSP:
                 connectB.setTextColor(Color.DKGRAY);
@@ -97,10 +99,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onPause(){
         super.onPause();
-        if(mTestReceiverVideo!=null) {
-            mTestReceiverVideo.stopReceiving();
-            mTestReceiverVideo=null;
-        }
     }
 
     @Override

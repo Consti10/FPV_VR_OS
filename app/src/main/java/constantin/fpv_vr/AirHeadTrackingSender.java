@@ -7,8 +7,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
 
 import com.google.vr.ndk.base.GvrApi;
 
@@ -24,7 +29,7 @@ import constantin.fpv_vr.Settings.SJ;
 
 import static java.lang.Thread.sleep;
 
-public class AirHeadTrackingSender{
+public class AirHeadTrackingSender implements LifecycleObserver {
     private static final String THIS_CHANNEL_ID="CHANNEL_FPV-VR_AirHeadTracking";
     private static final int THIS_NOTIFICATION_ID=1000;
     //IP and port where to  send the head tracking data
@@ -37,17 +42,19 @@ public class AirHeadTrackingSender{
     private final boolean ENABLED;
     private Thread mThread;
 
-    public AirHeadTrackingSender(Context context,GvrApi gvrApi){
-        this.context=context;
+    public AirHeadTrackingSender(AppCompatActivity activity, GvrApi gvrApi){
+        this.context=activity.getApplicationContext();
         ENABLED=SJ.EnableAHT(context);
         mGvrApi=gvrApi;
         mDestination=new InetSocketAddress("", SJ.AHTPort(context)); //TODO
         mRefreshRateMs = SJ.AHTRefreshRateMs(context);
         createNotificationChannel();
+        activity.getLifecycle().addObserver(this);
     }
 
     //Start sending head tracking data
-    public void startSendingDataIfEnabled(){
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    private void startSendingDataIfEnabled(){
         if(!ENABLED){
             return;
         }
@@ -65,7 +72,8 @@ public class AirHeadTrackingSender{
     }
 
     //Stop sending head tracking data
-    public void stopSendingDataIfEnabled(){
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    private void stopSendingDataIfEnabled(){
         if(!ENABLED){
             return;
         }

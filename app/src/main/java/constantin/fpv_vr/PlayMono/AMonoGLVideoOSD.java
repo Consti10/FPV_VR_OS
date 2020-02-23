@@ -1,6 +1,7 @@
 package constantin.fpv_vr.PlayMono;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -12,7 +13,6 @@ import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
 
@@ -50,6 +50,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mContext=this;
         final boolean renderOSD=getIntent().getBooleanExtra(EXTRA_RENDER_OSD,true);
         MyVRLayout.enableSustainedPerformanceIfPossible(this);
@@ -91,12 +92,9 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         //Log.d(TAG, "onResume");
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        telemetryReceiver.startReceiving();
         mGLView.onResume();
         if(useGvrLayout){
             gvrLayout.onResume();
-        }else{
-            myVRLayout.onResumeX();
         }
         startVideoIfNotYetStarted();
     }
@@ -104,12 +102,9 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
     @Override
     protected void onPause() {
         super.onPause();
-        telemetryReceiver.stopReceiving();
         mGLView.onPause();
         if(useGvrLayout){
             gvrLayout.onPause();
-        }else{
-            myVRLayout.onPauseX();
         }
         stopVideoIfNotYetSopped();
     }
@@ -119,10 +114,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         super.onDestroy();
         if(useGvrLayout){
             gvrLayout.shutdown();
-        }else{
-            myVRLayout.shutdown();
         }
-        telemetryReceiver.delete();
     }
 
     @Override
@@ -156,7 +148,9 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
             @Override
             public void run() {
                 instance.surfaceTexture=surfaceTexture;
-                startVideoIfNotYetStarted();
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)){
+                    startVideoIfNotYetStarted();
+                }
             }
         });
     }

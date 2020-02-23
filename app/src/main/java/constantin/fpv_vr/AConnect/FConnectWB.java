@@ -1,14 +1,15 @@
 package constantin.fpv_vr.AConnect;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,13 @@ import constantin.telemetry.core.TestReceiverTelemetry;
 import constantin.video.core.TestReceiverVideo;
 
 /**
- * Connect to EZ-Wifibroadcast/OpenHD
+ * 'Connect' to EZ-Wifibroadcast/OpenHD
+ * There is no real connection (since all is lossy UDP) but I use this term since most users are probably used to it
+ * Here, 'Connected' means 'data is coming in'
  */
 
 @SuppressLint("ApplySharedPref")
-public class FConnectWB extends Fragment implements View.OnClickListener {
+public class FConnectWB extends Fragment implements View.OnClickListener , OpenHDConnectionListener.IConnectionStatus {
     private Context mContext;
     private TestReceiverTelemetry mTestReceiverTelemetry;
     private TestReceiverVideo mTestReceiverVideo;
@@ -38,11 +41,8 @@ public class FConnectWB extends Fragment implements View.OnClickListener {
     private TextView receivedTelemetryDataTV;
     private TextView receivedEZWBForwardDataTV;
 
-    //checks for changes in the connection status every x ms
-    //This "check" has to run on the UI thread, since it might have to modify UI elements,
-    //e.g. a connection status button. invokeConnectionCheck schedules a runnable on the UI thread every 500ms
-    private final Handler connectionCheckHandler=new Handler();
-    private Runnable connectionCheckRunnable;
+
+    private OpenHDConnectionListener mOpenHDConnectionListener;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -63,43 +63,27 @@ public class FConnectWB extends Fragment implements View.OnClickListener {
         receivedVideoDataTV =rootView.findViewById(R.id.FEZWB_ReceivedVideoDataTV);
         receivedTelemetryDataTV=rootView.findViewById(R.id.FEZWB_ReceivedTelemetryDataTV);
         receivedEZWBForwardDataTV =rootView.findViewById(R.id.FEZWB_ReceivedEZWBForwardDataTV);
-        connectionCheckRunnable = new Runnable() {
-            @Override
-            public void run() {
-                ((Activity)mContext).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //check the connection statuses and change any ui elements if needed
-                        updateEZWBConnectionStatus();
-                    }
-                });
-                connectionCheckHandler.postDelayed(this, 500);
-            }
-        };
+        final FragmentActivity activity=requireActivity();
+        mOpenHDConnectionListener=new OpenHDConnectionListener(activity,this);
+        mTestReceiverTelemetry =new TestReceiverTelemetry(activity);
+        mTestReceiverVideo=new TestReceiverVideo(activity);
+
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        connectionCheckHandler.postDelayed(connectionCheckRunnable, 500);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
-        stopTestReceiverIfRunning();
     }
 
+    @Override
     @SuppressLint("SetTextI18n")
-    private void updateEZWBConnectionStatus(){
-        //boolean wifiConnectedToEZWB= IsConnected.checkWifiConnectedEZWB(mContext);
-        //boolean wifiConnectedToOpenHD=IsConnected.checkWifiConnectedOpenHD(mContext);
-        final boolean wifiConnectedToSystem=IsConnected.checkWifiConnectedEZWB(mContext) ||
-                IsConnected.checkWifiConnectedOpenHD(mContext);
-
-        final IsConnected.USB_CONNECTION currUSBStatus=IsConnected.getUSBStatus(mContext);
+    public void refreshConnectionSTatus(final boolean wifiConnectedToSystem,final IsConnected.USB_CONNECTION currUSBStatus) {
         final boolean usbConnectedToSystem=currUSBStatus==IsConnected.USB_CONNECTION.TETHERING;
 
         if(wifiConnectedToSystem){
@@ -131,9 +115,11 @@ public class FConnectWB extends Fragment implements View.OnClickListener {
         //start the test receiver if ether WIFI or USB is connected
         if(wifiConnectedToSystem || usbConnectedToSystem){
             //The test receiver also changes the text view to the right color
-            startTestReceiverIfNotAlreadyRunning();
+            mTestReceiverTelemetry.setViews(receivedTelemetryDataTV,receivedEZWBForwardDataTV,null);
+            mTestReceiverVideo.setViews(receivedVideoDataTV,null);
         }else{
-            stopTestReceiverIfRunning();
+            mTestReceiverTelemetry.setViews(null,null,null);
+            mTestReceiverVideo.setViews(null,null);
             receivedVideoDataTV.setText("No receiver detected.\nRX:0");
             receivedVideoDataTV.setTextColor(Color.argb(255,255,0,0));
             receivedTelemetryDataTV.setText("");
@@ -141,27 +127,6 @@ public class FConnectWB extends Fragment implements View.OnClickListener {
         }
     }
 
-    private synchronized void startTestReceiverIfNotAlreadyRunning(){
-        if(mTestReceiverTelemetry ==null){
-            mTestReceiverTelemetry =new TestReceiverTelemetry(mContext,receivedTelemetryDataTV,receivedEZWBForwardDataTV,null);
-            mTestReceiverTelemetry.startReceiving();
-        }
-        if(mTestReceiverVideo==null){
-            mTestReceiverVideo=new TestReceiverVideo(mContext,receivedVideoDataTV,null);
-            mTestReceiverVideo.startReceiving();
-        }
-    }
-
-    private synchronized void stopTestReceiverIfRunning(){
-        if(mTestReceiverTelemetry !=null){
-            mTestReceiverTelemetry.stopReceiving();
-            mTestReceiverTelemetry =null;
-        }
-        if(mTestReceiverVideo!=null){
-            mTestReceiverVideo.stopReceiving();
-            mTestReceiverVideo=null;
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -187,6 +152,5 @@ public class FConnectWB extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-
 
 }

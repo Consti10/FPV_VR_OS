@@ -76,10 +76,7 @@ public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureA
         System.out.println("YYY onResume()");
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        telemetryReceiver.startReceiving();
-        mVrLayout.onResumeX();
         mGLViewStereo.onResume();
-        airHeadTrackingSender.startSendingDataIfEnabled();
     }
 
 
@@ -88,10 +85,6 @@ public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureA
         super.onPause();
         System.out.println("YYY onPause()");
         mGLViewStereo.onPause();
-        telemetryReceiver.stopReceiving();
-        airHeadTrackingSender.stopSendingDataIfEnabled();
-        mVrLayout.onPauseX();
-        //hmm...
         if(mVideoPlayer!=null){
             mVideoPlayer.stop();
             mVideoPlayer=null;
@@ -118,12 +111,10 @@ public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureA
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        mVrLayout.shutdown();
         mVrLayout =null;
         mGLViewStereo =null;
         mGLRStereoNormal=null;
         airHeadTrackingSender=null;
-        telemetryReceiver.delete();
     }
 
     @Override

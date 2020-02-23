@@ -4,8 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +45,11 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
         TextView tv=rootView.findViewById(R.id.ipAdressesTV);
         tv.setText(getActiveInetAddresses());
         mContext=getActivity();
+        FragmentActivity activity=requireActivity();
+        mTestReceiverTelemetry=new TestReceiverTelemetry(activity);
+        mTestReceiverTelemetry.setViews(receivedTelemetryDataTV,null,null);
+        mTestReceiverVideo=new TestReceiverVideo(activity);
+        mTestReceiverVideo.setViews(receivedVideoDataTV,null);
         Button InfoB=rootView.findViewById(R.id.ManuallyInfoB);
         InfoB.setOnClickListener(this);
         return rootView;
@@ -47,19 +58,11 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        mTestReceiverVideo=new TestReceiverVideo(mContext,receivedVideoDataTV,null);
-        mTestReceiverVideo.startReceiving();
-        mTestReceiverTelemetry =new TestReceiverTelemetry(mContext, receivedTelemetryDataTV,null,null);
-        mTestReceiverTelemetry.startReceiving();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mTestReceiverVideo.stopReceiving();
-        mTestReceiverVideo=null;
-        mTestReceiverTelemetry.stopReceiving();
-        mTestReceiverTelemetry =null;
     }
 
     //get all Inet4Addresses that are

@@ -88,12 +88,10 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if(ENABLE_OSD){
-            telemetryReceiver.startReceiving();
             mGLView.onResume();
         }
         if(gvrApi!=null){
             gvrApi.resumeTracking();
-            airHeadTrackingSender.startSendingDataIfEnabled();
         }
     }
 
@@ -102,11 +100,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         super.onPause();
         //Log.d(TAG, "onPause");
         if(gvrApi!=null){
-            airHeadTrackingSender.stopSendingDataIfEnabled();
             gvrApi.pauseTracking();
         }
         if(ENABLE_OSD){
-            telemetryReceiver.stopReceiving();
             mGLView.onPause();
         }
     }
@@ -119,7 +115,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         }
         if(ENABLE_OSD){
             mGLView=null;
-            telemetryReceiver.delete();
         }
     }
 
