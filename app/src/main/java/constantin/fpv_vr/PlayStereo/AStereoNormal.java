@@ -5,22 +5,12 @@ package constantin.fpv_vr.PlayStereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
-import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.ContextMenu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-
-import com.google.vr.ndk.base.BufferViewport;
-
+import android.view.KeyEvent;
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
@@ -57,6 +47,16 @@ public class AStereoNormal extends AppCompatActivity{
         mVrLayout.setPresentationView(mGLViewStereo);
         setContentView(mVrLayout);
         airHeadTrackingSender=new AirHeadTrackingSender(this, mVrLayout.getGvrApi());
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        //Some VR headsets use a clamp to hold the phone in place. This clamp may press against the volume up/down buttons.
+        //Here we effectively disable these 2 buttons
+        if(event.getKeyCode()==KeyEvent.KEYCODE_VOLUME_DOWN || event.getKeyCode()==KeyEvent.KEYCODE_VOLUME_UP){
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
     }
 
 }

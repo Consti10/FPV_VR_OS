@@ -1,22 +1,14 @@
 package constantin.fpv_vr.PlayMono;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Lifecycle;
-
 import android.content.Context;
-import android.graphics.SurfaceTexture;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
-
 import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
-
-import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
