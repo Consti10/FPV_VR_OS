@@ -26,6 +26,7 @@ public class MVideoPlayer implements IVideoParamsChanged {
     }
 
     public synchronized void stop(){
+
         videoPlayer.stopAndRemovePlayerReceiver();
     }
 

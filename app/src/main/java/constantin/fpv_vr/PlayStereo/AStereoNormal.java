@@ -5,32 +5,28 @@ package constantin.fpv_vr.PlayStereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.ContextMenu;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.google.vr.ndk.base.BufferViewport;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.renderingx.core.ISurfaceTextureAvailable;
-import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.video.core.VideoPlayerSurfaceTexture;
 
-public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureAvailable {
+public class AStereoNormal extends AppCompatActivity{
     //private GvrLayout mVrLayout;
     private MyVRLayout mVrLayout;
     private GLSurfaceView mGLViewStereo;
@@ -39,8 +35,7 @@ public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureA
     private AirHeadTrackingSender airHeadTrackingSender;
     private Context mContext;
     private TelemetryReceiver telemetryReceiver;
-    private MVideoPlayer mVideoPlayer;
-    private SurfaceTexture surfaceTexture;
+    private VideoPlayerSurfaceTexture mVideoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +48,9 @@ public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureA
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
         //mGLViewStereo.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory(true));
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRStereoNormal = new GLRStereoNormal(this,this,telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+        mVideoPlayer=new VideoPlayerSurfaceTexture(this);
+        mGLRStereoNormal = new GLRStereoNormal(this,mVideoPlayer,telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+        mVideoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
 
         mGLViewStereo.setRenderer(mGLRStereoNormal);
         mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -85,28 +82,8 @@ public class AStereoNormal extends AppCompatActivity implements ISurfaceTextureA
         super.onPause();
         System.out.println("YYY onPause()");
         mGLViewStereo.onPause();
-        if(mVideoPlayer!=null){
-            mVideoPlayer.stop();
-            mVideoPlayer=null;
-        }
     }
 
-
-    @Override
-    public void onSurfaceTextureAvailable(final SurfaceTexture surfaceTexture) {
-        //Set the surface texture to 'available' on the GL Thread !
-        ((Activity)mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ((AStereoNormal)mContext).surfaceTexture=surfaceTexture;
-                if(mVideoPlayer==null){
-                    Surface mVideoSurface=new Surface(surfaceTexture);
-                    mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,mGLRStereoNormal);
-                    mVideoPlayer.start();
-                }
-            }
-        });
-    }
 
     @Override
     protected void onDestroy(){

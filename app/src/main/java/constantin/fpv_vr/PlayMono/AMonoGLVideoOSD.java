@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
 
-import constantin.renderingx.core.ISurfaceTextureAvailable;
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
@@ -26,6 +25,7 @@ import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoNative.VideoNative;
+import constantin.video.core.VideoPlayerSurfaceTexture;
 
 
 /*****************************************************************
@@ -34,7 +34,7 @@ import constantin.video.core.VideoNative.VideoNative;
  * OSD can be fully disabled
  ***************************************************************** */
 
-public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextureAvailable {
+public class AMonoGLVideoOSD extends AppCompatActivity{
     private static final String TAG="AMonoGLVideoOSD";
     private Context mContext;
     private GLSurfaceView mGLView;
@@ -44,8 +44,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
     private GvrLayout gvrLayout;
     private MyVRLayout myVRLayout;
     public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather ENABLE_OSD should be enabled
-    private MVideoPlayer mVideoPlayer;
-    private SurfaceTexture surfaceTexture;
+    private VideoPlayerSurfaceTexture mVideoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +72,10 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
             myVRLayout.setPresentationView(mGLView);
         }
         telemetryReceiver=new TelemetryReceiver(this);
-        mGLRenderer =new GLRMono(mContext,this,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
+        mVideoPlayer=new VideoPlayerSurfaceTexture(this);
+        mGLRenderer =new GLRMono(mContext,mVideoPlayer,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
                 VideoNative.videoMode(mContext),renderOSD, disableVSYNC);
+        mVideoPlayer.setIVideoParamsChanged(mGLRenderer);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
             setContentView(gvrLayout);
@@ -96,7 +97,6 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         if(useGvrLayout){
             gvrLayout.onResume();
         }
-        startVideoIfNotYetStarted();
     }
 
     @Override
@@ -106,7 +106,6 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         if(useGvrLayout){
             gvrLayout.onPause();
         }
-        stopVideoIfNotYetSopped();
     }
 
     @Override
@@ -140,35 +139,4 @@ public class AMonoGLVideoOSD extends AppCompatActivity implements ISurfaceTextur
         }
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(final SurfaceTexture surfaceTexture) {
-        //Start and stop the video on the UI thread only
-        final AMonoGLVideoOSD instance=this;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                instance.surfaceTexture=surfaceTexture;
-                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)){
-                    startVideoIfNotYetStarted();
-                }
-            }
-        });
-    }
-
-    //Needs to be called on the UI thread !
-    private void startVideoIfNotYetStarted(){
-        if(surfaceTexture!=null && mVideoPlayer==null){
-            final Surface mVideoSurface=new Surface(surfaceTexture);
-            mVideoPlayer=new MVideoPlayer(mContext,mVideoSurface,mGLRenderer);
-            mVideoPlayer.start();
-        }
-    }
-
-    //Needs to be called on the UI thread !
-    private void stopVideoIfNotYetSopped(){
-        if(mVideoPlayer!=null){
-            mVideoPlayer.stop();
-            mVideoPlayer=null;
-        }
-    }
 }

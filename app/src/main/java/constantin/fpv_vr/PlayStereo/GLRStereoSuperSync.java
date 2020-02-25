@@ -10,6 +10,7 @@ import com.google.vr.sdk.base.GvrViewerParams;
 
 import constantin.fpv_vr.MVideoPlayer;
 import constantin.renderingx.core.GLESInfo.GLESInfo;
+import constantin.renderingx.core.MyVrHeadsetParams;
 import constantin.renderingx.core.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
@@ -61,18 +62,10 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoNative.videoMode(mContext));
 
-        GvrView view=new GvrView(context);
-        GvrViewerParams params=view.getGvrViewerParams();
-        float[] fov=new float[4];
-        fov[0]=params.getLeftEyeMaxFov().getLeft();
-        fov[1]=params.getLeftEyeMaxFov().getRight();
-        fov[2]=params.getLeftEyeMaxFov().getBottom();
-        fov[3]=params.getLeftEyeMaxFov().getTop();
-        float[] kN=params.getDistortion().getCoefficients();
-        nativeUpdateHeadsetParams(nativeGLRSuperSync,view.getScreenParams().getWidthMeters(),view.getScreenParams().getHeightMeters(),
-                params.getScreenToLensDistance(),params.getInterLensDistance(),params.getVerticalAlignment().ordinal(),params.getVerticalDistanceToLensCenter(),
-                fov,kN,view.getScreenParams().getWidth(),view.getScreenParams().getHeight());
-        view.shutdown();
+        final MyVrHeadsetParams params=new MyVrHeadsetParams(context);
+        nativeUpdateHeadsetParams(nativeGLRSuperSync,params.ScreenWidthMeters,params.ScreenHeightMeters,
+                params.ScreenToLensDistance,params.InterLensDistance,params.VerticalAlignment,params.VerticalDistanceToLensCenter,
+                params.fov,params.kN,params.ScreenWidthPixels,params.ScreenHeightPixels);
     }
 
     @Override

@@ -97,11 +97,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
     }
 
     @Override
-    protected void onPause(){
-        super.onPause();
-    }
-
-    @Override
     public void onClick(View v) {
         /*
          * Each button starts its own activity or service

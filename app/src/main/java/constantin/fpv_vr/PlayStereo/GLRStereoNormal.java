@@ -7,17 +7,15 @@ import android.opengl.EGLExt;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
-import com.google.vr.sdk.base.GvrView;
-import com.google.vr.sdk.base.GvrViewerParams;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import constantin.renderingx.core.ISurfaceTextureAvailable;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.MyEGLConfigChooser;
+import constantin.renderingx.core.MyVrHeadsetParams;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
+import constantin.video.core.ISurfaceTextureAvailable;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoNative.VideoNative;
 
@@ -54,7 +52,6 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private final TelemetryReceiver telemetryReceiver;
     private final ISurfaceTextureAvailable iSurfaceTextureAvailable;
 
-
     public GLRStereoNormal(final Context activityContext, final ISurfaceTextureAvailable iSurfaceTextureAvailable,final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=activityContext;
         this.iSurfaceTextureAvailable=iSurfaceTextureAvailable;
@@ -62,18 +59,10 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoNative.videoMode(mContext));
 
-        GvrView view=new GvrView(activityContext);
-        GvrViewerParams params=view.getGvrViewerParams();
-        float[] fov=new float[4];
-        fov[0]=params.getLeftEyeMaxFov().getLeft();
-        fov[1]=params.getLeftEyeMaxFov().getRight();
-        fov[2]=params.getLeftEyeMaxFov().getBottom();
-        fov[3]=params.getLeftEyeMaxFov().getTop();
-        float[] kN=params.getDistortion().getCoefficients();
-        nativeUpdateHeadsetParams(nativeGLRendererStereo,view.getScreenParams().getWidthMeters(),view.getScreenParams().getHeightMeters(),
-                params.getScreenToLensDistance(),params.getInterLensDistance(),params.getVerticalAlignment().ordinal(),params.getVerticalDistanceToLensCenter(),
-                fov,kN,view.getScreenParams().getWidth(),view.getScreenParams().getHeight());
-        view.shutdown();
+        final MyVrHeadsetParams params=new MyVrHeadsetParams(activityContext);
+        nativeUpdateHeadsetParams(nativeGLRendererStereo,params.ScreenWidthMeters,params.ScreenHeightMeters,
+                params.ScreenToLensDistance,params.InterLensDistance,params.VerticalAlignment,params.VerticalDistanceToLensCenter,
+                params.fov,params.kN,params.ScreenWidthPixels,params.ScreenHeightPixels);
     }
 
     @Override

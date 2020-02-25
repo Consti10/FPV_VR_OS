@@ -7,7 +7,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -16,7 +15,6 @@ import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.MVideoPlayer;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;
 import constantin.renderingx.core.FullscreenHelper;
@@ -26,6 +24,7 @@ import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.External.AspectFrameLayout;
 import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.VideoPlayerSurfaceHolder;
 
 /*****************************************************************
  * Play video blended with OSD in a Mono window (e.g. for Tablets usw)
@@ -35,10 +34,9 @@ import constantin.video.core.IVideoParamsChanged;
  ***************************************************************** */
 
 
-public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Callback, IVideoParamsChanged {
+public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged {
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
     private AspectFrameLayout mAspectFrameLayout;
-    private MVideoPlayer mVideoPlayer;
     private Context mContext;
     private GvrApi gvrApi;
     private AirHeadTrackingSender airHeadTrackingSender;
@@ -47,6 +45,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
     private TelemetryReceiver telemetryReceiver;
     private boolean ENABLE_OSD;
     private boolean ENABLE_VIDEO_VIA_OPENGL;
+    private VideoPlayerSurfaceHolder mVideoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         mContext=this;
         setContentView(R.layout.activity_mono_vid_osd);
         SurfaceView mSurfaceView = findViewById(R.id.SurfaceView_monoscopicVideo);
-        mSurfaceView.getHolder().addCallback(this);
+        mVideoPlayer=new VideoPlayerSurfaceHolder(mContext,this);
+        mSurfaceView.getHolder().addCallback(mVideoPlayer);
         mAspectFrameLayout =  findViewById(R.id.VideoSurface_AFL);
         if(ENABLE_OSD){
             mGLView = new GLSurfaceView(this);
@@ -79,7 +79,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
             Log.d("TAG","AHT LOL");
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -115,34 +114,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements SurfaceHolder.Ca
         }
         if(ENABLE_OSD){
             mGLView=null;
-        }
-    }
-
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        // There's a short delay between the start of the activity and the initialization
-        // of the SurfaceHolder that backs the SurfaceView. (Video Surface,not OpenGL surface)
-        //Log.d(TAG, "Video surface created");
-        if(mVideoPlayer==null){
-            mVideoPlayer=new MVideoPlayer(mContext,holder.getSurface(),this);
-            mVideoPlayer.start();
-        }
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        // ignore
-        //Log.d(TAG, "Video surfaceChanged fmt=" + format + " size=" + width + "x" + height);
-        //format 4= rgb565
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        //Log.d(TAG, "Video Surface destroyed");
-        if(mVideoPlayer!=null){
-            mVideoPlayer.stop();
-            mVideoPlayer=null;
         }
     }
 
