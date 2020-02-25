@@ -22,28 +22,27 @@ import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
+import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoPlayerSurfaceTexture;
 
 public class AStereoNormal extends AppCompatActivity{
-    //private GvrLayout mVrLayout;
+    //Components use the android LifecycleObserver. Since they don't need forwarding of
+    //onPause / onResume it looks so empty here
     private MyVRLayout mVrLayout;
-    private GLSurfaceView mGLViewStereo;
+    private MyGLSurfaceView mGLViewStereo;
 
     private GLRStereoNormal mGLRStereoNormal;
     private AirHeadTrackingSender airHeadTrackingSender;
-    private Context mContext;
     private TelemetryReceiver telemetryReceiver;
     private VideoPlayerSurfaceTexture mVideoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext=this;
-        //mVrLayout = new GvrLayout(this);
-        mVrLayout =new MyVRLayout(this);
-        mGLViewStereo=new GLSurfaceView(this);
+        mVrLayout =new MyVRLayout(this,false);
+        mGLViewStereo=new MyGLSurfaceView(this,this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
         //mGLViewStereo.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory(true));
@@ -58,58 +57,6 @@ public class AStereoNormal extends AppCompatActivity{
         mVrLayout.setPresentationView(mGLViewStereo);
         setContentView(mVrLayout);
         airHeadTrackingSender=new AirHeadTrackingSender(this, mVrLayout.getGvrApi());
-
-        registerForContextMenu(mVrLayout);
-
-        float[] input={0,0};
-        float[] output= mVrLayout.getGvrApi().computeDistortedPoint(BufferViewport.EyeType.LEFT,input);
-        System.out.println("Distortion:("+output[0]+","+output[1]+","+output[2]+")");
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        System.out.println("YYY onResume()");
-        FullscreenHelper.setImmersiveSticky(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mGLViewStereo.onResume();
-    }
-
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        System.out.println("YYY onPause()");
-        mGLViewStereo.onPause();
-    }
-
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        mVrLayout =null;
-        mGLViewStereo =null;
-        mGLRStereoNormal=null;
-        airHeadTrackingSender=null;
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.setHeaderTitle("Options");
-        getMenuInflater().inflate(R.menu.videovr_context_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.option_reset_tracking:
-               mVrLayout.getGvrApi().recenterTracking();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 
 }

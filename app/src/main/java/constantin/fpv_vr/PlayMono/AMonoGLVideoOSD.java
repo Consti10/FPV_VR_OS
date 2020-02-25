@@ -22,6 +22,7 @@ import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
+import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoNative.VideoNative;
@@ -37,7 +38,7 @@ import constantin.video.core.VideoPlayerSurfaceTexture;
 public class AMonoGLVideoOSD extends AppCompatActivity{
     private static final String TAG="AMonoGLVideoOSD";
     private Context mContext;
-    private GLSurfaceView mGLView;
+    private MyGLSurfaceView mGLView;
     private GLRMono mGLRenderer;
     private TelemetryReceiver telemetryReceiver;
     private static final boolean useGvrLayout=false;
@@ -53,7 +54,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
         mContext=this;
         final boolean renderOSD=getIntent().getBooleanExtra(EXTRA_RENDER_OSD,true);
         MyVRLayout.enableSustainedPerformanceIfPossible(this);
-        mGLView = new GLSurfaceView(this);
+        mGLView = new MyGLSurfaceView(this,this);
         mGLView.setEGLContextClientVersion(2);
         //for now do not differentiate
         final boolean disableVSYNC = SJ.DisableVSYNC(this);
@@ -93,7 +94,6 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
         //Log.d(TAG, "onResume");
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mGLView.onResume();
         if(useGvrLayout){
             gvrLayout.onResume();
         }
@@ -102,7 +102,6 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
     @Override
     protected void onPause() {
         super.onPause();
-        mGLView.onPause();
         if(useGvrLayout){
             gvrLayout.onPause();
         }

@@ -18,43 +18,23 @@ import constantin.telemetry.core.TelemetryReceiver;
  **************************************** */
 
 public class AStereoSuperSYNC extends AppCompatActivity{
+    //Components use the android LifecycleObserver. Since they don't need forwarding of
+    //onPause / onResume it looks so empty here
     private ViewSuperSync mViewSuperSync;
     private GLRStereoSuperSync mGLRStereoSuperSync;
     private AirHeadTrackingSender airHeadTrackingSender;
     private TelemetryReceiver telemetryReceiver;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewSuperSync=new ViewSuperSync(this);
+        mViewSuperSync=new ViewSuperSync(this,false);
         telemetryReceiver=new TelemetryReceiver(this);
         mGLRStereoSuperSync = new GLRStereoSuperSync(this,telemetryReceiver,mViewSuperSync.getGvrApi().getNativeGvrContext());
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
 
         setContentView(mViewSuperSync);
         airHeadTrackingSender=new AirHeadTrackingSender(this,mViewSuperSync.getGvrApi());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        System.out.println("YYY onResume()");
-        FullscreenHelper.setImmersiveSticky(this);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        System.out.println("YYY onPause()");
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        mViewSuperSync=null;
-        mGLRStereoSuperSync=null;
-        airHeadTrackingSender=null;
     }
 
 }

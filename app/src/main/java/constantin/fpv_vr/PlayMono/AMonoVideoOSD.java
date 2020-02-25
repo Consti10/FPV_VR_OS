@@ -20,6 +20,7 @@ import constantin.fpv_vr.R;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
+import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.External.AspectFrameLayout;
@@ -41,7 +42,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     private GvrApi gvrApi;
     private AirHeadTrackingSender airHeadTrackingSender;
     //Only !=null when ENABLE_OSD is enabled
-    private GLSurfaceView mGLView;
+    private MyGLSurfaceView mGLView;
     private TelemetryReceiver telemetryReceiver;
     private boolean ENABLE_OSD;
     private boolean ENABLE_VIDEO_VIA_OPENGL;
@@ -59,7 +60,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         mSurfaceView.getHolder().addCallback(mVideoPlayer);
         mAspectFrameLayout =  findViewById(R.id.VideoSurface_AFL);
         if(ENABLE_OSD){
-            mGLView = new GLSurfaceView(this);
+            mGLView = new MyGLSurfaceView(this,this);
             mGLView.setEGLContextClientVersion(2);
             //Do not use MSAA in mono mode
             mGLView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
@@ -86,9 +87,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         //Log.d(TAG, "onResume");
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        if(ENABLE_OSD){
-            mGLView.onResume();
-        }
         if(gvrApi!=null){
             gvrApi.resumeTracking();
         }
@@ -101,9 +99,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         if(gvrApi!=null){
             gvrApi.pauseTracking();
         }
-        if(ENABLE_OSD){
-            mGLView.onPause();
-        }
     }
 
     @Override
@@ -111,9 +106,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         super.onDestroy();
         if(gvrApi!=null){
             gvrApi.shutdown();
-        }
-        if(ENABLE_OSD){
-            mGLView=null;
         }
     }
 
