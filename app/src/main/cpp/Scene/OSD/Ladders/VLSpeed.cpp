@@ -9,8 +9,7 @@
 VLSpeed::VLSpeed(const VLSpeed::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms &basicGLPrograms, BatchingManager &batchingManager,
                                const TelemetryReceiver &telemetryReceiver) :
         mOptions(options),
-        AVerticalLadder(settingsOSDStyle,basicGLPrograms, batchingManager, telemetryReceiver,true,10,
-                       options.useKMHinsteadOfMS ? L"km/h" : L"m/s"){}
+        AVerticalLadder(settingsOSDStyle,basicGLPrograms, batchingManager, telemetryReceiver,true,10){}
 
 
 void VLSpeed::updateGL() {

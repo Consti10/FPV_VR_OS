@@ -11,17 +11,17 @@
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,const TelemetryReceiver& telemetryReceiver,
-                               const bool leftHanded,const int unitsBetween,const std::wstring& unit):
+                               const bool leftHanded,const int unitsBetween):
         IUpdateable(TAG),IDrawable(TAG),
         settingsOSDStyle(settingsOSDStyle),
         mTelemetryReceiver(telemetryReceiver),
         LEFT_HANDED(leftHanded),
         UNITS_BETWEEN_SRINGS(unitsBetween),
         UNITS_BETWEEN_LONG_LINES(unitsBetween),
-        UNIT(unit),
         mPositionDebug(basicGLPrograms.vc,0, true),
         mGLPrograms(basicGLPrograms),
         mTextObjTelemetryValue(15,false, Color::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
+        mTextObjMetric(4, false,Color::WHITE,false,Color::WHITE,batchingManager),
         mBackgroundObj(batchingManager,SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH))
 {
     glGenBuffers(1,&mLadderLines.glBuffer);
@@ -47,14 +47,16 @@ void AVerticalLadder::setupPosition() {
             float width=shortLinesWidth;
             if(i%4==0)width=longLinesWidth;
             const float linesHeight=distanceBetweenLines*0.25f;
+            const auto FILL_COLOR=settingsOSDStyle.OSD_LINE_FILL_COLOR;
+            const auto OUTLINE_COLOR=settingsOSDStyle.OSD_LINE_OUTLINE_COLOR;
             if(LEFT_HANDED){
                 const glm::vec3 start=glm::vec3(mX + mWidth - width,mY+ i*distanceBetweenLines,mZ);
                 const glm::vec3 end=start+glm::vec3(width,0,0);
-                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,FILL_COLOR,OUTLINE_COLOR);
             }else{
                 const glm::vec3 start=glm::vec3(mX,mY + i * distanceBetweenLines,mZ);
                 const glm::vec3 end=start+glm::vec3(width,0,0);
-                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,FILL_COLOR,OUTLINE_COLOR);
             }
         }
         GLBufferHelper::uploadGLBuffer(mLadderLines.glBuffer, tmpLinesB, sizeof(tmpLinesB));
@@ -66,9 +68,16 @@ void AVerticalLadder::setupPosition() {
     if(LEFT_HANDED){
         mTextObjTelemetryValue.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight/2.0f,mZ,
                                            outlineQuadWidth,outlineQuadHeight);
+        mTextObjMetric.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight,mZ,outlineQuadWidth,outlineQuadHeight/2.f);
+        mTextObjMetric.setTextSafe(mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::VS).metric);
+        mTextObjMetric.recalculateDataIfNeeded();
     }else{
         mTextObjTelemetryValue.setPosition(mX+longLinesWidth,mY+mHeight/2.0f-outlineQuadHeight/2.0f,mZ,
                                            outlineQuadWidth,outlineQuadHeight);
+        mTextObjMetric.setPosition(mX+longLinesWidth,mY+mHeight/2.0f-outlineQuadHeight,mZ,outlineQuadWidth,outlineQuadHeight/2.0f);
+        mTextObjMetric.setBounds(OSDTextObj::BOUNDS::RIGHT);
+        mTextObjMetric.setTextSafe(L"m");
+        mTextObjMetric.recalculateDataIfNeeded();
     }
     //start with 0
     updateLadderStringsRange(0);
@@ -80,7 +89,7 @@ void AVerticalLadder::setupPosition() {
 void AVerticalLadder::updateLadderStringsRange(int newMiddleValue) {
     GLProgramText::Character tmp[MAX_N_CHARS_PER_LADDER_STRING*N_LADDER_STRINGS];
     std::memset (&tmp, 0, sizeof(tmp));
-    float ladderTextHeight=mHeight/12.0f;
+    float ladderTextHeight=mHeight/10.0f;
     int lowestValue=newMiddleValue-PRECALCULATED_RANGE_BOOTH_SIDES;
     float distBetween=mHeight/4.0f;
     const int blub=PRECALCULATED_RANGE_BOOTH_SIDES/UNITS_BETWEEN_SRINGS;
@@ -89,7 +98,6 @@ void AVerticalLadder::updateLadderStringsRange(int newMiddleValue) {
         std::wstringstream ss;
         ss<<(i*UNITS_BETWEEN_SRINGS+lowestValue);
         std::wstring s=ss.str();
-        s.append(UNIT);
         if(s.length()>MAX_N_CHARS_PER_LADDER_STRING){
             s=L"E";
         }
@@ -142,7 +150,7 @@ void AVerticalLadder::updateMainString(float value) {
 
 //calculate the offset & translation matrix for the ladder lines
 void AVerticalLadder::calcLadderLinesRenderData(const float value) {
-    float glTranslationPerUnit=mHeight/80;
+    float glTranslationPerUnit=mHeight/(4*UNITS_BETWEEN_LONG_LINES);
     float valueModPos=fmod(value,(float)UNITS_BETWEEN_LONG_LINES);
     if(valueModPos<0)valueModPos+=UNITS_BETWEEN_LONG_LINES;
     mLadderLines.currentDrawOffset=((int)valueModPos/5+1);

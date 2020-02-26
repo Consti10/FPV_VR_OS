@@ -7,8 +7,9 @@
 
 VLAltitude::VLAltitude(const VLAltitude::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms &basicGLPrograms, BatchingManager &batchingManager,
                      const TelemetryReceiver &telemetryReceiver) : AVerticalLadder(settingsOSDStyle,
-        basicGLPrograms, batchingManager, telemetryReceiver, false,20,L"m"),
-        mOptions(options){}
+        basicGLPrograms, batchingManager, telemetryReceiver, false,20),
+        mOptions(options){
+}
 
 //float val=50;
 void VLAltitude::updateGL() {

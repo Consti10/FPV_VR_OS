@@ -23,7 +23,7 @@
 class AVerticalLadder : public IDrawable, public IPositionable, public IUpdateable  {
 public:
     AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,const TelemetryReceiver& telemetryReceiver,
-                   bool leftHanded, int unitsBetween,const std::wstring& unit);
+                   bool leftHanded, int unitsBetween);
     static constexpr float PERCENTAGE_VIDEO_Y_MONO=10.0f/20.0f;
     static constexpr float PERCENTAGE_VIDEO_Y_STEREO=8.0f/20.0f;
     static constexpr float RATIO=1.0f/2.5f;
@@ -43,15 +43,15 @@ private:
     PositionDebug mPositionDebug;
     OSDBackgroundObject mBackgroundObj;
     OSDTextObj mTextObjTelemetryValue;
+    OSDTextObj mTextObjMetric;
 
-    const std::wstring UNIT;
     const bool LEFT_HANDED;
     const int N_LADDER_LINES=5*4;
     const int UNITS_BETWEEN_LONG_LINES;
     const int UNITS_BETWEEN_SRINGS;
     const int PRECALCULATED_RANGE_BOOTH_SIDES=1000;
     const int N_LADDER_STRINGS=(PRECALCULATED_RANGE_BOOTH_SIDES*2)/UNITS_BETWEEN_SRINGS;
-    const int MAX_N_CHARS_PER_LADDER_STRING=6+(int)UNIT.length(); //-99999, -1.23
+    const int MAX_N_CHARS_PER_LADDER_STRING=6; //-99999, -1.23
 
     float outlineQuadWidth;
     float outlineQuadHeight;
