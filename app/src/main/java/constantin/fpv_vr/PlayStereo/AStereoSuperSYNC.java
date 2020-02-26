@@ -29,9 +29,8 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         telemetryReceiver=new TelemetryReceiver(this);
         mGLRStereoSuperSync = new GLRStereoSuperSync(this,telemetryReceiver,mViewSuperSync.getGvrApi().getNativeGvrContext());
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
-
         setContentView(mViewSuperSync);
-        airHeadTrackingSender=new AirHeadTrackingSender(this,mViewSuperSync.getGvrApi());
+        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this,mViewSuperSync.getGvrApi());
     }
 
     @Override

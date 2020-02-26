@@ -42,17 +42,25 @@ public class AirHeadTrackingSender implements LifecycleObserver {
     private final GvrApi mGvrApi;
     //When created by the first constructor, the head tracker instantiates a new GvrApi instance and handles its lifecycle
     private final boolean OwnGvrApi;
-    private final boolean ENABLED;
     private Thread mThread;
 
-    public AirHeadTrackingSender(AppCompatActivity activity){
-        this.context=activity.getApplicationContext();
-        ENABLED=SJ.EnableAHT(context);
-        if(!ENABLED){
-            mGvrApi=new GvrApi(activity, null);
-        }else{
-            mGvrApi=null;
+
+    public static AirHeadTrackingSender createIfEnabled(AppCompatActivity activity){
+        if(SJ.EnableAHT(activity)){
+            return new AirHeadTrackingSender(activity);
         }
+        return null;
+    };
+    public static AirHeadTrackingSender createIfEnabled(AppCompatActivity activity, GvrApi gvrApi){
+        if(SJ.EnableAHT(activity)){
+            return new AirHeadTrackingSender(activity,gvrApi);
+        }
+        return null;
+    };
+
+    private AirHeadTrackingSender(AppCompatActivity activity){
+        this.context=activity.getApplicationContext();
+        mGvrApi=new GvrApi(activity, null);
         OwnGvrApi=true;
         mDestination=new InetSocketAddress("", SJ.AHTPort(context)); //TODO
         mRefreshRateMs = SJ.AHTRefreshRateMs(context);
@@ -60,9 +68,8 @@ public class AirHeadTrackingSender implements LifecycleObserver {
         activity.getLifecycle().addObserver(this);
     }
 
-    public AirHeadTrackingSender(AppCompatActivity activity, GvrApi gvrApi){
+    private AirHeadTrackingSender(AppCompatActivity activity, GvrApi gvrApi){
         this.context=activity.getApplicationContext();
-        ENABLED=SJ.EnableAHT(context);
         OwnGvrApi=false;
         mGvrApi=gvrApi;
         mDestination=new InetSocketAddress("", SJ.AHTPort(context)); //TODO
@@ -74,9 +81,6 @@ public class AirHeadTrackingSender implements LifecycleObserver {
     //Start sending head tracking data
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private void startSendingDataIfEnabled(){
-        if(!ENABLED){
-            return;
-        }
         if(OwnGvrApi){
             mGvrApi.resumeTracking();
         }
@@ -96,9 +100,6 @@ public class AirHeadTrackingSender implements LifecycleObserver {
     //Stop sending head tracking data
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     private void stopSendingDataIfEnabled(){
-        if(!ENABLED){
-            return;
-        }
         mThread.interrupt();
         try { mThread.join(); } catch (InterruptedException ignored) { }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

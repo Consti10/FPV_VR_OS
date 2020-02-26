@@ -46,7 +46,7 @@ public class AStereoNormal extends AppCompatActivity{
         mGLViewStereo.setPreserveEGLContextOnPause(true);
         mVrLayout.setPresentationView(mGLViewStereo);
         setContentView(mVrLayout);
-        airHeadTrackingSender=new AirHeadTrackingSender(this, mVrLayout.getGvrApi());
+        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this,mVrLayout.getGvrApi());
     }
 
     @Override

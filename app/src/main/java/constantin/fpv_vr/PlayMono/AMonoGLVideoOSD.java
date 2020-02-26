@@ -3,12 +3,15 @@ package constantin.fpv_vr.PlayMono;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import com.google.vr.ndk.base.GvrApi;
 import com.google.vr.ndk.base.GvrLayout;
+
+import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
@@ -37,6 +40,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
     private MyVRLayout myVRLayout;
     public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather ENABLE_OSD should be enabled
     private VideoPlayerSurfaceTexture mVideoPlayer;
+    private AirHeadTrackingSender airHeadTrackingSender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,8 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
             setContentView(myVRLayout);
             registerForContextMenu(myVRLayout);
         }
+        final GvrApi gvrApi=useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi();
+        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this,gvrApi);
     }
 
 

@@ -68,10 +68,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        if(SJ.EnableAHT(this)){
-            airHeadTrackingSender=new AirHeadTrackingSender(this);
-            Log.d("TAG","AHT LOL");
-        }
+        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this);
     }
 
     @Override

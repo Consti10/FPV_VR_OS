@@ -27,7 +27,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
     private GLRStereoDaydream mGLRStereoDayDream;
     private Context mContext;
     private MVideoPlayer mVideoPlayer;
-    private AirHeadTrackingSender airHeadTrackingSender;
     private TelemetryReceiver telemetryReceiver;
 
     @Override
@@ -53,7 +52,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
         mGLView.setRenderer(mGLRStereoDayDream);
         mGvrLayout.setPresentationView(mGLView);
         setContentView(mGvrLayout);
-        airHeadTrackingSender=new AirHeadTrackingSender(this,mGvrLayout.getGvrApi());
     }
 
     @Override
@@ -86,7 +84,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
         mGvrLayout=null;
         mGLView =null;
         mGLRStereoDayDream=null;
-        airHeadTrackingSender=null;
     }
 
     @Override
