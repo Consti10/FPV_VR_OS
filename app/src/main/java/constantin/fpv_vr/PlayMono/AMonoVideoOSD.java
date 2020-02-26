@@ -35,8 +35,6 @@ import constantin.video.core.VideoPlayerSurfaceHolder;
 public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged {
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
     private AspectFrameLayout mAspectFrameLayout;
-    private Context mContext;
-    private GvrApi gvrApi;
     private AirHeadTrackingSender airHeadTrackingSender;
     //Only !=null when ENABLE_OSD is enabled
     private MyGLSurfaceView mGLView;
@@ -50,10 +48,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         super.onCreate(savedInstanceState);
         ENABLE_OSD =getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD,true);
         ENABLE_VIDEO_VIA_OPENGL=false;
-        mContext=this;
         setContentView(R.layout.activity_mono_vid_osd);
         SurfaceView mSurfaceView = findViewById(R.id.SurfaceView_monoscopicVideo);
-        mVideoPlayer=new VideoPlayerSurfaceHolder(mContext,this);
+        mVideoPlayer=new VideoPlayerSurfaceHolder(this,this);
         mSurfaceView.getHolder().addCallback(mVideoPlayer);
         mAspectFrameLayout =  findViewById(R.id.VideoSurface_AFL);
         if(ENABLE_OSD){
@@ -65,15 +62,14 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             mGLView.setPreserveEGLContextOnPause(true);
             telemetryReceiver=new TelemetryReceiver(this);
-            final GLRMono mGLRMonoOSD = new GLRMono(mContext, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
+            final GLRMono mGLRMonoOSD = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
             mGLView.setRenderer(mGLRMonoOSD);
             mGLView.setZOrderMediaOverlay(true);
             addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        if(SJ.EnableAHT(mContext)){
-            gvrApi = new GvrApi(this, new DisplaySynchronizer(this,getWindowManager().getDefaultDisplay()));
-            airHeadTrackingSender=new AirHeadTrackingSender(this,gvrApi);
+        if(SJ.EnableAHT(this)){
+            airHeadTrackingSender=new AirHeadTrackingSender(this);
             Log.d("TAG","AHT LOL");
         }
     }
@@ -81,29 +77,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     @Override
     protected void onResume() {
         super.onResume();
-        //Log.d(TAG, "onResume");
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        if(gvrApi!=null){
-            gvrApi.resumeTracking();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //Log.d(TAG, "onPause");
-        if(gvrApi!=null){
-            gvrApi.pauseTracking();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(gvrApi!=null){
-            gvrApi.shutdown();
-        }
     }
 
 

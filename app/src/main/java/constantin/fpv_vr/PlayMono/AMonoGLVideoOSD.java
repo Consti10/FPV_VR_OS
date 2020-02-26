@@ -29,7 +29,6 @@ import constantin.video.core.VideoPlayerSurfaceTexture;
 
 public class AMonoGLVideoOSD extends AppCompatActivity{
     private static final String TAG="AMonoGLVideoOSD";
-    private Context mContext;
     private MyGLSurfaceView mGLView;
     private GLRMono mGLRenderer;
     private TelemetryReceiver telemetryReceiver;
@@ -43,7 +42,6 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mContext=this;
         final boolean renderOSD=getIntent().getBooleanExtra(EXTRA_RENDER_OSD,true);
         MyVRLayout.enableSustainedPerformanceIfPossible(this);
         mGLView = new MyGLSurfaceView(this,this);
@@ -66,8 +64,8 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
         }
         telemetryReceiver=new TelemetryReceiver(this);
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
-        mGLRenderer =new GLRMono(mContext,mVideoPlayer,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
-                VideoNative.videoMode(mContext),renderOSD, disableVSYNC);
+        mGLRenderer =new GLRMono(this,mVideoPlayer,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
+                VideoNative.videoMode(this),renderOSD, disableVSYNC);
         mVideoPlayer.setIVideoParamsChanged(mGLRenderer);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){
