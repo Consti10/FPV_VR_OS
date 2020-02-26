@@ -96,11 +96,20 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     vrHeadsetParams.setOpenGLViewport(eye);
     //Now draw
     const auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
-    const auto rotationWithAxesDisabled=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
-    const glm::mat4 viewVideo=mVideoRenderer->is360Video() ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled :
-                              vrHeadsetParams.GetEyeFromHeadMatrix(eye);
-    const glm::mat4 viewOSD= mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)
-                                                               : vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;
+    glm::mat4 viewVideo;
+    glm::mat4 viewOSD;
+    if(mVideoRenderer->is360Video()){
+        //When rendering 360° video,always fully track head rotation for video, optionally lock OSD
+        viewVideo= vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
+        viewOSD= mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye):
+                vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
+    }else{
+        //Else, track video only if head tracking is enabled, lock OSD if requested
+        const auto rotationWithAxesDisabled=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
+        viewVideo=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;
+        viewOSD= mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)
+                                                   : vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;
+    }
     const glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
     mVideoRenderer->drawVideoCanvas(viewVideo,projection,eye==GVR_LEFT_EYE);
     if(eye==GVR_LEFT_EYE || updateOSDBetweenEyes){
