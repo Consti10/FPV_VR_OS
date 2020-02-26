@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
+import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
 
 import java.io.IOException;
@@ -39,12 +40,30 @@ public class AirHeadTrackingSender implements LifecycleObserver {
     private final Context context;
     //Use the gvrApi head tracker to get the values to send
     private final GvrApi mGvrApi;
+    //When created by the first constructor, the head tracker instantiates a new GvrApi instance and handles its lifecycle
+    private final boolean OwnGvrApi;
     private final boolean ENABLED;
     private Thread mThread;
+
+    public AirHeadTrackingSender(AppCompatActivity activity){
+        this.context=activity.getApplicationContext();
+        ENABLED=SJ.EnableAHT(context);
+        if(!ENABLED){
+            mGvrApi=new GvrApi(activity, null);
+        }else{
+            mGvrApi=null;
+        }
+        OwnGvrApi=true;
+        mDestination=new InetSocketAddress("", SJ.AHTPort(context)); //TODO
+        mRefreshRateMs = SJ.AHTRefreshRateMs(context);
+        createNotificationChannel();
+        activity.getLifecycle().addObserver(this);
+    }
 
     public AirHeadTrackingSender(AppCompatActivity activity, GvrApi gvrApi){
         this.context=activity.getApplicationContext();
         ENABLED=SJ.EnableAHT(context);
+        OwnGvrApi=false;
         mGvrApi=gvrApi;
         mDestination=new InetSocketAddress("", SJ.AHTPort(context)); //TODO
         mRefreshRateMs = SJ.AHTRefreshRateMs(context);
@@ -57,6 +76,9 @@ public class AirHeadTrackingSender implements LifecycleObserver {
     private void startSendingDataIfEnabled(){
         if(!ENABLED){
             return;
+        }
+        if(OwnGvrApi){
+            mGvrApi.resumeTracking();
         }
         String content="Sending head tracking data to "+mDestination.getAddress()+":"+mDestination.getPort()+
                 " @ "+toHZ(mRefreshRateMs)+"hz"+" ("+mRefreshRateMs+"ms)";
@@ -81,9 +103,18 @@ public class AirHeadTrackingSender implements LifecycleObserver {
         try { mThread.join(); } catch (InterruptedException ignored) { }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.cancel(THIS_NOTIFICATION_ID);
+        if(OwnGvrApi){
+            mGvrApi.pauseTracking();
+        }
         System.out.println("HT STOPPED");
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    private void onDestroy(){
+        if(OwnGvrApi){
+            mGvrApi.shutdown();
+        }
+    }
 
     private void loop(){
         //send int16_t (2 byte) *3 (x,y,z)
