@@ -49,9 +49,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         ENABLE_OSD =getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD,true);
         ENABLE_VIDEO_VIA_OPENGL=false;
         setContentView(R.layout.activity_mono_vid_osd);
-        SurfaceView mSurfaceView = findViewById(R.id.SurfaceView_monoscopicVideo);
-        mVideoPlayer=new VideoPlayerSurfaceHolder(this,this);
-        mSurfaceView.getHolder().addCallback(mVideoPlayer);
+        final SurfaceView surfaceView = findViewById(R.id.SurfaceView_monoscopicVideo);
+        mVideoPlayer=new VideoPlayerSurfaceHolder(this,surfaceView,this);
         mAspectFrameLayout =  findViewById(R.id.VideoSurface_AFL);
         if(ENABLE_OSD){
             mGLView = new MyGLSurfaceView(this,this);
