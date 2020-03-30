@@ -3,12 +3,7 @@ package constantin.fpv_vr.PlayStereo;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
-import android.view.Surface;
 
-import com.google.vr.sdk.base.GvrView;
-import com.google.vr.sdk.base.GvrViewerParams;
-
-import constantin.fpv_vr.MVideoPlayer;
 import constantin.renderingx.core.GLESInfo.GLESInfo;
 import constantin.renderingx.core.MyVrHeadsetParams;
 import constantin.renderingx.core.ViewSuperSync;
@@ -16,7 +11,7 @@ import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.ISurfaceTextureAvailable;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.VideoNative.VideoNative;
+import constantin.video.core.VideoPlayer.VideoSettings;
 
 
 /**
@@ -60,7 +55,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         final boolean qcomTiledRenderingAvailable= GLESInfo.isExtensionAvailable(context, GLESInfo.GL_QCOM_tiled_rendering);
         final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
-                gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoNative.videoMode(mContext));
+                gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoSettings.videoMode(mContext));
         final MyVrHeadsetParams params=new MyVrHeadsetParams(context);
         nativeUpdateHeadsetParams(nativeGLRSuperSync,params.ScreenWidthMeters,params.ScreenHeightMeters,
                 params.ScreenToLensDistance,params.InterLensDistance,params.VerticalAlignment,params.VerticalDistanceToLensCenter,

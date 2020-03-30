@@ -31,7 +31,7 @@ import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.UpdateHelper;
 import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
-import constantin.video.core.VideoNative.VideoNative;
+import constantin.video.core.VideoPlayer.VideoSettings;
 
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_Manually;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_StorageFile;
@@ -75,7 +75,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 connectB.setTextColor(Color.GREEN);
                 break;
             case CONNECTION_TYPE_StorageFile:
-                if(VideoNative.PLAYBACK_FLE_EXISTS(this)){
+                if(VideoSettings.PLAYBACK_FLE_EXISTS(this)){
                     connectB.setTextColor(Color.GREEN);
                 }else{
                     connectB.setTextColor(Color.RED);
@@ -104,7 +104,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:
                 //With normal video we can use a android surface instead of OpenGL
-                if(VideoNative.videoMode(this)==0){
+                if(VideoSettings.videoMode(this)==0){
                     final Intent i=new Intent().setClass(this, AMonoVideoOSD.class);
                     i.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,false);
                     startActivity(i);
@@ -115,7 +115,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
                 }
                 break;
             case R.id.b_startMonoVideoOSD:
-                if(VideoNative.videoMode(this)==0){
+                if(VideoSettings.videoMode(this)==0){
                     startActivity(new Intent().setClass(this, AMonoVideoOSD.class));
                 }else{
                     Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);

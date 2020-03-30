@@ -9,8 +9,6 @@ import android.view.Surface;
 
 import com.google.vr.ndk.base.GvrLayout;
 
-import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.MVideoPlayer;
 import constantin.telemetry.core.TelemetryReceiver;
 
 /**
@@ -26,7 +24,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
     private GLSurfaceView mGLView;
     private GLRStereoDaydream mGLRStereoDayDream;
     private Context mContext;
-    private MVideoPlayer mVideoPlayer;
     private TelemetryReceiver telemetryReceiver;
 
     @Override
@@ -66,10 +63,6 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
     protected void onPause(){
         //System.out.println("YYY onPause()");
         synchronized (this){
-            if(mVideoPlayer!=null){
-                mVideoPlayer.stop();
-                mVideoPlayer=null;
-            }
         }
         mGvrLayout.onPause();
         mGLView.onPause();
@@ -93,8 +86,7 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
         c.drawColor(Color.RED);
         surface.unlockCanvasAndPost(c);*/
         synchronized (this){
-            mVideoPlayer=new MVideoPlayer(mContext,surface,null);
-            mVideoPlayer.start();
+
         }
     }
 

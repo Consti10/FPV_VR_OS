@@ -15,9 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import constantin.fpv_vr.R;
-import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.Toaster;
-import constantin.video.core.VideoNative.VideoNative;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class FConnectRTSP extends Fragment implements View.OnClickListener {

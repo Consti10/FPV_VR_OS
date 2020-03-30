@@ -27,7 +27,8 @@ import constantin.fpv_vr.R;
 import constantin.telemetry.core.ASettingsTelemetry;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.AVideoSettings;
-import constantin.video.core.VideoNative.VideoNative;
+import constantin.video.core.VideoPlayer.VideoPlayer;
+import constantin.video.core.VideoPlayer.VideoSettings;
 
 /************************************
  * This activity only writes values in pref_connect.xml .
@@ -169,16 +170,16 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         switch (connectionType){
             case CONNECTION_TYPE_EZWB:
             case CONNECTION_TYPE_Manually:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE), VideoNative.VS_SOURCE_UDP);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE), VideoPlayer.VS_SOURCE_UDP);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE), TelemetryReceiver.SOURCE_TYPE_UDP);
                 break;
             case CONNECTION_TYPE_StorageFile:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_FILE);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_FILE);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_FILE);
                 break;
             case CONNECTION_TYPE_TestFile:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_ASSETS);
-                final int vm=VideoNative.videoMode(context);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_ASSETS);
+                final int vm= VideoSettings.videoMode(context);
                 if(vm==0){
                     pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "x264/testVideo.h264");
                 }else if(vm==1){
@@ -194,7 +195,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_ASSETS);
                 break;
             case CONNECTION_TYPE_RTSP:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoNative.VS_SOURCE_FFMPEG_URL);
+                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_FFMPEG_URL);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_UDP);
                 break;
              default:break;

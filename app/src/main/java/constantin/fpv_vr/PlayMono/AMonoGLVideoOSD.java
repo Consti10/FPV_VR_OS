@@ -20,7 +20,7 @@ import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
-import constantin.video.core.VideoNative.VideoNative;
+import constantin.video.core.VideoPlayer.VideoSettings;
 import constantin.video.core.VideoPlayerSurfaceTexture;
 
 
@@ -69,7 +69,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
         telemetryReceiver=new TelemetryReceiver(this);
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
         mGLRenderer =new GLRMono(this,mVideoPlayer,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
-                VideoNative.videoMode(this),renderOSD, disableVSYNC);
+                VideoSettings.videoMode(this),renderOSD, disableVSYNC);
         mVideoPlayer.setIVideoParamsChanged(mGLRenderer);
         mGLView.setRenderer(mGLRenderer);
         if(useGvrLayout){

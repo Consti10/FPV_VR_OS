@@ -17,7 +17,7 @@ import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.ISurfaceTextureAvailable;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.VideoNative.VideoNative;
+import constantin.video.core.VideoPlayer.VideoSettings;
 
 import static constantin.renderingx.core.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
 
@@ -57,7 +57,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         this.iSurfaceTextureAvailable=iSurfaceTextureAvailable;
         this.telemetryReceiver=telemetryReceiver;
         nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
-                gvrApiNativeContext, VideoNative.videoMode(mContext));
+                gvrApiNativeContext, VideoSettings.videoMode(mContext));
 
         final MyVrHeadsetParams params=new MyVrHeadsetParams(activityContext);
         nativeUpdateHeadsetParams(nativeGLRendererStereo,params.ScreenWidthMeters,params.ScreenHeightMeters,
