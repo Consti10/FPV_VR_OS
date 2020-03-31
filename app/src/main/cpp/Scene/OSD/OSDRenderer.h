@@ -6,7 +6,7 @@
 #include <GLProgramText.h>
 #include <GLProgramVC.h>
 #include <TelemetryReceiver.h>
-#include <Helper/BasicGLPrograms.hpp>
+#include <BasicGLPrograms.hpp>
 #include <OSD/Ladders/CompassLadder.h>
 #include <OSD/Text/TextElements2.h>
 #include <OSD/Text/TextElements1.h>

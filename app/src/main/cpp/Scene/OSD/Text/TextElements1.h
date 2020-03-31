@@ -9,7 +9,7 @@
 #include <TelemetryReceiver.h>
 #include <thread>
 #include <atomic>
-#include <Helper/BasicGLPrograms.hpp>
+#include <BasicGLPrograms.hpp>
 #include <General/ITextHeight.h>
 #include "OSD/ATextElements/OSDTextObj.hpp"
 #include "../../General/IPositionable.hpp"

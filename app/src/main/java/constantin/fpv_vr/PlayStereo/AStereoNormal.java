@@ -36,8 +36,8 @@ public class AStereoNormal extends AppCompatActivity{
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
         //mGLViewStereo.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory(true));
-        telemetryReceiver=new TelemetryReceiver(this);
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
+        telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
         mGLRStereoNormal = new GLRStereoNormal(this,mVideoPlayer,telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
         mVideoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
 

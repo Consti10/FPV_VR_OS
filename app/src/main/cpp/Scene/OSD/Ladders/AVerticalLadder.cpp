@@ -3,9 +3,9 @@
 //
 #include "AVerticalLadder.h"
 #include <SettingsOSDStyle.h>
-#include <Helper/StringHelper.hpp>
-#include <Helper/GLBufferHelper.hpp>
-#include "Helper/GLHelper.hpp"
+#include <StringHelper.hpp>
+#include <GLBufferHelper.hpp>
+#include <GLHelper.hpp>
 
 #define TAG "VerticalLadder"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)

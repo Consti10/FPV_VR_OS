@@ -5,7 +5,7 @@
 #ifndef FPV_VR_OSDBACKGROUNDOBJ_H
 #define FPV_VR_OSDBACKGROUNDOBJ_H
 
-#include <GeometryBuilder/ColoredGeometry.hpp>
+#include <ColoredGeometry.hpp>
 #include "General/IPositionable.hpp"
 #include "OSD/ElementBatching/BatchingManager.h"
 

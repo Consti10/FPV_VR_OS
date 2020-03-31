@@ -3,8 +3,8 @@
 #define OSDTEXTOBJ
 
 
-#include <GeometryBuilder/ColoredGeometry.hpp>
-#include <Helper/MDebug.hpp>
+#include <ColoredGeometry.hpp>
+#include <MDebug.hpp>
 #include "StylizedString.hpp"
 #include "../ElementBatching/CpuGpuBuff.h"
 #include "../../General/IPositionable.hpp"

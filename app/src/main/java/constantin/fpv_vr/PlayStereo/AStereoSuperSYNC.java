@@ -28,8 +28,8 @@ public class AStereoSuperSYNC extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewSuperSync=new ViewSuperSync(this,false);
-        telemetryReceiver=new TelemetryReceiver(this);
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
+        telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
         mGLRStereoSuperSync = new GLRStereoSuperSync(this,mVideoPlayer,telemetryReceiver,mViewSuperSync.getGvrApi().getNativeGvrContext());
         mVideoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);

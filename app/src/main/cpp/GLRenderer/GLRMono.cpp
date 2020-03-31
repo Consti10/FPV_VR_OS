@@ -1,7 +1,7 @@
 
 
 #include <vr/gvr/capi/include/gvr.h>
-#include <Helper/MatrixHelper.h>
+#include <MatrixHelper.h>
 #include "GLRMono.h"
 #include "CPUPriorities.hpp"
 

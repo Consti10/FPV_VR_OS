@@ -1,6 +1,6 @@
 #include "OSDRenderer.h"
-#include <Helper/BasicGLPrograms.hpp>
-#include "Helper/GLHelper.hpp"
+#include <BasicGLPrograms.hpp>
+#include <GLHelper.hpp>
 
 #define TAG "OSDRenderer"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)

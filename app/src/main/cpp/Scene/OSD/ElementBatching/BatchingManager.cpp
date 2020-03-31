@@ -3,11 +3,11 @@
 //
 
 #include "BatchingManager.h"
-#include "Helper/GLHelper.hpp"
+#include <GLHelper.hpp>
 
 #include <GLES3/gl3.h>
-#include <Color/Color.hpp>
-#include <Helper/BasicGLPrograms.hpp>
+#include <Color.hpp>
+#include <BasicGLPrograms.hpp>
 
 
 #define TAG "BatchingManager"

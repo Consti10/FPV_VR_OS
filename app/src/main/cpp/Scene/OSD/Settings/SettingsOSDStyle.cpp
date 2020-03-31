@@ -5,7 +5,7 @@
 #include "SettingsOSDStyle.h"
 #include "IDOSD.hpp"
 #include <android/log.h>
-#include <Helper/SharedPreferences.hpp>
+#include <SharedPreferences.hpp>
 
 #define TAG "SettingsOSDStyle"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)

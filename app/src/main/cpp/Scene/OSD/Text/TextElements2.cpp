@@ -3,7 +3,7 @@
 //
 #include <SettingsOSDStyle.h>
 #include "TextElements2.h"
-#include "Helper/GLHelper.hpp"
+#include <GLHelper.hpp>
 
 #define TAG "TextElements2"
 

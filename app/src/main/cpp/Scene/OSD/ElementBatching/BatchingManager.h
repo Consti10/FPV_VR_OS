@@ -10,8 +10,8 @@
 #include <General/IDrawable.hpp>
 #include <GLES2/gl2.h>
 #include <array>
-#include <Helper/BasicGLPrograms.hpp>
-#include "Helper/GLHelper.hpp"
+#include <BasicGLPrograms.hpp>
+#include "GLHelper.hpp"
 
 #include "CpuGpuBuff.h"
 

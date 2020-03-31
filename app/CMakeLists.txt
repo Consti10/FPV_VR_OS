@@ -14,6 +14,13 @@ include_directories(libs/other)
 set(T_SOURCE_DIR ${T_CORE_DIR}/src/main/cpp/Telemetry)
 set(T_SO_FILES   ${T_CORE_DIR}/jniLibs)
 include_directories(${T_SOURCE_DIR})
+#hmmm
+set(IO_PATH ${V_CORE_DIR}/../VideoTelemetryShared/InputOutput)
+set(HELPER_PATH ${V_CORE_DIR}/../VideoTelemetryShared/Helper)
+include_directories(${HELPER_PATH})
+include_directories(${IO_PATH})
+#mm
+
 add_library( Telemetry-lib
         SHARED
         IMPORTED )
@@ -25,51 +32,9 @@ set_target_properties( # Specifies the target library.
         ${T_SO_FILES}/${ANDROID_ABI}/libTelemetryReceiver.so )
 
 ##########################################################################################################
-#we just include and buld here the files from RenderingXCore directly,except glm and gvr
+# compile and add sources of RenderingXCore library
 ##########################################################################################################
-#RX_CORE_DIR is passed as an argument in app/build.gradle
-#set(RX_CORE_DIR ${CMAKE_SOURCE_DIR}/../../RenderingX/RenderingXCore)
-#first, get all the external libraries that come with RenderingXCore - glm and gvr
-#glm is header only, we only need to provide the path
-include_directories(${RX_CORE_DIR}/libs/glm)
-include_directories(${RX_CORE_DIR}/src/main/cpp)
-include_directories(${RX_CORE_DIR}/src/main/cpp/Color)
-include_directories(${RX_CORE_DIR}/src/main/cpp/Other)
-include_directories(${RX_CORE_DIR}/src/main/cpp/Helper)
-include_directories(${RX_CORE_DIR}/src/main/cpp/GeometryBuilder)
-#gvr is a shared,imported library
-set(GVR_DIR ${RX_CORE_DIR}/libs/google/gvr)
-include_directories(${GVR_DIR}/headers)
-add_library( gvr-lib SHARED IMPORTED )
-set_target_properties(gvr-lib PROPERTIES IMPORTED_LOCATION
-        ${GVR_DIR}/jni/${ANDROID_ABI}/libgvr.so )
-
-#now build our libraries
-#Time library
-include_directories(${RX_CORE_DIR}/src/main/cpp/Time)
-add_library( Time SHARED
-        ${RX_CORE_DIR}/src/main/cpp/Time/Chronometer.cpp
-        ${RX_CORE_DIR}/src/main/cpp/Time/VRFrameCPUChronometer.cpp
-        ${RX_CORE_DIR}/src/main/cpp/Time/FPSCalculator.cpp)
-target_link_libraries( Time ${log-lib} android)
-#SuperSync Library
-include_directories(${RX_CORE_DIR}/src/main/cpp/SuperSync)
-add_library( SuperSync SHARED
-        ${RX_CORE_DIR}/src/main/cpp/SuperSync/FBRManager.cpp)
-target_link_libraries( SuperSync ${log-lib} android Time log EGL GLESv2)
-#OpenGL Programs
-include_directories(${RX_CORE_DIR}/src/main/cpp/GLPrograms)
-add_library( GLPrograms SHARED
-        ${RX_CORE_DIR}/src/main/cpp/DistortionCorrection/DistortionManager.cpp
-        ${RX_CORE_DIR}/src/main/cpp/DistortionCorrection/MLensDistortion.cpp
-        ${RX_CORE_DIR}/src/main/cpp/DistortionCorrection/PolynomialRadialDistortion.cpp
-        ${RX_CORE_DIR}/src/main/cpp/DistortionCorrection/VRHeadsetParams.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramVC.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramText.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramTexture.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GLPrograms/GLProgramLine.cpp
-        ${RX_CORE_DIR}/src/main/cpp/GeometryBuilder/UvSphere.cpp)
-target_link_libraries( GLPrograms ${log-lib} android GLESv2 gvr-lib)
+include(${RX_CORE_DIR}/CMakeLists.txt)
 
 ##########################################################################################################
 #Scene (Engine) Stuff (OSD and video rendering)

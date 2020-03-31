@@ -12,7 +12,7 @@
 #include <TelemetryReceiver.h>
 #include <General/PositionDebug.hpp>
 #include <General/IUpdateable.hpp>
-#include <Helper/BasicGLPrograms.hpp>
+#include <BasicGLPrograms.hpp>
 #include <OSD/ElementBatching/BatchingManager.h>
 #include <SettingsOSDStyle.h>
 #include "General/IDrawable.hpp"

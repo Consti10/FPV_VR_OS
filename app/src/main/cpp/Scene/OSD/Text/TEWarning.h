@@ -10,7 +10,7 @@
 #include <General/IPositionable.hpp>
 #include <General/IUpdateable.hpp>
 #include <General/ITextHeight.h>
-#include <Helper/BasicGLPrograms.hpp>
+#include <BasicGLPrograms.hpp>
 #include <TelemetryReceiver.h>
 #include <General/PositionDebug.hpp>
 #include <OSD/ElementBatching/BatchingManager.h>

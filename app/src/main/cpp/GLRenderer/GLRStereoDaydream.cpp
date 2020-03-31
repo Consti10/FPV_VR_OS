@@ -10,15 +10,13 @@
 #include <GLProgramTexture.h>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <memory>
-#include <Helper/GLBufferHelper.hpp>
+#include <GLBufferHelper.hpp>
 #include <MatrixHelper.h>
 #include "CPUPriorities.hpp"
-
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
 #include <gvr_util/util.h>
-
-#include "Helper/GLHelper.hpp"
+#include <GLHelper.hpp>
 
 #define TAG "GLRendererDaydream"
 

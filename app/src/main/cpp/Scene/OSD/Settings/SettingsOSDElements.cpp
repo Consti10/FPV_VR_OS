@@ -5,7 +5,7 @@
 #include "SettingsOSDElements.h"
 #include "IDOSD.hpp"
 #include <jni.h>
-#include <Helper/SharedPreferences.hpp>
+#include <SharedPreferences.hpp>
 
 #define TAG "OSDSettings"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)

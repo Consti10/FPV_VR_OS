@@ -10,7 +10,7 @@
 #include <chrono>
 #include <string>
 #include <sstream>
-#include "Helper/GLHelper.hpp"
+#include <GLHelper.hpp>
 
 /**
  *  cpp Interface. Similar to IUpdateable

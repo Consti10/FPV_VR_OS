@@ -20,6 +20,7 @@ import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.video.core.VideoPlayer.VideoPlayer;
 import constantin.video.core.VideoPlayer.VideoSettings;
 import constantin.video.core.VideoPlayerSurfaceTexture;
 
@@ -66,8 +67,8 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
             myVRLayout.setVrOverlayEnabled(false);
             myVRLayout.setPresentationView(mGLView);
         }
-        telemetryReceiver=new TelemetryReceiver(this);
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
+        telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
         mGLRenderer =new GLRMono(this,mVideoPlayer,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
                 VideoSettings.videoMode(this),renderOSD, disableVSYNC);
         mVideoPlayer.setIVideoParamsChanged(mGLRenderer);

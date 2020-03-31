@@ -17,7 +17,7 @@
 #include <GLProgramText.h>
 #include <GLProgramVC.h>
 #include <TelemetryReceiver.h>
-#include <Helper/BasicGLPrograms.hpp>
+#include <BasicGLPrograms.hpp>
 #include <General/ITextHeight.h>
 #include "OSD/ATextElements/OSDTextObj.hpp"
 #include "../../General/IPositionable.hpp"

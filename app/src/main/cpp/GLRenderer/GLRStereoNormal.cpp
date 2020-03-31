@@ -18,7 +18,7 @@ constexpr auto TAG= "GLRendererStereo";
 
 #include <android/choreographer.h>
 #include <MatrixHelper.h>
-#include <GeometryBuilder/CardboardViewportOcclusion.h>
+#include <CardboardViewportOcclusion.h>
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
 videoMode(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),

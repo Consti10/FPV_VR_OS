@@ -13,7 +13,7 @@
 #include "android/log.h"
 #include <glm/mat4x4.hpp>
 #include <GLES2/gl2.h>
-#include "Helper/GLHelper.hpp"
+#include "GLHelper.hpp"
 
 /**
  * cpp Interface for Drawables. Elements that can be drawn using OpenGL should implement this interface such that

@@ -7,7 +7,7 @@
 #include <glm/gtx/transform.hpp>
 #include <GLProgramTexture.h>
 #include <GLProgramVC.h>
-#include <Helper/GLBufferHelper.hpp>
+#include <GLBufferHelper.hpp>
 
 
 class VideoRenderer{ //Does not inherit from IDrawable !

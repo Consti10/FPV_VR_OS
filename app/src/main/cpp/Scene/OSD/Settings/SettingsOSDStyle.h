@@ -7,7 +7,7 @@
 
 
 #include <jni.h>
-#include <Color/Color.hpp>
+#include <Color.hpp>
 #include <TextAssetsHelper.hpp>
 
 class SettingsOSDStyle {

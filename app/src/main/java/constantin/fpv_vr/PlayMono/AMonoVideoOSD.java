@@ -60,7 +60,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
             mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             mGLView.setPreserveEGLContextOnPause(true);
-            telemetryReceiver=new TelemetryReceiver(this);
+            telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
             final GLRMono mGLRMonoOSD = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
             mGLView.setRenderer(mGLRMonoOSD);
             mGLView.setZOrderMediaOverlay(true);

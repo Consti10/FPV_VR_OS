@@ -17,7 +17,9 @@ android {
                         //Pass trough the location for cmake to find native (cpp) code of the TelemetryCore module
                         "-DT_CORE_DIR=${project(':TelemetryCore').getProjectDir().getAbsolutePath().replace("\\","/")}",
                         //Pass trough the location for cmake to find native (cpp) code of the RenderingXCore module
-                        "-DRX_CORE_DIR=${project(':RenderingXCore').getProjectDir().getAbsolutePath().replace("\\","/")}"
+                        "-DRX_CORE_DIR=${project(':RenderingXCore').getProjectDir().getAbsolutePath().replace("\\","/")}",
+                        //Pass trough the location for cmake to find native (cpp) code of the RenderingXCore module
+                        "-DV_CORE_DIR=${project(':VideoCore').getProjectDir().getAbsolutePath().replace("\\","/")}"
             }
         }
 

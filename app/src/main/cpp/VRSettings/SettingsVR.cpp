@@ -5,8 +5,8 @@
 #include <android/log.h>
 #include <array>
 #include <sstream>
-#include <Helper/SharedPreferences.hpp>
-#include <Helper/MDebug.hpp>
+#include <SharedPreferences.hpp>
+#include <MDebug.hpp>
 #include "SettingsVR.h"
 #include "IDVR.hpp"
 

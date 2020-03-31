@@ -1,10 +1,10 @@
 
-#include <Color/Color.hpp>
-#include <GeometryBuilder/ColoredGeometry.hpp>
-#include <GeometryBuilder/TexturedGeometry.hpp>
-#include <GeometryBuilder/SphereBuilder.hpp>
+#include <Color.hpp>
+#include <ColoredGeometry.hpp>
+#include <TexturedGeometry.hpp>
+#include <SphereBuilder.hpp>
 #include "VideoRenderer.h"
-#include "Helper/GLHelper.hpp"
+#include "GLHelper.hpp"
 
 constexpr auto TAG="VideoRenderer";
 

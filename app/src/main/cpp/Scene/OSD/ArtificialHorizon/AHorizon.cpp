@@ -4,11 +4,11 @@
 
 #include <GLProgramText.h>
 #include <SettingsOSDStyle.h>
-#include <Color/Color.hpp>
-#include <GeometryBuilder/ColoredGeometry.hpp>
-#include <Helper/GLBufferHelper.hpp>
+#include <Color.hpp>
+#include <ColoredGeometry.hpp>
+#include <GLBufferHelper.hpp>
 #include "AHorizon.h"
-#include "Helper/GLHelper.hpp"
+#include "GLHelper.hpp"
 
 #define TAG "AHorizon"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)

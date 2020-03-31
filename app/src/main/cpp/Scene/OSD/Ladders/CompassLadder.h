@@ -9,14 +9,14 @@
 #include <GLProgramText.h>
 #include <GLProgramVC.h>
 #include <TelemetryReceiver.h>
-#include <Helper/BasicGLPrograms.hpp>
+#include <BasicGLPrograms.hpp>
 #include <General/IUpdateable.hpp>
 #include <General/ITextHeight.h>
 #include <OSD/ElementBatching/BatchingManager.h>
 #include <OSD/ATextElements/OSDTextObj.hpp>
 #include <OSD/ATextElements/OSDBackgroundObj.hpp>
 #include <SettingsOSDStyle.h>
-#include <Helper/GLBufferHelper.hpp>
+#include <GLBufferHelper.hpp>
 #include "../../General/IDrawable.hpp"
 #include "../../General/IPositionable.hpp"
 #include "../../General/PositionDebug.hpp"

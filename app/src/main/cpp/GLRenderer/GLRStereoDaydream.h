@@ -15,7 +15,7 @@
 #include "IVideoFormatChanged.hpp"
 #include <FPSCalculator.h>
 #include <Video/VideoRenderer.h>
-#include <DistortionCorrection/VRHeadsetParams.h>
+#include <VRHeadsetParams.h>
 #include <SettingsVR.h>
 
 //Only fulfills testing purpose(s)

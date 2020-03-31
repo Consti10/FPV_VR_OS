@@ -16,7 +16,7 @@
 #include <Video/VideoRenderer.h>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
-#include <DistortionCorrection/VRHeadsetParams.h>
+#include <VRHeadsetParams.h>
 #include <SettingsVR.h>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
