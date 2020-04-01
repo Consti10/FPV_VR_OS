@@ -53,7 +53,8 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
         bEasySelectVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String[] filenames=getAllFilenamesInDirectory(getDirectory()+"Video/");
+                final String directory=getDirectory()+"Test/";
+                final String[] filenames=getAllFilenamesInDirectory(directory);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Pick a video file");
                 builder.setItems(filenames, new DialogInterface.OnClickListener() {
@@ -62,7 +63,7 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
                         // the user clicked on colors[which]
                         final String selectedFilename=filenames[which];
                         editTextVideo.setText(selectedFilename);
-                        setFilenameVideo(mContext,getDirectory()+"Video/"+selectedFilename);
+                        setFilenameVideo(mContext,directory+selectedFilename);
                     }
                 });
                 builder.show();
@@ -72,7 +73,8 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
         bEasySelectTelemetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String[] filenames=getAllFilenamesInDirectory(getDirectory()+"Telemetry/");
+                final String directory=getDirectory()+"Test/";
+                final String[] filenames=getAllFilenamesInDirectory(directory);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Pick a telemetry file");
                 builder.setItems(filenames, new DialogInterface.OnClickListener() {
@@ -81,7 +83,7 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
                         // the user clicked on colors[which]
                         final String selectedFilename=filenames[which];
                         editTextTelemetry.setText(selectedFilename);
-                        setFilenameTelemetry(mContext,getDirectory()+"Telemetry/"+selectedFilename);
+                        setFilenameTelemetry(mContext,directory+selectedFilename);
                     }
                 });
                 builder.show();
