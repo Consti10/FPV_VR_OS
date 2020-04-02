@@ -1,9 +1,11 @@
 package constantin.fpv_vr.AMain;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -13,6 +15,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.hbisoft.hbrecorder.HBRecorder;
+import com.hbisoft.hbrecorder.HBRecorderListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +44,7 @@ import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_TestFile;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_EZWB;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_RTSP;
 
-public class AMain extends AppCompatActivity implements View.OnClickListener{
+public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
     private static final String TAG="AMain";
     private TestReceiverVideo mTestReceiverVideo=null;
     private static final String[] REQUIRED_PERMISSION_LIST = new String[]{
@@ -48,6 +53,12 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
     };
     private final List<String> missingPermission = new ArrayList<>();
     private static final int REQUEST_PERMISSION_CODE = 12345;
+
+    //
+    private HBRecorder hbRecorder;
+    private static final int SCREEN_RECORD_REQUEST_CODE = 777;
+    Intent data;
+    int resultCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +73,53 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
          * Same for the permissions (required in >=android X)
          */
         checkAndRequestPermissions();
+        //
+        //
+        //Screen recording !
+        hbRecorder = new HBRecorder(this, this);
+        hbRecorder.isAudioEnabled(false);
+        //hbRecorder.shouldShowNotification(true);
+        getPermission();
     }
 
+    private void getPermission(){
+        MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
+        startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                //Start screen recording
+                this.data=data;
+                this.resultCode=resultCode;
+            }else{
+                System.out.println("hbRecorder Cannot start screen recorder");
+            }
+        }
+    }
+
+    private void startRecordingScreen(){
+        hbRecorder.startScreenRecording(data, resultCode, this);
+        System.out.println("hbRecorder Start screen recorder");
+    }
+
+    private void stopRecordingScreenIfNeeded(){
+        if(hbRecorder.isBusyRecording()){
+            hbRecorder.stopScreenRecording();
+            System.out.println("hbRecorder Stop screen recorder");
+        }
+    }
 
     @Override
     protected void onResume(){
         super.onResume();
+
+        stopRecordingScreenIfNeeded();
+
         //Set the connectB to the right color
         Button connectB=findViewById(R.id.b_Connect);
         switch (SJ.ConnectionType(this)){
@@ -117,13 +169,15 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
             case R.id.b_startMonoVideoOSD:
                 if(VideoSettings.videoMode(this)==0){
                     startActivity(new Intent().setClass(this, AMonoVideoOSD.class));
+                    startRecordingScreen();
                 }else{
                     Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
                     i.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,true);
                     startActivity(i);
+                    startRecordingScreen();
                 }
                 break;
-            case R.id.b_startStereo: //360 not yet supported
+            case R.id.b_startStereo:
                 Intent mStereoI = new Intent();
                 //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
                 //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
@@ -184,9 +238,20 @@ public class AMain extends AppCompatActivity implements View.OnClickListener{
 
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        hbRecorder.stopScreenRecording();
+    }
 
 
+    @Override
+    public void HBRecorderOnComplete() {
 
+    }
 
+    @Override
+    public void HBRecorderOnError(int errorCode, String reason) {
 
+    }
 }

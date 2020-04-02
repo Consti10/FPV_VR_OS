@@ -1,9 +1,12 @@
 package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -11,6 +14,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.google.vr.cardboard.DisplaySynchronizer;
 import com.google.vr.ndk.base.GvrApi;
+import com.hbisoft.hbrecorder.HBRecorder;
+import com.hbisoft.hbrecorder.HBRecorderListener;
+
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;
@@ -32,7 +38,7 @@ import constantin.video.core.VideoPlayerSurfaceHolder;
  ***************************************************************** */
 
 
-public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged {
+public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged, HBRecorderListener {
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
     private AspectFrameLayout mAspectFrameLayout;
     private AirHeadTrackingSender airHeadTrackingSender;
@@ -46,6 +52,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ENABLE_OSD =getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD,true);
         ENABLE_VIDEO_VIA_OPENGL=false;
         setContentView(R.layout.activity_mono_vid_osd);
@@ -70,11 +77,17 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
     }
 
 
@@ -96,6 +109,15 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         }
     }
 
+    @Override
+    public void HBRecorderOnComplete() {
+        System.out.println("HBRecorderOnComplete");
+    }
+
+    @Override
+    public void HBRecorderOnError(int errorCode, String reason) {
+        System.out.println("HBRecorderOnError"+reason);
+    }
 }
 
 

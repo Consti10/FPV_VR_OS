@@ -21,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import constantin.fpv_vr.AMain.AMain;
+import constantin.fpv_vr.Settings.AGroundRecordingSettings;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.ASettingsTelemetry;
@@ -103,6 +103,9 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 return true;
             case R.id.action_settings_video:
                 startActivity(new Intent().setClass(this, AVideoSettings.class));
+                return true;
+            case R.id.action_ground_recording:
+                startActivity(new Intent().setClass(this, AGroundRecordingSettings.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

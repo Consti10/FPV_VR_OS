@@ -22,14 +22,18 @@ import android.widget.Toast;
 import java.io.File;
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.telemetry.core.TelemetrySettings;
+import constantin.video.core.VideoPlayer.VideoPlayer;
+import constantin.video.core.VideoPlayer.VideoSettings;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class FConnectGroundRecFile extends Fragment implements TextView.OnEditorActionListener{
+public class FConnectGroundRecFile extends Fragment {
     private Context mContext;
-    private EditText editTextTelemetry;
-    private EditText editTextVideo;
+    //private EditText editTextTelemetry;
+    //private EditText editTextVideo;
+    private EditText editTextFileNameFPV;
 
 
     @SuppressLint("SetTextI18n")
@@ -39,51 +43,40 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
         mContext =getActivity();
         createFoldersIfNotYetExisting();
         View rootView = inflater.inflate(R.layout.connect_grfile_fragment, container, false);
-        editTextVideo=rootView.findViewById(R.id.editTextFileNameVideoSource);
-        editTextVideo.setOnEditorActionListener(this);
-        editTextTelemetry=rootView.findViewById(R.id.editTextFileTelemetrySource);
-        editTextTelemetry.setOnEditorActionListener(this);
-
-        final String filenameVideo=getFilenameVideo(mContext);
-        final String filenameTelemetry=getFilenameTelemetry(mContext);
-        editTextVideo.setText(filenameVideo);
-        editTextTelemetry.setText(filenameTelemetry);
-
-        Button bEasySelectVideo = rootView.findViewById(R.id.bEasySelectVideo);
-        bEasySelectVideo.setOnClickListener(new View.OnClickListener() {
+        editTextFileNameFPV=rootView.findViewById(R.id.editTextFileNameFPV);
+        editTextFileNameFPV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-                final String directory=getDirectory()+"Test/";
-                final String[] filenames=getAllFilenamesInDirectory(directory);
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Pick a video file");
-                builder.setItems(filenames, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // the user clicked on colors[which]
-                        final String selectedFilename=filenames[which];
-                        editTextVideo.setText(selectedFilename);
-                        setFilenameVideo(mContext,directory+selectedFilename);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                final String input=v.getText().toString();
+                if(v.equals(editTextFileNameFPV)){
+                    final String pathAndFilename=getDirectory()+"Video/"+input;
+                    if(!fileExists(pathAndFilename)){
+                        makeInfoDialog("WARNING ! This video file does not exist.");
                     }
-                });
-                builder.show();
+                    VideoSettings.setVS_PLAYBACK_FILENAME(mContext,pathAndFilename);
+                }
+                return false;
             }
         });
-        Button bEasySelectTelemetry=rootView.findViewById(R.id.bEasySelectTelemetry);
-        bEasySelectTelemetry.setOnClickListener(new View.OnClickListener() {
+
+        //We need to write the filename double - once for video, once for telemetry lib.
+        final String filenameFPV=extractFilename(VideoSettings.getVS_PLAYBACK_FILENAME(mContext));
+        editTextFileNameFPV.setText(filenameFPV);
+        final Button bEasySelectFPV = rootView.findViewById(R.id.bEasySelectFileFPV);
+        bEasySelectFPV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String directory=getDirectory()+"Test/";
                 final String[] filenames=getAllFilenamesInDirectory(directory);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Pick a telemetry file");
+                builder.setTitle("Pick a ground recording file");
                 builder.setItems(filenames, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // the user clicked on colors[which]
                         final String selectedFilename=filenames[which];
-                        editTextTelemetry.setText(selectedFilename);
-                        setFilenameTelemetry(mContext,directory+selectedFilename);
+                        editTextFileNameFPV.setText(selectedFilename);
+                        VideoSettings.setVS_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
+                        TelemetrySettings.setT_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
                     }
                 });
                 builder.show();
@@ -97,34 +90,12 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
     public void onPause() {
         super.onPause();
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        warnUserIfMismatchProtocol();
     }
 
-    @SuppressLint("ApplySharedPref")
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        //The user edited the FileNameVideoSource text view string
-        //Check if the file exists. If not, make a warning Dialog
-        final String input=v.getText().toString();
-        if(v.equals(editTextVideo)){
-            final String pathAndFilename=getDirectory()+"Video/"+input;
-            if(!fileExists(pathAndFilename)){
-                makeInfoDialog("WARNING ! This video file does not exist.");
-            }
-            setFilenameVideo(mContext,pathAndFilename);
-        }
-        if(v.equals(editTextTelemetry)){
-            final String pathAndFilename=getDirectory()+"Telemetry/"+input;
-            if(!fileExists(pathAndFilename)){
-                makeInfoDialog("WARNING ! This telemetry file does not exist.");
-            }
-            setFilenameTelemetry(mContext,pathAndFilename);
-        }
-        return false;
-    }
 
     private void makeInfoDialog(final String message){
         ((Activity) mContext).runOnUiThread(new Runnable() {
@@ -138,17 +109,11 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
         });
     }
 
-
     private static boolean fileExists(String fileName){
         File tempFile = new File(fileName);
         return tempFile.exists();
     }
 
-    private void warnUserIfMismatchProtocol(){
-        if(!TelemetryReceiver.checkFileExtensionMatchTelemetryProtocol(mContext)){
-            Toast.makeText(mContext,"WARNING ! Telemetry protocol does not match file",Toast.LENGTH_LONG).show();
-        }
-    }
 
     private static String getDirectory(){
         return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/FPV_VR/";
@@ -167,31 +132,6 @@ public class FConnectGroundRecFile extends Fragment implements TextView.OnEditor
         return last;
     }
 
-
-    private static String getFilenameVideo(final Context context){
-        final String tmp=context.getSharedPreferences("pref_video",Context.MODE_PRIVATE).
-                getString(context.getString(R.string.VS_PLAYBACK_FILENAME),context.getString(R.string.VS_PLAYBACK_FILENAME_DEFAULT_VALUE));
-        return extractFilename(tmp);
-    }
-
-    private static String getFilenameTelemetry(final Context context){
-        final String tmp=context.getSharedPreferences("pref_telemetry",Context.MODE_PRIVATE).
-                getString(context.getString(R.string.T_PLAYBACK_FILENAME), context.getString(R.string.T_PLAYBACK_FILENAME_DEFAULT_VALUE));
-        return extractFilename(tmp);
-    }
-
-
-    @SuppressLint("ApplySharedPref")
-    private static void setFilenameVideo(final Context context, final String pathAndFilename){
-        context.getSharedPreferences("pref_video",Context.MODE_PRIVATE).edit().
-                putString(context.getString(R.string.VS_PLAYBACK_FILENAME),pathAndFilename).commit();
-    }
-
-    @SuppressLint("ApplySharedPref")
-    private static void setFilenameTelemetry(final Context context, final String pathAndFilename){
-        context.getSharedPreferences("pref_telemetry",Context.MODE_PRIVATE).edit().
-                putString(context.getString(R.string.T_PLAYBACK_FILENAME),pathAndFilename).commit();
-    }
 
 
     private static String[] getAllFilenamesInDirectory(final String directory){

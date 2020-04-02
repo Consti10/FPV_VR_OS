@@ -37,7 +37,7 @@ set_target_properties( # Specifies the target library.
 include(${RX_CORE_DIR}/CMakeLists.txt)
 
 ##########################################################################################################
-#Scene (Engine) Stuff (OSD and video rendering)
+# Scene (Engine) Stuff (OSD and video rendering)
 ##########################################################################################################
 include_directories(src/main/cpp/Scene)
 set(SCENE_PATH src/main/cpp/Scene)
@@ -61,7 +61,7 @@ target_link_libraries( Scene GLPrograms Telemetry-lib ${log-lib} android EGL GLE
 include_directories(${SCENE_PATH}/OSD/Settings)
 
 ##########################################################################################################
-#Renderer Mono/Stereo (called from GLSurfaceView.Renderer)
+# Renderer Mono/Stereo (called from GLSurfaceView.Renderer)
 ##########################################################################################################
 include_directories(src/main/cpp/VRSettings)
 add_library(VRSettings SHARED

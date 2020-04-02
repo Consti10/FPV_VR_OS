@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/editTextFileNameVideoSource"
+            android:id="@+id/editTextFileNameFPV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -41,35 +41,13 @@
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/bEasySelectVideo"
+            android:id="@+id/bEasySelectFileFPV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SELECT V"
+            android:text="SELECT .fpv FILE)"
             tools:ignore="HardcodedText"/>
-
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/editTextFileTelemetrySource"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:text="NONE"
-            tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/bEasySelectTelemetry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SELECT T"
-            tools:ignore="HardcodedText"/>
-
-    </LinearLayout>
 
 
 

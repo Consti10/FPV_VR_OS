@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="LULATSHC">
+
+
+        <com.mapzen.prefsplus.IntListPreference
+            android:key="@string/GROUND_RECORDING_TYPE"
+            android:title="@string/GROUND_RECORDING_TYPE"
+            android:summary="BLA"
+            android:entries="@array/entriesGROUND_RECORDING_TYPE"
+            android:entryValues="@array/valuesGROUND_RECORDING_TYPE"
+            android:defaultValue="0"/>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

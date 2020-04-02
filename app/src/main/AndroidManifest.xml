@@ -10,8 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-
+        tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
         <activity
             android:name=".AMain.AMain"
             android:screenOrientation="landscape"
@@ -58,6 +57,10 @@
         </activity>
         <activity
             android:name=".AConnect.AConnect"
+            android:screenOrientation="behind"
+            android:theme="@style/MyStyleNoActionBar" />
+        <activity
+            android:name=".Settings.AGroundRecordingSettings"
             android:screenOrientation="behind"
             android:theme="@style/MyStyleNoActionBar" />
         <activity
@@ -108,6 +111,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!--for the notification-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 
 </manifest>

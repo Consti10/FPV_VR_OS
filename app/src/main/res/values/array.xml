@@ -156,5 +156,15 @@
     </string-array>
 
 
+    <string-array name="entriesGROUND_RECORDING_TYPE" >
+        <item>Disable</item>
+        <item>.FPV (playback in FPV_VR) </item>
+        <item>.MP4 (export to youtube) </item>
+    </string-array>
+    <string-array name="valuesGROUND_RECORDING_TYPE" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
 </resources>
