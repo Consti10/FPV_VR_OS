@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import com.google.vr.ndk.base.GvrApi;
@@ -20,8 +21,12 @@ import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.video.core.DecodingInfo;
+import constantin.video.core.External.AspectFrameLayout;
+import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayer.VideoPlayer;
 import constantin.video.core.VideoPlayer.VideoSettings;
+import constantin.video.core.VideoPlayerSurfaceHolder;
 import constantin.video.core.VideoPlayerSurfaceTexture;
 
 
@@ -31,13 +36,11 @@ import constantin.video.core.VideoPlayerSurfaceTexture;
  * OSD can be fully disabled
  ***************************************************************** */
 
-public class AMonoGLVideoOSD extends AppCompatActivity{
+public class AMonoGLVideoOSD extends AppCompatActivity {
     private static final String TAG="AMonoGLVideoOSD";
     private MyGLSurfaceView mGLView;
     private GLRMono mGLRenderer;
     private TelemetryReceiver telemetryReceiver;
-    private static final boolean useGvrLayout=false;
-    private GvrLayout gvrLayout;
     private MyVRLayout myVRLayout;
     public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather ENABLE_OSD should be enabled
     private VideoPlayerSurfaceTexture mVideoPlayer;
@@ -56,32 +59,22 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
         //do not use MSAA in mono mode
         mGLView.setEGLConfigChooser(new MyEGLConfigChooser(disableVSYNC, 0,true));
         mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
-        mGLView.setPreserveEGLContextOnPause(true);
-        if(useGvrLayout){
-            gvrLayout=new GvrLayout(this);
-            gvrLayout.setAsyncReprojectionEnabled(false);
-            gvrLayout.setStereoModeEnabled(false);
-            gvrLayout.setPresentationView(mGLView);
-        }else{
-            myVRLayout=new MyVRLayout(this);
-            myVRLayout.setVrOverlayEnabled(false);
-            myVRLayout.setPresentationView(mGLView);
-        }
+
+        myVRLayout=new MyVRLayout(this);
+        myVRLayout.setVrOverlayEnabled(false);
+        myVRLayout.setPresentationView(mGLView);
+
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
         telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
-        mGLRenderer =new GLRMono(this,mVideoPlayer,telemetryReceiver,useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi(),
+        mGLRenderer =new GLRMono(this,mVideoPlayer,telemetryReceiver, myVRLayout.getGvrApi(),
                 VideoSettings.videoMode(this),renderOSD, disableVSYNC);
         mVideoPlayer.setIVideoParamsChanged(mGLRenderer);
         mGLView.setRenderer(mGLRenderer);
-        if(useGvrLayout){
-            setContentView(gvrLayout);
-            registerForContextMenu(gvrLayout);
-        }else{
-            setContentView(myVRLayout);
-            registerForContextMenu(myVRLayout);
-        }
-        final GvrApi gvrApi=useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi();
-        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this,gvrApi);
+
+        setContentView(myVRLayout);
+        registerForContextMenu(myVRLayout);
+
+        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this,myVRLayout.getGvrApi());
     }
 
 
@@ -91,25 +84,16 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
         //Log.d(TAG, "onResume");
         FullscreenHelper.setImmersiveSticky(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        if(useGvrLayout){
-            gvrLayout.onResume();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(useGvrLayout){
-            gvrLayout.onPause();
-        }
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        if(useGvrLayout){
-            gvrLayout.shutdown();
-        }
     }
 
     @Override
@@ -127,12 +111,11 @@ public class AMonoGLVideoOSD extends AppCompatActivity{
                 return true;
             case R.id.option_goto_home:
                 //mGLRenderer14Mono360.goToHomeOrientation();
-                GvrApi api=useGvrLayout ? gvrLayout.getGvrApi() : myVRLayout.getGvrApi();
+                GvrApi api= myVRLayout.getGvrApi();
                 api.recenterTracking();
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
-
 }

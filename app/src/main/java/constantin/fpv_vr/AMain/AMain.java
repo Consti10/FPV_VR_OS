@@ -25,10 +25,12 @@ import java.util.List;
 
 import constantin.fpv_vr.AConnect.AConnect;
 import constantin.fpv_vr.PlayMono.AMonoGLVideoOSD;
+import constantin.fpv_vr.Settings.AGroundRecordingSettings;
 import constantin.fpv_vr.Settings.ASettingsOSD;
 import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.PlayMono.AMonoVideoOSD;
+import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.XExperimental.AStereoDaydream;
 import constantin.fpv_vr.PlayStereo.AStereoNormal;
 import constantin.fpv_vr.PlayStereo.AStereoSuperSYNC;
@@ -53,12 +55,12 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     };
     private final List<String> missingPermission = new ArrayList<>();
     private static final int REQUEST_PERMISSION_CODE = 12345;
-
     //
     private HBRecorder hbRecorder;
     private static final int SCREEN_RECORD_REQUEST_CODE = 777;
-    Intent data;
-    int resultCode;
+    //If this Intent != null the permission to record screen was already granted
+    Intent mRecordScreenPermissionI=null;
+    int mRecordScreenResultCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,53 +75,18 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          * Same for the permissions (required in >=android X)
          */
         checkAndRequestPermissions();
-        //
-        //
-        //Screen recording !
-        hbRecorder = new HBRecorder(this, this);
-        hbRecorder.isAudioEnabled(false);
-        //hbRecorder.shouldShowNotification(true);
-        getPermission();
     }
 
-    private void getPermission(){
-        MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
-        startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                //Start screen recording
-                this.data=data;
-                this.resultCode=resultCode;
-            }else{
-                System.out.println("hbRecorder Cannot start screen recorder");
-            }
-        }
-    }
-
-    private void startRecordingScreen(){
-        hbRecorder.startScreenRecording(data, resultCode, this);
-        System.out.println("hbRecorder Start screen recorder");
-    }
-
-    private void stopRecordingScreenIfNeeded(){
-        if(hbRecorder.isBusyRecording()){
-            hbRecorder.stopScreenRecording();
-            System.out.println("hbRecorder Stop screen recorder");
-        }
-    }
 
     @Override
     protected void onResume(){
         super.onResume();
-
+        //Get the permission to record screen if needed
+        if(AGroundRecordingSettings.enableHBScreenRecorder(this)){
+            getPermissionRecordScreenIfNeeded();
+        }
+        //If a screen recording is running it means we came back to AMain from a playing activity
         stopRecordingScreenIfNeeded();
-
         //Set the connectB to the right color
         Button connectB=findViewById(R.id.b_Connect);
         switch (SJ.ConnectionType(this)){
@@ -154,42 +121,47 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          * Each button starts its own activity or service
          */
         switch (v.getId()) {
-            case R.id.b_startMonoVideoOnly:
+            case R.id.b_startMonoVideoOnly:{
                 //With normal video we can use a android surface instead of OpenGL
+                final Intent intent;
                 if(VideoSettings.videoMode(this)==0){
-                    final Intent i=new Intent().setClass(this, AMonoVideoOSD.class);
-                    i.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,false);
-                    startActivity(i);
+                    intent=new Intent().setClass(this, AMonoVideoOSD.class);
+                    intent.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,false);
                 }else{
-                    final Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
-                    i.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,false);
-                    startActivity(i);
+                    intent=new Intent().setClass(this, AMonoGLVideoOSD.class);
+                    intent.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,false);
                 }
+                startActivity(intent);
+                startRecordingScreenIfEnabled();
                 break;
-            case R.id.b_startMonoVideoOSD:
+            }
+            case R.id.b_startMonoVideoOSD:{
+                final Intent intent;
                 if(VideoSettings.videoMode(this)==0){
-                    startActivity(new Intent().setClass(this, AMonoVideoOSD.class));
-                    startRecordingScreen();
+                    intent=new Intent().setClass(this, AMonoVideoOSD.class);
                 }else{
-                    Intent i=new Intent().setClass(this, AMonoGLVideoOSD.class);
-                    i.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,true);
-                    startActivity(i);
-                    startRecordingScreen();
+                    intent=new Intent().setClass(this, AMonoGLVideoOSD.class);
+                    intent.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,true);
                 }
+                startActivity(intent);
+                startRecordingScreenIfEnabled();
                 break;
-            case R.id.b_startStereo:
-                Intent mStereoI = new Intent();
+            }
+            case R.id.b_startStereo:{
+                final Intent intent = new Intent();
                 //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
                 //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
                 if (SJ.DEV_USE_GVR_VIDEO_TEXTURE(this)) {
-                    mStereoI.setClass(this, AStereoDaydream.class);
+                    intent.setClass(this, AStereoDaydream.class);
                 } else if (SJ.SuperSync(this)) {
-                    mStereoI.setClass(this, AStereoSuperSYNC.class);
+                    intent.setClass(this, AStereoSuperSYNC.class);
                 } else {
-                    mStereoI.setClass(this, AStereoNormal.class);
+                    intent.setClass(this, AStereoNormal.class);
                 }
-                startActivity(mStereoI);
+                startActivity(intent);
+                startRecordingScreenIfEnabled();
                 break;
+            }
             case R.id.b_OSDSettings:
                 startActivity(new Intent().setClass(this, ASettingsOSD.class));
                 break;
@@ -223,7 +195,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         // Check for granted permission and remove from missing list
         if (requestCode == REQUEST_PERMISSION_CODE) {
             for (int i = grantResults.length - 1; i >= 0; i--) {
@@ -235,23 +206,56 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         if (!missingPermission.isEmpty()) {
             checkAndRequestPermissions();
         }
-
     }
 
+    //After the permission was granted by the user,
+    //the Intent gets set and stored for later use via the onActivityResult callback
+    private void getPermissionRecordScreenIfNeeded(){
+        if(mRecordScreenPermissionI!=null)return;
+        MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
+        startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
+    }
     @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        hbRecorder.stopScreenRecording();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                mRecordScreenPermissionI =data;
+                mRecordScreenResultCode =resultCode;
+            }
+        }
     }
 
+    private void startRecordingScreenIfEnabled(){
+        if(AGroundRecordingSettings.enableHBScreenRecorder(this)){
+            if(mRecordScreenPermissionI==null){
+                Toaster.makeToast(this,"Cannot enable mp4 ground recording",false);
+                return;
+            }
+            if(hbRecorder==null){
+                hbRecorder = new HBRecorder(this, this);
+                hbRecorder.isAudioEnabled(false);
+            }
+            hbRecorder.startScreenRecording(mRecordScreenPermissionI, mRecordScreenResultCode, this);
+            System.out.println("hbRecorder Start screen recorder");
+        }
+    }
+
+    private void stopRecordingScreenIfNeeded(){
+        if(hbRecorder!=null && hbRecorder.isBusyRecording()){
+            hbRecorder.stopScreenRecording();
+            System.out.println("hbRecorder Stop screen recorder");
+        }
+    }
 
     @Override
     public void HBRecorderOnComplete() {
-
+        System.out.println("HBRecorderOnComplete()");
     }
 
     @Override
     public void HBRecorderOnError(int errorCode, String reason) {
-
+        System.out.println("HBRecorderOnError "+errorCode+" "+reason);
     }
 }
