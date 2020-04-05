@@ -34,7 +34,7 @@ set_target_properties( # Specifies the target library.
 ##########################################################################################################
 # compile and add sources of RenderingXCore library
 ##########################################################################################################
-include(${RX_CORE_DIR}/CMakeLists.txt)
+include(${RX_CORE_DIR}/RenderingXCore.cmake)
 
 ##########################################################################################################
 # Scene (Engine) Stuff (OSD and video rendering)
