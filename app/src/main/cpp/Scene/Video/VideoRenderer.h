@@ -16,7 +16,13 @@ public:
     //Stereo: One decoded frame contains images for left and right eye
     //Render left frame into a rectangle with u->{0,0,5} and right frame int a rectangle with u->{0.5,1.0}
     //Degree360: 360 degree video, rendered onto a sphere instead of a quad
-    enum VIDEO_RENDERING_MODE{RM_2D_MONOSCOPIC,RM_2D_STEREO,RM_360_DUAL_FISHEYE_INSTA360,RM_360_KODAK_SP360_4K_DUAL,RM_360_KODAK_SP360_4K_SINGLE,RM_360_FIREFLY_SPLIT_4K,RM_360_1080P_USB,RM_360_STEREO_PI};
+    enum VIDEO_RENDERING_MODE{
+        RM_2D_MONOSCOPIC,RM_2D_STEREO,
+        //2 different modes - mapping in shader or before uploading
+        RM_360_DUAL_FISHEYE_INSTA360_1,
+        RM_360_DUAL_FISHEYE_INSTA360_2,
+        //Rest of the stuff added by webbn
+        RM_360_KODAK_SP360_4K_DUAL,RM_360_KODAK_SP360_4K_SINGLE,RM_360_FIREFLY_SPLIT_4K,RM_360_1080P_USB,RM_360_STEREO_PI};
     /*
      * @param VIDEO_RENDERING_MODE one of the rendering modes above
      * @param videoTexture a valid OpenGL texture
@@ -28,7 +34,7 @@ public:
     //For 360 equirectangular we need the video vidth and height in px
     void updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,int optionalVideoWidthPx,int optionalVideoHeightPx);
     bool is360Video(){
-        return mMode==RM_360_DUAL_FISHEYE_INSTA360 || mMode==RM_360_KODAK_SP360_4K_DUAL || mMode==RM_360_KODAK_SP360_4K_SINGLE || mMode==RM_360_FIREFLY_SPLIT_4K || mMode==RM_360_1080P_USB || mMode==RM_360_STEREO_PI;
+        return mMode>1;
     }
 private:
     VertexBuffer mEquirectangularSphereB; //Equirectangular Sphere

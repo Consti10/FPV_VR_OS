@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.6)
 
 find_library( log-lib
         log )
-include_directories(libs/other)
 
 ##########################################################################################################
 # Add the native part of all the external modules (e.g. the cpp part)
@@ -41,6 +40,7 @@ include_directories(${SCENE_PATH}/OSD/Settings)
 # Renderer Mono/Stereo (called from GLSurfaceView.Renderer)
 ##########################################################################################################
 include_directories(src/main/cpp/VRSettings)
+include_directories(src/main/cpp/ZScheduling)
 add_library(VRSettings SHARED
         src/main/cpp/VRSettings/SettingsVR.cpp)
 target_link_libraries(VRSettings android log GLPrograms)
