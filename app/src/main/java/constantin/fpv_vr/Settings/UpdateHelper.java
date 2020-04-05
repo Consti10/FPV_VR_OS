@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import constantin.fpv_vr.AConnect.AConnect;
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.VideoPlayer.VideoPlayer;
 import constantin.video.core.VideoPlayer.VideoSettings;
 
@@ -24,7 +25,7 @@ public class UpdateHelper {
         PreferenceManager.setDefaultValues(c,"pref_vr_rendering",MODE_PRIVATE,R.xml.pref_vr_rendering,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_elements,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_style,readAgain);
-        TelemetryReceiver.initializePreferences(c,readAgain);
+        TelemetrySettings.initializePreferences(c,readAgain);
         VideoSettings.initializePreferences(c,readAgain);
         AConnect.setPreferencesForConnectionType(c,c.getSharedPreferences("pref_connect",MODE_PRIVATE).getInt(c.getString(R.string.ConnectionType),2));
     }

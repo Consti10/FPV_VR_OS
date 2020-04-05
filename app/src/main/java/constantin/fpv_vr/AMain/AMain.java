@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -76,7 +78,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          */
         checkAndRequestPermissions();
     }
-
 
     @Override
     protected void onResume(){
@@ -235,6 +236,8 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             }
             if(hbRecorder==null){
                 hbRecorder = new HBRecorder(this, this);
+                hbRecorder.setVideoFrameRate(AGroundRecordingSettings.getGROUND_RECORDING_VIDEO_FPS(this));
+                hbRecorder.setVideoBitrate(AGroundRecordingSettings.getGROUND_RECORDING_VIDEO_BITRATE(this));
                 hbRecorder.isAudioEnabled(false);
             }
             hbRecorder.startScreenRecording(mRecordScreenPermissionI, mRecordScreenResultCode, this);

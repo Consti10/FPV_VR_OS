@@ -1,8 +1,11 @@
 package constantin.fpv_vr.Settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
@@ -26,6 +29,16 @@ public class AGroundRecordingSettings extends AppCompatActivity {
         final SharedPreferences pref_ground_recording=context.getSharedPreferences(PREF_GROUND_RECORDING,MODE_PRIVATE);
         final int value=pref_ground_recording.getInt(context.getString(R.string.GROUND_RECORDING_TYPE),0);
         return value==2;
+    }
+
+    public static int getGROUND_RECORDING_VIDEO_FPS(final Context context){
+        final SharedPreferences pref_ground_recording=context.getSharedPreferences(PREF_GROUND_RECORDING,MODE_PRIVATE);
+        return pref_ground_recording.getInt(context.getString(R.string.GROUND_RECORDING_VIDEO_FPS),30);
+    }
+
+    public static int getGROUND_RECORDING_VIDEO_BITRATE(final Context context){
+        final SharedPreferences pref_ground_recording=context.getSharedPreferences(PREF_GROUND_RECORDING,MODE_PRIVATE);
+        return pref_ground_recording.getInt(context.getString(R.string.GROUND_RECORDING_VIDEO_BITRATE),40000000);
     }
 
     public static class MSettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
@@ -67,6 +80,21 @@ public class AGroundRecordingSettings extends AppCompatActivity {
                     TelemetrySettings.setT_GROUND_RECORDING(getActivity(),false);
                 }
             }
+        }
+    }
+
+    private void lol(){
+        Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/myFolder/");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null)
+        {
+            startActivity(intent);
+        }
+        else
+        {
+            // if you reach this place, it means there is no any file
+            // explorer app installed on your device
         }
     }
 }

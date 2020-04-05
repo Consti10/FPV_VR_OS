@@ -41,7 +41,6 @@ public class FConnectGroundRecFile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mContext =getActivity();
-        createFoldersIfNotYetExisting();
         View rootView = inflater.inflate(R.layout.connect_grfile_fragment, container, false);
         editTextFileNameFPV=rootView.findViewById(R.id.editTextFileNameFPV);
         editTextFileNameFPV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -49,16 +48,16 @@ public class FConnectGroundRecFile extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 final String input=v.getText().toString();
                 if(v.equals(editTextFileNameFPV)){
-                    final String pathAndFilename=getDirectory()+"Video/"+input;
+                    final String pathAndFilename=VideoSettings.getDirectoryToSaveDataTo()+input;
                     if(!fileExists(pathAndFilename)){
                         makeInfoDialog("WARNING ! This video file does not exist.");
                     }
                     VideoSettings.setVS_PLAYBACK_FILENAME(mContext,pathAndFilename);
+                    TelemetrySettings.setT_PLAYBACK_FILENAME(mContext,pathAndFilename);
                 }
                 return false;
             }
         });
-
         //We need to write the filename double - once for video, once for telemetry lib.
         final String filenameFPV=extractFilename(VideoSettings.getVS_PLAYBACK_FILENAME(mContext));
         editTextFileNameFPV.setText(filenameFPV);
@@ -66,7 +65,7 @@ public class FConnectGroundRecFile extends Fragment {
         bEasySelectFPV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String directory=getDirectory()+"Test/";
+                final String directory=VideoSettings.getDirectoryToSaveDataTo();
                 final String[] filenames=getAllFilenamesInDirectory(directory);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Pick a ground recording file");
@@ -114,25 +113,12 @@ public class FConnectGroundRecFile extends Fragment {
         return tempFile.exists();
     }
 
-
-    private static String getDirectory(){
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/FPV_VR/";
-    }
-
-    private void createFoldersIfNotYetExisting(){
-        final boolean mkdirs1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +"/FPV_VR/").mkdirs();
-        final boolean mkdirs2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +"/FPV_VR/Telemetry/").mkdirs();
-        final boolean mkdirs3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +"/FPV_VR/Video/").mkdirs();
-    }
-
     private static String extractFilename(final String pathWithFilename){
         String last = pathWithFilename.substring(pathWithFilename.lastIndexOf('/') + 1);
         System.out.println(pathWithFilename);
         System.out.println(last);
         return last;
     }
-
-
 
     private static String[] getAllFilenamesInDirectory(final String directory){
         File folder = new File(directory);

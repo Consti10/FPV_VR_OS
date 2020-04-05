@@ -4,9 +4,11 @@
     <string name="ConnectionType">ConnectionType</string>
     <string name="AHTPort">AHTPort</string>
     <string name="RTSPString">RTSPString</string>
-
-
+    //*************************************************************************************
+    //********************************** pref ground recording ************************
     <string name="GROUND_RECORDING_TYPE">GROUND_RECORDING_TYPE</string>
+    <string name="GROUND_RECORDING_VIDEO_FPS">KEY_GROUND_RECORDING_VIDEO_FPS</string>
+    <string name="GROUND_RECORDING_VIDEO_BITRATE">KEY_GROUND_RECORDING_VIDEO_BITRATE</string>
     //*************************************************************************************
 
 </resources>
