@@ -1,40 +1,17 @@
 cmake_minimum_required(VERSION 3.6)
 
-
 find_library( log-lib
         log )
 include_directories(libs/other)
 
-
 ##########################################################################################################
-#Telemetry receiver is included as an imported libarary, e.g we don't compile it here, but rather use .so and .h files
+# Add the native part of all the external modules (e.g. the cpp part)
 ##########################################################################################################
-#T_CORE_DIR is passed as an argument in app/build.gradle
-#set(T_CORE_DIR ${CMAKE_SOURCE_DIR}/../../Telemetry/TelemetryCore)
-set(T_SOURCE_DIR ${T_CORE_DIR}/src/main/cpp/Telemetry)
-set(T_SO_FILES   ${T_CORE_DIR}/jniLibs)
-include_directories(${T_SOURCE_DIR})
-#hmmm
-set(IO_PATH ${V_CORE_DIR}/../VideoTelemetryShared/InputOutput)
-set(HELPER_PATH ${V_CORE_DIR}/../VideoTelemetryShared/Helper)
-include_directories(${HELPER_PATH})
-include_directories(${IO_PATH})
-#mm
-
-add_library( Telemetry-lib
-        SHARED
-        IMPORTED )
-set_target_properties( # Specifies the target library.
-        Telemetry-lib
-        # Specifies the parameter you want to define.
-        PROPERTIES IMPORTED_LOCATION
-        # Provides the path to the library you want to import.
-        ${T_SO_FILES}/${ANDROID_ABI}/libTelemetryReceiver.so )
-
-##########################################################################################################
-# compile and add sources of RenderingXCore library
-##########################################################################################################
+# TelemetryCore
+include(${T_CORE_DIR}/TelemetryCore.cmake)
+# RenderingXCore
 include(${RX_CORE_DIR}/RenderingXCore.cmake)
+# VideoCore is not needed
 
 ##########################################################################################################
 # Scene (Engine) Stuff (OSD and video rendering)
@@ -57,7 +34,7 @@ add_library( Scene
         ${SCENE_PATH}/OSD/Settings/SettingsOSDElements.cpp
         ${SCENE_PATH}/OSD/Settings/SettingsOSDStyle.cpp
         ${SCENE_PATH}/Video/VideoRenderer.cpp)
-target_link_libraries( Scene GLPrograms Telemetry-lib ${log-lib} android EGL GLESv2 GLESv3 Time)
+target_link_libraries( Scene GLPrograms TelemetryReceiver ${log-lib} android EGL GLESv2 GLESv3 Time)
 include_directories(${SCENE_PATH}/OSD/Settings)
 
 ##########################################################################################################
@@ -68,7 +45,7 @@ add_library(VRSettings SHARED
         src/main/cpp/VRSettings/SettingsVR.cpp)
 target_link_libraries(VRSettings android log GLPrograms)
 
-set(GLR_SOME_DEPENDENCIES VRSettings GLPrograms Scene Telemetry-lib Time)
+set(GLR_SOME_DEPENDENCIES VRSettings GLPrograms Scene TelemetryReceiver Time)
 
 add_library( GLRMono SHARED
         src/main/cpp/GLRenderer/GLRMono.cpp )
