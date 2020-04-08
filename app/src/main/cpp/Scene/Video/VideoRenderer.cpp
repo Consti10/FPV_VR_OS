@@ -8,6 +8,8 @@
 
 constexpr auto TAG="VideoRenderer";
 
+
+
 VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const DistortionManager* distortionManager):
 mVideoTexture(videoTexture),mMode(mode){
     mGLProgramTextureExtMappingEnabled=std::make_unique<GLProgramTextureExt>(distortionManager,true);
@@ -30,11 +32,11 @@ mVideoTexture(videoTexture),mMode(mode){
             break;
         case RM_360_KODAK_SP360_4K_DUAL:
             mInsta360SphereB.initializeGL();
-            mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_180,0.5,0.65,210,0.05,0),GL_TRIANGLE_STRIP);
+            mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_0,0.5,0.65,190,0.05,0),GL_TRIANGLE_STRIP);
             break;
         case RM_360_KODAK_SP360_4K_SINGLE:
             mInsta360SphereB.initializeGL();
-            mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_90,0.5,0.5,190,0.0,0),GL_TRIANGLE_STRIP);
+            mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_180,0.5,0.5,190,0.0,0),GL_TRIANGLE_STRIP);
             break;
         case RM_360_FIREFLY_SPLIT_4K:
             mInsta360SphereB.initializeGL();
