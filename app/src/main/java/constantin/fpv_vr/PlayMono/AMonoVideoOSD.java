@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
@@ -21,7 +22,6 @@ import constantin.video.core.DecodingInfo;
 import constantin.video.core.External.AspectFrameLayout;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayerSurfaceHolder;
-
 /*****************************************************************
  * Play video blended with OSD in a Mono window (e.g. for Tablets usw)
  * The video is displayed with the Android HW composer, not OpenGL
@@ -31,11 +31,9 @@ import constantin.video.core.VideoPlayerSurfaceHolder;
 
 
 public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged{
+    private ActivityMonoVidOsdBinding binding;
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
-    private AspectFrameLayout mAspectFrameLayout;
     private AirHeadTrackingSender airHeadTrackingSender;
-    //Only !=null when ENABLE_OSD is enabled
-    private MyGLSurfaceView mGLView;
     private TelemetryReceiver telemetryReceiver;
     private boolean ENABLE_OSD;
     private boolean ENABLE_VIDEO_VIA_OPENGL;
@@ -44,27 +42,22 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ENABLE_OSD =getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD,true);
         ENABLE_VIDEO_VIA_OPENGL=false;
-        setContentView(R.layout.activity_mono_vid_osd);
-        final SurfaceView surfaceView = findViewById(R.id.SurfaceView_monoscopicVideo);
-        mVideoPlayer=new VideoPlayerSurfaceHolder(this,surfaceView,this);
-        mAspectFrameLayout =  findViewById(R.id.VideoSurface_AFL);
+        binding = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        mVideoPlayer=new VideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo,this);
         if(ENABLE_OSD){
-            mGLView = new MyGLSurfaceView(this,this);
-            mGLView.setEGLContextClientVersion(2);
+            binding.MyGLSurfaceView.setEnabled(true);
+            binding.MyGLSurfaceView.setEGLContextClientVersion(2);
             //Do not use MSAA in mono mode
-            mGLView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
-            mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
-            mGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-            mGLView.setPreserveEGLContextOnPause(true);
+            binding.MyGLSurfaceView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
+            binding.MyGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
+            binding.MyGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+            binding.MyGLSurfaceView.setPreserveEGLContextOnPause(true);
             telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
             final GLRMono mGLRMonoOSD = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
-            mGLView.setRenderer(mGLRMonoOSD);
-            mGLView.setZOrderMediaOverlay(true);
-            addContentView(mGLView,new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            binding.MyGLSurfaceView.setRenderer(mGLRMonoOSD);
         }
         airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this);
     }
@@ -88,7 +81,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         //System.out.println("Width:"+videoW+"Height:"+videoH);
         runOnUiThread(new Runnable() {
             public void run() {
-                mAspectFrameLayout.setAspectRatio((double) videoW / videoH);
+                binding.VideoSurfaceAFL.setAspectRatio((double) videoW / videoH);
             }
         });
     }
