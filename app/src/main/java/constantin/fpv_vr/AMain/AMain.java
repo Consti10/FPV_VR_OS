@@ -87,13 +87,11 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     int mRecordScreenResultCode;
     //
     private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        context=this;
         /*
          * Check ( and do the appropriate actions ) on a fresh install or update
          */
@@ -147,8 +145,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         /*
          * Each button starts its own activity or service
          */
-        startSDKRegistration();
-        /*
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:{
                 //With normal video we can use a android surface instead of OpenGL
@@ -200,7 +196,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             case R.id.b_VRSettings:
                 startActivity(new Intent().setClass(this, ASettingsVR.class));
                 break;
-        }*/
+        }
     }
 
 
@@ -218,7 +214,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 ActivityCompat.requestPermissions(this, asArray, REQUEST_PERMISSION_CODE);
             }
         }else{
-            //startSDKRegistration();
+            startSDKRegistration();
         }
     }
 
@@ -307,6 +303,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                                 DJISDKManager.getInstance().startConnectionToProduct();
                             } else {
                                 showToast("Register sdk fails, please check the bundle id and network connection!");
+                                startSDKRegistration();
                             }
                             Log.v(TAG, djiError.getDescription());
                         }
