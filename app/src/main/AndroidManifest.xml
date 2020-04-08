@@ -4,6 +4,7 @@
     package="constantin.fpv_vr">
     <!-- a write implies a read. Needed for ground recording and play test file -->
     <application
+        android:name=".MApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,6 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
+        <!-- dji sdk begin -->
+        <uses-library android:name="com.android.future.usb.accessory" />
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <meta-data
+            android:name="com.dji.sdk.API_KEY"
+            android:value="20a596760cca71918ad0b003" />
+        <!-- dji sdk end -->
         <activity
             android:name=".AMain.AMain"
             android:screenOrientation="landscape"
@@ -81,7 +89,8 @@
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
-    </application> <!-- DANGEROUS (needs runtime request) -->
+    </application>
+    <!-- DANGEROUS (needs runtime request) -->
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" /> <!-- DANGEROUS (needs runtime request) -->
