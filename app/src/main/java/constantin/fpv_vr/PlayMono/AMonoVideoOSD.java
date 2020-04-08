@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
@@ -48,7 +49,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         setContentView(binding.getRoot());
         mVideoPlayer=new VideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo,this);
         if(ENABLE_OSD){
-            binding.MyGLSurfaceView.setEnabled(true);
+            binding.MyGLSurfaceView.setVisibility(View.VISIBLE);
             binding.MyGLSurfaceView.setEGLContextClientVersion(2);
             //Do not use MSAA in mono mode
             binding.MyGLSurfaceView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
