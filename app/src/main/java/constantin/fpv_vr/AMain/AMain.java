@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -14,9 +15,12 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.hbisoft.hbrecorder.HBRecorder;
 import com.hbisoft.hbrecorder.HBRecorderListener;
@@ -24,6 +28,7 @@ import com.hbisoft.hbrecorder.HBRecorderListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import constantin.fpv_vr.AConnect.AConnect;
 import constantin.fpv_vr.PlayMono.AMonoGLVideoOSD;
@@ -41,6 +46,12 @@ import constantin.fpv_vr.Settings.UpdateHelper;
 import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.VideoPlayer.VideoSettings;
+import dji.common.error.DJIError;
+import dji.common.error.DJISDKError;
+import dji.sdk.base.BaseComponent;
+import dji.sdk.base.BaseProduct;
+import dji.sdk.sdkmanager.DJISDKInitEvent;
+import dji.sdk.sdkmanager.DJISDKManager;
 
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_Manually;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_StorageFile;
@@ -52,8 +63,19 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     private static final String TAG="AMain";
     private TestReceiverVideo mTestReceiverVideo=null;
     private static final String[] REQUIRED_PERMISSION_LIST = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.VIBRATE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.WAKE_LOCK,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
     };
     private final List<String> missingPermission = new ArrayList<>();
     private static final int REQUEST_PERMISSION_CODE = 12345;
@@ -63,11 +85,15 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     //If this Intent != null the permission to record screen was already granted
     Intent mRecordScreenPermissionI=null;
     int mRecordScreenResultCode;
+    //
+    private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context=this;
         /*
          * Check ( and do the appropriate actions ) on a fresh install or update
          */
@@ -121,6 +147,8 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         /*
          * Each button starts its own activity or service
          */
+        startSDKRegistration();
+        /*
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:{
                 //With normal video we can use a android surface instead of OpenGL
@@ -172,7 +200,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             case R.id.b_VRSettings:
                 startActivity(new Intent().setClass(this, ASettingsVR.class));
                 break;
-        }
+        }*/
     }
 
 
@@ -189,6 +217,8 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 Log.d("PermissionManager","Request: "+Arrays.toString(asArray));
                 ActivityCompat.requestPermissions(this, asArray, REQUEST_PERMISSION_CODE);
             }
+        }else{
+            //startSDKRegistration();
         }
     }
 
@@ -260,5 +290,82 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     @Override
     public void HBRecorderOnError(int errorCode, String reason) {
         System.out.println("HBRecorderOnError "+errorCode+" "+reason);
+    }
+    //
+    private void startSDKRegistration() {
+        if (isRegistrationInProgress.compareAndSet(false, true)) {
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    showToast("registering, pls wait...");
+
+                    DJISDKManager.getInstance().registerApp(AMain.this.getApplicationContext(), new DJISDKManager.SDKManagerCallback() {
+                        @Override
+                        public void onRegister(DJIError djiError) {
+                            if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
+                                showToast("Register Success");
+                                DJISDKManager.getInstance().startConnectionToProduct();
+                            } else {
+                                showToast("Register sdk fails, please check the bundle id and network connection!");
+                            }
+                            Log.v(TAG, djiError.getDescription());
+                        }
+
+                        @Override
+                        public void onProductDisconnect() {
+                            Log.d(TAG, "onProductDisconnect");
+                            showToast("Product Disconnected");
+
+                        }
+                        @Override
+                        public void onProductConnect(BaseProduct baseProduct) {
+                            Log.d(TAG, String.format("onProductConnect newProduct:%s", baseProduct));
+                            showToast("Product Connected");
+
+                        }
+                        @Override
+                        public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,
+                                                      BaseComponent newComponent) {
+
+                            if (newComponent != null) {
+                                newComponent.setComponentListener(new BaseComponent.ComponentListener() {
+
+                                    @Override
+                                    public void onConnectivityChange(boolean isConnected) {
+                                        Log.d(TAG, "onComponentConnectivityChanged: " + isConnected);
+                                    }
+                                });
+                            }
+                            Log.d(TAG,
+                                    String.format("onComponentChange key:%s, oldComponent:%s, newComponent:%s",
+                                            componentKey,
+                                            oldComponent,
+                                            newComponent));
+
+                        }
+
+                        @Override
+                        public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
+
+                        }
+
+                        @Override
+                        public void onDatabaseDownloadProgress(long l, long l1) {
+
+                        }
+
+                    });
+                }
+            });
+        }
+    }
+    private void showToast(final String toastMsg) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), toastMsg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
