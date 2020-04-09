@@ -164,4 +164,5 @@
         android:required="true" />
     <!-- Permissions and features -->
 
+
 </manifest>
