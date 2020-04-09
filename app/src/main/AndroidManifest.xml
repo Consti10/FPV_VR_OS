@@ -18,7 +18,7 @@
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <meta-data
             android:name="com.dji.sdk.API_KEY"
-            android:value="1a336aea457b8f3b2b7d8aab" />
+            android:value="5d59d94daccf4da9a2d51e3d" />
         <activity
             android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
             android:theme="@android:style/Theme.Translucent" >
