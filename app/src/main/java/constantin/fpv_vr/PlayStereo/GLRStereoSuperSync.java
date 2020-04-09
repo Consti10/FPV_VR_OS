@@ -5,7 +5,7 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 
 import constantin.renderingx.core.GLESInfo.GLESInfo;
-import constantin.renderingx.core.MyVrHeadsetParams;
+import constantin.renderingx.core.MVrHeadsetParams;
 import constantin.renderingx.core.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
@@ -31,15 +31,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     private native void nativeExitSuperSyncLoop(long glRendererMonoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
     private native void nativeDoFrame(long glRendererStereoP,long lastVsync);
-    private native void nativeUpdateHeadsetParams(long nativePointer,float screen_width_meters,
-                                                  float screen_height_meters,
-                                                  float screen_to_lens_distance,
-                                                  float inter_lens_distance,
-                                                  int vertical_alignment,
-                                                  float tray_to_lens_distance,
-                                                  float[] device_fov_left,
-                                                  float[] radial_distortion_params,
-                                                  int screenWidthP,int screenHeightP);
+    private native void nativeUpdateHeadsetParams(long nativePointer,MVrHeadsetParams params);
 
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoSuperSync instance.
@@ -56,10 +48,8 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoSettings.videoMode(mContext));
-        final MyVrHeadsetParams params=new MyVrHeadsetParams(context);
-        nativeUpdateHeadsetParams(nativeGLRSuperSync,params.ScreenWidthMeters,params.ScreenHeightMeters,
-                params.ScreenToLensDistance,params.InterLensDistance,params.VerticalAlignment,params.VerticalDistanceToLensCenter,
-                params.fov,params.kN,params.ScreenWidthPixels,params.ScreenHeightPixels);
+        final MVrHeadsetParams params=new MVrHeadsetParams(context);
+        nativeUpdateHeadsetParams(nativeGLRSuperSync,params);
     }
 
     @Override

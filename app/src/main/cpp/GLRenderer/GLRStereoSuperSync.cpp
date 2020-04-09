@@ -170,31 +170,9 @@ JNI_METHOD(void, nativeOnVideoRatioChanged)
 }
 
 JNI_METHOD(void, nativeUpdateHeadsetParams)
-(JNIEnv *env, jobject obj, jlong instance,
- jfloat screen_width_meters,
- jfloat screen_height_meters,
- jfloat screen_to_lens_distance,
- jfloat inter_lens_distance,
- jint vertical_alignment,
- jfloat tray_to_lens_distance,
- jfloatArray device_fov_left,
- jfloatArray radial_distortion_params,
- jint screenWidthP,jint screenHeightP
-) {
-    std::array<float,4> device_fov_left1{};
-    std::vector<float> radial_distortion_params1(2);
-
-    jfloat *arrayP=env->GetFloatArrayElements(device_fov_left, nullptr);
-    std::memcpy(device_fov_left1.data(),&arrayP[0],4*sizeof(float));
-    env->ReleaseFloatArrayElements(device_fov_left,arrayP,0);
-    arrayP=env->GetFloatArrayElements(radial_distortion_params, nullptr);
-    std::memcpy(radial_distortion_params1.data(),&arrayP[0],2*sizeof(float));
-    env->ReleaseFloatArrayElements(radial_distortion_params,arrayP,0);
-
-    const MDeviceParams deviceParams{screen_width_meters,screen_height_meters,screen_to_lens_distance,inter_lens_distance,vertical_alignment,tray_to_lens_distance,
-                                     device_fov_left1,radial_distortion_params1};
-    native(instance)->vrHeadsetParams.updateHeadsetParams(deviceParams,screenWidthP,screenHeightP);
-    native(instance)->vrHeadsetParams.updateDistortionManager(native(instance)->distortionManager);
+(JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
+    const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
+    native(instancePointer)->vrHeadsetParams.updateHeadsetParams(deviceParams);
 }
 
 }

@@ -16,7 +16,7 @@
 #include <Video/VideoRenderer.h>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
-#include <VRHeadsetParams.h>
+#include <DistortionEngine.h>
 #include <SettingsVR.h>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
@@ -54,8 +54,8 @@ protected:
     int swapColor=0;
     const VideoRenderer::VIDEO_RENDERING_MODE videoMode;
 public:
-    DistortionManager distortionManager;
-    VRHeadsetParams vrHeadsetParams;
+    VDDCManager distortionManager;
+    DistortionEngine vrHeadsetParams;
 };
 
 

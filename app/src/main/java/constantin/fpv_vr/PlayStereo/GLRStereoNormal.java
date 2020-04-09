@@ -12,7 +12,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.MyEGLConfigChooser;
-import constantin.renderingx.core.MyVrHeadsetParams;
+import constantin.renderingx.core.MVrHeadsetParams;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.ISurfaceTextureAvailable;
@@ -35,15 +35,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
     private native void nativeOnDrawFrame(long glRendererStereoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
-    private native void nativeUpdateHeadsetParams(long nativePointer,float screen_width_meters,
-                                                  float screen_height_meters,
-                                                  float screen_to_lens_distance,
-                                                  float inter_lens_distance,
-                                                  int vertical_alignment,
-                                                  float tray_to_lens_distance,
-                                                  float[] device_fov_left,
-                                                  float[] radial_distortion_params,
-                                                  int screenWidthP,int screenHeightP);
+    private native void nativeUpdateHeadsetParams(long nativePointer,MVrHeadsetParams params);
 
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoNormal instance.
@@ -59,10 +51,8 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoSettings.videoMode(mContext));
 
-        final MyVrHeadsetParams params=new MyVrHeadsetParams(activityContext);
-        nativeUpdateHeadsetParams(nativeGLRendererStereo,params.ScreenWidthMeters,params.ScreenHeightMeters,
-                params.ScreenToLensDistance,params.InterLensDistance,params.VerticalAlignment,params.VerticalDistanceToLensCenter,
-                params.fov,params.kN,params.ScreenWidthPixels,params.ScreenHeightPixels);
+        final MVrHeadsetParams params=new MVrHeadsetParams(activityContext);
+        nativeUpdateHeadsetParams(nativeGLRendererStereo,params);
     }
 
     @Override
