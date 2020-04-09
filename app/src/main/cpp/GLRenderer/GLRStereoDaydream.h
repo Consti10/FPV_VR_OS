@@ -15,7 +15,7 @@
 #include "IVideoFormatChanged.hpp"
 #include <FPSCalculator.h>
 #include <Video/VideoRenderer.h>
-#include <VRHeadsetParams.h>
+#include <DistortionEngine.h>
 #include <SettingsVR.h>
 
 //Only fulfills testing purpose(s)
@@ -54,10 +54,9 @@ private:
     GLuint glBufferVC;
     GLuint glBufferVCX;
     int nColoredVertices;
-private:
-    DistortionManager distortionManager;
 public:
-    VRHeadsetParams vrHeadsetParams;
+    VDDCManager distortionManager;
+    DistortionEngine vrHeadsetParams;
 };
 
 

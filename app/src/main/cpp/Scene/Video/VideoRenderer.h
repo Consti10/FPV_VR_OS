@@ -28,7 +28,7 @@ public:
      * @param videoTexture a valid OpenGL texture
      * @param DistortionManager: optional, used to create GLProgramTextureExt if needed
      */
-    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const DistortionManager* distortionManager);
+    VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const VDDCManager* vddcManager);
     void drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye);
     void drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM);
     //For 360 equirectangular we need the video vidth and height in px

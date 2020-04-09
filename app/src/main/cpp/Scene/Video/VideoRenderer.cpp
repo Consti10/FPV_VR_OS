@@ -10,10 +10,10 @@ constexpr auto TAG="VideoRenderer";
 
 
 
-VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const DistortionManager* distortionManager):
+VideoRenderer::VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const const VDDCManager* vddcManager):
 mVideoTexture(videoTexture),mMode(mode){
-    mGLProgramTextureExtMappingEnabled=std::make_unique<GLProgramTextureExt>(distortionManager,true);
-    mGLProgramTextureExt=std::make_unique<GLProgramTextureExt>(distortionManager,false);
+    mGLProgramTextureExtMappingEnabled=std::make_unique<GLProgramTextureExt>(vddcManager,true);
+    mGLProgramTextureExt=std::make_unique<GLProgramTextureExt>(vddcManager,false);
     switch (mMode){
         case RM_2D_MONOSCOPIC:
             mVideoCanvasB.initializeGL();
