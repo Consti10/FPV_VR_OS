@@ -2,6 +2,60 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="constantin.fpv_vr">
+    <!-- DANGEROUS (needs runtime request) -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" /> <!-- DANGEROUS (needs runtime request) -->
+    <!-- Home location for OSD -->
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="false" /> <!-- DANGEROUS (needs runtime request) -->
+    <!-- open UDP ports -->
+    <uses-feature
+        android:name="android.hardware.sensor.gyroscope"
+        android:required="false" /> <!-- Info about networks (EZ-WB connect via WIFI) -->
+    <uses-feature
+        android:name="android.software.vr.mode"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.vr.high_performance"
+        android:required="false" /> <!-- I think for gvr lib -->
+    <uses-feature
+        android:name="android.hardware.vr.headtracking"
+        android:required="false" /> <!-- a write implies a read. Needed for ground recording and play test file -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- for the notification -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!--  -->
+    <!-- Permissions and features -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.accessory"
+        android:required="true" />
 
     <application
         android:name=".MApplication"
@@ -12,25 +66,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
-
+        <activity android:name=".DJIConnectionA"></activity>
         <!-- DJI SDK -->
         <uses-library android:name="com.android.future.usb.accessory" />
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <meta-data
             android:name="com.dji.sdk.API_KEY"
             android:value="5d59d94daccf4da9a2d51e3d" />
+
         <activity
             android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
-            android:theme="@android:style/Theme.Translucent" >
+            android:theme="@android:style/Theme.Translucent">
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
                 android:resource="@xml/accessory_filter" />
-        </activity>
-        <!-- DJI SDK -->
-
+        </activity> <!-- DJI SDK -->
         <activity
             android:name=".AMain.AMain"
             android:screenOrientation="landscape"
@@ -41,8 +98,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".PlayMono.AMonoGLVideoOSD"
+        <activity
+            android:name=".PlayMono.AMonoGLVideoOSD"
             android:screenOrientation="landscape"
             android:theme="@style/MyStyleFullscreen" />
         <activity
@@ -98,71 +155,10 @@
         <activity
             android:name="constantin.renderingx.core.GLESInfo.AWriteGLESInfo"
             android:screenOrientation="behind" />
+
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
     </application>
-    <!-- DANGEROUS (needs runtime request) -->
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" /> <!-- DANGEROUS (needs runtime request) -->
-    <!-- Home location for OSD -->
-    <uses-feature
-        android:name="android.hardware.sensor.accelerometer"
-        android:required="false" /> <!-- DANGEROUS (needs runtime request) -->
-    <!-- open UDP ports -->
-    <uses-feature
-        android:name="android.hardware.sensor.gyroscope"
-        android:required="false" /> <!-- Info about networks (EZ-WB connect via WIFI) -->
-    <uses-feature
-        android:name="android.software.vr.mode"
-        android:required="false" />
-    <uses-feature
-        android:name="android.software.vr.high_performance"
-        android:required="false" /> <!-- I think for gvr lib -->
-    <uses-feature
-        android:name="android.hardware.vr.headtracking"
-        android:required="false" />
-
-    <!-- a write implies a read. Needed for ground recording and play test file -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <!--for the notification-->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- -->
-
-    <!-- Permissions and features -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature
-        android:name="android.hardware.usb.host"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.usb.accessory"
-        android:required="true" />
-    <!-- Permissions and features -->
-
 
 </manifest>

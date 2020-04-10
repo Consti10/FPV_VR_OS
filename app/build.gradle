@@ -15,11 +15,11 @@ android {
                 cppFlags "-std=c++17"  //,"-frtti","-fexceptions"
                 arguments "-DANDROID_STL=c++_static",   //, "-DCMAKE_VERBOSE_MAKEFILE=ON"
                         //Pass trough the location for cmake to find native (cpp) code of the TelemetryCore module
-                        "-DT_CORE_DIR=${project(':TelemetryCore').getProjectDir().getAbsolutePath().replace("\\","/")}",
+                        "-DT_CORE_DIR=${project(':TelemetryCore').getProjectDir().getAbsolutePath().replace("\\", "/")}",
                         //Pass trough the location for cmake to find native (cpp) code of the RenderingXCore module
-                        "-DRX_CORE_DIR=${project(':RenderingXCore').getProjectDir().getAbsolutePath().replace("\\","/")}",
+                        "-DRX_CORE_DIR=${project(':RenderingXCore').getProjectDir().getAbsolutePath().replace("\\", "/")}",
                         //Pass trough the location for cmake to find native (cpp) code of the VideoCore module
-                        "-DV_CORE_DIR=${project(':VideoCore').getProjectDir().getAbsolutePath().replace("\\","/")}"
+                        "-DV_CORE_DIR=${project(':VideoCore').getProjectDir().getAbsolutePath().replace("\\", "/")}"
             }
         }
         ndk {
@@ -80,8 +80,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // dji sdk begin
-    implementation ('com.dji:dji-sdk:4.11.2')
-    compileOnly ('com.dji:dji-sdk-provided:4.11.2')
+    implementation('com.dji:dji-sdk:4.11.2')
+    compileOnly('com.dji:dji-sdk-provided:4.11.2')
     implementation 'androidx.core:core:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import constantin.fpv_vr.AConnect.AConnect;
+import constantin.fpv_vr.DJIConnectionA;
 import constantin.fpv_vr.PlayMono.AMonoGLVideoOSD;
 import constantin.fpv_vr.Settings.AGroundRecordingSettings;
 import constantin.fpv_vr.Settings.ASettingsOSD;
@@ -46,11 +47,6 @@ import constantin.fpv_vr.Settings.UpdateHelper;
 import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.VideoPlayer.VideoSettings;
-import dji.common.error.DJIError;
-import dji.common.error.DJISDKError;
-import dji.sdk.base.BaseComponent;
-import dji.sdk.base.BaseProduct;
-import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_Manually;
@@ -85,8 +81,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     //If this Intent != null the permission to record screen was already granted
     Intent mRecordScreenPermissionI=null;
     int mRecordScreenResultCode;
-    //
-    private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +95,9 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          * Same for the permissions (required in >=android X)
          */
         checkAndRequestPermissions();
+        if(!DJISDKManager.getInstance().hasSDKRegistered()){
+            startActivity(new Intent().setClass(this, DJIConnectionA.class));
+        }
     }
 
     @Override
@@ -213,8 +210,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 Log.d("PermissionManager","Request: "+Arrays.toString(asArray));
                 ActivityCompat.requestPermissions(this, asArray, REQUEST_PERMISSION_CODE);
             }
-        }else{
-            startSDKRegistration();
         }
     }
 
@@ -286,83 +281,5 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     @Override
     public void HBRecorderOnError(int errorCode, String reason) {
         System.out.println("HBRecorderOnError "+errorCode+" "+reason);
-    }
-    //
-    private void startSDKRegistration() {
-        if (isRegistrationInProgress.compareAndSet(false, true)) {
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    showToast("registering, pls wait...");
-
-                    DJISDKManager.getInstance().registerApp(AMain.this.getApplicationContext(), new DJISDKManager.SDKManagerCallback() {
-                        @Override
-                        public void onRegister(DJIError djiError) {
-                            if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
-                                showToast("Register Success");
-                                DJISDKManager.getInstance().startConnectionToProduct();
-                            } else {
-                                showToast("Register sdk fails, please check the bundle id and network connection!");
-                                startSDKRegistration();
-                            }
-                            Log.v(TAG, djiError.getDescription());
-                        }
-
-                        @Override
-                        public void onProductDisconnect() {
-                            Log.d(TAG, "onProductDisconnect");
-                            showToast("Product Disconnected");
-
-                        }
-                        @Override
-                        public void onProductConnect(BaseProduct baseProduct) {
-                            Log.d(TAG, String.format("onProductConnect newProduct:%s", baseProduct));
-                            showToast("Product Connected");
-
-                        }
-                        @Override
-                        public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,
-                                                      BaseComponent newComponent) {
-
-                            if (newComponent != null) {
-                                newComponent.setComponentListener(new BaseComponent.ComponentListener() {
-
-                                    @Override
-                                    public void onConnectivityChange(boolean isConnected) {
-                                        Log.d(TAG, "onComponentConnectivityChanged: " + isConnected);
-                                    }
-                                });
-                            }
-                            Log.d(TAG,
-                                    String.format("onComponentChange key:%s, oldComponent:%s, newComponent:%s",
-                                            componentKey,
-                                            oldComponent,
-                                            newComponent));
-
-                        }
-
-                        @Override
-                        public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
-
-                        }
-
-                        @Override
-                        public void onDatabaseDownloadProgress(long l, long l1) {
-
-                        }
-
-                    });
-                }
-            });
-        }
-    }
-    private void showToast(final String toastMsg) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), toastMsg, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 }
