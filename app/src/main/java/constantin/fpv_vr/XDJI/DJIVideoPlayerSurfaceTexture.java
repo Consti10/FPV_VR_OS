@@ -24,7 +24,6 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
     private final Context context;
     //null in the beginning, becomes valid in the future via onSurfaceTextureAvailable
     //(Constructor of Surface takes SurfaceTexture)
-    private Surface mVideoSurface;
     private SurfaceTexture surfaceTexture;
     private final VideoFeeder.VideoDataListener mReceivedVideoDataListener;
     private DJICodecManager mCodecManager = null;
@@ -54,7 +53,6 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
                 Toaster.makeToast(context,"Unknown aircraft",true);
             }
         }
-
         parent.getLifecycle().addObserver(this);
     }
 
@@ -92,16 +90,18 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private void resume(){
-        if(mVideoSurface!=null){
+        if(surfaceTexture!=null){
             if(mCodecManager==null){
+                surfaceTexture.setDefaultBufferSize(1280,720);
                 mCodecManager = new DJICodecManager(context,surfaceTexture,1280,720);
+                System.out.println("Decoder okay ? "+mCodecManager.isDecoderOK()+" W H"+mCodecManager.getVideoWidth()+" "+mCodecManager.getVideoHeight());
             }
         }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     private void pause(){
-        if(mVideoSurface!=null){
+        if(surfaceTexture!=null){
             if (mCodecManager != null) {
                 mCodecManager.cleanSurface();
                 mCodecManager = null;
@@ -111,9 +111,9 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private void destroy(){
-        if(mVideoSurface!=null){
-            mVideoSurface.release();
-        }
+        //if(mVideoSurface!=null){
+        //    mVideoSurface.release();
+        //}
     }
 
 
