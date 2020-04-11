@@ -49,9 +49,6 @@ public class DJIConnectionA extends AppCompatActivity {
     private final List<String> missingPermission = new ArrayList<>();
     private static final int REQUEST_PERMISSION_CODE = 22345;
     private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
-    //
-    protected VideoFeeder.VideoDataListener mReceivedVideoDataListener = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +56,11 @@ public class DJIConnectionA extends AppCompatActivity {
         setContentView(R.layout.activity_dji_connection);
         checkAndRequestPermissions();
 
-        mReceivedVideoDataListener = new VideoFeeder.VideoDataListener() {
-            @Override
-            public void onReceive(byte[] videoBuffer, int size) {
-                //if (mCodecManager != null) {
-                //    mCodecManager.sendDataToDecoder(videoBuffer, size);
-                //}
-            }
-        };
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        //DJISDKManager.getInstance().getLiveStreamManager().
     }
 
 
