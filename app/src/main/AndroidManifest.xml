@@ -58,7 +58,7 @@
         android:required="true" />
 
     <application
-        android:name=".MApplication"
+        android:name=".XDJI.DJIApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -66,7 +66,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
-        <activity android:name=".DJIConnectionA"></activity>
+        <activity android:name=".XDJI.DJIConnectionA"></activity>
         <!-- DJI SDK -->
         <uses-library android:name="com.android.future.usb.accessory" />
         <uses-library

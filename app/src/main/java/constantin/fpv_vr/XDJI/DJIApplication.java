@@ -1,16 +1,16 @@
-package constantin.fpv_vr;
+package constantin.fpv_vr.XDJI;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.secneo.sdk.Helper;
 
-public class MApplication extends Application {
+public class DJIApplication extends Application {
 
     @Override
     protected void attachBaseContext(Context paramContext) {
         super.attachBaseContext(paramContext);
-        Helper.install(MApplication.this);
+        Helper.install(DJIApplication.this);
     }
 
 }

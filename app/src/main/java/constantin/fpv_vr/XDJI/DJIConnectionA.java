@@ -1,4 +1,4 @@
-package constantin.fpv_vr;
+package constantin.fpv_vr.XDJI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,12 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import constantin.fpv_vr.AMain.AMain;
+import constantin.fpv_vr.R;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
-import dji.sdk.codec.DJICodecManager;
+import dji.sdk.camera.VideoFeeder;
 import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 
@@ -49,11 +49,30 @@ public class DJIConnectionA extends AppCompatActivity {
     private final List<String> missingPermission = new ArrayList<>();
     private static final int REQUEST_PERMISSION_CODE = 22345;
     private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
+    //
+    protected VideoFeeder.VideoDataListener mReceivedVideoDataListener = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dji_connection);
+        checkAndRequestPermissions();
+
+        mReceivedVideoDataListener = new VideoFeeder.VideoDataListener() {
+            @Override
+            public void onReceive(byte[] videoBuffer, int size) {
+                //if (mCodecManager != null) {
+                //    mCodecManager.sendDataToDecoder(videoBuffer, size);
+                //}
+            }
+        };
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        //DJISDKManager.getInstance().getLiveStreamManager().
     }
 
 

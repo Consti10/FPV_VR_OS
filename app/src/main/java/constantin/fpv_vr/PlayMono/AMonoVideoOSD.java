@@ -1,26 +1,21 @@
 package constantin.fpv_vr.PlayMono;
 
 import android.graphics.PixelFormat;
-import androidx.appcompat.app.ActionBar;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.R;
+import constantin.fpv_vr.XDJI.DJIVideoPlayerSurfaceHolder;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
-import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
-import constantin.video.core.External.AspectFrameLayout;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayerSurfaceHolder;
 /*****************************************************************
@@ -39,6 +34,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     private boolean ENABLE_OSD;
     private boolean ENABLE_VIDEO_VIA_OPENGL;
     private VideoPlayerSurfaceHolder mVideoPlayer;
+    private DJIVideoPlayerSurfaceHolder mVideoPlayer2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +43,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         ENABLE_VIDEO_VIA_OPENGL=false;
         binding = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        mVideoPlayer=new VideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo,this);
+        //mVideoPlayer=new VideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo,this);
+        mVideoPlayer2=new DJIVideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo);
         if(ENABLE_OSD){
             binding.MyGLSurfaceView.setVisibility(View.VISIBLE);
             binding.MyGLSurfaceView.setEGLContextClientVersion(2);
@@ -56,7 +53,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             binding.MyGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
             binding.MyGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             binding.MyGLSurfaceView.setPreserveEGLContextOnPause(true);
-            telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
+            telemetryReceiver=new TelemetryReceiver(this,/*mVideoPlayer.GetExternalGroundRecorder()*/0);
             final GLRMono mGLRMonoOSD = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
             binding.MyGLSurfaceView.setRenderer(mGLRMonoOSD);
         }
