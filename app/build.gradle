@@ -25,7 +25,6 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'//, 'x86','x86_64'
         }
-        testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -33,7 +32,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-// Use this block to link Gradle to your CMake build script.
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
