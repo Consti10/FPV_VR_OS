@@ -33,8 +33,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     private TelemetryReceiver telemetryReceiver;
     private boolean ENABLE_OSD;
     private boolean ENABLE_VIDEO_VIA_OPENGL;
-    private VideoPlayerSurfaceHolder mVideoPlayer;
-    private DJIVideoPlayerSurfaceHolder mVideoPlayer2;
+    //private VideoPlayerSurfaceHolder mVideoPlayer;
+    private DJIVideoPlayerSurfaceHolder mVideoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         binding = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //mVideoPlayer=new VideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo,this);
-        mVideoPlayer2=new DJIVideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo);
+        mVideoPlayer=new DJIVideoPlayerSurfaceHolder(this,binding.SurfaceViewMonoscopicVideo);
+        mVideoPlayer.setIVideoParamsChanged(this);
         if(ENABLE_OSD){
             binding.MyGLSurfaceView.setVisibility(View.VISIBLE);
             binding.MyGLSurfaceView.setEGLContextClientVersion(2);
@@ -53,7 +54,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             binding.MyGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
             binding.MyGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             binding.MyGLSurfaceView.setPreserveEGLContextOnPause(true);
-            telemetryReceiver=new TelemetryReceiver(this,/*mVideoPlayer.GetExternalGroundRecorder()*/0);
+            telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
             final GLRMono mGLRMonoOSD = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
             binding.MyGLSurfaceView.setRenderer(mGLRMonoOSD);
         }

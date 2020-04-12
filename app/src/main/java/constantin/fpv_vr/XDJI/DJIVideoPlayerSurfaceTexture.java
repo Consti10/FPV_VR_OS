@@ -27,6 +27,7 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
     private SurfaceTexture surfaceTexture;
     private final VideoFeeder.VideoDataListener mReceivedVideoDataListener;
     private DJICodecManager mCodecManager = null;
+    private IVideoParamsChanged iVideoParamsChanged;
 
     public DJIVideoPlayerSurfaceTexture(final AppCompatActivity parent){
         this.parent=parent;
@@ -56,9 +57,8 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
     }
 
 
-
     public void setIVideoParamsChanged(final IVideoParamsChanged vpc){
-        //videoPlayer.setIVideoParamsChanged(vpc);
+        this.iVideoParamsChanged=vpc;
     }
     public long GetExternalGroundRecorder(){
         return 0;
@@ -81,6 +81,15 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
                         surfaceTexture.setDefaultBufferSize(1280,720);
                         mCodecManager = new DJICodecManager(context,surfaceTexture,1280,720);
                         System.out.println("Decoder okay ? "+mCodecManager.isDecoderOK()+" W H"+mCodecManager.getVideoWidth()+" "+mCodecManager.getVideoHeight());
+                        mCodecManager.setOnVideoSizeChangedListener(new DJICodecManager.OnVideoSizeChangedListener() {
+                            @Override
+                            public void onVideoSizeChanged(int w, int h) {
+                                if(iVideoParamsChanged!=null){
+                                    iVideoParamsChanged.onVideoRatioChanged(w,h);
+                                    Toaster.makeToast(context,"Video w h"+w+" "+h,false);
+                                }
+                            }
+                        });
                     }
                 }
             }

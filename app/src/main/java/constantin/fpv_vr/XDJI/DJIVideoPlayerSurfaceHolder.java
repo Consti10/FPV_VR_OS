@@ -5,6 +5,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import constantin.fpv_vr.Toaster;
+import constantin.video.core.IVideoParamsChanged;
 import dji.common.product.Model;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
@@ -15,6 +16,7 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback {
     private final VideoFeeder.VideoDataListener mReceivedVideoDataListener;
     private DJICodecManager mCodecManager = null;
     private final Context context;
+    private IVideoParamsChanged iVideoParamsChanged;
 
     public DJIVideoPlayerSurfaceHolder(final Context context,final SurfaceView surfaceView){
         this.context=context;
@@ -39,6 +41,12 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback {
         }
         surfaceView.getHolder().addCallback(this);
     }
+    public void setIVideoParamsChanged(final IVideoParamsChanged vpc){
+        this.iVideoParamsChanged=vpc;
+    }
+    public long GetExternalGroundRecorder(){
+        return 0;
+    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -49,6 +57,15 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback {
         if(mCodecManager==null){
             System.out.println("W H"+width+" "+height);
             mCodecManager = new DJICodecManager(context,holder,width,height);
+            mCodecManager.setOnVideoSizeChangedListener(new DJICodecManager.OnVideoSizeChangedListener() {
+                @Override
+                public void onVideoSizeChanged(int w, int h) {
+                    if(iVideoParamsChanged!=null){
+                        iVideoParamsChanged.onVideoRatioChanged(w,h);
+                        Toaster.makeToast(context,"Video w h"+w+" "+h,false);
+                    }
+                }
+            });
         }
     }
 
