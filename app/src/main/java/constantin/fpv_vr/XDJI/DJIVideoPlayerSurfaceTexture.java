@@ -41,7 +41,6 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
                 }
             }
         };
-        //
         final BaseProduct product = DJISDKManager.getInstance().getProduct();
         if (product == null || !product.isConnected()) {
             Toaster.makeToast(context,"Cannot start video",true);
