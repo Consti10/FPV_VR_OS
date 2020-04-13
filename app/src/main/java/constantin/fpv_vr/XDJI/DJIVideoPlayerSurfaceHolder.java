@@ -7,6 +7,7 @@ import android.view.SurfaceView;
 import constantin.fpv_vr.Toaster;
 import constantin.video.core.IVideoParamsChanged;
 import dji.common.product.Model;
+import dji.midware.usb.P3.UsbAccessoryService;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
@@ -23,6 +24,7 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback {
         mReceivedVideoDataListener = new VideoFeeder.VideoDataListener() {
             @Override
             public void onReceive(byte[] videoBuffer, int size) {
+                System.out.println("Data arrived");
                 if (mCodecManager != null) {
                     mCodecManager.sendDataToDecoder(videoBuffer, size);
                 }
@@ -57,6 +59,7 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback {
         if(mCodecManager==null){
             System.out.println("W H"+width+" "+height);
             mCodecManager = new DJICodecManager(context,holder,width,height);
+            //mCodecManager.switchSource(DJICodecManager.VideoSource.FPV);
             mCodecManager.setOnVideoSizeChangedListener(new DJICodecManager.OnVideoSizeChangedListener() {
                 @Override
                 public void onVideoSizeChanged(int w, int h) {
@@ -66,6 +69,8 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback {
                     }
                 }
             });
+            //mCodecManager.cleanSurface();
+            //mCodecManager.destroyCodec();
         }
     }
 

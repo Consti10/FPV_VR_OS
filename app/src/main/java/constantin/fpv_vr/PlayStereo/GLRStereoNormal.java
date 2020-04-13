@@ -50,7 +50,6 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         this.telemetryReceiver=telemetryReceiver;
         nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoSettings.videoMode(mContext));
-
         final MVrHeadsetParams params=new MVrHeadsetParams(activityContext);
         nativeUpdateHeadsetParams(nativeGLRendererStereo,params);
     }

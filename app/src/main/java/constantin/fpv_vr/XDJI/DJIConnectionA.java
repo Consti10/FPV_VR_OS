@@ -23,9 +23,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import constantin.fpv_vr.R;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
+import dji.common.product.Model;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
+import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 
@@ -97,6 +99,15 @@ public class DJIConnectionA extends AppCompatActivity {
         if (!missingPermission.isEmpty()) {
             checkAndRequestPermissions();
         }
+    }
+
+    private static boolean isAircraftConnected(){
+        final BaseProduct product = DJISDKManager.getInstance().getProduct();
+        final Aircraft aircraft=(Aircraft)product;
+        if (product == null || !product.isConnected() || aircraft==null || product.getModel().equals(Model.UNKNOWN_AIRCRAFT)) {
+            return false;
+        }
+        return true;
     }
 
     //

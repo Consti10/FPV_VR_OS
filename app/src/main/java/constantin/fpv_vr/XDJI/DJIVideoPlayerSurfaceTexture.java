@@ -69,6 +69,12 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
     public void onSurfaceTextureAvailable(final SurfaceTexture surfaceTexture) {
         //To avoid race conditions always start and stop the Video player on the UI thread
         this.surfaceTexture=surfaceTexture;
+        /*surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
+            @Override
+            public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+
+            }
+        });*/
         parent.runOnUiThread(new Runnable() {
             @Override
             public void run() {
