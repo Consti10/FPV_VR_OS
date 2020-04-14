@@ -50,8 +50,8 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
 
     public void setIVideoParamsChanged(final IVideoParamsChanged vpc){
         videoPlayer.setIVideoParamsChanged(vpc);
-        //this.iVideoParamsChanged=vpc;
     }
+
     public long GetExternalGroundRecorder(){
         return 0;
     }

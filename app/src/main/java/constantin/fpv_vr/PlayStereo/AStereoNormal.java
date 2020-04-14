@@ -41,7 +41,6 @@ public class AStereoNormal extends AppCompatActivity{
         telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
         mGLRStereoNormal = new GLRStereoNormal(this,mVideoPlayer,telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
         mVideoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
-
         mGLViewStereo.setRenderer(mGLRStereoNormal);
         mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         mGLViewStereo.setPreserveEGLContextOnPause(true);

@@ -175,6 +175,7 @@ JNI_METHOD(void, nativeUpdateHeadsetParams)
 (JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
     const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
     native(instancePointer)->vrHeadsetParams.updateHeadsetParams(deviceParams);
+    native(instancePointer)->vrHeadsetParams.updateDistortionManager(native(instancePointer)->distortionManager);
 }
 
 }
