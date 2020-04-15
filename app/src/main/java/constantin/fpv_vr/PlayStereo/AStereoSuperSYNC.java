@@ -19,23 +19,18 @@ import constantin.video.core.VideoPlayerSurfaceTexture;
 public class AStereoSuperSYNC extends AppCompatActivity{
     //Components use the android LifecycleObserver. Since they don't need forwarding of
     //onPause / onResume it looks so empty here
-    private ViewSuperSync mViewSuperSync;
-    private GLRStereoSuperSync mGLRStereoSuperSync;
-    private AirHeadTrackingSender airHeadTrackingSender;
-    private DJITelemetryReceiver telemetryReceiver;
-    private VideoPlayerSurfaceTexture mVideoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewSuperSync=new ViewSuperSync(this,false);
-        mVideoPlayer=new VideoPlayerSurfaceTexture(this);
-        telemetryReceiver=new DJITelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
-        mGLRStereoSuperSync = new GLRStereoSuperSync(this,mVideoPlayer,telemetryReceiver,mViewSuperSync.getGvrApi().getNativeGvrContext());
+        ViewSuperSync mViewSuperSync = new ViewSuperSync(this);
+        VideoPlayerSurfaceTexture mVideoPlayer = new VideoPlayerSurfaceTexture(this);
+        DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
+        GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this, mVideoPlayer, telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
         mVideoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
         setContentView(mViewSuperSync);
-        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this,mViewSuperSync.getGvrApi());
+        AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, mViewSuperSync.getGvrApi());
     }
 
     @Override

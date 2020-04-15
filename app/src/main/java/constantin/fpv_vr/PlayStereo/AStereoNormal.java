@@ -21,33 +21,26 @@ import constantin.telemetry.core.TelemetryReceiver;
 public class AStereoNormal extends AppCompatActivity{
     //Components use the android LifecycleObserver. Since they don't need forwarding of
     //onPause / onResume it looks so empty here
-    private MyVRLayout mVrLayout;
-    private MyGLSurfaceView mGLViewStereo;
-
-    private GLRStereoNormal mGLRStereoNormal;
-    private AirHeadTrackingSender airHeadTrackingSender;
-    private DJITelemetryReceiver telemetryReceiver;
-    //private VideoPlayerSurfaceTexture mVideoPlayer;
-    private DJIVideoPlayerSurfaceTexture mVideoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mVrLayout =new MyVRLayout(this,false);
-        mGLViewStereo=new MyGLSurfaceView(this,this);
+        MyVRLayout mVrLayout = new MyVRLayout(this);
+        MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
         //mVideoPlayer=new VideoPlayerSurfaceTexture(this);
-        mVideoPlayer=new DJIVideoPlayerSurfaceTexture(this);
-        telemetryReceiver=new DJITelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
-        mGLRStereoNormal = new GLRStereoNormal(this,mVideoPlayer,telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+        //private VideoPlayerSurfaceTexture mVideoPlayer;
+        DJIVideoPlayerSurfaceTexture mVideoPlayer = new DJIVideoPlayerSurfaceTexture(this);
+        DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
+        GLRStereoNormal mGLRStereoNormal = new GLRStereoNormal(this, mVideoPlayer, telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
         mVideoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         mGLViewStereo.setRenderer(mGLRStereoNormal);
         mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         mGLViewStereo.setPreserveEGLContextOnPause(true);
         mVrLayout.setPresentationView(mGLViewStereo);
         setContentView(mVrLayout);
-        airHeadTrackingSender=AirHeadTrackingSender.createIfEnabled(this,mVrLayout.getGvrApi());
+        AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, mVrLayout.getGvrApi());
     }
 
     @Override

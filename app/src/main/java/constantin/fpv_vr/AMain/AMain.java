@@ -25,7 +25,6 @@ import java.util.List;
 
 import constantin.fpv_vr.AConnect.AConnect;
 import constantin.fpv_vr.XDJI.DJIConnectionA;
-import constantin.fpv_vr.PlayMono.AMonoGLVideoOSD;
 import constantin.fpv_vr.Settings.AGroundRecordingSettings;
 import constantin.fpv_vr.Settings.ASettingsOSD;
 import constantin.fpv_vr.Settings.ASettingsVR;
@@ -125,32 +124,13 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          * Each button starts its own activity or service
          */
         switch (v.getId()) {
-            case R.id.b_startMonoVideoOnly:{
-                //With normal video we can use a android surface instead of OpenGL
-                final Intent intent;
-                if(VideoSettings.videoMode(this)==0){
-                    intent=new Intent().setClass(this, AMonoVideoOSD.class);
-                    intent.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,false);
-                }else{
-                    intent=new Intent().setClass(this, AMonoGLVideoOSD.class);
-                    intent.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,false);
-                }
-                startActivity(intent);
-                startRecordingScreenIfEnabled();
-                break;
-            }
+            case R.id.b_startMonoVideoOnly:
             case R.id.b_startMonoVideoOSD:{
-                final Intent intent;
-                if(VideoSettings.videoMode(this)==0){
-                    intent=new Intent().setClass(this, AMonoVideoOSD.class);
-                }else{
-                    intent=new Intent().setClass(this, AMonoGLVideoOSD.class);
-                    intent.putExtra(AMonoGLVideoOSD.EXTRA_RENDER_OSD,true);
-                }
+                final Intent intent=new Intent().setClass(this, AMonoVideoOSD.class);
+                intent.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,v.getId()==R.id.b_startMonoVideoOSD);
                 startActivity(intent);
                 startRecordingScreenIfEnabled();
-                break;
-            }
+            }break;
             case R.id.b_startStereo:{
                 final Intent intent = new Intent();
                 //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
