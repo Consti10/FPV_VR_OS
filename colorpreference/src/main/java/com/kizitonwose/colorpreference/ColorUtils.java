@@ -8,10 +8,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import androidx.annotation.ArrayRes;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.ImageView;
+
+import androidx.annotation.ArrayRes;
 
 /**
  * Created by Kizito Nwose on 9/28/2016.

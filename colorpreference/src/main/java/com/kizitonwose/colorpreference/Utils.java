@@ -3,6 +3,7 @@ package com.kizitonwose.colorpreference;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+
 import androidx.annotation.Nullable;
 
 /**

@@ -3,7 +3,6 @@ package constantin.fpv_vr.Preferences;
 import android.content.Context;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
-
 import android.util.AttributeSet;
 
 /**
