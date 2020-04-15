@@ -1,14 +1,13 @@
 package constantin.fpv_vr.PlayMono;
 
 import android.graphics.PixelFormat;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.vr.ndk.base.GvrApi;
 
@@ -16,7 +15,6 @@ import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
-import constantin.fpv_vr.XDJI.DJIVideoPlayerSurfaceHolder;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;

@@ -14,7 +14,6 @@ import constantin.video.core.ISurfaceTextureAvailable;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayer.VideoPlayer;
 import constantin.video.core.VideoPlayer.VideoSettings;
-import dji.common.product.Model;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;

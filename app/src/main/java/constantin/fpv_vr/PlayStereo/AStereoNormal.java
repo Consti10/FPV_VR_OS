@@ -7,16 +7,17 @@ package constantin.fpv_vr.PlayStereo;
 
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
 import constantin.fpv_vr.XDJI.DJIVideoPlayerSurfaceTexture;
-import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
-import constantin.telemetry.core.TelemetryReceiver;
 
 public class AStereoNormal extends AppCompatActivity{
     //Components use the android LifecycleObserver. Since they don't need forwarding of

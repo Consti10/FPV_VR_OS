@@ -3,9 +3,9 @@ package constantin.fpv_vr.XExperimental;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.Surface;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.vr.ndk.base.GvrLayout;
 

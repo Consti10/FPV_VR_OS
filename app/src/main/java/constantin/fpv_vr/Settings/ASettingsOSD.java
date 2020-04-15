@@ -4,10 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.preference.PreferenceManager;
 
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Toaster;

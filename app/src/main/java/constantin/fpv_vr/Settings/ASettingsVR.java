@@ -10,12 +10,13 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.mapzen.prefsplus.IntListPreference;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import constantin.fpv_vr.R;
 import constantin.renderingx.core.GLESInfo.GLESInfo;
 

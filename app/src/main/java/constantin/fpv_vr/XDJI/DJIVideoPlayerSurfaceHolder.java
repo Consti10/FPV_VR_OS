@@ -2,7 +2,6 @@ package constantin.fpv_vr.XDJI;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -10,8 +9,6 @@ import constantin.fpv_vr.Toaster;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayer.VideoPlayer;
 import constantin.video.core.VideoPlayer.VideoSettings;
-import dji.common.product.Model;
-import dji.midware.usb.P3.UsbAccessoryService;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;

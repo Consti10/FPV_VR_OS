@@ -7,14 +7,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.hbisoft.hbrecorder.HBRecorder;
 import com.hbisoft.hbrecorder.HBRecorderListener;
@@ -24,28 +25,28 @@ import java.util.Arrays;
 import java.util.List;
 
 import constantin.fpv_vr.AConnect.AConnect;
-import constantin.fpv_vr.XDJI.DJIConnectionA;
+import constantin.fpv_vr.PlayMono.AMonoVideoOSD;
+import constantin.fpv_vr.PlayStereo.AStereoNormal;
+import constantin.fpv_vr.PlayStereo.AStereoSuperSYNC;
+import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.AGroundRecordingSettings;
 import constantin.fpv_vr.Settings.ASettingsOSD;
 import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.PlayMono.AMonoVideoOSD;
-import constantin.fpv_vr.Toaster;
-import constantin.fpv_vr.XExperimental.AStereoDaydream;
-import constantin.fpv_vr.PlayStereo.AStereoNormal;
-import constantin.fpv_vr.PlayStereo.AStereoSuperSYNC;
-import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.UpdateHelper;
+import constantin.fpv_vr.Toaster;
+import constantin.fpv_vr.XDJI.DJIConnectionA;
+import constantin.fpv_vr.XExperimental.AStereoDaydream;
 import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.VideoPlayer.VideoSettings;
 import dji.sdk.sdkmanager.DJISDKManager;
 
+import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_EZWB;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_Manually;
+import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_RTSP;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_StorageFile;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_TestFile;
-import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_EZWB;
-import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_RTSP;
 
 public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
     private static final String TAG="AMain";

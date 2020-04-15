@@ -2,11 +2,12 @@ package constantin.fpv_vr.PlayStereo;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
 import constantin.renderingx.core.ViewSuperSync;
-import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoPlayerSurfaceTexture;
 
 /*****************************************

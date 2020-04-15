@@ -1,12 +1,7 @@
 package constantin.fpv_vr.Settings;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.CheckBoxPreference;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import constantin.fpv_vr.R;
 

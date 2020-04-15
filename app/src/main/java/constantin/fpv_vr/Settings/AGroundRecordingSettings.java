@@ -10,6 +10,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.VideoPlayer.VideoSettings;

@@ -7,12 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,11 +15,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.AGroundRecordingSettings;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.R;
 import constantin.telemetry.core.ASettingsTelemetry;
-import constantin.telemetry.core.TelemetryReceiver;
 import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.AVideoSettings;
 import constantin.video.core.VideoPlayer.VideoPlayer;
