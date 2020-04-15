@@ -22,7 +22,8 @@
         android:required="false" /> <!-- I think for gvr lib -->
     <uses-feature
         android:name="android.hardware.vr.headtracking"
-        android:required="false" /> <!-- a write implies a read. Needed for ground recording and play test file -->
+        android:required="false" />
+    <!-- a write implies a read. Needed for ground recording and play test file -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -65,7 +66,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
-        <activity android:name=".XDJI.DJIConnectionA"></activity>
         <!-- DJI SDK -->
         <uses-library android:name="com.android.future.usb.accessory" />
         <uses-library
@@ -86,7 +86,11 @@
             <meta-data
                 android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
                 android:resource="@xml/accessory_filter" />
-        </activity> <!-- DJI SDK -->
+        </activity>
+        <!-- me -->
+        <activity android:name=".XDJI.DJIConnectionA"></activity>
+        <!-- DJI SDK -->
+
         <activity
             android:name=".AMain.AMain"
             android:screenOrientation="landscape"
@@ -149,7 +153,6 @@
         <activity
             android:name="constantin.renderingx.core.GLESInfo.AWriteGLESInfo"
             android:screenOrientation="behind" />
-
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
