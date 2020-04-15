@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
 import constantin.fpv_vr.XDJI.DJIVideoPlayerSurfaceHolder;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.renderingx.core.FullscreenHelper;
@@ -30,7 +31,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     private ActivityMonoVidOsdBinding binding;
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
     private AirHeadTrackingSender airHeadTrackingSender;
-    private TelemetryReceiver telemetryReceiver;
+    private DJITelemetryReceiver telemetryReceiver;
     private boolean ENABLE_OSD;
     private boolean ENABLE_VIDEO_VIA_OPENGL;
     //private VideoPlayerSurfaceHolder mVideoPlayer;
@@ -54,7 +55,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             binding.MyGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
             binding.MyGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             binding.MyGLSurfaceView.setPreserveEGLContextOnPause(true);
-            telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
+            telemetryReceiver=new DJITelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
             final GLRMono mGLRMonoOSD = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
             binding.MyGLSurfaceView.setRenderer(mGLRMonoOSD);
         }

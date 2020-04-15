@@ -15,6 +15,7 @@ import com.google.vr.ndk.base.GvrLayout;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
+import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyEGLWindowSurfaceFactory;
@@ -40,7 +41,8 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
     private static final String TAG="AMonoGLVideoOSD";
     private MyGLSurfaceView mGLView;
     private GLRMono mGLRenderer;
-    private TelemetryReceiver telemetryReceiver;
+    //private TelemetryReceiver telemetryReceiver;
+    private DJITelemetryReceiver telemetryReceiver;
     private MyVRLayout myVRLayout;
     public static final String EXTRA_RENDER_OSD ="EXTRA_RENDER_OSD"; //boolean weather ENABLE_OSD should be enabled
     private VideoPlayerSurfaceTexture mVideoPlayer;
@@ -65,7 +67,7 @@ public class AMonoGLVideoOSD extends AppCompatActivity {
         myVRLayout.setPresentationView(mGLView);
 
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
-        telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
+        telemetryReceiver=new DJITelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
         mGLRenderer =new GLRMono(this,mVideoPlayer,telemetryReceiver, myVRLayout.getGvrApi(),
                 VideoSettings.videoMode(this),renderOSD, disableVSYNC);
         mVideoPlayer.setIVideoParamsChanged(mGLRenderer);

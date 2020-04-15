@@ -26,6 +26,7 @@ import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.ASettingsTelemetry;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.AVideoSettings;
 import constantin.video.core.VideoPlayer.VideoPlayer;
 import constantin.video.core.VideoPlayer.VideoSettings;
@@ -174,11 +175,11 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
             case CONNECTION_TYPE_EZWB:
             case CONNECTION_TYPE_Manually:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE), VideoPlayer.VS_SOURCE_UDP);
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE), TelemetryReceiver.SOURCE_TYPE_UDP);
+                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE), TelemetrySettings.SOURCE_TYPE_UDP);
                 break;
             case CONNECTION_TYPE_StorageFile:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_FILE);
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_FILE);
+                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetrySettings.SOURCE_TYPE_FILE);
                 break;
             case CONNECTION_TYPE_TestFile:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_ASSETS);
@@ -195,11 +196,11 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "paris_by_diego.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "mono.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_ASSETS);
+                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetrySettings.SOURCE_TYPE_ASSETS);
                 break;
             case CONNECTION_TYPE_RTSP:
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_FFMPEG_URL);
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetryReceiver.SOURCE_TYPE_UDP);
+                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetrySettings.SOURCE_TYPE_UDP);
                 break;
              default:break;
         }

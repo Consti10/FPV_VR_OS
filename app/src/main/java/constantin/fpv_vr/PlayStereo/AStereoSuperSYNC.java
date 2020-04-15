@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import androidx.appcompat.app.AppCompatActivity;
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
 import constantin.renderingx.core.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.VideoPlayerSurfaceTexture;
@@ -21,7 +22,7 @@ public class AStereoSuperSYNC extends AppCompatActivity{
     private ViewSuperSync mViewSuperSync;
     private GLRStereoSuperSync mGLRStereoSuperSync;
     private AirHeadTrackingSender airHeadTrackingSender;
-    private TelemetryReceiver telemetryReceiver;
+    private DJITelemetryReceiver telemetryReceiver;
     private VideoPlayerSurfaceTexture mVideoPlayer;
 
     @Override
@@ -29,7 +30,7 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         mViewSuperSync=new ViewSuperSync(this,false);
         mVideoPlayer=new VideoPlayerSurfaceTexture(this);
-        telemetryReceiver=new TelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
+        telemetryReceiver=new DJITelemetryReceiver(this,mVideoPlayer.GetExternalGroundRecorder());
         mGLRStereoSuperSync = new GLRStereoSuperSync(this,mVideoPlayer,telemetryReceiver,mViewSuperSync.getGvrApi().getNativeGvrContext());
         mVideoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
