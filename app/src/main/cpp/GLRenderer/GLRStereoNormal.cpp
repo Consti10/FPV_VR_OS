@@ -128,7 +128,7 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
-      Java_constantin_fpv_1vr_PlayStereo_GLRStereoNormal_##method_name
+      Java_constantin_fpv_1vr_play_1stereo_GLRStereoNormal_##method_name
 
 inline jlong jptr(GLRStereoNormal *glRendererStereo) {
     return reinterpret_cast<intptr_t>(glRendererStereo);

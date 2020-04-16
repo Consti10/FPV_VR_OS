@@ -119,7 +119,7 @@ void GLRStereoSuperSync::setLastVSYNC(int64_t lastVSYNC) {
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
-      Java_constantin_fpv_1vr_PlayStereo_GLRStereoSuperSync_##method_name
+      Java_constantin_fpv_1vr_play_1stereo_GLRStereoSuperSync_##method_name
 
 inline jlong jptr(GLRStereoSuperSync *glRendererStereo) {
     return reinterpret_cast<intptr_t>(glRendererStereo);
