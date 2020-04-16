@@ -20,31 +20,32 @@ import dji.common.util.CommonCallbacks;
 import dji.sdk.products.Aircraft;
 
 public class XTelemetryReceiver extends TelemetryReceiver {
-    private final boolean DJI_ENABLED;
     private static final float MPS_TO_KPH=3.6f;
 
     public <T extends Activity & LifecycleOwner> XTelemetryReceiver(T parent, long externalGroundRecorder) {
         super(parent, externalGroundRecorder);
-        DJI_ENABLED=DJIApplication.isDJIEnabled(context);
-
-        if(DJI_ENABLED){
+        if(DJIApplication.isDJIEnabled(context)){
             TelemetrySettings.setT_SOURCE(parent,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
+            setupDJICallbacks();
+        }
+    }
 
-            final Aircraft aircraft=DJIApplication.getConnectedAircraft();
-            if (aircraft==null) {
-                Toaster.makeToast(context,"Cannot start telemetry",true);
-            } else {
-                Toast.makeText(context,"starting dji telemetry",Toast.LENGTH_LONG).show();
-                aircraft.getGimbal().setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        if(djiError==null){
-                            System.out.println("Set gimbal to X");
-                        }else{
-                            System.out.println("Cannot set gimbal to X"+djiError.getDescription());
-                        }
+    private void setupDJICallbacks(){
+        final Aircraft aircraft=DJIApplication.getConnectedAircraft();
+        if (aircraft==null) {
+            Toaster.makeToast(context,"Cannot start telemetry",true);
+        } else {
+            Toast.makeText(context, "starting dji telemetry", Toast.LENGTH_LONG).show();
+            aircraft.getGimbal().setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+                    if (djiError == null) {
+                        System.out.println("Set gimbal to X");
+                    } else {
+                        System.out.println("Cannot set gimbal to X" + djiError.getDescription());
                     }
-                });
+                }
+            });
                 /*Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.RELATIVE_ANGLE);
                 builder.time(1);
                 builder.pitch(0);
@@ -60,32 +61,32 @@ public class XTelemetryReceiver extends TelemetryReceiver {
                         }
                     }
                 });*/
-                aircraft.getAirLink().setDownlinkSignalQualityCallback(new SignalQualityCallback() {
-                    @Override
-                    public void onUpdate(int i) {
-                        setDJIDownlinkSignalQuality(nativeInstance,i);
-                    }
-                });
-                aircraft.getBattery().setStateCallback(new BatteryState.Callback() {
-                    @Override
-                    public void onUpdate(BatteryState state) {
-                        setDJIBatteryValues(nativeInstance,state.getChargeRemainingInPercent(),state.getCurrent()*1000);
-                    }
-                });
-                aircraft.getFlightController().setStateCallback(new FlightControllerState.Callback() {
-                    @Override
-                    public void onUpdate(FlightControllerState state) {
-                        final LocationCoordinate2D home=state.getHomeLocation();
-                        final LocationCoordinate3D aircraftLocation=state.getAircraftLocation();
-                        final Attitude aircraftAttitude=state.getAttitude();
-                        setDJIValues(nativeInstance,aircraftLocation.getLatitude(),aircraftLocation.getLongitude(),aircraftLocation.getAltitude(),
-                                -(float)aircraftAttitude.roll,(float)aircraftAttitude.pitch,
-                                state.getVelocityX()*MPS_TO_KPH,
-                                -state.getVelocityZ()*MPS_TO_KPH,
-                                state.getSatelliteCount(),(float)aircraftAttitude.yaw);
-                        setHomeLocation(nativeInstance,home.getLatitude(),home.getLongitude(),0);
-                    }
-                });
+            aircraft.getAirLink().setDownlinkSignalQualityCallback(new SignalQualityCallback() {
+                @Override
+                public void onUpdate(int i) {
+                    setDJIDownlinkSignalQuality(nativeInstance, i);
+                }
+            });
+            aircraft.getBattery().setStateCallback(new BatteryState.Callback() {
+                @Override
+                public void onUpdate(BatteryState state) {
+                    setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(), state.getCurrent() * 1000);
+                }
+            });
+            aircraft.getFlightController().setStateCallback(new FlightControllerState.Callback() {
+                @Override
+                public void onUpdate(FlightControllerState state) {
+                    final LocationCoordinate2D home = state.getHomeLocation();
+                    final LocationCoordinate3D aircraftLocation = state.getAircraftLocation();
+                    final Attitude aircraftAttitude = state.getAttitude();
+                    setDJIValues(nativeInstance, aircraftLocation.getLatitude(), aircraftLocation.getLongitude(), aircraftLocation.getAltitude(),
+                            -(float) aircraftAttitude.roll, (float) aircraftAttitude.pitch,
+                            state.getVelocityX() * MPS_TO_KPH,
+                            -state.getVelocityZ() * MPS_TO_KPH,
+                            state.getSatelliteCount(), (float) aircraftAttitude.yaw);
+                    setHomeLocation(nativeInstance, home.getLatitude(), home.getLongitude(), 0);
+                }
+            });
                 /*aircraft.getAirLink().getWiFiLink().setDataRate(WifiDataRate.RATE_1_MBPS, new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
@@ -99,7 +100,6 @@ public class XTelemetryReceiver extends TelemetryReceiver {
                             debugDJIError("video resolution",djiError);
                     }
                 });*/
-            }
         }
     }
 

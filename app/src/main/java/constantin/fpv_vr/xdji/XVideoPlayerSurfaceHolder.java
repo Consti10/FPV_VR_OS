@@ -16,7 +16,6 @@ import dji.sdk.products.Aircraft;
 public class XVideoPlayerSurfaceHolder  implements SurfaceHolder.Callback{
     private DJICodecManager mCodecManager = null;
     private final Context context;
-    private IVideoParamsChanged iVideoParamsChanged;
     private VideoPlayer videoPlayer;
     private final boolean DJI_ENABLED;
 
