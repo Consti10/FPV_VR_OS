@@ -35,12 +35,10 @@ import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Settings.UpdateHelper;
 import constantin.fpv_vr.Toaster;
-import constantin.fpv_vr.XDJI.DJIConnectionA;
 import constantin.fpv_vr.XExperimental.AStereoDaydream;
 import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.VideoPlayer.VideoSettings;
-import dji.sdk.sdkmanager.DJISDKManager;
 
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_EZWB;
 import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_Manually;
@@ -93,7 +91,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         stopRecordingScreenIfNeeded();
         //Set the connectB to the right color
         Button connectB=findViewById(R.id.b_Connect);
-        switch (SJ.ConnectionType(this)){
+        switch (SJ.getConnectionType(this)){
             case CONNECTION_TYPE_TestFile:
                 connectB.setTextColor(Color.GREEN);
                 break;

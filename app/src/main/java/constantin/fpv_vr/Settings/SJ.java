@@ -1,5 +1,6 @@
 package constantin.fpv_vr.Settings;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -19,9 +20,14 @@ import static constantin.fpv_vr.AConnect.AConnect.CONNECTION_TYPE_TestFile;
 public class SJ {
 
     //********************************** pref_connect only **********************************
-    public static int ConnectionType(final Context context){
+    public static int getConnectionType(final Context context){
         final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
         return pref_connect.getInt(context.getString(R.string.ConnectionType),CONNECTION_TYPE_TestFile);
+    }
+    @SuppressLint("ApplySharedPref")
+    public static void setConnectionType(final Context context, final int value){
+        final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
+        pref_connect.edit().putInt(context.getString(R.string.ConnectionType),value).commit();
     }
     //********************************** pref_connect only **********************************
 

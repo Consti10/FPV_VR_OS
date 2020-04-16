@@ -87,7 +87,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.entriesConnectionType,R.layout.spinner_white);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
-        mSpinner.setSelection(SJ.ConnectionType(this));
+        mSpinner.setSelection(SJ.getConnectionType(this));
     }
 
     @Override
@@ -213,8 +213,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         }
         pref_video_edit.commit();
         pref_telemetry_edit.commit();
-        context.getSharedPreferences("pref_connect", MODE_PRIVATE).edit().
-                putInt(context.getString(R.string.ConnectionType), connectionType).commit();
+        SJ.setConnectionType(context,connectionType);
     }
 
 
