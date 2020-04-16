@@ -54,6 +54,8 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     private static final String[] REQUIRED_PERMISSION_LIST = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_FINE_LOCATION,
+            // Needed for DJI registering the SDK (alongside with WRITE_EXTERNAL_STORAGE)
+            Manifest.permission.READ_PHONE_STATE,
     };
     private final List<String> missingPermission = new ArrayList<>();
     private static final int REQUEST_PERMISSION_CODE = 12345;

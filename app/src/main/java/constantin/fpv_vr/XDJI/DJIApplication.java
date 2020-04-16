@@ -21,7 +21,7 @@ import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 
-public class DJIApplication extends Application implements DJISDKManager.SDKManagerCallback {
+public class DJIApplication extends Application {
     private final AtomicBoolean isSDKInstalled=new AtomicBoolean(false);
     private final AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
 
@@ -30,7 +30,6 @@ public class DJIApplication extends Application implements DJISDKManager.SDKMana
         super.attachBaseContext(paramContext);
         initAppIfNeeded();
     }
-
 
     static Aircraft getConnectedAircraft(final Context context){
         final BaseProduct product = DJISDKManager.getInstance().getProduct();
@@ -54,14 +53,14 @@ public class DJIApplication extends Application implements DJISDKManager.SDKMana
                 @Override
                 public void run() {
                     showToast("registering, pls wait...");
-                    DJISDKManager.getInstance().registerApp(DJIApplication.this.getApplicationContext(),DJIApplication.this);
+                    //DJISDKManager.getInstance().registerApp(DJIApplication.this.getApplicationContext(),DJIApplication.this);
                 }
             });
         }
     }
 
     //All these are called by dji
-    @Override
+    /*@Override
     public void onRegister(DJIError djiError) {
         if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
             showToast("Register Success");
@@ -95,7 +94,7 @@ public class DJIApplication extends Application implements DJISDKManager.SDKMana
     @Override
     public void onDatabaseDownloadProgress(long l, long l1) {
 
-    }
+    }*/
 
     private void showToast(final String toastMsg) {
         Handler handler = new Handler(Looper.getMainLooper());
