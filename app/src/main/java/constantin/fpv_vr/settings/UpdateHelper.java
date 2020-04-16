@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.telemetry.core.TelemetrySettings;
-import constantin.video.core.VideoPlayer.VideoSettings;
+import constantin.video.core.video_player.VideoSettings;
 
 import static android.content.Context.MODE_PRIVATE;
 

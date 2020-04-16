@@ -24,7 +24,7 @@ import constantin.renderingx.core.views.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.VideoPlayer.VideoSettings;
+import constantin.video.core.video_player.VideoSettings;
 
 /*****************************************************************
  *  * OSD can be fully disabled
@@ -47,7 +47,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final boolean ENABLE_OSD = getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD, true);
-        final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VideoSettings.videoMode(this)==0;
+        final boolean USE_ANDROID_SURFACE_FOR_VIDEO= VideoSettings.videoMode(this)==0;
         System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
         }else{

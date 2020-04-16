@@ -39,7 +39,7 @@ import constantin.fpv_vr.xdji.DJIApplication;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
-import constantin.video.core.VideoPlayer.VideoSettings;
+import constantin.video.core.video_player.VideoSettings;
 
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_EZWB;
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_Manually;

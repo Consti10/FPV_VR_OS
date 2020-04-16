@@ -19,7 +19,7 @@ import java.io.File;
 
 import constantin.fpv_vr.databinding.ConnectGrfileFragmentBinding;
 import constantin.telemetry.core.TelemetrySettings;
-import constantin.video.core.VideoPlayer.VideoSettings;
+import constantin.video.core.video_player.VideoSettings;
 
 
 public class FConnectGroundRecFile extends Fragment {
@@ -53,7 +53,7 @@ public class FConnectGroundRecFile extends Fragment {
         binding.bEasySelectFileFPV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String directory=VideoSettings.getDirectoryToSaveDataTo();
+                final String directory= VideoSettings.getDirectoryToSaveDataTo();
                 final String[] filenames=getAllFilenamesInDirectory(directory);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Pick a ground recording file");

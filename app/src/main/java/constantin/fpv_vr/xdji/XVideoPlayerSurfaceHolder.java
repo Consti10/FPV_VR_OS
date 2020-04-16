@@ -6,8 +6,8 @@ import android.view.SurfaceHolder;
 
 import constantin.fpv_vr.Toaster;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.VideoPlayer.VideoPlayer;
-import constantin.video.core.VideoPlayer.VideoSettings;
+import constantin.video.core.video_player.VideoPlayer;
+import constantin.video.core.video_player.VideoSettings;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.products.Aircraft;

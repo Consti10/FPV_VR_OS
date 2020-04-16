@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.TelemetrySettings;
-import constantin.video.core.VideoPlayer.VideoSettings;
+import constantin.video.core.video_player.VideoSettings;
 
 public class AGroundRecordingSettings extends AppCompatActivity {
     private static final String PREF_GROUND_RECORDING="pref_ground_recording";
