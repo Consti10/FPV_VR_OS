@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.connect.AConnect;
 import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.VideoPlayer.VideoSettings;
 

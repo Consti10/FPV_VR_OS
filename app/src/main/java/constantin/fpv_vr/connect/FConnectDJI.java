@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import constantin.fpv_vr.xdji.DJIApplication;
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
+import constantin.fpv_vr.xdji.DJIApplication;
 
 public class FConnectDJI extends Fragment implements View.OnClickListener{
     private ConnectDjiFragmentBinding binding;

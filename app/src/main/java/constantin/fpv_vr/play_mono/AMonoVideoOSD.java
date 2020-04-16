@@ -13,11 +13,11 @@ import com.google.vr.ndk.base.GvrApi;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.xdji.XTelemetryReceiver;
 import constantin.fpv_vr.xdji.XVideoPlayerSurfaceHolder;
 import constantin.fpv_vr.xdji.XVideoPlayerSurfaceTexture;
-import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyEGLWindowSurfaceFactory;
