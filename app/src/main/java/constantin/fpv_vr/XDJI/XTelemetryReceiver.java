@@ -17,17 +17,18 @@ import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.gimbal.GimbalMode;
 import dji.common.model.LocationCoordinate2D;
 import dji.common.util.CommonCallbacks;
-import dji.sdk.base.BaseProduct;
 import dji.sdk.products.Aircraft;
-import dji.sdk.sdkmanager.DJISDKManager;
 
-public class DJITelemetryReceiver extends TelemetryReceiver {
+public class XTelemetryReceiver extends TelemetryReceiver {
+    private final boolean DJI_ENABLED;
 
-    public <T extends Activity & LifecycleOwner> DJITelemetryReceiver(T parent, long externalGroundRecorder) {
+    public <T extends Activity & LifecycleOwner> XTelemetryReceiver(T parent, long externalGroundRecorder) {
         super(parent, externalGroundRecorder);
-        TelemetrySettings.setT_SOURCE(parent,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
-        /////
-        if(TelemetrySettings.getT_SOURCE(parent)==TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI){
+        DJI_ENABLED=DJIApplication.isDJIEnabled(context);
+
+        if(DJI_ENABLED){
+            TelemetrySettings.setT_SOURCE(parent,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
+
             final Aircraft aircraft=DJIApplication.getConnectedAircraft();
             if (aircraft==null) {
                 Toaster.makeToast(context,"Cannot start telemetry",true);
@@ -84,6 +85,7 @@ public class DJITelemetryReceiver extends TelemetryReceiver {
                 });
             }
         }
+
     }
 
 }

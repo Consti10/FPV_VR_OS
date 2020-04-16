@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,7 +26,6 @@ import constantin.fpv_vr.Settings.SJ;
 import constantin.telemetry.core.ASettingsTelemetry;
 import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.AVideoSettings;
-import constantin.video.core.VideoPlayer.VideoPlayer;
 import constantin.video.core.VideoPlayer.VideoSettings;
 
 /************************************

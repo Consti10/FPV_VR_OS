@@ -1,21 +1,22 @@
 package constantin.fpv_vr.PlayStereo;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.EGLExt;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.Settings.SJ;
 import constantin.renderingx.core.MVrHeadsetParams;
+import constantin.renderingx.core.video.ISurfaceAvailable;
+import constantin.renderingx.core.video.VideoSurfaceHolder;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
-import constantin.video.core.ISurfaceTextureAvailable;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayer.VideoSettings;
 
@@ -41,28 +42,23 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoNormal instance.
     private final long nativeGLRendererStereo;
-    private SurfaceTexture mSurfaceTexture;
+    private VideoSurfaceHolder videoSurfaceHolder;
     private final TelemetryReceiver telemetryReceiver;
-    private final ISurfaceTextureAvailable iSurfaceTextureAvailable;
 
-    public GLRStereoNormal(final Context activityContext, final ISurfaceTextureAvailable iSurfaceTextureAvailable,final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
-        mContext=activityContext;
-        this.iSurfaceTextureAvailable=iSurfaceTextureAvailable;
+    public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
+        mContext=context;
         this.telemetryReceiver=telemetryReceiver;
-        nativeGLRendererStereo=nativeConstruct(activityContext,telemetryReceiver.getNativeInstance(),
+        videoSurfaceHolder=new VideoSurfaceHolder(context,iSurfaceAvailable);
+        nativeGLRendererStereo=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoSettings.videoMode(mContext));
-        final MVrHeadsetParams params=new MVrHeadsetParams(activityContext);
+        final MVrHeadsetParams params=new MVrHeadsetParams(context);
         nativeUpdateHeadsetParams(nativeGLRendererStereo,params);
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        int[] videoTexture=new int[1];
-        GLES20.glGenTextures(1, videoTexture, 0);
-        final int mGLTextureVideo = videoTexture[0];
-        mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
-        iSurfaceTextureAvailable.onSurfaceTextureAvailable(mSurfaceTexture);
-        nativeOnSurfaceCreated(nativeGLRendererStereo,mGLTextureVideo,mContext);
+        videoSurfaceHolder.createSurfaceTextureGL();
+        nativeOnSurfaceCreated(nativeGLRendererStereo,videoSurfaceHolder.getTextureId(),mContext);
     }
 
     @Override
@@ -80,7 +76,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
-        mSurfaceTexture.updateTexImage();
+        videoSurfaceHolder.getSurfaceTexture().updateTexImage();
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }

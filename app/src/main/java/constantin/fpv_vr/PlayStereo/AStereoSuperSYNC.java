@@ -6,9 +6,9 @@ import android.view.KeyEvent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
+import constantin.fpv_vr.XDJI.XTelemetryReceiver;
+import constantin.fpv_vr.XDJI.XVideoPlayerSurfaceTexture;
 import constantin.renderingx.core.views.ViewSuperSync;
-import constantin.video.core.VideoPlayerSurfaceTexture;
 
 /*****************************************
  * Render Video & OSD Side by Side. Difference to AStereoNormal: Renders directly into the Front Buffer  (FB) for lower latency
@@ -25,10 +25,10 @@ public class AStereoSuperSYNC extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewSuperSync mViewSuperSync = new ViewSuperSync(this);
-        VideoPlayerSurfaceTexture mVideoPlayer = new VideoPlayerSurfaceTexture(this);
-        DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
-        GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this, mVideoPlayer, telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
-        mVideoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
+        XVideoPlayerSurfaceTexture videoPlayer=new XVideoPlayerSurfaceTexture(this);
+        XTelemetryReceiver telemetryReceiver = new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder());
+        GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this,videoPlayer, telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
+        videoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
         setContentView(mViewSuperSync);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, mViewSuperSync.getGvrApi());

@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
+import constantin.fpv_vr.XDJI.XTelemetryReceiver;
+import constantin.fpv_vr.XDJI.XVideoPlayerSurfaceTexture;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.renderingx.core.views.MyVRLayout;
-import constantin.video.core.VideoPlayerSurfaceTexture;
 
 public class AStereoNormal extends AppCompatActivity{
     //Components use the android LifecycleObserver. Since they don't need forwarding of
@@ -30,11 +30,10 @@ public class AStereoNormal extends AppCompatActivity{
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
-        VideoPlayerSurfaceTexture mVideoPlayer=new VideoPlayerSurfaceTexture(this);
-        //DJIVideoPlayerSurfaceTexture mVideoPlayer = new DJIVideoPlayerSurfaceTexture(this);
-        DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
-        GLRStereoNormal mGLRStereoNormal = new GLRStereoNormal(this, mVideoPlayer, telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
-        mVideoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
+        XVideoPlayerSurfaceTexture videoPlayer=new XVideoPlayerSurfaceTexture(this);
+        XTelemetryReceiver telemetryReceiver = new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder());
+        GLRStereoNormal mGLRStereoNormal = new GLRStereoNormal(this,videoPlayer, telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+        videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         mGLViewStereo.setRenderer(mGLRStereoNormal);
         mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         mGLViewStereo.setPreserveEGLContextOnPause(true);

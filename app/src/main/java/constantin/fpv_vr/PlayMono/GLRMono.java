@@ -1,10 +1,10 @@
 package constantin.fpv_vr.PlayMono;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.vr.ndk.base.GvrApi;
 
@@ -12,10 +12,11 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.R;
+import constantin.renderingx.core.video.ISurfaceAvailable;
+import constantin.renderingx.core.video.VideoSurfaceHolder;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
-import constantin.video.core.ISurfaceTextureAvailable;
 import constantin.video.core.IVideoParamsChanged;
 
 import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
@@ -23,6 +24,7 @@ import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_AND
 /*
  * Renders OSD and/or video in monoscopic view
  */
+@SuppressWarnings("WeakerAccess")
 public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
     static final int VIDEO_MODE_2D_MONOSCOPIC=0;
     static {
@@ -42,37 +44,33 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
     private final TelemetryReceiver telemetryReceiver;
     //Optional, only when playing video that cannot be displayed by a 'normal' android surface
     //(e.g. 360° video)
-    private SurfaceTexture mSurfaceTexture;
-    private final int videoMode;
+    private final VideoSurfaceHolder mVideoSurfaceHolder;
     private final boolean disableVSYNC;
-    private final ISurfaceTextureAvailable iSurfaceTextureAvailable;
 
-    public GLRMono(final Context context,final ISurfaceTextureAvailable iSurfaceTextureAvailable, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
+    public GLRMono(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
                    final boolean disableVSYNC){
-        this.iSurfaceTextureAvailable=iSurfaceTextureAvailable;
-        this.videoMode=videoMode;
         mContext=context;
         this.disableVSYNC=disableVSYNC;
         this.telemetryReceiver=telemetryReceiver;
+        if(videoMode!=VIDEO_MODE_2D_MONOSCOPIC){
+            mVideoSurfaceHolder=new VideoSurfaceHolder(context,iSurfaceAvailable);
+        }else{
+            mVideoSurfaceHolder=null;
+        }
         nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi!=null ? gvrApi.getNativeGvrContext() : 0,videoMode,renderOSD);
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        int mGLTextureVideo=0;
-        if(videoMode!=VIDEO_MODE_2D_MONOSCOPIC){
-            int[] videoTexture=new int[1];
-            GLES20.glGenTextures(1, videoTexture, 0);
-            mGLTextureVideo = videoTexture[0];
-            mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
-            iSurfaceTextureAvailable.onSurfaceTextureAvailable(mSurfaceTexture);
+        if(mVideoSurfaceHolder!=null){
+            mVideoSurfaceHolder.createSurfaceTextureGL();
         }
         if(disableVSYNC){
             MyEGLConfigChooser.setEglSurfaceAttrib(EGL14.EGL_RENDER_BUFFER,EGL14.EGL_SINGLE_BUFFER);
             MyEGLConfigChooser.setEglSurfaceAttrib(EGL_ANDROID_front_buffer_auto_refresh,EGL14.EGL_TRUE);
             EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
         }
-        nativeOnSurfaceCreated(nativeGLRendererMono,mContext,mGLTextureVideo);
+        nativeOnSurfaceCreated(nativeGLRendererMono,mContext,mVideoSurfaceHolder==null ? 0 : mVideoSurfaceHolder.getTextureId());
     }
 
     @Override
@@ -84,8 +82,8 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        if(mSurfaceTexture!=null){
-            mSurfaceTexture.updateTexImage();
+        if(mVideoSurfaceHolder!=null){
+           mVideoSurfaceHolder.getSurfaceTexture().updateTexImage();
         }
         nativeOnDrawFrame(nativeGLRendererMono);
     }

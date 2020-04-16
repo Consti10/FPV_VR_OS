@@ -14,7 +14,9 @@ import com.google.vr.ndk.base.GvrApi;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Settings.SJ;
-import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
+import constantin.fpv_vr.XDJI.XTelemetryReceiver;
+import constantin.fpv_vr.XDJI.XVideoPlayerSurfaceHolder;
+import constantin.fpv_vr.XDJI.XVideoPlayerSurfaceTexture;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
@@ -23,8 +25,6 @@ import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayer.VideoSettings;
-import constantin.video.core.VideoPlayerSurfaceHolder;
-import constantin.video.core.VideoPlayerSurfaceTexture;
 
 /*****************************************************************
  *  * OSD can be fully disabled
@@ -36,11 +36,11 @@ import constantin.video.core.VideoPlayerSurfaceTexture;
  * 360° or stereo video needs to be rendered with OpenGL regardless weather the user wants to see the OSD or not
  ***************************************************************** */
 
-public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged{
+public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged {
     private ActivityMonoVidOsdBinding binding1;
     private constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding bindingGL;
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
-    private DJITelemetryReceiver telemetryReceiver;
+    private XTelemetryReceiver telemetryReceiver;
     private GLRMono mGLRenderer;
 
     @Override
@@ -56,9 +56,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding1 = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
             setContentView(binding1.getRoot());
-            VideoPlayerSurfaceHolder mVideoPlayer=new VideoPlayerSurfaceHolder(this,binding1.SurfaceViewMonoscopicVideo);
-            //DJIVideoPlayerSurfaceHolder mVideoPlayer = new DJIVideoPlayerSurfaceHolder(this, binding1.SurfaceViewMonoscopicVideo);
-            mVideoPlayer.setIVideoParamsChanged(this);
+            XVideoPlayerSurfaceHolder videoPlayer=new XVideoPlayerSurfaceHolder(this);
+            videoPlayer.setIVideoParamsChanged(this);
+            binding1.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoPlayer);
             //--
 
             if(ENABLE_OSD){
@@ -69,18 +69,14 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                 binding1.MyGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
                 binding1.MyGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
                 binding1.MyGLSurfaceView.setPreserveEGLContextOnPause(true);
-                telemetryReceiver=new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
+                telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder());
                 mGLRenderer = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
                 binding1.MyGLSurfaceView.setRenderer(mGLRenderer);
             }
         }else{
             bindingGL = constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding.inflate(getLayoutInflater());
             setContentView(bindingGL.getRoot());
-            //Do not forget to set the listener for the SurfaceTexture from the OpenGL renderer
-            VideoPlayerSurfaceTexture mVideoPlayer = new VideoPlayerSurfaceTexture(this);
-            mVideoPlayer.setIVideoParamsChanged(this);
-            //--
-
+            XVideoPlayerSurfaceTexture videoPlayer=new XVideoPlayerSurfaceTexture(this);
             MyGLSurfaceView mGLView = new MyGLSurfaceView(this);
             mGLView.setEGLContextClientVersion(2);
             //for now do not differentiate
@@ -93,8 +89,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             bindingGL.myVRLayout.setPresentationView(mGLView);
 
             //private TelemetryReceiver telemetryReceiver;
-            telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
-            mGLRenderer =new GLRMono(this, mVideoPlayer, telemetryReceiver, bindingGL.myVRLayout.getGvrApi(),
+            telemetryReceiver = new XTelemetryReceiver(this, videoPlayer.getExternalGroundRecorder());
+            mGLRenderer =new GLRMono(this,videoPlayer, telemetryReceiver, bindingGL.myVRLayout.getGvrApi(),
                     VideoSettings.videoMode(this),ENABLE_OSD, disableVSYNC);
             mGLView.setRenderer(mGLRenderer);
 
@@ -164,6 +160,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                 return super.onContextItemSelected(item);
         }
     }
+
 }
 
 

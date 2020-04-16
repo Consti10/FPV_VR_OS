@@ -2,14 +2,16 @@ package constantin.fpv_vr.PlayStereo;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.opengl.GLES20;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.renderingx.core.MVrHeadsetParams;
 import constantin.renderingx.core.gles_info.GLESInfo;
+import constantin.renderingx.core.video.ISurfaceAvailable;
+import constantin.renderingx.core.video.VideoSurfaceHolder;
 import constantin.renderingx.core.views.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
-import constantin.video.core.ISurfaceTextureAvailable;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.VideoPlayer.VideoSettings;
 
@@ -36,14 +38,13 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoSuperSync instance.
     private final long nativeGLRSuperSync;
-    private SurfaceTexture mSurfaceTexture;
+    private final VideoSurfaceHolder videoSurfaceHolder;
     private final TelemetryReceiver telemetryReceiver;
-    private final ISurfaceTextureAvailable iSurfaceTextureAvailable;
 
-    public GLRStereoSuperSync(final Context context, final ISurfaceTextureAvailable iSurfaceTextureAvailable,final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
+    public GLRStereoSuperSync(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=context;
-        this.iSurfaceTextureAvailable=iSurfaceTextureAvailable;
         this.telemetryReceiver=telemetryReceiver;
+        videoSurfaceHolder=new VideoSurfaceHolder(context,iSurfaceAvailable);
         final boolean qcomTiledRenderingAvailable= GLESInfo.isExtensionAvailable(context, GLESInfo.GL_QCOM_tiled_rendering);
         final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
@@ -54,12 +55,8 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
 
     @Override
     public void onSurfaceCreated() {
-        int[] videoTexture=new int[1];
-        GLES20.glGenTextures(1, videoTexture, 0);
-        final int mGLTextureVideo = videoTexture[0];
-        mSurfaceTexture = new SurfaceTexture(mGLTextureVideo,false);
-        iSurfaceTextureAvailable.onSurfaceTextureAvailable(mSurfaceTexture);
-        nativeOnSurfaceCreated(nativeGLRSuperSync,videoTexture[0],mContext);
+        videoSurfaceHolder.createSurfaceTextureGL();
+        nativeOnSurfaceCreated(nativeGLRSuperSync,videoSurfaceHolder.getTextureId(),mContext);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
 
     @Override
     public void enterSuperSyncLoop(final int exclusiveVRCore) {
-        nativeEnterSuperSyncLoop(nativeGLRSuperSync,mSurfaceTexture,exclusiveVRCore);
+        nativeEnterSuperSyncLoop(nativeGLRSuperSync,videoSurfaceHolder.getSurfaceTexture(),exclusiveVRCore);
     }
 
     @Override
