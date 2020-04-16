@@ -172,47 +172,43 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
     }
 
     public static void setPreferencesForConnectionType(final Context context,final int connectionType){
-        SharedPreferences pref_video=context.getSharedPreferences("pref_video",Context.MODE_PRIVATE);
-        SharedPreferences pref_telemetry=context.getSharedPreferences("pref_telemetry",MODE_PRIVATE);
-        SharedPreferences.Editor pref_video_edit=pref_video.edit();
-        SharedPreferences.Editor pref_telemetry_edit=pref_telemetry.edit();
         switch (connectionType){
             case CONNECTION_TYPE_EZWB:
             case CONNECTION_TYPE_Manually:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE), VideoPlayer.VS_SOURCE_UDP);
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE), TelemetrySettings.SOURCE_TYPE_UDP);
+                VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.UDP);
+                TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_UDP);
                 break;
             case CONNECTION_TYPE_StorageFile:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_FILE);
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetrySettings.SOURCE_TYPE_FILE);
+                VideoSettings.setVS_SOURCE(context,VideoSettings.VS_SOURCE.FILE);
+                TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_FILE);
                 break;
             case CONNECTION_TYPE_TestFile:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_ASSETS);
+                VideoSettings.setVS_SOURCE(context,VideoSettings.VS_SOURCE.ASSETS);
                 final int vm= VideoSettings.videoMode(context);
                 if(vm==0){
-                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "x264/testVideo.h264");
+                    VideoSettings.setVS_ASSETS_FILENAME_TEST_ONLY(context, "x264/testVideo.h264");
                 }else if(vm==1){
-                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "360/insta_webbn_1_shortened.h264");
+                    VideoSettings.setVS_ASSETS_FILENAME_TEST_ONLY(context,  "360/insta_webbn_1_shortened.h264");
                 }else{
-                    pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "360/insta_webbn_1_shortened.h264");
+                    VideoSettings.setVS_ASSETS_FILENAME_TEST_ONLY(context,  "360/insta_webbn_1_shortened.h264");
                 }
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "outfile.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "paris_by_diego.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "mono.h264");
                 //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetrySettings.SOURCE_TYPE_ASSETS);
+                TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_ASSETS);
                 break;
             case CONNECTION_TYPE_RTSP:
-                pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_FFMPEG_URL);
-                pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetrySettings.SOURCE_TYPE_UDP);
+                VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.FFMPEG);
+                TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_UDP);
                 break;
             case CONNECTION_TYPE_DJI:
-                //
+                VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
+                TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
+                break;
              default:break;
         }
-        pref_video_edit.commit();
-        pref_telemetry_edit.commit();
         SJ.setConnectionType(context,connectionType);
     }
 

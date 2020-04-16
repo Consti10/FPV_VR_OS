@@ -33,7 +33,7 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
     public DJIVideoPlayerSurfaceTexture(final AppCompatActivity parent){
         this.parent=parent;
         this.context=parent;
-        VideoSettings.setVS_SOURCE(context, VideoPlayer.VS_SOURCE.EXTERNAL);
+        VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
         videoPlayer=new VideoPlayer(context,null);
 
         final BaseProduct product = DJISDKManager.getInstance().getProduct();

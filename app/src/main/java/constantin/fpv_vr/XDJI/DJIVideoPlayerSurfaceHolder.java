@@ -22,7 +22,7 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback ,Vide
 
     public DJIVideoPlayerSurfaceHolder(final Context context,final SurfaceView surfaceView){
         this.context=context;
-        VideoSettings.setVS_SOURCE(context, VideoPlayer.VS_SOURCE.EXTERNAL);
+        VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
         videoPlayer=new VideoPlayer(context,null);
         final BaseProduct product = DJISDKManager.getInstance().getProduct();
         if (product == null || !product.isConnected()) {
