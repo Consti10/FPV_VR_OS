@@ -27,13 +27,13 @@ import dji.sdk.sdkmanager.DJISDKManager;
  */
 public class DJIApplication extends Application {
     private static final String TAG="DJIApplication";
-    private final AtomicBoolean isSDKInstalled=new AtomicBoolean(false);
     private final AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
     private long lastTimeToastDownloadDatabase=0;
 
     @Override
     protected void attachBaseContext(Context paramContext) {
         super.attachBaseContext(paramContext);
+        Helper.install(DJIApplication.this);
         initializeDJIIfNeeded();
     }
 
@@ -53,11 +53,6 @@ public class DJIApplication extends Application {
         final Context context=getBaseContext();
         if(!isDJIEnabled(context)){
             return;
-        }
-        //This one seems to link some libraries ?
-        if(isSDKInstalled.compareAndSet(false,true)){
-            debug("Helper.install(DJIApplication.this);");
-            Helper.install(DJIApplication.this);
         }
         if(DJISDKManager.getInstance().hasSDKRegistered()){
             return;

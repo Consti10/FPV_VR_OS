@@ -13,9 +13,9 @@
 #include <android/log.h>
 
 
-//Holds an array of fixed size
-//Intention is to avoid common mistakes (e.g. modifying the array but forgetting to set _sizeModified )
-template <typename T> class ModifiableArray{
+// Holds an array of fixed size
+// Intention is to avoid common mistakes (e.g. modifying the array but forgetting to set _sizeModified )
+template <class T> class ModifiableArray{
 private:
     //How many elements of member '_array' have been modified since last update call.
     unsigned int _sizeModified=0;
@@ -53,7 +53,7 @@ public:
 
 
 
-template <typename T>
+template <class T>
 class CpuGpuBuff{
 public:
     GLuint gpuBuffer;

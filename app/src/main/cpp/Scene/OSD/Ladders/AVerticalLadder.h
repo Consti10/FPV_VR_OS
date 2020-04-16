@@ -20,6 +20,7 @@
 #include <OSD/ATextElements/OSDBackgroundObj.hpp>
 #include <SettingsOSDStyle.h>
 
+// Abstract vertical ladder
 class AVerticalLadder : public IDrawable, public IPositionable, public IUpdateable  {
 public:
     AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,const TelemetryReceiver& telemetryReceiver,
