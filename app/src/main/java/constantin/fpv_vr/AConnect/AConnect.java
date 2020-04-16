@@ -116,8 +116,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //The toolbar has changed. Replace the old fragment with a new one
-        //FragmentManager fm=getFragmentManager();
-        FragmentManager fm=getSupportFragmentManager();
+        final FragmentManager fm=getSupportFragmentManager();
         final View v=findViewById(R.id.spinner_connection_type);
         setPreferencesForConnectionType(this,position);
         switch (position){

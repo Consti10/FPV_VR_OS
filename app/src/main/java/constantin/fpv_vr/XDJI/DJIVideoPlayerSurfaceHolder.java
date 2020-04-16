@@ -12,6 +12,7 @@ import constantin.video.core.VideoPlayer.VideoSettings;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
+import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback ,VideoFeeder.VideoDataListener{
@@ -24,8 +25,8 @@ public class DJIVideoPlayerSurfaceHolder implements SurfaceHolder.Callback ,Vide
         this.context=context;
         VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
         videoPlayer=new VideoPlayer(context,null);
-        final BaseProduct product = DJISDKManager.getInstance().getProduct();
-        if (product == null || !product.isConnected()) {
+        final Aircraft aircraft=DJIApplication.getConnectedAircraft();
+        if (aircraft==null) {
             Toaster.makeToast(context,"Cannot start video",true);
         } else {
             VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(this);

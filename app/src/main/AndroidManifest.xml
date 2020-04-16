@@ -87,7 +87,6 @@
                 android:resource="@xml/accessory_filter" />
         </activity>
         <!-- me -->
-        <activity android:name=".XDJI.DJIConnectionA"></activity>
         <!-- DJI SDK -->
 
         <activity

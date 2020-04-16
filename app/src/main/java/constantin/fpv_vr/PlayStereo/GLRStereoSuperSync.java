@@ -4,9 +4,9 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 
-import constantin.renderingx.core.GLESInfo.GLESInfo;
 import constantin.renderingx.core.MVrHeadsetParams;
-import constantin.renderingx.core.ViewSuperSync;
+import constantin.renderingx.core.gles_info.GLESInfo;
+import constantin.renderingx.core.views.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.ISurfaceTextureAvailable;

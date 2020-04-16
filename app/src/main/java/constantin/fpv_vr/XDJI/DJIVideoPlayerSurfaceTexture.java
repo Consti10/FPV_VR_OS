@@ -17,6 +17,7 @@ import constantin.video.core.VideoPlayer.VideoSettings;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
+import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurfaceTextureAvailable, VideoFeeder.VideoDataListener {
@@ -36,8 +37,8 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
         VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
         videoPlayer=new VideoPlayer(context,null);
 
-        final BaseProduct product = DJISDKManager.getInstance().getProduct();
-        if (product == null || !product.isConnected()) {
+        final Aircraft aircraft=DJIApplication.getConnectedAircraft();
+        if (aircraft==null) {
             Toaster.makeToast(context,"Cannot start video",true);
         } else {
             VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(this);
@@ -80,6 +81,19 @@ public class DJIVideoPlayerSurfaceTexture implements LifecycleObserver, ISurface
             start();
         }
     }
+
+    // Called on the UI thread. Following holds true:
+    // a) Surface Texture is valid and bound to OpenGL
+    // b) Activity is in state Lifecycle.State.RESUMED
+    private void onSurfaceTextureCreated(){
+
+    }
+
+    private void onSurfaceTextureDestroyed(){
+
+    }
+
+
 
     private void start(){
         surfaceTexture.setDefaultBufferSize(1280,720);

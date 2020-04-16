@@ -18,7 +18,7 @@ import com.mapzen.prefsplus.IntListPreference;
 import java.util.ArrayList;
 
 import constantin.fpv_vr.R;
-import constantin.renderingx.core.GLESInfo.GLESInfo;
+import constantin.renderingx.core.gles_info.GLESInfo;
 
 
 public class ASettingsVR extends AppCompatActivity {

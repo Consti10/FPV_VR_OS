@@ -49,8 +49,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener{
     public void onResume() {
         super.onResume();
         checkAndRequestPermissions();
-        final Application application=getActivity().getApplication();
-        //((DJIApplication)application).initAppIfNeeded();
     }
 
     @Override
@@ -79,11 +77,12 @@ public class FConnectDJI extends Fragment implements View.OnClickListener{
             }
         }
         if (!missingPermission.isEmpty()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                final String[] asArray=missingPermission.toArray(new String[0]);
-                Log.d("PermissionManager","Request: "+ Arrays.toString(asArray));
-                ActivityCompat.requestPermissions(getActivity(), asArray, REQUEST_PERMISSION_CODE);
-            }
+            final String[] asArray=missingPermission.toArray(new String[0]);
+            Log.d("PermissionManager","Request: "+ Arrays.toString(asArray));
+            ActivityCompat.requestPermissions(getActivity(), asArray, REQUEST_PERMISSION_CODE);
+        }else{
+            final Application application=getActivity().getApplication();
+            ((DJIApplication)application).initializeDJIIfNeeded();
         }
     }
 
@@ -99,8 +98,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener{
                 }
             }
         }
-        if (!missingPermission.isEmpty()) {
-            checkAndRequestPermissions();
-        }
+        //When using the if(empty) here call initialize twice !
+        checkAndRequestPermissions();
     }
 }

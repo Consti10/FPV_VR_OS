@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.XDJI.DJITelemetryReceiver;
-import constantin.renderingx.core.ViewSuperSync;
+import constantin.renderingx.core.views.ViewSuperSync;
 import constantin.video.core.VideoPlayerSurfaceTexture;
 
 /*****************************************

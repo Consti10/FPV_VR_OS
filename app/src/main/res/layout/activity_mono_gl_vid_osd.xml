@@ -7,7 +7,7 @@
     android:background="@android:color/black"
     tools:context="constantin.fpv_vr.PlayMono.AMonoGLVideoOSD">
 
-   <constantin.renderingx.core.MyVRLayout
+   <constantin.renderingx.core.views.MyVRLayout
        android:id="@+id/myVRLayout"
        android:layout_width="match_parent"
        android:layout_height="match_parent"/>

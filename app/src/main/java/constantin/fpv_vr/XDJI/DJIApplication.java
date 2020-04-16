@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.secneo.sdk.Helper;
@@ -25,8 +26,10 @@ import dji.sdk.sdkmanager.DJISDKManager;
  * If not enabled (connection type != DJI ) behaviour is like a default Android Application
  */
 public class DJIApplication extends Application {
+    private static final String TAG="DJIApplication";
     private final AtomicBoolean isSDKInstalled=new AtomicBoolean(false);
     private final AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
+    private long lastTimeToastDownloadDatabase=0;
 
     @Override
     protected void attachBaseContext(Context paramContext) {
@@ -38,22 +41,22 @@ public class DJIApplication extends Application {
         return SJ.getConnectionType(context)== AConnect.CONNECTION_TYPE_DJI;
     }
 
-    public static Aircraft getConnectedAircraft(final Context context){
+    public static synchronized Aircraft getConnectedAircraft(){
         final BaseProduct product = DJISDKManager.getInstance().getProduct();
-        final Aircraft aircraft=(Aircraft)product;
-        if (product == null || !product.isConnected()) {
-            Toast.makeText(context,"No connected product", Toast.LENGTH_LONG).show();
+        if (product != null && product.isConnected() && (product instanceof Aircraft)) {
+            return (Aircraft)product;
         }
-        return aircraft;
+        return null;
     }
 
-    public void initializeDJIIfNeeded(){
+    public synchronized void initializeDJIIfNeeded(){
         final Context context=getBaseContext();
         if(!isDJIEnabled(context)){
             return;
         }
         //This one seems to link some libraries ?
         if(isSDKInstalled.compareAndSet(false,true)){
+            debug("Helper.install(DJIApplication.this);");
             Helper.install(DJIApplication.this);
         }
         if(DJISDKManager.getInstance().hasSDKRegistered()){
@@ -72,35 +75,40 @@ public class DJIApplication extends Application {
                                 showToast("Register Success");
                                 DJISDKManager.getInstance().startConnectionToProduct();
                             } else {
-                                showToast("Register sdk fails, please check the bundle id and network connection!");
+                                showToast("Register sdk fails, please check your network connection!");
                                 isRegistrationInProgress.set(false);
-                                initializeDJIIfNeeded();
                             }
                         }
 
                         @Override
                         public void onProductDisconnect() {
-
+                            showToast("Product Disconnected");
                         }
 
                         @Override
                         public void onProductConnect(BaseProduct baseProduct) {
-
+                            showToast("Product Connected");
                         }
 
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent baseComponent, BaseComponent baseComponent1) {
-
+                            debug("onComponentChange");
                         }
 
                         @Override
                         public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
-
+                            debug("onInitProcess "+djisdkInitEvent.toString()+" "+i);
                         }
 
                         @Override
-                        public void onDatabaseDownloadProgress(long l, long l1) {
-
+                        public void onDatabaseDownloadProgress(long current, long total) {
+                            final int process = (int) (100 * current / total);
+                            long delta=System.currentTimeMillis()-lastTimeToastDownloadDatabase;
+                            if(delta>5000){
+                                showToast("Downloading dji fly safe database. Make sure you have wifi connected. Process:"+process+" %");
+                                lastTimeToastDownloadDatabase=System.currentTimeMillis();
+                            }
+                            debug("onDatabaseDownloadProgress "+process+"current "+current+"total "+total);
                         }
                     });
                 }
@@ -108,6 +116,9 @@ public class DJIApplication extends Application {
         }
     }
 
+    private void debug(final String message){
+        Log.d(TAG,message);
+    }
 
     private void showToast(final String toastMsg) {
         Handler handler = new Handler(Looper.getMainLooper());

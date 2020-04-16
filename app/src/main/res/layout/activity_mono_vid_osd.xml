@@ -25,7 +25,7 @@
     </RelativeLayout>
 
     <!--The view to render OSD with or render both video and OSD (360°). Disabled by default-->
-   <constantin.renderingx.core.MyGLSurfaceView
+   <constantin.renderingx.core.views.MyGLSurfaceView
         android:id="@+id/MyGLSurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,8 +36,9 @@ import constantin.fpv_vr.Settings.ASettingsVR;
 import constantin.fpv_vr.Settings.SJ;
 import constantin.fpv_vr.Settings.UpdateHelper;
 import constantin.fpv_vr.Toaster;
+import constantin.fpv_vr.XDJI.DJIApplication;
 import constantin.fpv_vr.XExperimental.AStereoDaydream;
-import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
+import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.VideoPlayer.VideoSettings;
 
@@ -125,12 +127,20 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:
             case R.id.b_startMonoVideoOSD:{
+                if(DJIApplication.isDJIEnabled(this) && DJIApplication.getConnectedAircraft()==null){
+                    Toaster.makeToast(this,"No connected product",false);
+                    return;
+                }
                 final Intent intent=new Intent().setClass(this, AMonoVideoOSD.class);
                 intent.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,v.getId()==R.id.b_startMonoVideoOSD);
                 startActivity(intent);
                 startRecordingScreenIfEnabled();
             }break;
             case R.id.b_startStereo:{
+                if(DJIApplication.isDJIEnabled(this) && DJIApplication.getConnectedAircraft()==null){
+                    Toaster.makeToast(this,"No connected product",false);
+                    return;
+                }
                 final Intent intent = new Intent();
                 //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
                 //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
