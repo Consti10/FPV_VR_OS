@@ -25,7 +25,6 @@ public class XTelemetryReceiver extends TelemetryReceiver {
     public <T extends Activity & LifecycleOwner> XTelemetryReceiver(T parent, long externalGroundRecorder) {
         super(parent, externalGroundRecorder);
         if(DJIApplication.isDJIEnabled(context)){
-            TelemetrySettings.setT_SOURCE(parent,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
             setupDJICallbacks();
         }
     }

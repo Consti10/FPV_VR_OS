@@ -23,9 +23,6 @@ public class XVideoPlayerSurfaceTexture implements ISurfaceAvailable {
     public XVideoPlayerSurfaceTexture(final Context context){
         this.context=context;
         DJI_ENABLED=DJIApplication.isDJIEnabled(context);
-        if(DJI_ENABLED){
-            VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
-        }
         videoPlayer=new VideoPlayer(context,null);
         if(DJI_ENABLED){
             final Aircraft aircraft=DJIApplication.getConnectedAircraft();
