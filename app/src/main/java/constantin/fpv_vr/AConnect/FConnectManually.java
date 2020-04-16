@@ -20,6 +20,7 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.databinding.ConnectManuallyFragmentBinding;
 import constantin.telemetry.core.TestReceiverTelemetry;
 import constantin.video.core.TestReceiverVideo;
 
@@ -27,27 +28,22 @@ import constantin.video.core.TestReceiverVideo;
 public class FConnectManually extends Fragment implements View.OnClickListener{
     private TestReceiverTelemetry mTestReceiverTelemetry;
     private TestReceiverVideo mTestReceiverVideo;
-    private TextView receivedVideoDataTV;
-    private TextView receivedTelemetryDataTV;
+    private ConnectManuallyFragmentBinding binding;
     private Context mContext;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.connect_manually_fragment, container, false);
-        receivedVideoDataTV =rootView.findViewById(R.id.FM_ReceivedVideoDataTV);
-        receivedTelemetryDataTV=rootView.findViewById(R.id.FM_ReceivedTelemetryDataTV);
-        TextView tv=rootView.findViewById(R.id.ipAdressesTV);
-        tv.setText(getActiveInetAddresses());
+        binding=ConnectManuallyFragmentBinding.inflate(inflater);
+        binding.ipAdressesTV.setText(getActiveInetAddresses());
         mContext=getActivity();
         FragmentActivity activity=requireActivity();
         mTestReceiverTelemetry=new TestReceiverTelemetry(activity);
-        mTestReceiverTelemetry.setViews(receivedTelemetryDataTV,null,null);
+        mTestReceiverTelemetry.setViews(binding.FMReceivedTelemetryDataTV,null,null);
         mTestReceiverVideo=new TestReceiverVideo(activity);
-        mTestReceiverVideo.setViews(receivedVideoDataTV,null);
-        Button InfoB=rootView.findViewById(R.id.ManuallyInfoB);
-        InfoB.setOnClickListener(this);
-        return rootView;
+        mTestReceiverVideo.setViews(binding.FMReceivedVideoDataTV,null);
+        binding.ManuallyInfoB.setOnClickListener(this);
+        return binding.getRoot();
     }
 
     @Override

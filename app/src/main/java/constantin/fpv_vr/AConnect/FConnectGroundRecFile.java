@@ -20,29 +20,27 @@ import androidx.fragment.app.Fragment;
 import java.io.File;
 
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
+import constantin.fpv_vr.databinding.ConnectGrfileFragmentBinding;
 import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.VideoPlayer.VideoSettings;
 
 
 public class FConnectGroundRecFile extends Fragment {
     private Context mContext;
-    //private EditText editTextTelemetry;
-    //private EditText editTextVideo;
-    private EditText editTextFileNameFPV;
-
+    private ConnectGrfileFragmentBinding binding;
 
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mContext =getActivity();
-        View rootView = inflater.inflate(R.layout.connect_grfile_fragment, container, false);
-        editTextFileNameFPV=rootView.findViewById(R.id.editTextFileNameFPV);
-        editTextFileNameFPV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        binding=ConnectGrfileFragmentBinding.inflate(inflater);
+        binding.editTextFileNameFPV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 final String input=v.getText().toString();
-                if(v.equals(editTextFileNameFPV)){
+                if(v.equals(binding.editTextFileNameFPV)){
                     final String pathAndFilename=VideoSettings.getDirectoryToSaveDataTo()+input;
                     if(!fileExists(pathAndFilename)){
                         makeInfoDialog("WARNING ! This video file does not exist.");
@@ -55,9 +53,8 @@ public class FConnectGroundRecFile extends Fragment {
         });
         //We need to write the filename double - once for video, once for telemetry lib.
         final String filenameFPV=extractFilename(VideoSettings.getVS_PLAYBACK_FILENAME(mContext));
-        editTextFileNameFPV.setText(filenameFPV);
-        final Button bEasySelectFPV = rootView.findViewById(R.id.bEasySelectFileFPV);
-        bEasySelectFPV.setOnClickListener(new View.OnClickListener() {
+        binding.editTextFileNameFPV.setText(filenameFPV);
+        binding.bEasySelectFileFPV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String directory=VideoSettings.getDirectoryToSaveDataTo();
@@ -68,7 +65,7 @@ public class FConnectGroundRecFile extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String selectedFilename=filenames[which];
-                        editTextFileNameFPV.setText(selectedFilename);
+                        binding.editTextFileNameFPV.setText(selectedFilename);
                         VideoSettings.setVS_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
                         TelemetrySettings.setT_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
                     }
@@ -76,7 +73,7 @@ public class FConnectGroundRecFile extends Fragment {
                 builder.show();
             }
         });
-        return rootView;
+        return binding.getRoot();
     }
 
 

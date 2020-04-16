@@ -15,25 +15,24 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.databinding.ConnectRtspFragmentBinding;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class FConnectRTSP extends Fragment implements View.OnClickListener {
     private Context mContext;
-
-    private EditText mEditTextRTSPUrl;
+    private ConnectRtspFragmentBinding binding;
 
 
     @Override
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.connect_rtsp_fragment, container, false);
         mContext=getActivity();
-        mEditTextRTSPUrl=rootView.findViewById(R.id.editText_rtspUrl);
+        binding=ConnectRtspFragmentBinding.inflate(inflater);
         final SharedPreferences pref_video=mContext.getSharedPreferences("pref_video",Context.MODE_PRIVATE);
         final String url=pref_video.getString(mContext.getString(R.string.VS_FFMPEG_URL),"rtsp://");
-        mEditTextRTSPUrl.setText(url);
-        mEditTextRTSPUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        binding.editTextRtspUrl.setText(url);
+        binding.editTextRtspUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @SuppressLint("ApplySharedPref")
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -42,7 +41,7 @@ public class FConnectRTSP extends Fragment implements View.OnClickListener {
                 return false;
             }
         });
-        return rootView;
+        return binding.getRoot();
     }
 
     @Override
