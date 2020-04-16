@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import constantin.fpv_vr.AMain.AMain;
+import constantin.fpv_vr.main.AMain;
 import constantin.fpv_vr.R;
 
 import static androidx.test.espresso.Espresso.onData;

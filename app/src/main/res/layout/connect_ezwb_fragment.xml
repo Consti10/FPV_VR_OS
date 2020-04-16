@@ -8,7 +8,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context="constantin.fpv_vr.AConnect.AConnect">
+    tools:context="constantin.fpv_vr.connect.AConnect">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

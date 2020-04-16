@@ -25,7 +25,7 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import constantin.fpv_vr.Settings.SJ;
+import constantin.fpv_vr.settings.SJ;
 
 import static java.lang.Thread.sleep;
 

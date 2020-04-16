@@ -4,7 +4,6 @@ package constantin.fpv_vr.activities;
 import android.content.Intent;
 
 import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.matcher.PreferenceMatchers;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -14,11 +13,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import constantin.fpv_vr.AMain.AMain;
+import constantin.fpv_vr.main.AMain;
 import constantin.fpv_vr.R;
 import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
