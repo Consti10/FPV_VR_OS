@@ -77,9 +77,9 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          * Same for the permissions (required in >=android X)
          */
         checkAndRequestPermissions();
-        if(!DJISDKManager.getInstance().hasSDKRegistered()){
-            startActivity(new Intent().setClass(this, DJIConnectionA.class));
-        }
+        //if(!DJISDKManager.getInstance().hasSDKRegistered()){
+        //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
+        //}
     }
 
     @Override

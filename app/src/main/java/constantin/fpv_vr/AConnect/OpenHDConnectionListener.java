@@ -58,10 +58,10 @@ public class OpenHDConnectionListener implements LifecycleObserver {
                 IsConnected.checkWifiConnectedOpenHD(context);
 
         final IsConnected.USB_CONNECTION currUSBStatus=IsConnected.getUSBStatus(context);
-        iConnectionStatusChanged.refreshConnectionSTatus(wifiConnectedToSystem,currUSBStatus);
+        iConnectionStatusChanged.refreshConnectionStatus(wifiConnectedToSystem,currUSBStatus);
     }
 
     public interface IConnectionStatus {
-        void refreshConnectionSTatus(final boolean wifiConnectedToSystem,final IsConnected.USB_CONNECTION currUSBStatus);
+        void refreshConnectionStatus(final boolean wifiConnectedToSystem, final IsConnected.USB_CONNECTION currUSBStatus);
     }
 }

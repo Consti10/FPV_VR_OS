@@ -10,18 +10,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import constantin.fpv_vr.R;
+import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
 
 public class FConnectDJI extends Fragment implements View.OnClickListener{
+    private ConnectDjiFragmentBinding binding;
     private Context mContext;
 
     @Override
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.connect_rtsp_fragment, container, false);
         mContext=getActivity();
-        return rootView;
+        binding=ConnectDjiFragmentBinding.inflate(inflater);
+        return binding.getRoot();
     }
 
     @Override

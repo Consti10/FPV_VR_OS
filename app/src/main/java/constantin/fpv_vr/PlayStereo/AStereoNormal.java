@@ -18,6 +18,7 @@ import constantin.fpv_vr.XDJI.DJIVideoPlayerSurfaceTexture;
 import constantin.renderingx.core.MyEGLConfigChooser;
 import constantin.renderingx.core.MyGLSurfaceView;
 import constantin.renderingx.core.MyVRLayout;
+import constantin.video.core.VideoPlayerSurfaceTexture;
 
 public class AStereoNormal extends AppCompatActivity{
     //Components use the android LifecycleObserver. Since they don't need forwarding of
@@ -30,9 +31,8 @@ public class AStereoNormal extends AppCompatActivity{
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
-        //mVideoPlayer=new VideoPlayerSurfaceTexture(this);
-        //private VideoPlayerSurfaceTexture mVideoPlayer;
-        DJIVideoPlayerSurfaceTexture mVideoPlayer = new DJIVideoPlayerSurfaceTexture(this);
+        VideoPlayerSurfaceTexture mVideoPlayer=new VideoPlayerSurfaceTexture(this);
+        //DJIVideoPlayerSurfaceTexture mVideoPlayer = new DJIVideoPlayerSurfaceTexture(this);
         DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
         GLRStereoNormal mGLRStereoNormal = new GLRStereoNormal(this, mVideoPlayer, telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
         mVideoPlayer.setIVideoParamsChanged(mGLRStereoNormal);

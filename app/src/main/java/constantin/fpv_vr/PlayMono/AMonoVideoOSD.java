@@ -49,6 +49,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         final boolean ENABLE_OSD = getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD, true);
         final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VideoSettings.videoMode(this)==0;
         System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
+        if(USE_ANDROID_SURFACE_FOR_VIDEO){
+        }else{
+        }
         //
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding1 = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
@@ -56,6 +59,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             VideoPlayerSurfaceHolder mVideoPlayer=new VideoPlayerSurfaceHolder(this,binding1.SurfaceViewMonoscopicVideo);
             //DJIVideoPlayerSurfaceHolder mVideoPlayer = new DJIVideoPlayerSurfaceHolder(this, binding1.SurfaceViewMonoscopicVideo);
             mVideoPlayer.setIVideoParamsChanged(this);
+            //--
+
             if(ENABLE_OSD){
                 binding1.MyGLSurfaceView.setVisibility(View.VISIBLE);
                 binding1.MyGLSurfaceView.setEGLContextClientVersion(2);
@@ -71,6 +76,11 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         }else{
             bindingGL = constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding.inflate(getLayoutInflater());
             setContentView(bindingGL.getRoot());
+            //Do not forget to set the listener for the SurfaceTexture from the OpenGL renderer
+            VideoPlayerSurfaceTexture mVideoPlayer = new VideoPlayerSurfaceTexture(this);
+            mVideoPlayer.setIVideoParamsChanged(this);
+            //--
+
             MyGLSurfaceView mGLView = new MyGLSurfaceView(this);
             mGLView.setEGLContextClientVersion(2);
             //for now do not differentiate
@@ -82,12 +92,10 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             bindingGL.myVRLayout.setVrOverlayEnabled(false);
             bindingGL.myVRLayout.setPresentationView(mGLView);
 
-            VideoPlayerSurfaceTexture mVideoPlayer = new VideoPlayerSurfaceTexture(this);
             //private TelemetryReceiver telemetryReceiver;
-            DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
+            telemetryReceiver = new DJITelemetryReceiver(this, mVideoPlayer.GetExternalGroundRecorder());
             mGLRenderer =new GLRMono(this, mVideoPlayer, telemetryReceiver, bindingGL.myVRLayout.getGvrApi(),
                     VideoSettings.videoMode(this),ENABLE_OSD, disableVSYNC);
-            mVideoPlayer.setIVideoParamsChanged(mGLRenderer);
             mGLView.setRenderer(mGLRenderer);
 
             registerForContextMenu(bindingGL.myVRLayout);
@@ -121,6 +129,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                 binding1.VideoSurfaceAFL.setAspectRatio((double) videoW / videoH);
             }
         });
+        if(mGLRenderer!=null){
+            mGLRenderer.onVideoRatioChanged(videoW,videoH);
+        }
     }
 
     @Override

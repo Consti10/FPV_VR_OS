@@ -66,7 +66,7 @@ public class FConnectWB extends Fragment implements View.OnClickListener , OpenH
 
     @Override
     @SuppressLint("SetTextI18n")
-    public void refreshConnectionSTatus(final boolean wifiConnectedToSystem,final IsConnected.USB_CONNECTION currUSBStatus) {
+    public void refreshConnectionStatus(final boolean wifiConnectedToSystem, final IsConnected.USB_CONNECTION currUSBStatus) {
         final boolean usbConnectedToSystem=currUSBStatus==IsConnected.USB_CONNECTION.TETHERING;
 
         if(wifiConnectedToSystem){

@@ -59,6 +59,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
     public static final int CONNECTION_TYPE_TestFile =2;
     public static final int CONNECTION_TYPE_StorageFile =3;
     public static final int CONNECTION_TYPE_RTSP =4;
+    public static final int CONNECTION_TYPE_DJI =5;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -139,6 +140,11 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
             case CONNECTION_TYPE_RTSP: //RTSP
                 fm.beginTransaction().replace(R.id.fragment_container, new FConnectRTSP()).commit();
                 makeSnackBarForView(mContext,"connection type set to RTSP",v);
+                break;
+            case CONNECTION_TYPE_DJI:
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commit();
+                makeSnackBarForView(mContext,"connection type set to DJI",v);
+                break;
         }
     }
 
@@ -201,6 +207,8 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 pref_video_edit.putInt(context.getString(R.string.VS_SOURCE),VideoPlayer.VS_SOURCE_FFMPEG_URL);
                 pref_telemetry_edit.putInt(context.getString(R.string.T_SOURCE),TelemetrySettings.SOURCE_TYPE_UDP);
                 break;
+            case CONNECTION_TYPE_DJI:
+                //
              default:break;
         }
         pref_video_edit.commit();
