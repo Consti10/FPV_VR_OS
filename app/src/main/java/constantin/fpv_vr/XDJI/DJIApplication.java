@@ -21,6 +21,9 @@ import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 
+/**
+ * If not enabled (connection type != DJI ) behaviour is like a default Android Application
+ */
 public class DJIApplication extends Application {
     private final AtomicBoolean isSDKInstalled=new AtomicBoolean(false);
     private final AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
