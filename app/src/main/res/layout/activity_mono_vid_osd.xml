@@ -20,7 +20,8 @@
                 android:id="@+id/SurfaceView_monoscopicVideo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:visibility="invisible"/>
         </constantin.video.core.external.AspectFrameLayout>
     </RelativeLayout>
 

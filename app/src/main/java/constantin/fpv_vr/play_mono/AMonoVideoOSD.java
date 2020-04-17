@@ -52,7 +52,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         // Use android surface if 'normal' video in monoscopic view
         final int VIDEO_MODE=VideoSettings.videoMode(this);
         final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VIDEO_MODE==VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
-        System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
+        //System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
         // The video player can be configured both for android surface and opengl surface
         final XVideoPlayer videoPlayer=new XVideoPlayer(this);
         videoPlayer.setIVideoParamsChanged(this);
@@ -77,6 +77,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             binding.myVRLayout.setPresentationView(mGLSurfaceView);
         }
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
+            binding.SurfaceViewMonoscopicVideo.setVisibility(View.VISIBLE);
             binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoPlayer);
         }else{
             mGLRenderer.getVideoSurfaceHolder().setCallBack(videoPlayer);
@@ -104,9 +105,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         //System.out.println("Width:"+videoW+"Height:"+videoH);
         runOnUiThread(new Runnable() {
             public void run() {
-                if(binding.VideoSurfaceAFL.getVisibility()==View.VISIBLE){
-                    binding.VideoSurfaceAFL.setAspectRatio((double) videoW / videoH);
-                }
+                binding.VideoSurfaceAFL.setAspectRatio((double) videoW / videoH);
             }
         });
         if(mGLRenderer!=null){
