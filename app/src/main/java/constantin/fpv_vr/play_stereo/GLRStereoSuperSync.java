@@ -44,7 +44,8 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     public GLRStereoSuperSync(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
-        videoSurfaceHolder=new VideoSurfaceHolder(context,iSurfaceAvailable);
+        videoSurfaceHolder=new VideoSurfaceHolder(context);
+        videoSurfaceHolder.setCallBack(iSurfaceAvailable);
         final boolean qcomTiledRenderingAvailable= GLESInfo.isExtensionAvailable(context, GLESInfo.GL_QCOM_tiled_rendering);
         final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),

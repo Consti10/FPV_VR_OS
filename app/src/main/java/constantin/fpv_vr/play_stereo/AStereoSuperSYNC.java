@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.xdji.XTelemetryReceiver;
-import constantin.fpv_vr.xdji.XVideoPlayerSurfaceTexture;
+import constantin.fpv_vr.xdji.XVideoPlayer;
 import constantin.renderingx.core.views.ViewSuperSync;
 
 /*****************************************
@@ -25,7 +25,7 @@ public class AStereoSuperSYNC extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewSuperSync mViewSuperSync = new ViewSuperSync(this);
-        XVideoPlayerSurfaceTexture videoPlayer=new XVideoPlayerSurfaceTexture(this);
+        XVideoPlayer videoPlayer=new XVideoPlayer(this);
         XTelemetryReceiver telemetryReceiver = new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder());
         GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this,videoPlayer, telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
         videoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);

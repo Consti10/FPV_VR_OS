@@ -2,24 +2,29 @@ package constantin.fpv_vr.xdji;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.Nullable;
+
 import constantin.fpv_vr.Toaster;
+import constantin.renderingx.core.video.ISurfaceAvailable;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.video_player.VideoPlayer;
-import constantin.video.core.video_player.VideoSettings;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.products.Aircraft;
 
-// Do not forget to set the callback
-public class XVideoPlayerSurfaceHolder  implements SurfaceHolder.Callback{
-    private DJICodecManager mCodecManager = null;
+// Use either one of the Interfaces to start() / stop the video player
+// e.g use either SurfaceView.getHolder().addCallback(videoPlayer); or
+// use new VideoSurfaceHolder(context,videoPlayer);
+public class XVideoPlayer implements SurfaceHolder.Callback, ISurfaceAvailable {
+    private final VideoPlayer videoPlayer;
     private final Context context;
-    private VideoPlayer videoPlayer;
     private final boolean DJI_ENABLED;
+    private DJICodecManager mCodecManager;
 
-    public XVideoPlayerSurfaceHolder(final Context context){
+    public XVideoPlayer(final Context context){
         this.context=context;
         DJI_ENABLED=DJIApplication.isDJIEnabled(context);
         videoPlayer=new VideoPlayer(context,null);
@@ -42,14 +47,10 @@ public class XVideoPlayerSurfaceHolder  implements SurfaceHolder.Callback{
         return videoPlayer.getExternalGroundRecorder();
     }
 
+    // Called when configured with SurfaceHolder
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        //Create a fake DJICodecManager to receive live video data
-        if(DJI_ENABLED){
-            mCodecManager=new DJICodecManager(context,new SurfaceTexture(0),1280,720);
-            mCodecManager.cleanSurface();
-        }
-        videoPlayer.addAndStartDecoderReceiver(holder.getSurface());
+        startPlayer(holder.getSurface());
     }
 
     @Override
@@ -58,6 +59,29 @@ public class XVideoPlayerSurfaceHolder  implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        stopPlayer();
+    }
+
+    // Called when configured with ISurfaceAvailable
+    @Override
+    public void XSurfaceCreated(SurfaceTexture surfaceTexture, Surface surface) {
+        startPlayer(surface);
+    }
+
+    @Override
+    public void XSurfaceDestroyed() {
+        stopPlayer();
+    }
+
+    private void startPlayer(Surface surface){
+        if(DJI_ENABLED){
+           mCodecManager=new DJICodecManager(context,new SurfaceTexture(0),1280,720);
+            System.out.println("Decoder okay ? "+mCodecManager.isDecoderOK()+" W H"+mCodecManager.getVideoWidth()+" "+mCodecManager.getVideoHeight());
+            mCodecManager.cleanSurface();
+        }
+        videoPlayer.addAndStartDecoderReceiver(surface);
+    }
+    private void stopPlayer(){
         if(DJI_ENABLED){
             mCodecManager.destroyCodec();
             VideoFeeder.getInstance().getPrimaryVideoFeed().removeVideoDataListener(this::onReceiveDjiData);
@@ -71,6 +95,6 @@ public class XVideoPlayerSurfaceHolder  implements SurfaceHolder.Callback{
         //    System.out.println("Data");
         //    mCodecManager.sendDataToDecoder(videoBuffer, size);
         //}
-        VideoPlayer.nativePassNALUData(videoPlayer.getNativeInstance(),videoBuffer,0,size);
+        VideoPlayer.nativePassNALUData(this.videoPlayer.getNativeInstance(),videoBuffer,0,size);
     }
 }

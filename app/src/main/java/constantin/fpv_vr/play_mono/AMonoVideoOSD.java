@@ -16,8 +16,7 @@ import constantin.fpv_vr.R;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.xdji.XTelemetryReceiver;
-import constantin.fpv_vr.xdji.XVideoPlayerSurfaceHolder;
-import constantin.fpv_vr.xdji.XVideoPlayerSurfaceTexture;
+import constantin.fpv_vr.xdji.XVideoPlayer;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyEGLWindowSurfaceFactory;
@@ -37,8 +36,8 @@ import constantin.video.core.video_player.VideoSettings;
  ***************************************************************** */
 
 public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged {
-    private ActivityMonoVidOsdBinding binding1;
-    private constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding bindingGL;
+    private ActivityMonoVidOsdBinding binding;
+    //private constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding bindingGL;
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
     private XTelemetryReceiver telemetryReceiver;
     private GLRMono mGLRenderer;
@@ -46,61 +45,44 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        // OSD is optional (e.g. 'only video' )
         final boolean ENABLE_OSD = getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD, true);
-        final boolean USE_ANDROID_SURFACE_FOR_VIDEO= VideoSettings.videoMode(this)==0;
+        // Use android surface if 'normal' video in monoscopic view
+        final int VIDEO_MODE=VideoSettings.videoMode(this);
+        final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VIDEO_MODE==VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
         System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
-        if(USE_ANDROID_SURFACE_FOR_VIDEO){
-        }else{
-        }
-        //
-        if(USE_ANDROID_SURFACE_FOR_VIDEO){
-            binding1 = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
-            setContentView(binding1.getRoot());
-            XVideoPlayerSurfaceHolder videoPlayer=new XVideoPlayerSurfaceHolder(this);
-            videoPlayer.setIVideoParamsChanged(this);
-            binding1.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoPlayer);
-            //--
-
-            if(ENABLE_OSD){
-                binding1.MyGLSurfaceView.setVisibility(View.VISIBLE);
-                binding1.MyGLSurfaceView.setEGLContextClientVersion(2);
-                //Do not use MSAA in mono mode
-                binding1.MyGLSurfaceView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
-                binding1.MyGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
-                binding1.MyGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-                binding1.MyGLSurfaceView.setPreserveEGLContextOnPause(true);
-                telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder());
-                mGLRenderer = new GLRMono(this, null, telemetryReceiver, null, GLRMono.VIDEO_MODE_2D_MONOSCOPIC, true, false);
-                binding1.MyGLSurfaceView.setRenderer(mGLRenderer);
+        // The video player can be configured both for android surface and opengl surface
+        final XVideoPlayer videoPlayer=new XVideoPlayer(this);
+        videoPlayer.setIVideoParamsChanged(this);
+        telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder());
+        binding.myVRLayout.setVrOverlayEnabled(false);
+        // if needed, create and initialize the GLSurfaceView
+        MyGLSurfaceView mGLSurfaceView;
+        if(!USE_ANDROID_SURFACE_FOR_VIDEO || ENABLE_OSD){
+            mGLSurfaceView=new MyGLSurfaceView(this);
+            mGLSurfaceView.setVisibility(View.VISIBLE);
+            mGLSurfaceView.setEGLContextClientVersion(2);
+            //Do not use MSAA in mono mode
+            mGLSurfaceView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
+            mGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
+            mGLSurfaceView.setPreserveEGLContextOnPause(true);
+            // make transparent when using android surface for video
+            if(USE_ANDROID_SURFACE_FOR_VIDEO){
+                mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
             }
-        }else{
-            bindingGL = constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding.inflate(getLayoutInflater());
-            setContentView(bindingGL.getRoot());
-            XVideoPlayerSurfaceTexture videoPlayer=new XVideoPlayerSurfaceTexture(this);
-            MyGLSurfaceView mGLView = new MyGLSurfaceView(this);
-            mGLView.setEGLContextClientVersion(2);
-            //for now do not differentiate
-            final boolean disableVSYNC = SJ.DisableVSYNC(this);
-            //do not use MSAA in mono mode
-            mGLView.setEGLConfigChooser(new MyEGLConfigChooser(disableVSYNC, 0,true));
-            mGLView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
-
-            bindingGL.myVRLayout.setVrOverlayEnabled(false);
-            bindingGL.myVRLayout.setPresentationView(mGLView);
-
-            //private TelemetryReceiver telemetryReceiver;
-            telemetryReceiver = new XTelemetryReceiver(this, videoPlayer.getExternalGroundRecorder());
-            mGLRenderer =new GLRMono(this,videoPlayer, telemetryReceiver, bindingGL.myVRLayout.getGvrApi(),
-                    VideoSettings.videoMode(this),ENABLE_OSD, disableVSYNC);
-            mGLView.setRenderer(mGLRenderer);
-
-            registerForContextMenu(bindingGL.myVRLayout);
+            mGLRenderer = new GLRMono(this,  telemetryReceiver, binding.myVRLayout.getGvrApi(),VIDEO_MODE, ENABLE_OSD, false);
+            mGLSurfaceView.setRenderer(mGLRenderer);
+            binding.myVRLayout.setPresentationView(mGLSurfaceView);
         }
-        if(bindingGL ==null){
-            AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this);
+        if(USE_ANDROID_SURFACE_FOR_VIDEO){
+            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoPlayer);
         }else{
-            AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, bindingGL.myVRLayout.getGvrApi());
+            mGLRenderer.getVideoSurfaceHolder().setCallBack(videoPlayer);
+            registerForContextMenu(binding.myVRLayout);
         }
+        AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, binding.myVRLayout.getGvrApi());
     }
 
 
@@ -122,11 +104,13 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         //System.out.println("Width:"+videoW+"Height:"+videoH);
         runOnUiThread(new Runnable() {
             public void run() {
-                binding1.VideoSurfaceAFL.setAspectRatio((double) videoW / videoH);
+                if(binding.VideoSurfaceAFL.getVisibility()==View.VISIBLE){
+                    binding.VideoSurfaceAFL.setAspectRatio((double) videoW / videoH);
+                }
             }
         });
         if(mGLRenderer!=null){
-            mGLRenderer.onVideoRatioChanged(videoW,videoH);
+            mGLRenderer.setVideoRatio(videoW,videoH);
         }
     }
 
@@ -153,7 +137,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                 return true;
             case R.id.option_goto_home:
                 //mGLRenderer14Mono360.goToHomeOrientation();
-                GvrApi api= bindingGL.myVRLayout.getGvrApi();
+                GvrApi api= binding.myVRLayout.getGvrApi();
                 api.recenterTracking();
                 return true;
             default:

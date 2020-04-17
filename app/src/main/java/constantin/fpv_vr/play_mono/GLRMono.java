@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.vr.ndk.base.GvrApi;
@@ -18,6 +19,7 @@ import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.video_player.VideoSettings;
 
 import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
 
@@ -25,8 +27,7 @@ import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_AND
  * Renders OSD and/or video in monoscopic view
  */
 @SuppressWarnings("WeakerAccess")
-public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
-    static final int VIDEO_MODE_2D_MONOSCOPIC=0;
+public class GLRMono implements GLSurfaceView.Renderer{
     static {
         System.loadLibrary("GLRMono");
     }
@@ -38,26 +39,27 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
     native void nativeSetHomeOrientation360(long glRendererMonoP);
     private native void nativeOnVideoRatioChanged(long glRenderer,int videoW,int videoH);
 
-
     private final long nativeGLRendererMono;
     private final Context mContext;
-    private final TelemetryReceiver telemetryReceiver;
     //Optional, only when playing video that cannot be displayed by a 'normal' android surface
     //(e.g. 360° video)
     private final VideoSurfaceHolder mVideoSurfaceHolder;
     private final boolean disableVSYNC;
 
-    public GLRMono(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
+    public GLRMono(final AppCompatActivity context,final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
                    final boolean disableVSYNC){
         mContext=context;
         this.disableVSYNC=disableVSYNC;
-        this.telemetryReceiver=telemetryReceiver;
-        if(videoMode!=VIDEO_MODE_2D_MONOSCOPIC){
-            mVideoSurfaceHolder=new VideoSurfaceHolder(context,iSurfaceAvailable);
+        if(videoMode!= VideoSettings.VIDEO_MODE_2D_MONOSCOPIC){
+            mVideoSurfaceHolder=new VideoSurfaceHolder(context);
         }else{
             mVideoSurfaceHolder=null;
         }
-        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi!=null ? gvrApi.getNativeGvrContext() : 0,videoMode,renderOSD);
+        nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),videoMode,renderOSD);
+    }
+
+    public final VideoSurfaceHolder getVideoSurfaceHolder(){
+        return mVideoSurfaceHolder;
     }
 
     @Override
@@ -98,17 +100,8 @@ public class GLRMono implements GLSurfaceView.Renderer, IVideoParamsChanged{
         }
     }
 
-    @Override
-    public void onVideoRatioChanged(int videoW, int videoH) {
+    public void setVideoRatio(int videoW, int videoH) {
         nativeOnVideoRatioChanged(nativeGLRendererMono,videoW,videoH);
-    }
-
-    @Override
-    public void onDecodingInfoChanged(DecodingInfo decodingInfo) {
-        if(telemetryReceiver!=null){
-            telemetryReceiver.setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
-                    decodingInfo.avgHWDecodingTime_ms);
-        }
     }
 
     public void setHomeOrientation(){
