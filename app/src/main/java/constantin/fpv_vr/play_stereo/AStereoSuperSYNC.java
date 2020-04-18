@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.xdji.XTelemetryReceiver;
 import constantin.fpv_vr.xdji.XVideoPlayer;
+import constantin.renderingx.core.VrActivity;
 import constantin.renderingx.core.views.ViewSuperSync;
 
 /*****************************************
@@ -17,7 +18,7 @@ import constantin.renderingx.core.views.ViewSuperSync;
  * h.264 NALUs->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  **************************************** */
 
-public class AStereoSuperSYNC extends AppCompatActivity{
+public class AStereoSuperSYNC extends VrActivity {
     //Components use the android LifecycleObserver. Since they don't need forwarding of
     //onPause / onResume it looks so empty here
 
@@ -26,22 +27,12 @@ public class AStereoSuperSYNC extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         ViewSuperSync mViewSuperSync = new ViewSuperSync(this);
         XVideoPlayer videoPlayer=new XVideoPlayer(this);
-        XTelemetryReceiver telemetryReceiver = new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFileReader());
-        GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this,videoPlayer, telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
+        XTelemetryReceiver telemetryReceiver = new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+        GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this,videoPlayer.configure2(), telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
         videoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
         setContentView(mViewSuperSync);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, mViewSuperSync.getGvrApi());
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        //Some VR headsets use a clamp to hold the phone in place. This clamp may press against the volume up/down buttons.
-        //Here we effectively disable these 2 buttons
-        if(event.getKeyCode()==KeyEvent.KEYCODE_VOLUME_DOWN || event.getKeyCode()==KeyEvent.KEYCODE_VOLUME_UP){
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
     }
 
 }

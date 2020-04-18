@@ -14,7 +14,6 @@ import com.google.vr.ndk.base.GvrApi;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
-import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.xdji.XTelemetryReceiver;
 import constantin.fpv_vr.xdji.XVideoPlayer;
 import constantin.renderingx.core.FullscreenHelper;
@@ -55,8 +54,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         //System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
         // The video player can be configured both for android surface and opengl surface
         final XVideoPlayer videoPlayer=new XVideoPlayer(this);
+
         videoPlayer.setIVideoParamsChanged(this);
-        telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFileReader());
+        telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         binding.myVRLayout.setVrOverlayEnabled(false);
         // if needed, create and initialize the GLSurfaceView
         MyGLSurfaceView mGLSurfaceView;
@@ -78,9 +78,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         }
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding.SurfaceViewMonoscopicVideo.setVisibility(View.VISIBLE);
-            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoPlayer);
+            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoPlayer.configure1());
         }else{
-            mGLRenderer.getVideoSurfaceHolder().setCallBack(videoPlayer);
+            mGLRenderer.getVideoSurfaceHolder().setCallBack(videoPlayer.configure2());
             registerForContextMenu(binding.myVRLayout);
         }
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, binding.myVRLayout.getGvrApi());

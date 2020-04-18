@@ -12,8 +12,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.MVrHeadsetParams;
-import constantin.renderingx.core.video.ISurfaceAvailable;
-import constantin.renderingx.core.video.VideoSurfaceHolder;
+import constantin.video.core.gl.ISurfaceAvailable;
+import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
