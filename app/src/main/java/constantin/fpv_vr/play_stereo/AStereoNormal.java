@@ -7,14 +7,11 @@ package constantin.fpv_vr.play_stereo;
 
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.view.KeyEvent;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.settings.SJ;
-import constantin.fpv_vr.xdji.XTelemetryReceiver;
-import constantin.fpv_vr.xdji.XVideoPlayer;
+import constantin.fpv_vr.xdji.DJITelemetryReceiver;
+import constantin.fpv_vr.xdji.DJIVideoPlayer;
 import constantin.renderingx.core.VrActivity;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyGLSurfaceView;
@@ -31,8 +28,8 @@ public class AStereoNormal extends VrActivity {
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
-        final XVideoPlayer videoPlayer=new XVideoPlayer(this);
-        XTelemetryReceiver telemetryReceiver = new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+        final DJIVideoPlayer videoPlayer=new DJIVideoPlayer(this);
+        DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         GLRStereoNormal mGLRStereoNormal = new GLRStereoNormal(this,videoPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
         videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         mGLViewStereo.setRenderer(mGLRStereoNormal);

@@ -17,12 +17,12 @@ import dji.sdk.products.Aircraft;
 // e.g use either SurfaceView.getHolder().addCallback(videoPlayer); or
 // use new VideoSurfaceHolder(context,videoPlayer);
 
-public class XVideoPlayer extends VideoPlayer {
+public class DJIVideoPlayer extends VideoPlayer {
     private final boolean DJI_ENABLED;
     private DJICodecManager mCodecManager;
     private final Context context;
 
-    public XVideoPlayer(Context context) {
+    public DJIVideoPlayer(Context context) {
         super(context,null);
         this.context=context;
         DJI_ENABLED=DJIApplication.isDJIEnabled(context);

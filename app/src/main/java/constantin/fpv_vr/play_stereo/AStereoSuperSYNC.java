@@ -1,13 +1,10 @@
 package constantin.fpv_vr.play_stereo;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.xdji.XTelemetryReceiver;
-import constantin.fpv_vr.xdji.XVideoPlayer;
+import constantin.fpv_vr.xdji.DJITelemetryReceiver;
+import constantin.fpv_vr.xdji.DJIVideoPlayer;
 import constantin.renderingx.core.VrActivity;
 import constantin.renderingx.core.views.ViewSuperSync;
 
@@ -26,8 +23,8 @@ public class AStereoSuperSYNC extends VrActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewSuperSync mViewSuperSync = new ViewSuperSync(this);
-        XVideoPlayer videoPlayer=new XVideoPlayer(this);
-        XTelemetryReceiver telemetryReceiver = new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+        DJIVideoPlayer videoPlayer=new DJIVideoPlayer(this);
+        DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this,videoPlayer.configure2(), telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
         videoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);

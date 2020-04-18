@@ -19,10 +19,10 @@ import dji.common.model.LocationCoordinate2D;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.products.Aircraft;
 
-public class XTelemetryReceiver extends TelemetryReceiver {
+public class DJITelemetryReceiver extends TelemetryReceiver {
     private static final float MPS_TO_KPH=3.6f;
 
-    public <T extends Activity & LifecycleOwner> XTelemetryReceiver(T parent, long externalGroundRecorder,long externalFileReader) {
+    public <T extends Activity & LifecycleOwner> DJITelemetryReceiver(T parent, long externalGroundRecorder, long externalFileReader) {
         super(parent, externalGroundRecorder,externalFileReader);
         if(DJIApplication.isDJIEnabled(context)){
             setupDJICallbacks();

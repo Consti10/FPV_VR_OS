@@ -14,15 +14,14 @@ import com.google.vr.ndk.base.GvrApi;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
-import constantin.fpv_vr.xdji.XTelemetryReceiver;
-import constantin.fpv_vr.xdji.XVideoPlayer;
+import constantin.fpv_vr.xdji.DJITelemetryReceiver;
+import constantin.fpv_vr.xdji.DJIVideoPlayer;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.video_player.VideoPlayer;
 import constantin.video.core.video_player.VideoSettings;
 
 /*****************************************************************
@@ -39,7 +38,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     private ActivityMonoVidOsdBinding binding;
     //private constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding bindingGL;
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
-    private XTelemetryReceiver telemetryReceiver;
+    private DJITelemetryReceiver telemetryReceiver;
     private GLRMono mGLRenderer;
 
     @Override
@@ -54,10 +53,10 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VIDEO_MODE==VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
         //System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
         // The video player can be configured both for android surface and opengl surface
-        final XVideoPlayer videoPlayer=new XVideoPlayer(this);
+        final DJIVideoPlayer videoPlayer=new DJIVideoPlayer(this);
 
         videoPlayer.setIVideoParamsChanged(this);
-        telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+        telemetryReceiver=new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         binding.myVRLayout.setVrOverlayEnabled(false);
         // if needed, create and initialize the GLSurfaceView
         MyGLSurfaceView mGLSurfaceView;
