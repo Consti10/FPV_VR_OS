@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner;
 import constantin.fpv_vr.Toaster;
 import constantin.telemetry.core.TelemetryReceiver;
 import dji.common.airlink.SignalQualityCallback;
+import dji.common.airlink.WiFiFrequencyBand;
 import dji.common.battery.BatteryState;
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.Attitude;
@@ -16,13 +17,14 @@ import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.gimbal.GimbalMode;
 import dji.common.model.LocationCoordinate2D;
 import dji.common.util.CommonCallbacks;
+import dji.sdk.airlink.WiFiLink;
 import dji.sdk.products.Aircraft;
 
 public class DJITelemetryReceiver extends TelemetryReceiver {
     private static final float MPS_TO_KPH=3.6f;
 
     public <T extends Activity & LifecycleOwner> DJITelemetryReceiver(T parent, long externalGroundRecorder, long externalFileReader) {
-        super(parent, externalGroundRecorder,externalFileReader);
+        super((T)parent, externalGroundRecorder,externalFileReader);
         if(DJIApplication.isDJIEnabled(context)){
             setupDJICallbacks();
         }
@@ -98,15 +100,39 @@ public class DJITelemetryReceiver extends TelemetryReceiver {
                             debugDJIError("video resolution",djiError);
                     }
                 });*/
+                /*final WiFiLink wiFiLink=aircraft.getAirLink().getWiFiLink();
+                if(wiFiLink!=null){
+                    wiFiLink.getFrequencyBand(new CommonCallbacks.CompletionCallbackWith<WiFiFrequencyBand>() {
+                        @Override
+                        public void onSuccess(WiFiFrequencyBand wiFiFrequencyBand) {
+                            Toaster.makeToast(context,"Frequency is "+frequencyBandToString(wiFiFrequencyBand));
+                        }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            Toaster.makeToast(context,"cannot get frequency");
+                        }
+                    });
+                }*/
         }
     }
 
-    private void debugDJIError(final String s,final DJIError djiError){
+    /*private static String frequencyBandToString(final WiFiFrequencyBand wiFiFrequencyBand){
+        switch (wiFiFrequencyBand){
+            case FREQUENCY_BAND_2_DOT_4_GHZ: return "2.4g";
+            case FREQUENCY_BAND_5_GHZ: return "5g";
+            case FREQUENCY_BAND_DUAL:return "dual";
+            case FREQUENCY_BAND_ONLY_2_DOT_4: return "only 2.4";
+        }
+        return "unknown";
+    }*/
+
+    /*private static void debugDJIError(final String s,final DJIError djiError){
         if(djiError!=null){
             System.out.println(s+"Error"+djiError.getDescription());
         }else{
             System.out.println(s+"Success");
         }
-    }
+    }*/
 
 }

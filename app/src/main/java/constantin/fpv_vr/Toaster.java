@@ -18,4 +18,7 @@ public class Toaster {
             }
         });
     }
+    public static void makeToast(final Context context,final String message) {
+        makeToast(context,message,false);
+    }
 }
