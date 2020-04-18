@@ -22,6 +22,7 @@ import constantin.renderingx.core.views.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.video_player.VideoPlayer;
 import constantin.video.core.video_player.VideoSettings;
 
 /*****************************************************************

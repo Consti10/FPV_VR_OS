@@ -52,7 +52,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
         <!-- DJI SDK begin-->
-        <uses-library android:name="com.android.future.usb.accessory" />
+        <uses-library android:name="com.android.future.usb.accessory"
+            android:required="false"/>
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
