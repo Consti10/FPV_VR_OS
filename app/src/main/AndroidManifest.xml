@@ -124,12 +124,6 @@
         <activity
             android:name=".settings.ASettingsVR"
             android:screenOrientation="behind" />
-        <activity
-            android:name="constantin.telemetry.core.ASettingsTelemetry"
-            android:screenOrientation="behind" />
-        <activity
-            android:name="constantin.video.core.AVideoSettings"
-            android:screenOrientation="behind" />
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
