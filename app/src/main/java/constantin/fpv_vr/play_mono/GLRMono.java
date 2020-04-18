@@ -12,9 +12,9 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.R;
-import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.video.core.video_player.VideoSettings;
 
 import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;

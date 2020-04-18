@@ -12,12 +12,12 @@ import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.MVrHeadsetParams;
-import constantin.video.core.gl.ISurfaceAvailable;
-import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.gl.ISurfaceAvailable;
+import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.video.core.video_player.VideoSettings;
 
 import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;

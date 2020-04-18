@@ -4,10 +4,7 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.view.Surface;
 
-import androidx.annotation.Nullable;
-
 import constantin.fpv_vr.Toaster;
-import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.video_player.VideoPlayer;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;

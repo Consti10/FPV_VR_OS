@@ -7,7 +7,6 @@ import androidx.lifecycle.LifecycleOwner;
 
 import constantin.fpv_vr.Toaster;
 import constantin.telemetry.core.TelemetryReceiver;
-import constantin.telemetry.core.TelemetrySettings;
 import dji.common.airlink.SignalQualityCallback;
 import dji.common.battery.BatteryState;
 import dji.common.error.DJIError;
