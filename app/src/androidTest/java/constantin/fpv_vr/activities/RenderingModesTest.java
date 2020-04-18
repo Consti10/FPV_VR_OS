@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 
 import constantin.fpv_vr.main.AMain;
 import constantin.fpv_vr.R;
-import constantin.renderingx.core.GLESInfo.AWriteGLESInfo;
+import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
