@@ -56,7 +56,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         // The video player can be configured both for android surface and opengl surface
         final XVideoPlayer videoPlayer=new XVideoPlayer(this);
         videoPlayer.setIVideoParamsChanged(this);
-        telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder());
+        telemetryReceiver=new XTelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFileReader());
         binding.myVRLayout.setVrOverlayEnabled(false);
         // if needed, create and initialize the GLSurfaceView
         MyGLSurfaceView mGLSurfaceView;

@@ -44,7 +44,7 @@ public class AStereoDaydream extends AppCompatActivity implements GvrLayout.Exte
         mGLView.setEGLContextClientVersion(2);
         mGLView.setEGLConfigChooser(8, 8, 8, 0, 0, 0);
         mGLView.setPreserveEGLContextOnPause(true);
-        telemetryReceiver=new TelemetryReceiver(this,0);
+        telemetryReceiver=new TelemetryReceiver(this,0,0);
         mGLRStereoDayDream =new GLRStereoDaydream(this,telemetryReceiver, mGvrLayout.getGvrApi(),0);//mGvrLayout.getAsyncReprojectionVideoSurfaceId()
         mGLView.setRenderer(mGLRStereoDayDream);
         mGvrLayout.setPresentationView(mGLView);

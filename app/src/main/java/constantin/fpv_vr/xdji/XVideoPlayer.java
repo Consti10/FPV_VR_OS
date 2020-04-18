@@ -46,6 +46,9 @@ public class XVideoPlayer implements SurfaceHolder.Callback, ISurfaceAvailable {
     public long getExternalGroundRecorder(){
         return videoPlayer.getExternalGroundRecorder();
     }
+    public long getExternalFileReader(){
+        return videoPlayer.getExternalFilePlayer();
+    }
 
     // Called when configured with SurfaceHolder
     @Override
