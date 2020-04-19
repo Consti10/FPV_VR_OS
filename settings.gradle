@@ -8,3 +8,4 @@ project(':TelemetryCore').projectDir=new File('..\\Telemetry\\TelemetryCore')
 
 include ':RenderingXCore'
 project(':RenderingXCore').projectDir=new File('..\\RenderingX\\RenderingXCore')
+include ':djiintegration'
