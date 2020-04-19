@@ -38,6 +38,7 @@ import constantin.fpv_vr.settings.UpdateHelper;
 import constantin.fpv_vr.xdji.DJIApplication;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
+import constantin.video.core.RequestPermissionHelper;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.video_player.VideoSettings;
 
@@ -50,12 +51,11 @@ import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_TestFile;
 public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
     private static final String TAG="AMain";
     private TestReceiverVideo mTestReceiverVideo=null;
-    private static final String[] REQUIRED_PERMISSION_LIST = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-    };
-    private final List<String> missingPermission = new ArrayList<>();
-    private static final int REQUEST_PERMISSION_CODE = 12345;
+    private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+            }
+    );
     //
     private HBRecorder hbRecorder;
     private static final int SCREEN_RECORD_REQUEST_CODE = 777;
@@ -75,7 +75,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         /*
          * Same for the permissions (required in >=android X)
          */
-        checkAndRequestPermissions();
+        requestPermissionHelper.checkAndRequestPermissions(this);
         //if(!DJISDKManager.getInstance().hasSDKRegistered()){
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
@@ -167,37 +167,11 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     }
 
 
-    private void checkAndRequestPermissions(){
-        missingPermission.clear();
-        for (String eachPermission : REQUIRED_PERMISSION_LIST) {
-            if (ContextCompat.checkSelfPermission(this, eachPermission) != PackageManager.PERMISSION_GRANTED) {
-                missingPermission.add(eachPermission);
-            }
-        }
-        if (!missingPermission.isEmpty()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                final String[] asArray=missingPermission.toArray(new String[0]);
-                Log.d("PermissionManager","Request: "+Arrays.toString(asArray));
-                ActivityCompat.requestPermissions(this, asArray, REQUEST_PERMISSION_CODE);
-            }
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Check for granted permission and remove from missing list
-        if (requestCode == REQUEST_PERMISSION_CODE) {
-            for (int i = grantResults.length - 1; i >= 0; i--) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    missingPermission.remove(permissions[i]);
-                }
-            }
-        }
-        if (!missingPermission.isEmpty()) {
-            checkAndRequestPermissions();
-        }
+        requestPermissionHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
     //After the permission was granted by the user,
