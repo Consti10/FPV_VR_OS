@@ -36,7 +36,7 @@ public class DJIApplication extends Application {
         initializeDJIIfNeeded();
     }
 
-    public static int getConnectionType(final Context context){
+    private static int getConnectionType(final Context context){
         final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
         return pref_connect.getInt("CONNECTION_TYPE",2);
     }

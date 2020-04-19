@@ -6,7 +6,7 @@ import android.graphics.SurfaceTexture;
 import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.renderingx.core.MVrHeadsetParams;
-import constantin.renderingx.core.gles_info.GLESInfo;
+import constantin.renderingx.core.gles_info.Extensions;
 import constantin.renderingx.core.views.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
@@ -46,8 +46,8 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         this.telemetryReceiver=telemetryReceiver;
         videoSurfaceHolder=new VideoSurfaceHolder(context);
         videoSurfaceHolder.setCallBack(iSurfaceAvailable);
-        final boolean qcomTiledRenderingAvailable= GLESInfo.isExtensionAvailable(context, GLESInfo.GL_QCOM_tiled_rendering);
-        final boolean reusableSyncAvailable=GLESInfo.isExtensionAvailable(context,GLESInfo.EGL_KHR_reusable_sync);
+        final boolean qcomTiledRenderingAvailable= Extensions.available(context, Extensions.GL_QCOM_tiled_rendering);
+        final boolean reusableSyncAvailable=Extensions.available(context,Extensions.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoSettings.videoMode(mContext));
         final MVrHeadsetParams params=new MVrHeadsetParams(context);

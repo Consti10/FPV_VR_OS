@@ -18,7 +18,8 @@ import com.mapzen.prefsplus.IntListPreference;
 import java.util.ArrayList;
 
 import constantin.fpv_vr.R;
-import constantin.renderingx.core.gles_info.GLESInfo;
+import constantin.renderingx.core.gles_info.Extensions;
+import constantin.renderingx.core.gles_info.OpenGLESValues;
 
 
 public class ASettingsVR extends AppCompatActivity {
@@ -85,7 +86,7 @@ public class ASettingsVR extends AppCompatActivity {
                 //The user tried to enable the "DisableVSYNC" option
                 //This only works if there is the 'mutable' extension available, supported by ~10% today,
                 //mostly on modern smartphones
-                if(GLESInfo.isExtensionAvailable(getActivity(),GLESInfo.EGL_KHR_mutable_render_buffer)){
+                if(Extensions.available(getActivity(),Extensions.EGL_KHR_mutable_render_buffer)){
                     SwitchPreference sp=(SwitchPreference)findPreference(getString(R.string.Disable60FPSLock));
                     sp.setChecked(false);
                 }else{
@@ -97,12 +98,12 @@ public class ASettingsVR extends AppCompatActivity {
                 }
             }else if(key.contentEquals(getString(R.string.SuperSync)) && pref_default.getBoolean(key,false)){
                 //The user enabled the "SuperSync" option
-                if(!(GLESInfo.isExtensionAvailable(getActivity(),GLESInfo.EGL_KHR_mutable_render_buffer) &&
-                        GLESInfo.isExtensionAvailable(getActivity(),GLESInfo.EGL_ANDROID_front_buffer_auto_refresh ))){
+                if(!(Extensions.available(getActivity(),Extensions.EGL_KHR_mutable_render_buffer) &&
+                        Extensions.available(getActivity(),Extensions.EGL_ANDROID_front_buffer_auto_refresh ))){
                     String warn="This smartphone does not support enabling SuperSync.";
-                    warn+="\n-EGL_KHR_mutable_render_bufferAvailable: "+GLESInfo.isExtensionAvailable(getActivity(),GLESInfo.EGL_KHR_mutable_render_buffer);
-                    warn+="\n-EGL_ANDROID_front_buffer_auto_refreshAvailable: "+GLESInfo.isExtensionAvailable(getActivity(),GLESInfo.EGL_ANDROID_front_buffer_auto_refresh );
-                    warn+="\n-EGL_KHR_reusable_syncAvailable: "+GLESInfo.isExtensionAvailable(getActivity(),GLESInfo.EGL_KHR_reusable_sync );
+                    warn+="\n-EGL_KHR_mutable_render_bufferAvailable: "+Extensions.available(getActivity(),Extensions.EGL_KHR_mutable_render_buffer);
+                    warn+="\n-EGL_ANDROID_front_buffer_auto_refreshAvailable: "+Extensions.available(getActivity(),Extensions.EGL_ANDROID_front_buffer_auto_refresh );
+                    warn+="\n-EGL_KHR_reusable_syncAvailable: "+Extensions.available(getActivity(),Extensions.EGL_KHR_reusable_sync );
                     makeDialog(getActivity(),warn);
                     SwitchPreference sp=(SwitchPreference)findPreference(getString(R.string.SuperSync));
                     sp.setChecked(false);
@@ -118,7 +119,7 @@ public class ASettingsVR extends AppCompatActivity {
 
 
         private void setupMSAALevelsPreference(final Context c){
-            ArrayList<Integer> allMSAALevels=GLESInfo.availableMSAALevels(c);
+            ArrayList<Integer> allMSAALevels= OpenGLESValues.availableMSAALevels(c);
             CharSequence[] msaaEntries =new CharSequence[allMSAALevels.size()];
             CharSequence[] msaaEntryValues =new CharSequence[allMSAALevels.size()];
             for(int i=0;i<allMSAALevels.size();i++){
