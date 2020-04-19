@@ -47,7 +47,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                     Manifest.permission.ACCESS_FINE_LOCATION,
             }
     );
-    //
     private HBRecorder hbRecorder;
     private static final int SCREEN_RECORD_REQUEST_CODE = 777;
     //If this Intent != null the permission to record screen was already granted

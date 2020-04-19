@@ -32,7 +32,7 @@ public class DJITelemetryReceiver extends TelemetryReceiver {
     private void setupDJICallbacks(){
         final Aircraft aircraft=DJIApplication.getConnectedAircraft();
         if (aircraft==null) {
-            //Toaster.makeToast(context,"Cannot start telemetry",true);
+            Toast.makeText(context, "Cannot start telemetry",Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, "starting dji telemetry", Toast.LENGTH_LONG).show();
             aircraft.getGimbal().setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
@@ -86,6 +86,12 @@ public class DJITelemetryReceiver extends TelemetryReceiver {
                     setHomeLocation(nativeInstance, home.getLatitude(), home.getLongitude(), 0);
                 }
             });
+            aircraft.getFlightController().setMaxFlightHeight(500, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+                    debugDJIError("Set max flight height",djiError);
+                }
+            });
                 /*aircraft.getAirLink().getWiFiLink().setDataRate(WifiDataRate.RATE_1_MBPS, new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
@@ -126,12 +132,12 @@ public class DJITelemetryReceiver extends TelemetryReceiver {
         return "unknown";
     }*/
 
-    /*private static void debugDJIError(final String s,final DJIError djiError){
+    private static void debugDJIError(final String s,final DJIError djiError){
         if(djiError!=null){
             System.out.println(s+"Error"+djiError.getDescription());
         }else{
             System.out.println(s+"Success");
         }
-    }*/
+    }
 
 }

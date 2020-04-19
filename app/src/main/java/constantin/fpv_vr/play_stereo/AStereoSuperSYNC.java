@@ -2,11 +2,17 @@ package constantin.fpv_vr.play_stereo;
 
 import android.os.Bundle;
 
+import com.google.vr.ndk.base.GvrSurfaceView;
+import com.google.vr.sdk.base.GvrView;
+
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.fpv_vr.djiintegration.xdji.DJIApplication;
 import constantin.fpv_vr.djiintegration.xdji.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.xdji.DJIVideoPlayer;
 import constantin.renderingx.core.VrActivity;
 import constantin.renderingx.core.views.ViewSuperSync;
+import constantin.telemetry.core.TelemetryReceiver;
+import constantin.video.core.video_player.VideoPlayer;
 
 /*****************************************
  * Render Video & OSD Side by Side. Difference to AStereoNormal: Renders directly into the Front Buffer  (FB) for lower latency
@@ -23,8 +29,12 @@ public class AStereoSuperSYNC extends VrActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewSuperSync mViewSuperSync = new ViewSuperSync(this);
-        DJIVideoPlayer videoPlayer=new DJIVideoPlayer(this);
-        DJITelemetryReceiver telemetryReceiver = new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+        final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
+                new DJIVideoPlayer(this):
+                new VideoPlayer(this);
+        final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
+                new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
+                new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         GLRStereoSuperSync mGLRStereoSuperSync = new GLRStereoSuperSync(this,videoPlayer.configure2(), telemetryReceiver, mViewSuperSync.getGvrApi().getNativeGvrContext());
         videoPlayer.setIVideoParamsChanged(mGLRStereoSuperSync);
         mViewSuperSync.setRenderer(mGLRStereoSuperSync);
