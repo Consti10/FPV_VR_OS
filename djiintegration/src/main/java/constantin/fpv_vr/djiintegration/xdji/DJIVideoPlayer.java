@@ -1,10 +1,9 @@
-package constantin.fpv_vr.xdji;
+package constantin.fpv_vr.djiintegration.xdji;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.view.Surface;
 
-import constantin.fpv_vr.Toaster;
 import constantin.video.core.video_player.VideoPlayer;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
@@ -26,10 +25,10 @@ public class DJIVideoPlayer extends VideoPlayer {
         if(DJI_ENABLED){
             final Aircraft aircraft=DJIApplication.getConnectedAircraft();
             if (aircraft==null) {
-                Toaster.makeToast(context,"Cannot start video",true);
+                //Toaster.makeToast(context,"Cannot start video",true);
             } else {
                 VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(this::onReceiveDjiData);
-                Toaster.makeToast(context,"Start feeder",true);
+                //Toaster.makeToast(context,"Start feeder",true);
             }
         }
     }

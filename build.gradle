@@ -42,12 +42,3 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task myTaskDoSomething()  {
-    println 'Hello TEST'
-    //commandLine "git", "clone https://github.com/Consti10/LiveVideo10ms"
-    //from zipTree("${project.rootDir}/libraries/sdk-base-1.190.0.aar")
-    //into "${project.rootDir}/libraries/"
-    //include "headers/vr/gvr/capi/**/*h"
-    //include "jni/**/libgvr_audio.so"
-    //include "jni/**/libgvr.so"
-}

@@ -4,9 +4,9 @@
     <!--Stores the connection type seleced by the user. Make sure to write all other values according to the connection type
     when either initializing or changing the value-->
     <com.mapzen.prefsplus.EditIntPreference
-        android:key="@string/ConnectionType"
-        android:title="@string/ConnectionType"
-        android:summary="@string/ConnectionType"
+        android:key="@string/CONNECTION_TYPE"
+        android:title="@string/CONNECTION_TYPE"
+        android:summary="@string/CONNECTION_TYPE"
         android:enabled="false"
         android:defaultValue="2"/>
 

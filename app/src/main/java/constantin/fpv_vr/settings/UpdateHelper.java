@@ -25,7 +25,7 @@ public class UpdateHelper {
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_style,readAgain);
         TelemetrySettings.initializePreferences(c,readAgain);
         VideoSettings.initializePreferences(c,readAgain);
-        AConnect.setPreferencesForConnectionType(c,c.getSharedPreferences("pref_connect",MODE_PRIVATE).getInt(c.getString(R.string.ConnectionType),2));
+        AConnect.setPreferencesForConnectionType(c,c.getSharedPreferences("pref_connect",MODE_PRIVATE).getInt(c.getString(R.string.CONNECTION_TYPE),2));
     }
 
     @SuppressLint("ApplySharedPref")

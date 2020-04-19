@@ -3,26 +3,17 @@ package constantin.fpv_vr.main;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.hbisoft.hbrecorder.HBRecorder;
 import com.hbisoft.hbrecorder.HBRecorderListener;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Toaster;
@@ -35,7 +26,7 @@ import constantin.fpv_vr.settings.ASettingsOSD;
 import constantin.fpv_vr.settings.ASettingsVR;
 import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.settings.UpdateHelper;
-import constantin.fpv_vr.xdji.DJIApplication;
+import constantin.fpv_vr.djiintegration.xdji.DJIApplication;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.video.core.RequestPermissionHelper;
@@ -126,7 +117,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         switch (v.getId()) {
             case R.id.b_startMonoVideoOnly:
             case R.id.b_startMonoVideoOSD:{
-                if(DJIApplication.isDJIEnabled(this) && DJIApplication.getConnectedAircraft()==null){
+                if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
                     Toaster.makeToast(this,"No connected product",false);
                     return;
                 }
@@ -136,7 +127,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 startRecordingScreenIfEnabled();
             }break;
             case R.id.b_startStereo:{
-                if(DJIApplication.isDJIEnabled(this) && DJIApplication.getConnectedAircraft()==null){
+                if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
                     Toaster.makeToast(this,"No connected product",false);
                     return;
                 }

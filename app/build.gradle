@@ -78,17 +78,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // dji sdk begin
-    implementation('com.dji:dji-sdk:4.11.2',{
-        exclude module: 'library-anti-distortion'
-        exclude module: 'fly-safe-database'
-    })
-    compileOnly('com.dji:dji-sdk-provided:4.11.2')
-    implementation 'androidx.core:core:1.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
-    // dji sdk end
+
     implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutVersion"
     implementation "com.google.android.material:material:$rootProject.materialVersion"
@@ -96,6 +86,7 @@ dependencies {
 
     implementation project(path: ':colorpreference')
     implementation project(path: ':preferences')
+    implementation project(path: ':djiintegration')
 
     implementation project(':VideoCore')
     implementation project(':TelemetryCore')

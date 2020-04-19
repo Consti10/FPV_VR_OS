@@ -1,7 +1,8 @@
-package constantin.fpv_vr.xdji;
+package constantin.fpv_vr.djiintegration.xdji;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,8 +13,6 @@ import com.secneo.sdk.Helper;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import constantin.fpv_vr.connect.AConnect;
-import constantin.fpv_vr.settings.SJ;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.sdk.base.BaseComponent;
@@ -37,8 +36,14 @@ public class DJIApplication extends Application {
         initializeDJIIfNeeded();
     }
 
+    public static int getConnectionType(final Context context){
+        final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
+        return pref_connect.getInt("CONNECTION_TYPE",2);
+    }
+
     public static boolean isDJIEnabled(final Context context){
-        return SJ.getConnectionType(context)== AConnect.CONNECTION_TYPE_DJI;
+        //return SJ.getConnectionType(context)== AConnect.CONNECTION_TYPE_DJI;
+        return getConnectionType(context)==5;
     }
 
     public static synchronized Aircraft getConnectedAircraft(){
@@ -47,6 +52,10 @@ public class DJIApplication extends Application {
             return (Aircraft)product;
         }
         return null;
+    }
+
+    public static synchronized boolean isAircraftConnected(){
+        return getConnectedAircraft()!=null;
     }
 
     public synchronized void initializeDJIIfNeeded(){

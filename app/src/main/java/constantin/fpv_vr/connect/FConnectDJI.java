@@ -4,25 +4,16 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
-import constantin.fpv_vr.xdji.DJIApplication;
+import constantin.fpv_vr.djiintegration.xdji.DJIApplication;
 import constantin.video.core.RequestPermissionHelper;
 
 public class FConnectDJI extends Fragment implements View.OnClickListener, RequestPermissionHelper.IOnPermissionsGranted{

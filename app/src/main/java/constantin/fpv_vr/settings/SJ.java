@@ -22,12 +22,12 @@ public class SJ {
     //********************************** pref_connect only **********************************
     public static int getConnectionType(final Context context){
         final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
-        return pref_connect.getInt(context.getString(R.string.ConnectionType),CONNECTION_TYPE_TestFile);
+        return pref_connect.getInt(context.getString(R.string.CONNECTION_TYPE),CONNECTION_TYPE_TestFile);
     }
     @SuppressLint("ApplySharedPref")
     public static void setConnectionType(final Context context, final int value){
         final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
-        pref_connect.edit().putInt(context.getString(R.string.ConnectionType),value).commit();
+        pref_connect.edit().putInt(context.getString(R.string.CONNECTION_TYPE),value).commit();
     }
     //********************************** pref_connect only **********************************
 

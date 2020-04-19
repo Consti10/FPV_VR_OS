@@ -10,8 +10,8 @@ import android.os.Bundle;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.settings.SJ;
-import constantin.fpv_vr.xdji.DJITelemetryReceiver;
-import constantin.fpv_vr.xdji.DJIVideoPlayer;
+import constantin.fpv_vr.djiintegration.xdji.DJITelemetryReceiver;
+import constantin.fpv_vr.djiintegration.xdji.DJIVideoPlayer;
 import constantin.renderingx.core.VrActivity;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyGLSurfaceView;

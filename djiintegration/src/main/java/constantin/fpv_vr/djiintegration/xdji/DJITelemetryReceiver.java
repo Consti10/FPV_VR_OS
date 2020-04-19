@@ -1,11 +1,10 @@
-package constantin.fpv_vr.xdji;
+package constantin.fpv_vr.djiintegration.xdji;
 
 import android.app.Activity;
 import android.widget.Toast;
 
 import androidx.lifecycle.LifecycleOwner;
 
-import constantin.fpv_vr.Toaster;
 import constantin.telemetry.core.TelemetryReceiver;
 import dji.common.airlink.SignalQualityCallback;
 import dji.common.airlink.WiFiFrequencyBand;
@@ -33,7 +32,7 @@ public class DJITelemetryReceiver extends TelemetryReceiver {
     private void setupDJICallbacks(){
         final Aircraft aircraft=DJIApplication.getConnectedAircraft();
         if (aircraft==null) {
-            Toaster.makeToast(context,"Cannot start telemetry",true);
+            //Toaster.makeToast(context,"Cannot start telemetry",true);
         } else {
             Toast.makeText(context, "starting dji telemetry", Toast.LENGTH_LONG).show();
             aircraft.getGimbal().setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
