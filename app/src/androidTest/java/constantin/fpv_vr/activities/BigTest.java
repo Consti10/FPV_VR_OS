@@ -25,7 +25,7 @@ import static org.hamcrest.CoreMatchers.anything;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class BasicTest {
+public class BigTest {
 
     private static final int WAIT_TIME_LONG=10000;
     private static final int WAIT_TIME_SHORT=1000;
