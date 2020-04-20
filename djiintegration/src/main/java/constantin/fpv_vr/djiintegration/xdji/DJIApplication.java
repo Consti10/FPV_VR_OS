@@ -51,9 +51,14 @@ public class DJIApplication extends Application {
     }
 
     public static synchronized Aircraft getConnectedAircraft(){
-        final BaseProduct product = DJISDKManager.getInstance().getProduct();
-        if (product != null && product.isConnected() && (product instanceof Aircraft)) {
-            return (Aircraft)product;
+        try{
+            final BaseProduct product = DJISDKManager.getInstance().getProduct();
+            if (product != null && product.isConnected() && (product instanceof Aircraft)) {
+                return (Aircraft)product;
+            }
+            return null;
+        }catch (NoClassDefFoundError e){
+            e.printStackTrace();
         }
         return null;
     }
