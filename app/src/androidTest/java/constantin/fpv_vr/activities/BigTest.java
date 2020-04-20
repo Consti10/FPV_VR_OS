@@ -1,5 +1,7 @@
 package constantin.fpv_vr.activities;
 
+import android.content.Intent;
+
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.matcher.PreferenceMatchers;
 import androidx.test.filters.LargeTest;
@@ -13,6 +15,8 @@ import org.junit.runner.RunWith;
 
 import constantin.fpv_vr.main.AMain;
 import constantin.fpv_vr.R;
+import constantin.renderingx.core.gles_info.AWriteGLESInfo;
+import constantin.video.core.DecodingInfo;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -37,7 +41,8 @@ public class BigTest {
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.ACCESS_FINE_LOCATION",
-                    "android.permission.WRITE_EXTERNAL_STORAGE");
+                    "android.permission.WRITE_EXTERNAL_STORAGE",
+                    "android.permission.READ_PHONE_STATE");
 
     //start the 3 basic activities, without modifying any settings
     private void openAll3PlayingActivitiesShort(){
@@ -52,14 +57,36 @@ public class BigTest {
         pressBack();
     }
 
+    private void clickOkayOnceAvailable(final int maxTimeSeconds){
+        final long startTime=System.currentTimeMillis();
+        boolean done=false;
+        while (!done){
+            try{
+                onView(withId(android.R.id.button1)).perform(click());
+                done=true;
+            }catch (NoMatchingViewException ignored){
+            }
+            long elapsed=System.currentTimeMillis()-startTime;
+            if(elapsed>maxTimeSeconds*1000)done=true;
+        }
+    }
+
     @Test
     public void basicTest() {
+        // The 'start first time' stuff
+        try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+        try{
+            onView(withId(android.R.id.button1)).perform(click());
+            // If there is the 'first start or update view' don't forget to clear the second one
+            clickOkayOnceAvailable(5);
+        }catch (NoMatchingViewException e){
+            // Not a first start
+            e.printStackTrace();
+        }
+        try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 
-        try {
-            onView(withText("Okay")).perform(scrollTo(),click());
-            onView(withText("Okay")).perform(scrollTo(),click());
-        } catch (NoMatchingViewException ignored) { }
-
+        // start mono mono & osd, stereo
+        openAll3PlayingActivitiesShort();
 
         //Change rendering mode to disable60fpsCap and start stereo activity
         onView(withId(R.id.b_VRSettings)).perform(click());
@@ -78,9 +105,14 @@ public class BigTest {
         //And check if the test receiver is working properly
         try { Thread.sleep(WAIT_TIME_SHORT); } catch (InterruptedException e) { e.printStackTrace(); }
         pressBack();
-
-        //Then,open the mono/stereo activities for the last time
         openAll3PlayingActivitiesShort();
+
+        // Set to DJI and
+        // cannot start because no connected dji
+        onView(withId(R.id.b_Connect)).perform(click());
+        onView(withId(R.id.spinner_connection_type)).perform(click());
+        onData(anything()).atPosition(5).perform(click());
+        pressBack();
     }
 
 }

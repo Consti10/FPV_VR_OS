@@ -2,6 +2,7 @@ package constantin.fpv_vr.djiintegration.xdji;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.util.Log;
 import android.view.Surface;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ public class DJIVideoPlayer extends VideoPlayer {
     private final boolean DJI_ENABLED;
     private DJICodecManager mCodecManager;
     private final Context context;
+    private boolean prioSet=false;
 
     public DJIVideoPlayer(Context context) {
         super(context);
@@ -26,11 +28,11 @@ public class DJIVideoPlayer extends VideoPlayer {
         if(DJI_ENABLED){
             final Aircraft aircraft=DJIApplication.getConnectedAircraft();
             if (aircraft==null) {
-                Toast.makeText(context, "Cannot start video",Toast.LENGTH_LONG).show();
-            } else {
-                VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(this::onReceiveDjiData);
-                Toast.makeText(context, "Start feeder",Toast.LENGTH_LONG).show();
+                Toaster.makeToast(context, "Cannot start video",true);
+                return;
             }
+            VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(this::onReceiveDjiData);
+            Toaster.makeToast(context, "Start feeder",true);
         }
     }
 
@@ -57,6 +59,11 @@ public class DJIVideoPlayer extends VideoPlayer {
 
 
     private void onReceiveDjiData(byte[] videoBuffer,int size) {
+        if(!prioSet){
+            Log.d("X","Thread priority"+Thread.currentThread().getPriority());
+            Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+            prioSet=true;
+        }
         //if (mCodecManager != null) {
         //    System.out.println("Data");
         //    mCodecManager.sendDataToDecoder(videoBuffer, size);
