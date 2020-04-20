@@ -1,4 +1,4 @@
-package constantin.fpv_vr.djiintegration.xdji;
+package constantin.fpv_vr.djiintegration;
 
 import android.app.Application;
 import android.content.Context;

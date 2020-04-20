@@ -1,10 +1,9 @@
-package constantin.fpv_vr.djiintegration.xdji;
+package constantin.fpv_vr.djiintegration;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.util.Log;
 import android.view.Surface;
-import android.widget.Toast;
 
 import constantin.video.core.video_player.VideoPlayer;
 import dji.sdk.camera.VideoFeeder;

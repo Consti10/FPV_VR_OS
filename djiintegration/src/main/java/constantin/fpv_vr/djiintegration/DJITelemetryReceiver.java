@@ -1,7 +1,6 @@
-package constantin.fpv_vr.djiintegration.xdji;
+package constantin.fpv_vr.djiintegration;
 
 import android.app.Activity;
-import android.widget.Toast;
 
 import androidx.lifecycle.LifecycleOwner;
 

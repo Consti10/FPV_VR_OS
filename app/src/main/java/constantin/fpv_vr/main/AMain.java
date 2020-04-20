@@ -26,7 +26,7 @@ import constantin.fpv_vr.settings.ASettingsOSD;
 import constantin.fpv_vr.settings.ASettingsVR;
 import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.settings.UpdateHelper;
-import constantin.fpv_vr.djiintegration.xdji.DJIApplication;
+import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.video.core.RequestPermissionHelper;

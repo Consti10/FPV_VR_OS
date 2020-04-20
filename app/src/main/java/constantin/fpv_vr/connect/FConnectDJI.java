@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
-import constantin.fpv_vr.djiintegration.xdji.DJIApplication;
+import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.video.core.RequestPermissionHelper;
 
 public class FConnectDJI extends Fragment implements View.OnClickListener, RequestPermissionHelper.IOnPermissionsGranted{

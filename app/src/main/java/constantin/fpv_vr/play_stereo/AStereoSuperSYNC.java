@@ -2,13 +2,10 @@ package constantin.fpv_vr.play_stereo;
 
 import android.os.Bundle;
 
-import com.google.vr.ndk.base.GvrSurfaceView;
-import com.google.vr.sdk.base.GvrView;
-
 import constantin.fpv_vr.AirHeadTrackingSender;
-import constantin.fpv_vr.djiintegration.xdji.DJIApplication;
-import constantin.fpv_vr.djiintegration.xdji.DJITelemetryReceiver;
-import constantin.fpv_vr.djiintegration.xdji.DJIVideoPlayer;
+import constantin.fpv_vr.djiintegration.DJIApplication;
+import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
+import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
 import constantin.renderingx.core.VrActivity;
 import constantin.renderingx.core.views.ViewSuperSync;
 import constantin.telemetry.core.TelemetryReceiver;
