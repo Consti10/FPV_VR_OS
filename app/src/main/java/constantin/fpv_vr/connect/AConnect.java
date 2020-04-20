@@ -139,6 +139,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 makeSnackBarForView(mContext,"connection type set to RTSP",v);
                 break;
             case CONNECTION_TYPE_DJI:
+                // Will crash on emulator !
                 fm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commit();
                 makeSnackBarForView(mContext,"connection type set to DJI",v);
                 break;

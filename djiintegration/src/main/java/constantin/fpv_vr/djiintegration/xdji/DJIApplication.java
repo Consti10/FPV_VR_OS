@@ -32,8 +32,12 @@ public class DJIApplication extends Application {
     @Override
     protected void attachBaseContext(Context paramContext) {
         super.attachBaseContext(paramContext);
-        Helper.install(DJIApplication.this);
-        initializeDJIIfNeeded();
+        try{
+            Helper.install(DJIApplication.this);
+            initializeDJIIfNeeded();
+        }catch (NoClassDefFoundError e){
+            e.printStackTrace();
+        }
     }
 
     private static int getConnectionType(final Context context){
@@ -59,64 +63,68 @@ public class DJIApplication extends Application {
     }
 
     public synchronized void initializeDJIIfNeeded(){
-        final Context context=getBaseContext();
-        if(!isDJIEnabled(context)){
-            return;
-        }
-        if(DJISDKManager.getInstance().hasSDKRegistered()){
-            return;
-        }
-        if (isRegistrationInProgress.compareAndSet(false, true)) {
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    showToast("registering, pls wait...");
-                    // We mustn't override the callback directly because of the DJI install libraries process
-                    DJISDKManager.getInstance().registerApp(DJIApplication.this.getBaseContext(), new DJISDKManager.SDKManagerCallback() {
-                        @Override
-                        public void onRegister(DJIError djiError) {
-                            if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
-                                showToast("Register Success");
-                                DJISDKManager.getInstance().startConnectionToProduct();
-                            } else {
-                                showToast("Register sdk fails, please check your network connection!");
-                                isRegistrationInProgress.set(false);
+        try{
+            final Context context=getBaseContext();
+            if(!isDJIEnabled(context)){
+                return;
+            }
+            if(DJISDKManager.getInstance().hasSDKRegistered()){
+                return;
+            }
+            if (isRegistrationInProgress.compareAndSet(false, true)) {
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast("registering, pls wait...");
+                        // We mustn't override the callback directly because of the DJI install libraries process
+                        DJISDKManager.getInstance().registerApp(DJIApplication.this.getBaseContext(), new DJISDKManager.SDKManagerCallback() {
+                            @Override
+                            public void onRegister(DJIError djiError) {
+                                if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
+                                    showToast("Register Success");
+                                    DJISDKManager.getInstance().startConnectionToProduct();
+                                } else {
+                                    showToast("Register sdk fails, please check your network connection!");
+                                    isRegistrationInProgress.set(false);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onProductDisconnect() {
-                            showToast("Product Disconnected");
-                        }
-
-                        @Override
-                        public void onProductConnect(BaseProduct baseProduct) {
-                            showToast("Product Connected");
-                        }
-
-                        @Override
-                        public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent baseComponent, BaseComponent baseComponent1) {
-                            debug("onComponentChange");
-                        }
-
-                        @Override
-                        public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
-                            debug("onInitProcess "+djisdkInitEvent.toString()+" "+i);
-                        }
-
-                        @Override
-                        public void onDatabaseDownloadProgress(long current, long total) {
-                            final int process = (int) (100 * current / total);
-                            long delta=System.currentTimeMillis()-lastTimeToastDownloadDatabase;
-                            if(delta>5000){
-                                showToast("Downloading dji fly safe database. Make sure you have wifi connected. Process:"+process+" %");
-                                lastTimeToastDownloadDatabase=System.currentTimeMillis();
+                            @Override
+                            public void onProductDisconnect() {
+                                showToast("Product Disconnected");
                             }
-                            debug("onDatabaseDownloadProgress "+process+"current "+current+"total "+total);
-                        }
-                    });
-                }
-            });
+
+                            @Override
+                            public void onProductConnect(BaseProduct baseProduct) {
+                                showToast("Product Connected");
+                            }
+
+                            @Override
+                            public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent baseComponent, BaseComponent baseComponent1) {
+                                debug("onComponentChange");
+                            }
+
+                            @Override
+                            public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
+                                debug("onInitProcess "+djisdkInitEvent.toString()+" "+i);
+                            }
+
+                            @Override
+                            public void onDatabaseDownloadProgress(long current, long total) {
+                                final int process = (int) (100 * current / total);
+                                long delta=System.currentTimeMillis()-lastTimeToastDownloadDatabase;
+                                if(delta>5000){
+                                    showToast("Downloading dji fly safe database. Make sure you have wifi connected. Process:"+process+" %");
+                                    lastTimeToastDownloadDatabase=System.currentTimeMillis();
+                                }
+                                debug("onDatabaseDownloadProgress "+process+"current "+current+"total "+total);
+                            }
+                        });
+                    }
+                });
+            }
+        }catch (NoClassDefFoundError e){
+            e.printStackTrace();
         }
     }
 
