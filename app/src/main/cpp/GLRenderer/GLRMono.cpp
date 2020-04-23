@@ -54,7 +54,7 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
         mOSDRenderer->placeGLElementsMono(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     }
     if(mVideoRenderer){
-        mVideoRenderer->updatePosition(glm::vec3(0),0,0,lastVideoWidthPx,lastVideoHeightPx);
+        mVideoRenderer->updatePosition(0,0,0,lastVideoWidthPx,lastVideoHeightPx);
     }
 }
 

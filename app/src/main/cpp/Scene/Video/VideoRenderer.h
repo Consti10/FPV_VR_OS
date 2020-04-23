@@ -32,7 +32,7 @@ public:
     void drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye);
     void drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM);
     //For 360 equirectangular we need the video vidth and height in px
-    void updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,int optionalVideoWidthPx,int optionalVideoHeightPx);
+    void updatePosition(const float positionZ,const float width,const float height,int optionalVideoWidthPx,int optionalVideoHeightPx);
     bool is360Video(){
         return mMode>1;
     }
@@ -46,7 +46,7 @@ private:
     std::unique_ptr<GLProgramTextureExt> mGLProgramTextureExt;
     std::unique_ptr<GLProgramTextureExt> mGLProgramTextureExtMappingEnabled;
 
-    const int TESSELATION_FACTOR=10;
+    const unsigned int TESSELATION_FACTOR=10;
     const VIDEO_RENDERING_MODE mMode;
     const GLuint mVideoTexture;
 };

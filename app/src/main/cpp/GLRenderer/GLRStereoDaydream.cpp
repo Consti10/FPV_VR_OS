@@ -43,7 +43,7 @@ void GLRStereoDaydream::placeGLElements() {
     videoZ*=1.1f;
     videoZ*=2;
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
-    mVideoRenderer->updatePosition(glm::vec3(videoX,videoY,videoZ),videoW,videoH,1920,1080);
+    mVideoRenderer->updatePosition(videoZ,videoW,videoH,1920,1080);
 }
 
 void GLRStereoDaydream::updateBufferViewports() {
@@ -74,9 +74,9 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     //
     float tesselatedRectSize=2.5; //6.2f
     const float offsetY=0.0f;
-    auto tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::BLUE);
+    auto tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{0,0,-2},{tesselatedRectSize,tesselatedRectSize},Color::BLUE);
     nColoredVertices= GLBufferHelper::createUploadGLBuffer(glBufferVC, tmp);
-    tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{-tesselatedRectSize/2.0f,-tesselatedRectSize/2.0f+offsetY,-2},tesselatedRectSize,tesselatedRectSize,Color::GREEN);
+    tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{0,0,-2},{tesselatedRectSize,tesselatedRectSize},Color::GREEN);
     GLBufferHelper::createUploadGLBuffer(glBufferVCX, tmp);
 }
 

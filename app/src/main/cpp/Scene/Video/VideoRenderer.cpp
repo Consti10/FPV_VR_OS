@@ -55,21 +55,15 @@ mVideoTexture(videoTexture),mMode(mode){
     }
 }
 
-void VideoRenderer::updatePosition(const glm::vec3& lowerLeftCorner,const float width,const float height,
+void VideoRenderer::updatePosition(const float positionZ,const float width,const float height,
         const int optionalVideoWidthPx,const int optionalVideoHeightPx) {
     if(mMode==RM_2D_MONOSCOPIC){
-        const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
-                                                                    width,height, TESSELATION_FACTOR, 0.0f,
-                                                                    1.0f);
+        const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
         mVideoCanvasB.initializeAndUploadGL(vid0.first,vid0.second);
     }else if(mMode==RM_2D_STEREO){
-        const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
-                                                                    width,height, TESSELATION_FACTOR, 0.0f,
-                                                                    0.5f);
+        const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,0.5f);
         mVideoCanvasLeftEyeB.initializeAndUploadGL(vid1.first,vid1.second);
-        const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(lowerLeftCorner,
-                                                                     width,height, TESSELATION_FACTOR, 0.5f,
-                                                                     0.5f);
+        const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.5f,1.0f);
         mVideoCanvasRightEyeB.initializeAndUploadGL(vid2.first,vid2.second);
     }//else if(false){
         //We need to recalculate the sphere u,v coordinates when the video ratio changes
