@@ -4,7 +4,7 @@
 
 #include <GLProgramText.h>
 #include <SettingsOSDStyle.h>
-#include <Color.hpp>
+#include <TrueColor.hpp>
 #include <ColoredGeometry.hpp>
 #include <GLBufferHelper.hpp>
 #include "AHorizon.h"
@@ -21,8 +21,6 @@ AHorizon::AHorizon(const AHorizon::Options& options,const SettingsOSDStyle& sett
         mPositionDebug(basicGLPrograms.vc,0, true),
         mMiddleTriangleBuff(batchingManager.allocateVCTriangles(3)),
         mOptions(options){
-    mGLBuffLadders.initializeGL();
-    mGLBuff3DModel.initializeGL();
 }
 
 //
@@ -49,7 +47,7 @@ void AHorizon::setupPosition() {
         ColoredGeometry::makeColoredTriangle1(mMiddleTriangleBuff->modify(),
                              glm::vec3(mX+mWidth/2.0f-middleTriangleWidthHeight/2.0f,mY+mHeight/2.0f-middleTriangleWidthHeight/2.0f,mZ),
                              middleTriangleWidthHeight,middleTriangleWidthHeight,
-                                              Color::GREEN);
+                                              TrueColor2::GREEN);
     }
     //create the 3D model
     {
@@ -138,24 +136,24 @@ IPositionable::Rect2D AHorizon::calculatePosition(const IPositionable::Rect2D &o
 std::array<GLProgramVC::Vertex,3+4*3> AHorizon::create3DModelData(float hW, float sixtW) {
     //Copter as colored geometry data
     return {
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f-sixtW,Color::RED}, //
-            GLProgramVC::Vertex{0.0f+sixtW,0.0f,0.0f+sixtW,Color::BLUE}, //bottom right
-            GLProgramVC::Vertex{0.0f-sixtW,0.0f,0.0f+sixtW,Color::YELLOW}, // bottom left
+            GLProgramVC::Vertex{0.0f,0.0f,0.0f-sixtW,TrueColor2::RED}, //
+            GLProgramVC::Vertex{0.0f+sixtW,0.0f,0.0f+sixtW,TrueColor2::BLUE}, //bottom right
+            GLProgramVC::Vertex{0.0f-sixtW,0.0f,0.0f+sixtW,TrueColor2::YELLOW}, // bottom left
             //1
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f,Color::RED},
-            GLProgramVC::Vertex{0.0f+hW,0.0f,0.0f-hW, Color::RED},
-            GLProgramVC::Vertex{0.0f+hW-(hW/4.0f),0.0f,0.0f-hW, Color::RED},
+            GLProgramVC::Vertex{0.0f,0.0f,0.0f,TrueColor2::RED},
+            GLProgramVC::Vertex{0.0f+hW,0.0f,0.0f-hW, TrueColor2::RED},
+            GLProgramVC::Vertex{0.0f+hW-(hW/4.0f),0.0f,0.0f-hW, TrueColor2::RED},
             //2
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f, Color::BLUE},
-            GLProgramVC::Vertex{0.0f+hW,0.0f,0.0f+hW, Color::BLUE},
-            GLProgramVC::Vertex{0.0f+hW-(hW/4.0f),0.0f,0.0f+hW, Color::BLUE},
+            GLProgramVC::Vertex{0.0f,0.0f,0.0f, TrueColor2::BLUE},
+            GLProgramVC::Vertex{0.0f+hW,0.0f,0.0f+hW, TrueColor2::BLUE},
+            GLProgramVC::Vertex{0.0f+hW-(hW/4.0f),0.0f,0.0f+hW, TrueColor2::BLUE},
             //3
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f, Color::YELLOW},
-            GLProgramVC::Vertex{0.0f-hW,0.0f,0.0f+hW, Color::YELLOW},
-            GLProgramVC::Vertex{0.0f-hW+(hW/4.0f),0.0f,0.0f+hW, Color::YELLOW},
+            GLProgramVC::Vertex{0.0f,0.0f,0.0f, TrueColor2::YELLOW},
+            GLProgramVC::Vertex{0.0f-hW,0.0f,0.0f+hW, TrueColor2::YELLOW},
+            GLProgramVC::Vertex{0.0f-hW+(hW/4.0f),0.0f,0.0f+hW, TrueColor2::YELLOW},
             //4
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f, Color::RED},
-            GLProgramVC::Vertex{0.0f-hW,0.0f,0.0f-hW, Color::RED},
-            GLProgramVC::Vertex{0.0f-hW+(hW/4.0f),0.0f,0.0f-hW,Color::RED}
+            GLProgramVC::Vertex{0.0f,0.0f,0.0f, TrueColor2::RED},
+            GLProgramVC::Vertex{0.0f-hW,0.0f,0.0f-hW, TrueColor2::RED},
+            GLProgramVC::Vertex{0.0f-hW+(hW/4.0f),0.0f,0.0f-hW,TrueColor2::RED}
     };
 }

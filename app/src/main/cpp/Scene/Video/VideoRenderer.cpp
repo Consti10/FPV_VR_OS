@@ -1,5 +1,5 @@
 
-#include <Color.hpp>
+#include <TrueColor.hpp>
 #include <ColoredGeometry.hpp>
 #include <TexturedGeometry.hpp>
 #include <SphereBuilder.hpp>
@@ -16,38 +16,28 @@ mVideoTexture(videoTexture),mMode(mode){
     mGLProgramTextureExt=std::make_unique<GLProgramTextureExt>(vddcManager,false);
     switch (mMode){
         case RM_2D_MONOSCOPIC:
-            mVideoCanvasB.initializeGL();
             break;
         case RM_2D_STEREO:
-            mVideoCanvasLeftEyeB.initializeGL();
-            mVideoCanvasRightEyeB.initializeGL();
             break;
         case RM_360_DUAL_FISHEYE_INSTA360_1:
-            mEquirectangularSphereB.initializeGL();
             mEquirectangularSphereB.uploadGL(SphereBuilder::createSphereEquirectangularMonoscopic(),GL_TRIANGLE_STRIP);
             break;
         case RM_360_DUAL_FISHEYE_INSTA360_2:
-            mInsta360SphereB.initializeGL();
             mInsta360SphereB.uploadGL(SphereBuilder::createSphereDualFisheyeInsta360(),GL_TRIANGLE_STRIP);
             break;
         case RM_360_KODAK_SP360_4K_DUAL:
-            mInsta360SphereB.initializeGL();
             mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_0,0.5,0.65,190,0.05,0),GL_TRIANGLE_STRIP);
             break;
         case RM_360_KODAK_SP360_4K_SINGLE:
-            mInsta360SphereB.initializeGL();
             mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_180,0.5,0.5,190,0.0,0),GL_TRIANGLE_STRIP);
             break;
         case RM_360_FIREFLY_SPLIT_4K:
-            mInsta360SphereB.initializeGL();
             mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_180,0.5,0.5,210,0.05,0),GL_TRIANGLE_STRIP);
             break;
         case RM_360_1080P_USB:
-            mInsta360SphereB.initializeGL();
             mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_270,0.5,0.5,210,0.05,0),GL_TRIANGLE_STRIP);
             break;
         case RM_360_STEREO_PI:
-            mInsta360SphereB.initializeGL();
             mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_270,0.5,0.5,210,0.05,0),GL_TRIANGLE_STRIP);
             break;
         default:
@@ -59,12 +49,12 @@ void VideoRenderer::updatePosition(const float positionZ,const float width,const
         const int optionalVideoWidthPx,const int optionalVideoHeightPx) {
     if(mMode==RM_2D_MONOSCOPIC){
         const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
-        mVideoCanvasB.initializeAndUploadGL(vid0.first,vid0.second);
+        mVideoCanvasB.uploadGL(vid0.first,vid0.second);
     }else if(mMode==RM_2D_STEREO){
         const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,0.5f);
-        mVideoCanvasLeftEyeB.initializeAndUploadGL(vid1.first,vid1.second);
+        mVideoCanvasLeftEyeB.uploadGL(vid1.first,vid1.second);
         const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.5f,1.0f);
-        mVideoCanvasRightEyeB.initializeAndUploadGL(vid2.first,vid2.second);
+        mVideoCanvasRightEyeB.uploadGL(vid2.first,vid2.second);
     }//else if(false){
         //We need to recalculate the sphere u,v coordinates when the video ratio changes
         //mEquirectangularSphereB.uploadGL(SphereBuilder::createSphereEquirectangularMonoscopic(),GL_TRIANGLE_STRIP);

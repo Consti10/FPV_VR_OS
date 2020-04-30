@@ -176,8 +176,8 @@ void TextElements2::updateSubElement(unsigned long id,OSDTextObj* obj)const {
     }
     const auto prefixColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR1;
     const auto valueColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR2;
-    const TrueColor metricsColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR3;
-    const TrueColor iconColor=prefixColor;
+    const auto metricsColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR3;
+    const auto iconColor=prefixColor;
 
     const auto ID=mOptions.enableXX.at(id);
     TelemetryReceiver::MTelemetryValue tmp=mTelemetryReceiver.getTelemetryValue(ID);
@@ -209,7 +209,7 @@ TextElements2::createAllElements(const SettingsOSDStyle &settingsOSDStyle,
     const int N_CHARS_PER_TEXT_OBJ=20;
     for(auto i:options.enableXX){
         ret.push_back(std::make_unique<OSDTextObj>(N_CHARS_PER_TEXT_OBJ,SettingsOSDStyle::isTransparentBackgroundEnabled(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH),
-                                                   SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH), false,Color::WHITE,batchingManager));
+                                                   SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH), false,TrueColor2::WHITE,batchingManager));
     }
     return ret;
 }

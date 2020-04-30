@@ -20,8 +20,8 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
         UNITS_BETWEEN_LONG_LINES(unitsBetween),
         mPositionDebug(basicGLPrograms.vc,0, true),
         mGLPrograms(basicGLPrograms),
-        mTextObjTelemetryValue(15,false, Color::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
-        mTextObjMetric(4, false,Color::WHITE,false,Color::WHITE,batchingManager),
+        mTextObjTelemetryValue(15,false, TrueColor2::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
+        mTextObjMetric(4, false,TrueColor2::WHITE,false,TrueColor2::WHITE,batchingManager),
         mBackgroundObj(batchingManager,SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH))
 {
     glGenBuffers(1,&mLadderLines.glBuffer);
@@ -31,7 +31,7 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
 
 void AVerticalLadder::setupPosition() {
     mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
-    const TrueColor lineColor=settingsOSDStyle.OSD_LINE_FILL_COLOR;
+    const auto lineColor=settingsOSDStyle.OSD_LINE_FILL_COLOR;
     //create the background
     mBackgroundObj.setPosition(mX,mY,mZ,mWidth,mHeight);
     mBackgroundObj.recalculateData();

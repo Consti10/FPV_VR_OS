@@ -5,7 +5,7 @@
 #ifndef FPV_VR_OS_SURFACETEXTUREUPDATE_HPP
 #define FPV_VR_OS_SURFACETEXTUREUPDATE_HPP
 
-//It is complete bullshit to call java code via ndk that is then calling ndk code again - but when building
+//It makes absolutely no sense to call java code via ndk that is then calling ndk code again - but when building
 //for pre-android 9, there is no other way around
 //If api<28 we have to use java to update the surface texture
 //#include <android/api-level.h>

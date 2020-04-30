@@ -51,16 +51,15 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint 
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
     mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)videoTexture,&distortionManager);
-    const TrueColor color=Color::BLACK;
-    mOcclusionMesh[0].initializeGL();
-    mOcclusionMesh[1].initializeGL();
+    const auto color=TrueColor2::BLACK;
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     placeGLElements();
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0,0,0,0.0F);
     cpuFrameTime.reset();
 }

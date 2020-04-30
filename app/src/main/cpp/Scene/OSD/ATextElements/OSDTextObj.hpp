@@ -75,7 +75,7 @@ public:
         backgroundRecalculationNeeded=true;
     }
     void setTextSafe(const std::wstring& text){
-        const std::vector<StylizedString> ss={{text,1.0f,Color::fromRGBA(1,1,1,1)}};
+        const std::vector<StylizedString> ss={{text,1.0f,TrueColor(1.0f,1,1,1)}};
         setTextSafe(ss);
     }
     void setTextSafe(const std::wstring &text,const TrueColor textColor){
@@ -83,12 +83,12 @@ public:
         setTextSafe(ss);
     }
     void setTextSafe(const std::vector<StylizedString>& ss){
-        if(StylizedString::equal(mText,ss)){
+        if(mText==ss){
             return;
         }
         if(StylizedString::length(ss)>maxNChars){
             MDebug::log(StylizedString::debug(ss),TAG);
-            mText={{L"E>n",1.0f,Color::fromRGBA(1, 1, 1, 1)}};
+            mText={{L"E>n",1.0f,TrueColor(1.0f, 1, 1, 1)}};
         }else{
             mText=ss;
         }

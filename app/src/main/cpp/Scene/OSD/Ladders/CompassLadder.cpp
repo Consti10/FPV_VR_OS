@@ -12,12 +12,9 @@ CompassLadder::CompassLadder(CompassLadder::Options options,const SettingsOSDSty
         mPositionDebug(basicGLPrograms.vc,0, true),
         mGLPrograms(basicGLPrograms),
         mOptions(options),
-        mTextObjTelemetryValue(N_CHARS_PER_TEXT_OBJ,false, Color::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
+        mTextObjTelemetryValue(N_CHARS_PER_TEXT_OBJ,false,TrueColor2::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
         mBackgroundObj(batchingManager,SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH)),
         mMiddleArrow(batchingManager.allocateVCTriangles(3)){
-    mGLLadderLinesB.initializeGL();
-    mGLLadderTextB.initializeGL();
-    mGLHomeIconB.initializeGL();
 }
 
 
@@ -126,7 +123,7 @@ void CompassLadder::setupPosition() {
         GLProgramText::convertStringToRenderingData(mX - home_arrow_width_height / 2.0f,
                                                     haStartY, mZ,
                                                     home_arrow_width_height, wstring1,
-                                                    Color::GREEN, tmp.data(), 0);
+                                                    TrueColor2::GREEN, tmp.data(), 0);
         mGLHomeIconB.uploadGL(tmp);
     }
     //create the middle arrow

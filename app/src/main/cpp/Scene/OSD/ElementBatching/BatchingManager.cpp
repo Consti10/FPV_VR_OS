@@ -6,7 +6,7 @@
 #include <GLHelper.hpp>
 
 #include <GLES3/gl3.h>
-#include <Color.hpp>
+#include <TrueColor.hpp>
 #include <BasicGLPrograms.hpp>
 
 
@@ -58,7 +58,7 @@ void BatchingManager::drawGL(const glm::mat4x4& ViewM,const glm::mat4x4& ProjM) 
 
     const int nTextVertices=mTextB.size*6;
     mBasicGLPrograms.text.beforeDraw(mTextB.gpuBuffer);
-    mBasicGLPrograms.text.updateOutline(Color::toRGBA(mTextOutlineColor),mTextOutlineStrength);
+    mBasicGLPrograms.text.updateOutline(mTextOutlineColor.toRGBA(),mTextOutlineStrength);
     mBasicGLPrograms.text.draw(ViewM,ProjM,0,nTextVertices);
     mBasicGLPrograms.text.afterDraw();
 

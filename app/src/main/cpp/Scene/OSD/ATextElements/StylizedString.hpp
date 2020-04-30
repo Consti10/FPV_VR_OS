@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <TrueColor.hpp>
 
 //A Stylized String is a string with added scale and color
 //Since OSD text might include different styles for sub-parts of one string (e.g. Dec: 60 fps) should have different colors for 'Dec' and '60fps'
@@ -15,18 +16,13 @@ class StylizedString{
 public:
     std::wstring string;
     float scale;
-    TrueColor color= Color::fromRGBA(1, 1, 1, 1);
-    static bool equal(const std::vector<StylizedString>& text1,const std::vector<StylizedString>& text2){
-        if(text1.size()!=text2.size())return false;
-        for(unsigned int i=0;i<text1.size();i++){
-            const auto& ss1=text1.at(i);
-            const auto& ss2=text2.at(i);
-            if(ss1.string!=ss2.string)return false;
-            if(ss1.scale!=ss2.scale)return false;
-            if(ss1.color!=ss2.color)return false;
-        }
-        return true;
-    };
+    TrueColor color= TrueColor(1.0f, 1, 1, 1);
+    bool operator==(const StylizedString& y)const{
+        return (string.compare(y.string)==0) && scale==y.scale && color==y.color;
+    }
+    bool operator!=(const StylizedString& y)const{
+        return !(*this==y);
+    }
     static int length(const std::vector<StylizedString>& text1){
         int len=0;
         for(const auto& ss:text1){

@@ -18,7 +18,7 @@
 #include <OSD/Text/TextElements1.h>
 #include <OSD/Text/TextElements2.h>
 #include <OSD/ArtificialHorizon/AHorizon.h>
-#include <Color.hpp>
+#include <TrueColor.hpp>
 #include <OSD/Ladders/VLAltitude.h>
 #include <OSD/Ladders/VLSpeed.h>
 

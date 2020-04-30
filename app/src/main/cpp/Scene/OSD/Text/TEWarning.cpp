@@ -11,8 +11,8 @@ TEWarning::TEWarning(const TEWarning::Options& options,const BasicGLPrograms &ba
         mPositionDebug(basicGLPrograms.vc,2, true),
         mOptions(options),
         mGLTextObjIndices(OSDTextObj::createAll(N_CHARS_PER_TEXT_OBJ,MAX_N_TEXT_OBJ,true,
-                                                Color::fromRGBA(0, 0, 0, 0.3f),false,
-                                                Color::WHITE,batchingManager)) {
+                                                TrueColor(0.0f, 0, 0, 0.3f),false,
+                                                TrueColor2::WHITE,batchingManager)) {
 }
 
 void TEWarning::setupPosition() {
@@ -42,7 +42,7 @@ void TEWarning::updateGL() {
     auto obj=mGLTextObjIndices.at(0).get();
     if(mOptions.batteryPercentage &&
        mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_PERCENTAGE).warning>0){
-        obj->setTextSafe(L"BATT %", Color::RED);
+        obj->setTextSafe(L"BATT %", TrueColor2::RED);
     }else{
         obj->setTextSafe(L"");
     }
@@ -51,7 +51,7 @@ void TEWarning::updateGL() {
     obj=mGLTextObjIndices.at(1).get();
     if(mOptions.batteryVoltage &&
        mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_VOLTAGE).warning>0){
-        obj->setTextSafe(L"BATT V", Color::RED);
+        obj->setTextSafe(L"BATT V", TrueColor2::RED);
     }else{
         obj->setTextSafe(L"");
     }
@@ -60,7 +60,7 @@ void TEWarning::updateGL() {
     obj=mGLTextObjIndices.at(2).get();
     if(mOptions.batteryMAHUsed &&
        mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_USED_CAPACITY).warning>0){
-        obj->setTextSafe(L"BATT mAh", Color::RED);
+        obj->setTextSafe(L"BATT mAh", TrueColor2::RED);
     }else{
         obj->setTextSafe(L"");
     }

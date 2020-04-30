@@ -59,15 +59,15 @@ private:
     static TrueColor getDebugColor(const int debugColorI){
         TrueColor color;
         switch(debugColorI){
-            case 0:color=Color::RED;break; //red
-            case 1:color=Color::GREEN;break; //green
-            case 2:color=Color::BLUE;break; //blue
-            case 3:color=Color::YELLOW;break; //yellow
-            case 4:color=Color::fromRGBA(1,0.5f,0,0.2f);break; //orange
-            case 5:color=Color::fromRGBA(0.5f,0.5f,0.5f,0.2f);break; //grey
-            case 6:color=Color::fromRGBA(1,1,1,0.2f);break; //white
-            case 7:color=Color::fromRGBA(0,0,0,0.1f);break; //black
-            default:color=Color::fromRGBA(1,1,1,0.2f);break; //white
+            case 0:color=TrueColor2::RED;break; //red
+            case 1:color=TrueColor2::GREEN;break; //green
+            case 2:color=TrueColor2::BLUE;break; //blue
+            case 3:color=TrueColor2::YELLOW;break; //yellow
+            case 4:color=TrueColor(1,0.5f,0,0.2f);break; //orange
+            case 5:color=TrueColor(0.5f,0.5f,0.5f,0.2f);break; //grey
+            case 6:color=TrueColor(1,1,1,0.2f);break; //white
+            case 7:color=TrueColor(0,0,0,0.1f);break; //black
+            default:color=TrueColor(1,1,1,0.2f);break; //white
         }
         return color;
     }

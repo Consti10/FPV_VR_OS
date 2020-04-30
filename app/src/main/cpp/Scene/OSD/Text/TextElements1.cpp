@@ -132,7 +132,7 @@ TextElements1::allocateAllElements(const SettingsOSDStyle &settingsOSDStyle,cons
     const int N_CHARS_PER_TEXT_OBJ=15;
     for(auto i:options.enableXX){
         ret.push_back(std::make_unique<OSDTextObj>(N_CHARS_PER_TEXT_OBJ,SettingsOSDStyle::isTransparentBackgroundEnabled(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH),
-                                                   SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH), false,Color::WHITE,batchingManager));
+                                                   SettingsOSDStyle::getOSDBackgroundColor(settingsOSDStyle.OSD_TRANSPARENT_BACKGROUND_STRENGTH), false,TrueColor2::WHITE,batchingManager));
     }
     return ret;
 }
