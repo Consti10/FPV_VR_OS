@@ -66,7 +66,7 @@ private:
             case 4:color=TrueColor(1,0.5f,0,0.2f);break; //orange
             case 5:color=TrueColor(0.5f,0.5f,0.5f,0.2f);break; //grey
             case 6:color=TrueColor(1,1,1,0.2f);break; //white
-            case 7:color=TrueColor(0,0,0,0.1f);break; //black
+            case 7:color=TrueColor(0.0f,0,0,0.1f);break; //black
             default:color=TrueColor(1,1,1,0.2f);break; //white
         }
         return color;
