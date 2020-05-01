@@ -14,9 +14,15 @@
 //I usually use std::vector<StylizedString> in my code
 class StylizedString{
 public:
-    std::wstring string;
-    float scale;
-    TrueColor color= TrueColor::RGBA32F(1.0f, 1, 1, 1);
+    std::wstring string=L"";
+    float scale=1.0f;
+    TrueColor color=TrueColor2::WHITE;
+    StylizedString()= default;
+    /*constexpr StylizedString(const std::wstring& string1=L"",float scale1=1.0f,TrueColor color1=TrueColor2::WHITE){
+        string=string1;
+        scale=scale1;
+        color=color1;
+    }*/
     bool operator==(const StylizedString& y)const{
         return (string.compare(y.string)==0) && scale==y.scale && color==y.color;
     }

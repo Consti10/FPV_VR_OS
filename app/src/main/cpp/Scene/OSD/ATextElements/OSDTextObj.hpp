@@ -75,7 +75,7 @@ public:
         backgroundRecalculationNeeded=true;
     }
     void setTextSafe(const std::wstring& text){
-        const std::vector<StylizedString> ss={{text,1.0f,TrueColor::RGBA32F(1.0f,1,1,1)}};
+        const std::vector<StylizedString> ss={{text}};
         setTextSafe(ss);
     }
     void setTextSafe(const std::wstring &text,const TrueColor textColor){
