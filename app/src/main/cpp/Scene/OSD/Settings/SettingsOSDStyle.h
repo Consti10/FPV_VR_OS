@@ -18,7 +18,7 @@ public:
     static TrueColor getOSDBackgroundColor(int _alpha){
         float alpha=_alpha*0.01f;
         if(alpha<0 || alpha>1){alpha=0;}
-        return TrueColor::RGBA32F(0.0f, 0.0f, 0.0f, alpha);
+        return TrueColor(glm::vec4(0.0f, 0.0f, 0.0f, alpha));
     }
     static bool isTransparentBackgroundEnabled(int _alpha){
         return _alpha>0;

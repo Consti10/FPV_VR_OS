@@ -88,7 +88,7 @@ public:
         }
         if(StylizedString::length(ss)>maxNChars){
             MDebug::log(StylizedString::debug(ss),TAG);
-            mText={{L"E>n",1.0f,TrueColor::RGBA32F(1.0f, 1, 1, 1)}};
+            mText={{L"E>n"}};
         }else{
             mText=ss;
         }
