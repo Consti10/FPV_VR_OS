@@ -16,7 +16,7 @@ class StylizedString{
 public:
     std::wstring string;
     float scale;
-    TrueColor color= TrueColor(1.0f, 1, 1, 1);
+    TrueColor color= TrueColor::RGBA32F(1.0f, 1, 1, 1);
     bool operator==(const StylizedString& y)const{
         return (string.compare(y.string)==0) && scale==y.scale && color==y.color;
     }

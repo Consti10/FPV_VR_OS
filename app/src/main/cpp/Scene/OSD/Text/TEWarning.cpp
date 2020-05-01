@@ -11,7 +11,7 @@ TEWarning::TEWarning(const TEWarning::Options& options,const BasicGLPrograms &ba
         mPositionDebug(basicGLPrograms.vc,2, true),
         mOptions(options),
         mGLTextObjIndices(OSDTextObj::createAll(N_CHARS_PER_TEXT_OBJ,MAX_N_TEXT_OBJ,true,
-                                                TrueColor(0.0f, 0, 0, 0.3f),false,
+                                                TrueColor::RGBA32F(0.0f, 0, 0, 0.3f),false,
                                                 TrueColor2::WHITE,batchingManager)) {
 }
 

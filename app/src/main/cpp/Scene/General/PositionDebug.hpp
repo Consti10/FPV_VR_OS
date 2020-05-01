@@ -63,11 +63,11 @@ private:
             case 1:color=TrueColor2::GREEN;break; //green
             case 2:color=TrueColor2::BLUE;break; //blue
             case 3:color=TrueColor2::YELLOW;break; //yellow
-            case 4:color=TrueColor(1,0.5f,0,0.2f);break; //orange
-            case 5:color=TrueColor(0.5f,0.5f,0.5f,0.2f);break; //grey
-            case 6:color=TrueColor(1,1,1,0.2f);break; //white
-            case 7:color=TrueColor(0.0f,0,0,0.1f);break; //black
-            default:color=TrueColor(1,1,1,0.2f);break; //white
+            case 4:color=TrueColor::RGBA32F(1,0.5f,0,0.2f);break; //orange
+            case 5:color=TrueColor::RGBA32F(0.5f,0.5f,0.5f,0.2f);break; //grey
+            case 6:color=TrueColor::RGBA32F(1,1,1,0.2f);break; //white
+            case 7:color=TrueColor::RGBA32F(0.0f,0,0,0.1f);break; //black
+            default:color=TrueColor::RGBA32F(1,1,1,0.2f);break; //white
         }
         return color;
     }

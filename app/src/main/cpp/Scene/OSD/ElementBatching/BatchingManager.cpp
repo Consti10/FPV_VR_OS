@@ -58,7 +58,7 @@ void BatchingManager::drawGL(const glm::mat4x4& ViewM,const glm::mat4x4& ProjM) 
 
     const int nTextVertices=mTextB.size*6;
     mBasicGLPrograms.text.beforeDraw(mTextB.gpuBuffer);
-    mBasicGLPrograms.text.updateOutline(mTextOutlineColor.toRGBA(),mTextOutlineStrength);
+    mBasicGLPrograms.text.updateOutline(mTextOutlineColor.RGBA32F(), mTextOutlineStrength);
     mBasicGLPrograms.text.draw(ViewM,ProjM,0,nTextVertices);
     mBasicGLPrograms.text.afterDraw();
 

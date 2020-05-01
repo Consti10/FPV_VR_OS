@@ -16,15 +16,20 @@ SettingsOSDStyle::SettingsOSDStyle(JNIEnv *env, jobject androidContext) {
     SharedPreferences prefOSDStyle(env,androidContext,"pref_osd");
     OSD_MONO_LINE_WIDTH=prefOSDStyle.getInt(IDOSD::OSD_MONO_LINE_WIDTH);
     OSD_STEREO_LINE_WIDTH=prefOSDStyle.getInt(IDOSD::OSD_STEREO_LINE_WIDTH);
-    OSD_LINE_FILL_COLOR=TrueColor::fromAndroid(prefOSDStyle.getInt(IDOSD::OSD_LINE_FILL_COLOR));
-    OSD_LINE_OUTLINE_COLOR=TrueColor::fromAndroid(prefOSDStyle.getInt(IDOSD::OSD_LINE_OUTLINE_COLOR));
+    OSD_LINE_FILL_COLOR= TrueColor::ARGB(prefOSDStyle.getInt(IDOSD::OSD_LINE_FILL_COLOR));
+    OSD_LINE_OUTLINE_COLOR= TrueColor::ARGB(
+            prefOSDStyle.getInt(IDOSD::OSD_LINE_OUTLINE_COLOR));
     OSD_TEXT_FONT_TYPE=static_cast<TextAssetsHelper::TEXT_STYLE>(prefOSDStyle.getInt(IDOSD::OSD_TEXT_FONT_TYPE));
 
-    OSD_TEXT_FILL_COLOR1=TrueColor::fromAndroid(prefOSDStyle.getInt(IDOSD::OSD_TEXT_FILL_COLOR1));
+    OSD_TEXT_FILL_COLOR1= TrueColor::ARGB(
+            prefOSDStyle.getInt(IDOSD::OSD_TEXT_FILL_COLOR1));
 
-    OSD_TEXT_FILL_COLOR2=TrueColor::fromAndroid(prefOSDStyle.getInt(IDOSD::OSD_TEXT_FILL_COLOR2));
-    OSD_TEXT_FILL_COLOR3=TrueColor::fromAndroid(prefOSDStyle.getInt(IDOSD::OSD_TEXT_FILL_COLOR3));
-    OSD_TEXT_OUTLINE_COLOR=TrueColor::fromAndroid(prefOSDStyle.getInt(IDOSD::OSD_TEXT_OUTLINE_COLOR));
+    OSD_TEXT_FILL_COLOR2= TrueColor::ARGB(
+            prefOSDStyle.getInt(IDOSD::OSD_TEXT_FILL_COLOR2));
+    OSD_TEXT_FILL_COLOR3= TrueColor::ARGB(
+            prefOSDStyle.getInt(IDOSD::OSD_TEXT_FILL_COLOR3));
+    OSD_TEXT_OUTLINE_COLOR= TrueColor::ARGB(
+            prefOSDStyle.getInt(IDOSD::OSD_TEXT_OUTLINE_COLOR));
     OSD_TRANSPARENT_BACKGROUND_STRENGTH=prefOSDStyle.getInt(IDOSD::OSD_TRANSPARENT_BACKGROUND_STRENGTH);
     OSD_MONO_GLOBAL_SCALE=prefOSDStyle.getInt(IDOSD::OSD_MONO_GLOBAL_SCALE);
     OSD_STEREO_GLOBAL_SCALE=prefOSDStyle.getInt(IDOSD::OSD_STEREO_GLOBAL_SCALE);
