@@ -58,6 +58,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
     public static final int CONNECTION_TYPE_StorageFile =3;
     public static final int CONNECTION_TYPE_RTSP =4;
     public static final int CONNECTION_TYPE_DJI =5;
+    public static final int CONNECTION_TYPE_UVC=6;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -142,6 +143,10 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 // Will crash on emulator !
                 fm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commit();
                 makeSnackBarForView(mContext,"connection type set to DJI",v);
+                break;
+            case CONNECTION_TYPE_UVC:
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectUVC()).commit();
+                makeSnackBarForView(mContext,"connection type set to UVC",v);
                 break;
         }
     }
