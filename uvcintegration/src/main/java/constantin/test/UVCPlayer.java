@@ -5,10 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.widget.Toast;
 
@@ -20,11 +22,13 @@ import androidx.lifecycle.OnLifecycleEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import constantin.video.core.gl.ISurfaceAvailable;
+
 // Pretty complicated / not good documented code
 // Uses BroadcastReceiver to get notified when USB devices are connected / permission is granted
 // Uses android lifecycle to pause / resume
 // Uses SurfaceHolder.Callback to get / remove decoding surface
-public class UVCPlayer extends BroadcastReceiver implements SurfaceHolder.Callback, LifecycleObserver {
+public class UVCPlayer extends BroadcastReceiver implements LifecycleObserver {
     private static final String TAG="UVCPlayer";
     private final UVCReceiverDecoder mUVCReceiverDecoder=new UVCReceiverDecoder();
     public static final String ACTION_USB_PERMISSION =
@@ -119,15 +123,34 @@ public class UVCPlayer extends BroadcastReceiver implements SurfaceHolder.Callba
         mUVCReceiverDecoder.stopReceiving();
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-       mUVCReceiverDecoder.setSurface(holder.getSurface());
+    public SurfaceHolder.Callback configure1(){
+        return new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                mUVCReceiverDecoder.setSurface(holder.getSurface());
+            }
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            }
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                mUVCReceiverDecoder.setSurface(null);
+            }
+        };
     }
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    public ISurfaceAvailable configure2(){
+        return new ISurfaceAvailable() {
+            @Override
+            public void XSurfaceCreated(SurfaceTexture surfaceTexture, Surface surface) {
+                mUVCReceiverDecoder.setSurface(surface);
+            }
+
+            @Override
+            public void XSurfaceDestroyed() {
+                mUVCReceiverDecoder.setSurface(null);
+            }
+        };
     }
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        mUVCReceiverDecoder.setSurface(null);
-    }
+
 }

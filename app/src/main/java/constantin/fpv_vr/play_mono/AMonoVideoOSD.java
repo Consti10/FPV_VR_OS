@@ -97,9 +97,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         }
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding.SurfaceViewMonoscopicVideo.setVisibility(View.VISIBLE);
-            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(uvcPlayer==null ? videoPlayer.configure1() : uvcPlayer);
+            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(uvcPlayer==null ? videoPlayer.configure1() : uvcPlayer.configure1());
         }else{
-            mGLRenderer.getVideoSurfaceHolder().setCallBack(videoPlayer.configure2());
+            mGLRenderer.getVideoSurfaceHolder().setCallBack(uvcPlayer==null ? videoPlayer.configure2() : uvcPlayer.configure2());
             registerForContextMenu(binding.myVRLayout);
         }
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, binding.myVRLayout.getGvrApi());

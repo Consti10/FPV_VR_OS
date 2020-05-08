@@ -9,6 +9,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
@@ -18,6 +19,7 @@ import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.renderingx.core.views.MyVRLayout;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.test.UVCPlayer;
 import constantin.video.core.video_player.VideoPlayer;
 
 public class AStereoNormal extends VrActivity {
@@ -31,14 +33,22 @@ public class AStereoNormal extends VrActivity {
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
-        final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
-                new DJIVideoPlayer(this):
-                new VideoPlayer(this);
-        final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
-                new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
-                new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
-        GLRStereoNormal mGLRStereoNormal = new GLRStereoNormal(this,videoPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
-        videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
+        final GLRStereoNormal mGLRStereoNormal;
+        if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
+            final UVCPlayer uvcPlayer=new UVCPlayer(this);
+            final TelemetryReceiver telemetryReceiver=new TelemetryReceiver(this,0,0);
+            mGLRStereoNormal = new GLRStereoNormal(this,uvcPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+            mGLRStereoNormal.onVideoRatioChanged(640,480);
+        }else{
+            final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
+                    new DJIVideoPlayer(this):
+                    new VideoPlayer(this);
+            final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
+                    new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
+                    new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+            mGLRStereoNormal = new GLRStereoNormal(this,videoPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+            videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
+        }
         mGLViewStereo.setRenderer(mGLRStereoNormal);
         mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         mGLViewStereo.setPreserveEGLContextOnPause(true);
