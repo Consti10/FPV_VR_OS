@@ -13,15 +13,18 @@ import com.google.vr.ndk.base.GvrApi;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
+import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyEGLWindowSurfaceFactory;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
+import constantin.test.UVCPlayer;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.video_player.VideoPlayer;
@@ -57,13 +60,23 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VIDEO_MODE==VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
         //System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
         // The video player can be configured both for android surface and opengl surface
-        final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
-                new DJIVideoPlayer(this):
-                new VideoPlayer(this);
-        videoPlayer.setIVideoParamsChanged(this);
-        telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
-                new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
-                new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+        final UVCPlayer uvcPlayer;
+        final VideoPlayer videoPlayer;
+        if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
+            uvcPlayer=new UVCPlayer(this);
+            videoPlayer=null;
+            telemetryReceiver=new TelemetryReceiver(this,0,0);
+            onVideoRatioChanged(640,480);
+        }else{
+            uvcPlayer=null;
+            videoPlayer= DJIApplication.isDJIEnabled(this) ?
+                    new DJIVideoPlayer(this):
+                    new VideoPlayer(this);
+            videoPlayer.setIVideoParamsChanged(this);
+            telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
+                    new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
+                    new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+        }
         // if needed, create and initialize the GLSurfaceView
         MyGLSurfaceView mGLSurfaceView;
         if(!USE_ANDROID_SURFACE_FOR_VIDEO || ENABLE_OSD){
@@ -84,7 +97,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         }
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding.SurfaceViewMonoscopicVideo.setVisibility(View.VISIBLE);
-            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoPlayer.configure1());
+            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(uvcPlayer==null ? videoPlayer.configure1() : uvcPlayer);
         }else{
             mGLRenderer.getVideoSurfaceHolder().setCallBack(videoPlayer.configure2());
             registerForContextMenu(binding.myVRLayout);
