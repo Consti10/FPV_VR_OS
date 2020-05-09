@@ -27,7 +27,7 @@ LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
 LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -ldl
 LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
-LOCAL_LDLIBS += -ljnigraphics
+#LOCAL_LDLIBS += -ljnigraphics
 
 LOCAL_SHARED_LIBRARIES += usb1.0 uvc
 LOCAL_STATIC_LIBRARIES +=libjpeg-turbo
