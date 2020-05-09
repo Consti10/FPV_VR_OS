@@ -45,6 +45,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.CAMERA
             }
     );
     private HBRecorder hbRecorder;
