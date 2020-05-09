@@ -13,14 +13,8 @@ VLSpeed::VLSpeed(const VLSpeed::Options& options,const SettingsOSDStyle& setting
 
 
 void VLSpeed::updateGL() {
-    float speedKMH;
-    const UAVTelemetryData& uav_td= mTelemetryReceiver.getUAVTelemetryData();
-    speedKMH=uav_td.SpeedGround_KPH;
-    if(mOptions.useKMHinsteadOfMS){
-        verticalLadderValue=speedKMH;
-    }else{
-        verticalLadderValue=speedKMH*1000.0f/60.0f/60.0f;
-    }
+    const auto value=mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::HS_GROUND);
+    verticalLadderValue=(float)value.valueNotAsString;
     AVerticalLadder::updateGL();
 }
 

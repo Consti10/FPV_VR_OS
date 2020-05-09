@@ -69,7 +69,7 @@ void AVerticalLadder::setupPosition() {
         mTextObjTelemetryValue.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight/2.0f,mZ,
                                            outlineQuadWidth,outlineQuadHeight);
         mTextObjMetric.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight,mZ,outlineQuadWidth,outlineQuadHeight/2.f);
-        mTextObjMetric.setTextSafe(mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::VS).metric);
+        mTextObjMetric.setTextSafe(mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::HS_GROUND).metric);
         mTextObjMetric.recalculateDataIfNeeded();
     }else{
         mTextObjTelemetryValue.setPosition(mX+longLinesWidth,mY+mHeight/2.0f-outlineQuadHeight/2.0f,mZ,

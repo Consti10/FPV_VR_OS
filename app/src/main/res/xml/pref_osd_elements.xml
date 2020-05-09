@@ -317,7 +317,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:title="Speed ladder (vertical)">
+            android:title="Horizontal Speed ladder (vertical)">
             <PreferenceCategory
                 android:title="General">
                 <SwitchPreference
