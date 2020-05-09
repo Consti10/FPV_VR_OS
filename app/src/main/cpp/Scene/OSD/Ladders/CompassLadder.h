@@ -57,8 +57,8 @@ private:
     VertexBuffer mGLLadderTextB;
     VertexBuffer mGLHomeIconB;
     ModifiableArray<GLProgramVC::Vertex>* mMiddleArrow;
-    glm::mat4x4 mHeadingTranslM;
-    glm::mat4x4 mHomeArrowTM;
+    glm::mat4 mHeadingTranslM;
+    glm::mat4 mHomeArrowTM;
     float degreeInGLTranslation=0;
     float mCalcTextHeight;
     int charOffset=0,nCharsToDraw=0;

@@ -29,8 +29,8 @@ public:
      * @param DistortionManager: optional, used to create GLProgramTextureExt if needed
      */
     VideoRenderer(VIDEO_RENDERING_MODE mode,const GLuint videoTexture,const VDDCManager* vddcManager);
-    void drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye);
-    void drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM);
+    void drawVideoCanvas(glm::mat4 ViewM, glm::mat4 ProjM, bool leftEye);
+    void drawVideoCanvas360(glm::mat4 ViewM, glm::mat4 ProjM);
     //For 360 equirectangular we need the video vidth and height in px
     void updatePosition(const float positionZ,const float width,const float height,int optionalVideoWidthPx,int optionalVideoHeightPx);
     bool is360Video(){

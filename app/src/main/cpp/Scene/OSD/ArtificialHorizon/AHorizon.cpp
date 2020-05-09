@@ -76,8 +76,8 @@ void AHorizon::updateGL() {
         pitchDegree*=-1.0f;
     }
     //for the 3d Model:
-    glm::mat4x4 translM = glm::translate(glm::mat4(1.0f),glm::vec3(mX+mWidth/2.0f,mY+mHeight/2.0f,mZ));
-    glm::mat4x4 rotateM=glm::mat4(1.0f);
+    glm::mat4 translM = glm::translate(glm::mat4(1.0f),glm::vec3(mX+mWidth/2.0f,mY+mHeight/2.0f,mZ));
+    glm::mat4 rotateM=glm::mat4(1.0f);
     rotateM=glm::rotate(rotateM,glm::radians(pitchDegree), glm::vec3(1.0f, 0.0f, 0.0f));
     rotateM=glm::rotate(rotateM,glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
     mModelM3DModel=translM*rotateM;
@@ -96,10 +96,10 @@ void AHorizon::updateGL() {
     if(pitchTranslationFactor>90){
         pitchTranslationFactor-=180;
     }
-    glm::mat4x4 rollRotationM=glm::rotate(glm::mat4(1.0f),glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 rollRotationM=glm::rotate(glm::mat4(1.0f),glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
     const float pitchTranslY=pitchTranslationFactor*degreeToYTranslationFactor;
-    glm::mat4x4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
-    glm::mat4x4 originTranslationM = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,mZ));
+    glm::mat4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
+    glm::mat4 originTranslationM = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,mZ));
     mModelMLadders=rollRotationM*(originTranslationM*pitchTranslationM);
 }
 

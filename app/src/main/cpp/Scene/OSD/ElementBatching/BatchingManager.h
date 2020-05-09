@@ -24,7 +24,7 @@ public:
     ModifiableArray<GLProgramText::Character>* allocateText(int nRectangles);
     void initGL();
     void updateGL()override;
-    void drawGL(const glm::mat4x4& ViewM,const glm::mat4x4& ProjM)override;
+    void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM)override;
     void setTextColor(TrueColor textOutlineColor,float textOutlineStrength);
 private:
     const BasicGLPrograms& mBasicGLPrograms;

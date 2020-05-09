@@ -62,7 +62,7 @@ void VideoRenderer::updatePosition(const float positionZ,const float width,const
     //}
 }
 
-void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool leftEye) {
+void VideoRenderer::drawVideoCanvas(glm::mat4 ViewM, glm::mat4 ProjM, bool leftEye) {
     if(mMode==RM_2D_MONOSCOPIC || mMode==RM_2D_STEREO){
         const auto buff=mMode==RM_2D_MONOSCOPIC ? mVideoCanvasB : leftEye ? mVideoCanvasLeftEyeB : mVideoCanvasRightEyeB;
         mGLProgramTextureExt->drawX(mVideoTexture,ViewM,ProjM,buff);
@@ -72,13 +72,13 @@ void VideoRenderer::drawVideoCanvas(glm::mat4x4 ViewM, glm::mat4x4 ProjM, bool l
     GLHelper::checkGlError("VideoRenderer::drawVideoCanvas");
 }
 
-void VideoRenderer::drawVideoCanvas360(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
+void VideoRenderer::drawVideoCanvas360(glm::mat4 ViewM, glm::mat4 ProjM) {
     if(!(is360Video())){
         throw "mMode!=VIDEO_RENDERING_MODE::Degree360";
     }
     const float scale=100.0f;
     const glm::mat4 scaleM=glm::scale(glm::vec3(scale,scale,scale));
-    const glm::mat4x4 modelMatrix=glm::rotate(glm::mat4(1.0F),glm::radians(90.0F), glm::vec3(0,0,-1))*scaleM;
+    const glm::mat4 modelMatrix=glm::rotate(glm::mat4(1.0F),glm::radians(90.0F), glm::vec3(0,0,-1))*scaleM;
     if(mMode==RM_360_DUAL_FISHEYE_INSTA360_1){
         mGLProgramTextureExtMappingEnabled->drawX(mVideoTexture,ViewM*modelMatrix,ProjM,mEquirectangularSphereB);
     }else{

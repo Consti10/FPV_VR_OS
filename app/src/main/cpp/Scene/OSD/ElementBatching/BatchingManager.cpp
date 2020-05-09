@@ -49,7 +49,7 @@ void BatchingManager::updateGL() {
     mOutlineB.uploadToGpuIfModified();
 }
 
-void BatchingManager::drawGL(const glm::mat4x4& ViewM,const glm::mat4x4& ProjM) {
+void BatchingManager::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //draw the background before the text
     const int nTriangleVertices=mTriangleBuffer.size;
     mBasicGLPrograms.vc.beforeDraw(mTriangleBuffer.gpuBuffer);

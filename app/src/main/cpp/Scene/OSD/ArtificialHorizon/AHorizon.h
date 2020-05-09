@@ -53,7 +53,7 @@ private:
     PositionDebug mPositionDebug;
     VertexBuffer mGLBuffLadders;
     ModifiableArray<GLProgramVC::Vertex>* mMiddleTriangleBuff;
-    glm::mat4x4 mModelMLadders;
+    glm::mat4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;
     const float RATIO=1.5f;
     struct LadderLine{
@@ -63,7 +63,7 @@ private:
     float degreeToYTranslationFactor;
     //
     VertexBuffer mGLBuff3DModel;
-    glm::mat4x4 mModelM3DModel;
+    glm::mat4 mModelM3DModel;
 };
 
 #endif //FPV_VR_ARTIFICIALHORIZON_H

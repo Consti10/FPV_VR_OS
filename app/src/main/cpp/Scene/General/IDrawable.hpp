@@ -36,7 +36,7 @@ public:
 * @return the time delta, for debugging, in microseconds,if Time measuring is enabled.
  * Else return 0
 */
-    int drawGLBase(glm::mat4x4 ViewM, glm::mat4x4 ProjM){
+    int drawGLBase(glm::mat4 ViewM, glm::mat4 ProjM){
 #ifdef DEBUG_PRINT_TIME
         auto before = std::chrono::steady_clock::now();
 #endif
@@ -52,7 +52,7 @@ public:
 #endif
     }
 public:
-    static void drawAll(const std::vector<IDrawable*>& drawables,glm::mat4x4 ViewM,glm::mat4x4 ProjM){
+    static void drawAll(const std::vector<IDrawable*>& drawables,glm::mat4 ViewM,glm::mat4 ProjM){
 #ifdef DEBUG_PRINT_TIME
         std::stringstream ss;
         ss<<std::fixed;

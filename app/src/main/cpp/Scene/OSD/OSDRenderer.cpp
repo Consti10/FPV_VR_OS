@@ -135,7 +135,7 @@ void OSDRenderer::placeGLElementsStereo(const IPositionable::Rect2D& rectVideoCa
     mFLightStart=std::chrono::steady_clock::now();
 }
 
-void OSDRenderer::updateAndDrawElementsGL(glm::mat4x4 ViewM,glm::mat4x4 ProjM){
+void OSDRenderer::updateAndDrawElementsGL(glm::mat4 ViewM,glm::mat4 ProjM){
     const auto now=std::chrono::steady_clock::now();
     const float flightTimeS=((float)std::chrono::duration_cast<std::chrono::milliseconds>(now-mFLightStart).count())/1000.0f;
     mTelemetryReceiver.setFlightTime(flightTimeS);
@@ -147,7 +147,7 @@ void OSDRenderer::updateAndDrawElementsGL(glm::mat4x4 ViewM,glm::mat4x4 ProjM){
     //LOGD("Valid %d %d %d %d %d %d",mTextElements1,mTextElements2,mTEWarning,mAHorizon,mAltitudeLadder,mSpeedLadder);
 }
 
-void OSDRenderer::drawElementsGL(glm::mat4x4 ViewM, glm::mat4x4 ProjM) {
+void OSDRenderer::drawElementsGL(glm::mat4 ViewM, glm::mat4 ProjM) {
     mBatchingManager.drawGL(ViewM,ProjM);
     IDrawable::drawAll(mDrawables,ViewM,ProjM);
     GLHelper::checkGlError("OSDRenderer::drawElementsGL");

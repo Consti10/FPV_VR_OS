@@ -61,7 +61,7 @@ private:
         int currentDrawNumber;
         GLuint glBuffer;
     }mLadderLines;
-    glm::mat4x4 mLadderLinesTM;
+    glm::mat4 mLadderLinesTM;
 
     struct LadderStrings{
         int currentDrawOffset1;
@@ -70,7 +70,7 @@ private:
         int currentDrawNumber2;
         GLuint glBuffer;
         int currentMiddleValue;
-        glm::mat4x4 currTranslationM;
+        glm::mat4 currTranslationM;
     }mLadderStrings;
 };
 

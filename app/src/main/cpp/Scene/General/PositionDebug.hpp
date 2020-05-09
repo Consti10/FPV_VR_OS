@@ -46,7 +46,7 @@ public:
 #endif
         int i = 0;
     };
-    const void drawGLDebug(const glm::mat4x4 ViewM,const glm::mat4x4 ProjM) const{
+    const void drawGLDebug(const glm::mat4 ViewM,const glm::mat4 ProjM) const{
 #ifndef  DISABLE_DEBUG_DRAW
         if(mEnableDebugDraw){
             mGLRenderGeometry.beforeDraw(vertexBuffer.vertexB);
