@@ -109,7 +109,7 @@ dependencies {
     implementation "com.google.vr:sdk-base:$mGvrVersion"
 
     //Screen recording
-    implementation 'com.github.HBiSoft:HBRecorder:0.1.6'
+    implementation 'com.github.HBiSoft:HBRecorder:0.1.7'
 }
 
 apply plugin: 'com.google.gms.google-services'
