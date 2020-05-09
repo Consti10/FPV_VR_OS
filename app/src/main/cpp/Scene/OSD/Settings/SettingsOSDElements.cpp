@@ -25,7 +25,6 @@ SettingsOSDElements::SettingsOSDElements(JNIEnv *env, jobject androidContext) {
     //Speed ladder
     oSpeedL.scale=prefOSDElements.getInt(IDOSD::SL_scale);
     oSpeedL.enable=prefOSDElements.getBoolean(IDOSD::SL_enable);
-    oSpeedL.useKMHinsteadOfMS=prefOSDElements.getBoolean(IDOSD::SL_useKMHinsteadOfMS);
     //Artificial horizon
     oArtificialHorizon.mode=prefOSDElements.getInt(IDOSD::AH_mode);
     oArtificialHorizon.scale=prefOSDElements.getInt(IDOSD::AH_scale);

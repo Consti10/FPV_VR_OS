@@ -331,14 +331,6 @@
                     android:summary="Scale in %. Default 100"
                     android:defaultValue="100"/>
             </PreferenceCategory>
-            <PreferenceCategory
-                android:title="Specific">
-                <SwitchPreference
-                    android:key="@string/SL_useKMHinsteadOfMS"
-                    android:title="@string/SL_useKMHinsteadOfMS"
-                    android:defaultValue="false" />
-            </PreferenceCategory>
-
         </PreferenceScreen>
 
         <PreferenceScreen

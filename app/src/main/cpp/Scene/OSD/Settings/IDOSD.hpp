@@ -35,7 +35,6 @@ public:
     static constexpr const char* AL_sourceValue="AL sourceValue";
     static constexpr const char* SL_enable="SL enable";
     static constexpr const char* SL_scale="SL scale";
-    static constexpr const char* SL_useKMHinsteadOfMS="SL use km/h instead of m/s";
     static constexpr const char* TW_BATT_P="TW BATT_P";
     static constexpr const char* TW_BATT_V="TW BATT V";
     static constexpr const char* TW_BATT_MAH_USED="TW_BATT_MAH_USED";

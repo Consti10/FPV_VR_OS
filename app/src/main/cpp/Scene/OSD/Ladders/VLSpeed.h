@@ -12,7 +12,6 @@ public:
     struct Options {
         bool enable = true;
         int scale=100;
-        bool useKMHinsteadOfMS=false;
     };
 public:
     VLSpeed(const VLSpeed::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms &basicGLPrograms, BatchingManager &batchingManager,

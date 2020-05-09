@@ -47,7 +47,6 @@
     //Speed ladder
     <string name="SL_enable">SL enable</string>
     <string name="SL_scale">SL scale</string>
-    <string name="SL_useKMHinsteadOfMS">SL use km/h instead of m/s</string>
     //Text Warnings
     <string name="TW_BATT_P">TW BATT_P</string>
     <string name="TW_BATT_V">TW BATT V</string>
