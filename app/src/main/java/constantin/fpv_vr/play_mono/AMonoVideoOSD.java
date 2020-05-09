@@ -64,9 +64,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         final VideoPlayer videoPlayer;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             uvcPlayer=new UVCPlayer(this);
+            uvcPlayer.setIVideoParamsChanged(this);
             videoPlayer=null;
             telemetryReceiver=new TelemetryReceiver(this,0,0);
-            onVideoRatioChanged(640,480);
         }else{
             uvcPlayer=null;
             videoPlayer= DJIApplication.isDJIEnabled(this) ?

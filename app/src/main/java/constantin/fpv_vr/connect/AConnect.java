@@ -210,6 +210,10 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
                 TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
                 break;
+            case CONNECTION_TYPE_UVC:
+                VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
+                TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_UDP);
+                break;
              default:break;
         }
         SJ.setConnectionType(context,connectionType);

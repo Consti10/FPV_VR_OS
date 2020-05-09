@@ -22,6 +22,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.gl.ISurfaceAvailable;
 
 // Pretty complicated / not good documented code
@@ -121,6 +122,11 @@ public class UVCPlayer extends BroadcastReceiver implements LifecycleObserver {
         Log.d(TAG,"pause");
         parent.unregisterReceiver(this);
         mUVCReceiverDecoder.stopReceiving();
+    }
+
+    // Video ratio is always the same
+    public void setIVideoParamsChanged(final IVideoParamsChanged iVideoParamsChanged){
+        iVideoParamsChanged.onVideoRatioChanged(640,480);
     }
 
     public SurfaceHolder.Callback configure1(){

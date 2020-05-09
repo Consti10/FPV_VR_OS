@@ -38,7 +38,7 @@ public class AStereoNormal extends VrActivity {
             final UVCPlayer uvcPlayer=new UVCPlayer(this);
             final TelemetryReceiver telemetryReceiver=new TelemetryReceiver(this,0,0);
             mGLRStereoNormal = new GLRStereoNormal(this,uvcPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
-            mGLRStereoNormal.onVideoRatioChanged(640,480);
+            uvcPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         }else{
             final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
                     new DJIVideoPlayer(this):
