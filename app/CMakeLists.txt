@@ -15,8 +15,8 @@ include(${RX_CORE_DIR}/RenderingXCore.cmake)
 ##########################################################################################################
 # Scene (Engine) Stuff (OSD and video rendering)
 ##########################################################################################################
-include_directories(src/main/cpp/Scene)
 set(SCENE_PATH src/main/cpp/Scene)
+include_directories(${SCENE_PATH})
 add_library( Scene
         SHARED
         ${SCENE_PATH}/OSD/ArtificialHorizon/AHorizon.cpp
