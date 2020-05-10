@@ -33,7 +33,7 @@
 #*********************************************************************/
 
 ######################################################################
-# libuvc_static.a (static library with static link to libjpeg, libusb1.0)
+# libuvc_static.a (static library with static link to libusb1.0), no link to libjpeg
 ######################################################################
 LOCAL_PATH	:= $(call my-dir)/../..
 include $(CLEAR_VARS)
@@ -57,8 +57,6 @@ LOCAL_EXPORT_LDLIBS := -llog
 
 LOCAL_ARM_MODE := arm
 
-#LOCAL_SHARED_LIBRARIES += libjpeg-turbo
-#LOCAL_SHARED_LIBRARIES += usb1.0
 LOCAL_STATIC_LIBRARIES += libusb1.0_static
 
 LOCAL_SRC_FILES := \
