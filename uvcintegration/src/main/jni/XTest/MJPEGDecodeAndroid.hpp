@@ -5,16 +5,30 @@
 #ifndef UVCCAMERA_MJPEGDECODEANDROID_HPP
 #define UVCCAMERA_MJPEGDECODEANDROID_HPP
 
+#include "../NDKHelper/MDebug.hpp"
 #include "HuffTables.hpp"
 #include <jni.h>
 #include <android/native_window_jni.h>
-
+#include <setjmp.h>
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
 // Including this file adds dependency on Android and libjpeg-turbo
 
 namespace MJPEGDecodeAndroid{
+    //  error handling (must be set !)
+    struct error_mgr {
+        struct jpeg_error_mgr super;
+        jmp_buf jmp;
+    };
+    static void _error_exit(j_common_ptr dinfo) {
+        struct error_mgr *myerr = (struct error_mgr *) dinfo->err;
+        char err_msg[1024];
+        (*dinfo->err->format_message)(dinfo, err_msg);
+        err_msg[1023] = 0;
+        CLOGD("LIBJPEG ERROR %s", err_msg);
+        longjmp(myerr->jmp, 1);
+    }
     // Helper that prints the current configuration of ANativeWindow_Buffer
     static void debugANativeWindowBuffer(const ANativeWindow_Buffer& buffer){
         CLOGD("ANativeWindow_Buffer: W H Stride Format %d %d %d %d",buffer.width,buffer.height,buffer.stride,buffer.format);

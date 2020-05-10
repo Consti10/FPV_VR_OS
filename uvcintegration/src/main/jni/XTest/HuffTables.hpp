@@ -5,26 +5,12 @@
 #ifndef UVCCAMERA_CONVERSION_HPP
 #define UVCCAMERA_CONVERSION_HPP
 
-#include "../NDKHelper/MDebug.hpp"
 #include "jconfig.h"
 #include <jpeglib.h>
-#include <setjmp.h>
 
 /**
  * Copied from somewhere in the libuvc library - it was declared in .c file but I needed it for the MJPEGDecodeAndroid file
  */
-struct error_mgr {
-    struct jpeg_error_mgr super;
-    jmp_buf jmp;
-};
-static void _error_exit(j_common_ptr dinfo) {
-    struct error_mgr *myerr = (struct error_mgr *) dinfo->err;
-    char err_msg[1024];
-    (*dinfo->err->format_message)(dinfo, err_msg);
-    err_msg[1023] = 0;
-    CLOGD("LIBJPEG ERROR %s", err_msg);
-    longjmp(myerr->jmp, 1);
-}
 
 /* ISO/IEC 10918-1:1993(E) K.3.3. Default Huffman tables used by MJPEG UVC devices
  which don't specify a Huffman table in the JPEG stream. */

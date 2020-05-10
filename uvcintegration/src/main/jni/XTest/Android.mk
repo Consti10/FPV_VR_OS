@@ -32,7 +32,7 @@ LOCAL_LDLIBS += -landroid
 # If we remove dependency of libusb here we can build both libusb and libuvc as static libraries uvc usb1.0
 # Then include libuvc as a static library here
 LOCAL_STATIC_LIBRARIES +=libuvc_static
-# FFMPEG can be static, too since it is only needed for the decoder (not for libuvc anymore)
+# FFMPEG can be static, too since it is only needed for the UVCReceiverDecoder (not for libuvc anymore)
 LOCAL_STATIC_LIBRARIES +=libjpeg-turbo
 
 LOCAL_ARM_MODE := arm
