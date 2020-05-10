@@ -29,7 +29,7 @@ LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
 #LOCAL_LDLIBS += -ljnigraphics
 
-LOCAL_SHARED_LIBRARIES += usb1.0 uvc
+LOCAL_SHARED_LIBRARIES += uvc # we do not need usb1.0 here
 LOCAL_STATIC_LIBRARIES +=libjpeg-turbo
 
 LOCAL_ARM_MODE := arm
