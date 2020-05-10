@@ -13,9 +13,9 @@ import androidx.annotation.Nullable;
 public class UVCReceiverDecoder {
     private static final String TAG="UVCReceiverDecoder";
     static{
-        System.loadLibrary("jpeg-turbo");
-        System.loadLibrary("usb1.0");
-        System.loadLibrary("uvc");
+        //System.loadLibrary("jpeg-turbo");
+        //System.loadLibrary("usb1.0");
+        //System.loadLibrary("uvc");
         System.loadLibrary("UVCReceiverDecoder");
     }
     private long nativeInstance;

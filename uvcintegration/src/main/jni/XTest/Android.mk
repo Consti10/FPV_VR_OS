@@ -29,7 +29,9 @@ LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
 #LOCAL_LDLIBS += -ljnigraphics
 
-LOCAL_SHARED_LIBRARIES += uvc # we do not need usb1.0 here
+#LOCAL_SHARED_LIBRARIES += uvc # we do not need usb1.0 here
+# If we remove dependency of libusb here we can build both libusb and libuvc as static libraries
+LOCAL_STATIC_LIBRARIES +=libuvc_static
 LOCAL_STATIC_LIBRARIES +=libjpeg-turbo
 
 LOCAL_ARM_MODE := arm
