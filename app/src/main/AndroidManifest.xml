@@ -28,15 +28,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
-            </intent-filter>
-            <!--<meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />-->
-
         </activity>
         <activity
             android:name=".play_mono.AMonoVideoOSD"
@@ -70,7 +61,15 @@
         <activity
             android:name=".connect.AConnect"
             android:screenOrientation="behind"
-            android:theme="@style/MyStyleNoActionBar" />
+            android:theme="@style/MyStyleNoActionBar" >
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+            </intent-filter>
+            <!--<meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />-->
+        </activity>
         <activity
             android:name=".settings.AGroundRecordingSettings"
             android:screenOrientation="behind"
