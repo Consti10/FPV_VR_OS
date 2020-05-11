@@ -51,7 +51,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
         binding.myVRLayout.setVrOverlayEnabled(false);
         // OSD is optional (e.g. 'only video' )
         final boolean ENABLE_OSD = getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD, true);
@@ -90,6 +89,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             // make transparent when using android surface for video
             if(USE_ANDROID_SURFACE_FOR_VIDEO){
                 mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+                mGLSurfaceView.setZOrderMediaOverlay(true);
             }
             mGLRenderer = new GLRMono(this,  telemetryReceiver, binding.myVRLayout.getGvrApi(),VIDEO_MODE, ENABLE_OSD, false);
             mGLSurfaceView.setRenderer(mGLRenderer);
@@ -103,6 +103,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             registerForContextMenu(binding.myVRLayout);
         }
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, binding.myVRLayout.getGvrApi());
+        setContentView(binding.getRoot());
     }
 
 
