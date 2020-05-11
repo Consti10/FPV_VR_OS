@@ -29,8 +29,6 @@ public class AStereoSuperSYNC extends VrActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewSuperSync mViewSuperSync = new ViewSuperSync(this);
-
-
         final GLRStereoSuperSync mGLRStereoSuperSync;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);
