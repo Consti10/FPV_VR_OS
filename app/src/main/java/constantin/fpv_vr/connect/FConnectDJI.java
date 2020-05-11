@@ -59,14 +59,13 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        requestPermissionHelper.onRequestPermissionsResult(requestCode,permissions,grantResults); requestPermissionHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        requestPermissionHelper.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
     @Override
