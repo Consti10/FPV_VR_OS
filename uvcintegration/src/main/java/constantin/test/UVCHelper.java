@@ -5,6 +5,7 @@ import android.hardware.usb.UsbDevice;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
@@ -32,15 +33,16 @@ public class UVCHelper {
         return ret;
     }
 
-    // Logs a toast to the user to change settings to UVC if
-    // The activity was started via the intent-filter -> action declared in the manifest
-    public static void informIfStartedViaIntentFilter(final AppCompatActivity activity){
+    // Returns true if the activity was started via the intent-filter -> action usb device attached
+    // declared in the manifest
+    public static boolean startedViaIntentFilterActionUSB(final AppCompatActivity activity){
         final Intent intent=activity.getIntent();
         if (intent != null) {
             final String action=intent.getAction();
             if(action!=null && action.contentEquals(android_hardware_usb_action_USB_DEVICE_ATTACHED)){
-                Toast.makeText(activity,"Please select UVC as connection type under CONNECT",Toast.LENGTH_LONG).show();
+                return true;
             }
         }
+        return false;
     }
 }

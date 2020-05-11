@@ -2,15 +2,16 @@ package constantin.fpv_vr.main;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hbisoft.hbrecorder.HBRecorder;
@@ -40,6 +41,7 @@ import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_Manually;
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_RTSP;
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_StorageFile;
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_TestFile;
+import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_UVC;
 
 public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
     private static final String TAG="AMain";
@@ -72,7 +74,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //if(!DJISDKManager.getInstance().hasSDKRegistered()){
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
-        UVCHelper.informIfStartedViaIntentFilter(this);
+        notifyUserStartedForUVC();
     }
 
     @Override
@@ -219,5 +221,19 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     @Override
     public void HBRecorderOnError(int errorCode, String reason) {
         System.out.println("HBRecorderOnError "+errorCode+" "+reason);
+    }
+    // Notify user if mode is probably UVC
+    private void notifyUserStartedForUVC(){
+        if (UVCHelper.startedViaIntentFilterActionUSB(this)) {
+            if(SJ.getConnectionType(this)!=CONNECTION_TYPE_UVC){
+                final String message="Select UVC as connection type";
+                new AlertDialog.Builder(this).setMessage(message).setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent().setClass(AMain.this, AConnect.class));
+                    }
+                }).setNegativeButton("No",null).show();
+            }
+        }
     }
 }
