@@ -11,7 +11,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <signal.h>
-#include "utilbase.h"
+#include "utilbase/utilbase.h"
 #include "utlist.h"
 
 //#define UVC_DEBUGGING

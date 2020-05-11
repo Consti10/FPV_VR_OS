@@ -38,7 +38,7 @@
 #endif
 #include "libusb.h"
 #include "version.h"
-#include "utilbase.h"
+#include "utilbase/utilbase.h"
 
 /* Inside the libusb code, mark all public functions as follows:
  *   return_type API_EXPORTED function_name(params) { ... }
