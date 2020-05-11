@@ -13,7 +13,6 @@
 #include "../NDKHelper/MDebug.hpp"
 #include "../NDKHelper/NDKArrayHelper.hpp"
 
-#include "MyTime.hpp"
 #include "MJPEGDecodeAndroid.hpp"
 
 class UVCReceiverDecoder{
@@ -66,11 +65,11 @@ public:
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, NULL)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
-            const auto before=GetTicksNanos();
+            const auto before=std::chrono::steady_clock::now();
             MJPEGDecodeAndroid::DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg,buffer);
-            const auto after=GetTicksNanos();
-            const auto deltaUS=after-before;
-            CLOGD("Time decoding ms %d",(int)((deltaUS / 1000) / 1000));
+            const auto after=std::chrono::steady_clock::now();
+            const auto delta=after-before;
+            CLOGD("Time decoding ms %d",(int)std::chrono::duration_cast<std::chrono::milliseconds>(delta).count());
             ANativeWindow_unlockAndPost(aNativeWindow);
         }else{
             CLOGD("Cannot lock window");
