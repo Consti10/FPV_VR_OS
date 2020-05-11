@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -29,6 +30,7 @@ import constantin.fpv_vr.settings.UpdateHelper;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
+import constantin.test.UVCHelper;
 import constantin.video.core.RequestPermissionHelper;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.video_player.VideoSettings;
@@ -70,6 +72,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //if(!DJISDKManager.getInstance().hasSDKRegistered()){
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
+        UVCHelper.informIfStartedViaIntentFilter(this);
     }
 
     @Override
