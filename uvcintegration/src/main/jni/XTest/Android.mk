@@ -12,7 +12,6 @@ include $(CLEAR_VARS)
 CFLAGS := -Werror
 
 LOCAL_CFLAGS += -DANDROID_NDK
-LOCAL_CFLAGS += -DLOG_NDEBUG
 LOCAL_CFLAGS += -DACCESS_RAW_DESCRIPTORS
 LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
 
@@ -26,6 +25,7 @@ LOCAL_STATIC_LIBRARIES +=libuvc_static
 # FFMPEG can be static, too since it is only needed for the UVCReceiverDecoder (not for libuvc anymore)
 LOCAL_STATIC_LIBRARIES +=libjpeg-turbo
 
+# leave this one. By default, the build system generates ARM target binaries in thumb mode, where each instruction is 16 bits wide
 LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
