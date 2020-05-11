@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class UVCHelper {
-    public static final int DEVICE_CLASS_ROTG02=255;
+    public static final int DEVICE_CLASS_ROTG02=239;
     public static final int DEVICE_SUBCLASS_ROTG02=2;
 
     private static final String TAG="UVCHelper";

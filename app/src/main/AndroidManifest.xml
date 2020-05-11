@@ -69,6 +69,9 @@
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter_rotg02" />
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
+                android:resource="@xml/device_filter_rotg02" />
         </activity>
         <activity
             android:name=".settings.AGroundRecordingSettings"
