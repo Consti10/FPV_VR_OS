@@ -7,6 +7,7 @@
 
 #include "jconfig.h"
 #include <jpeglib.h>
+//#include <libjpeg-turbo/libjpeg-turbo-2.0.4/jpeglib.h>
 
 /**
  * Copied from somewhere in the libuvc library - it was declared in .c file but I needed it for the MJPEGDecodeAndroid file

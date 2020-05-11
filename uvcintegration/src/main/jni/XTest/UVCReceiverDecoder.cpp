@@ -3,7 +3,6 @@
 #include <jni.h>
 #include <android/native_window_jni.h>
 
-
 #include <libusb.h>
 #include <libuvc.h>
 #include <stdio.h>
