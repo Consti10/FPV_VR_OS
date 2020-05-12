@@ -187,19 +187,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 break;
             case CONNECTION_TYPE_TestFile:
                 VideoSettings.setVS_SOURCE(context,VideoSettings.VS_SOURCE.ASSETS);
-                final int vm= VideoSettings.videoMode(context);
-                if(vm==0){
-                    VideoSettings.setVS_ASSETS_FILENAME_TEST_ONLY(context, "x264/testVideo.h264");
-                }else if(vm==1){
-                    VideoSettings.setVS_ASSETS_FILENAME_TEST_ONLY(context,  "360/insta_webbn_1_shortened.h264");
-                }else{
-                    VideoSettings.setVS_ASSETS_FILENAME_TEST_ONLY(context,  "360/insta_webbn_1_shortened.h264");
-                }
-                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "outfile.h264");
-                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "video360.h264");
-                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "paris_by_diego.h264");
-                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "mono.h264");
-                //pref_video_edit.putString(context.getString(R.string.VS_ASSETS_FILENAME_TEST_ONLY), "testVideo.h264");
+                VideoSettings.setVS_ASSETS_FILENAME_TEST_ONLY(context, "fpv/zipray_shortened.fpv");
                 TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_ASSETS);
                 break;
             case CONNECTION_TYPE_RTSP:
