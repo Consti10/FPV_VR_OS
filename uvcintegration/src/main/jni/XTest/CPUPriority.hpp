@@ -8,10 +8,22 @@
 #include <sys/resource.h>
 #include <unistd.h>
 #include <android/log.h>
+#include <sched.h>
+#include <pthread.h>
+//#include <MDebug.hpp>
+
+#define TAG_CPUPRIO "CPUPriority"
+#define CPULOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG_CPUPRIO, __VA_ARGS__)
 
 // This namespace contains helper to set specific CPU thread priorities to deal
 // With scheduling in a multi-threaded application
 namespace CPUPriority{
+    /*static constexpr auto TAG="CPUPriority";
+    template<class... Args>
+    static void CPULOGD(const Args&... args) {
+        __android_log_print(ANDROID_LOG_DEBUG, TAG,args...);
+    }*/
+
     constexpr int ANDROID_PRIORITY_LOWEST         =  19;
 
     //use for background tasks
@@ -61,9 +73,9 @@ namespace CPUPriority{
         int ret = setpriority(which, (id_t)pid, wantedPriority);
         const int currentPriorityAfterSet=getCurrentProcessPriority();
         if(ret!=0 || currentPriorityAfterSet != wantedPriority){
-            __android_log_print(ANDROID_LOG_DEBUG, "CPUPrio1", "ERROR set thread priority to:%d from %d in %s", wantedPriority, currentPriority, caller);
+            CPULOGD("ERROR set thread priority to:%d from %d in %s", wantedPriority, currentPriority, caller);
         }else{
-            __android_log_print(ANDROID_LOG_DEBUG, "CPUPrio1", "SUCCESS Set thread priority to:%d from %d in %s", wantedPriority, currentPriority, caller);
+            CPULOGD("SUCCESS Set thread priority to:%d from %d in %s", wantedPriority, currentPriority, caller);
         }
     }
 }
@@ -77,8 +89,30 @@ namespace FPV_VR_PRIORITY{
     constexpr int CPU_PRIORITY_UVC_FRAME_CALLBACK=-16; //needs low latency but uses CPU a lot (decoding)
     // These are much lower
     constexpr int CPU_PRIORITY_GLRENDERER_MONO=-4; //only shows the OSD not video
-    constexpr int CPU_PRIORITY_UDPRECEIVER_TELEMETRY=-4;
+    constexpr int CPU_PRIORITY_UDPRECEIVER_TELEMETRY=-4; //not as important as video but also needs almost no CPU processing time
     constexpr int CPU_PRIORITY_UDPSENDER_HEADTRACKING=-4;
 }
 
+/*static const void printX(){
+        int ret;
+        // We'll operate on the currently running thread.
+        pthread_t this_thread = pthread_self();
+
+        // struct sched_param is used to store the scheduling priority
+        struct sched_param params;
+        // We'll set the priority to the maximum.
+        CPULOGD("Scheduler is %d",sched_getscheduler(this_thread));
+
+        params.sched_priority = sched_get_priority_max(SCHED_FIFO);
+
+        CPULOGD("Trying to set thread realtime prio = %d ",params.sched_priority);
+
+        // Attempt to set thread real-time priority to the SCHED_FIFO policy
+        ret = pthread_setschedparam(this_thread, SCHED_FIFO, &params);
+        if (ret != 0) {
+            // Print the error
+            CPULOGD("Unsuccessful in setting thread realtime prio");
+            return;
+        }
+    }*/
 #endif //FPV_VR_CPUPRIORITIES_H
