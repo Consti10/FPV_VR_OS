@@ -97,6 +97,7 @@ void GLRMono::setHomeOrientation360() {
 
 
 
+
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 
 #define JNI_METHOD(return_type, method_name) \

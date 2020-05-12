@@ -13,7 +13,8 @@
 #include "../NDKHelper/MDebug.hpp"
 #include "../NDKHelper/NDKArrayHelper.hpp"
 #include "MJPEGDecodeAndroid.hpp"
-#include "CPUPriority.hpp"
+// TODO this is not good !
+#include "../../../../../../../LiveVideo10ms/VideoTelemetryShared/Helper/CPUPriority.hpp"
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 class UVCReceiverDecoder{
