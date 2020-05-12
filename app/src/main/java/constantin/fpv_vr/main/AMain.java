@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -75,6 +76,29 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
         notifyUserStartedForUVC();
+
+        /*final Runnable runnable=new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d(Thread.currentThread().getName(),"Has prio "+Thread.currentThread().getPriority());
+                }
+            }
+        };
+        Thread thread1=new Thread(runnable);
+        thread1.setName("Test Prio 1");
+        thread1.setPriority(Thread.MIN_PRIORITY);
+        thread1.start();
+
+        Thread thread2=new Thread(runnable);
+        thread2.setName("Test Prio 2");
+        thread2.setPriority(Thread.MAX_PRIORITY);
+        thread2.start();*/
     }
 
     @Override
