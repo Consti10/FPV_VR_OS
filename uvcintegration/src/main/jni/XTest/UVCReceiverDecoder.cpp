@@ -12,9 +12,10 @@
 
 #include "../NDKHelper/MDebug.hpp"
 #include "../NDKHelper/NDKArrayHelper.hpp"
-
 #include "MJPEGDecodeAndroid.hpp"
+#include "CPUPriority.hpp"
 
+static constexpr const auto TAG="UVCReceiverDecoder";
 class UVCReceiverDecoder{
 private:
     // Window that holds the buffer(s) into which uvc frames will be decoded
@@ -51,6 +52,9 @@ public:
     // I cannot experience dropped frames - ?
     // Using less threads (no extra thread for decoding) reduces throughput but also latency
     void processFrame(uvc_frame_t* frame_mjpeg){
+        const auto processFrameBegin=std::chrono::steady_clock::now();
+        // highest prio
+        CPUPriority::setCPUPriority(FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,TAG);
         std::lock_guard<std::mutex> lock(mMutexNativeWindow);
         //CLOGD("Got uvc_frame_t %d  ms: %f",frame_mjpeg->sequence,(frame_mjpeg->capture_time.tv_usec/1000)/1000.0f);
         int deltaFrameSequence=frame_mjpeg->sequence-lastUvcFrameSequenceNr;
@@ -65,15 +69,13 @@ public:
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, NULL)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
-            const auto before=std::chrono::steady_clock::now();
             MJPEGDecodeAndroid::DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg,buffer);
-            const auto after=std::chrono::steady_clock::now();
-            const auto delta=after-before;
-            CLOGD("Time decoding ms %d",(int)std::chrono::duration_cast<std::chrono::milliseconds>(delta).count());
             ANativeWindow_unlockAndPost(aNativeWindow);
         }else{
             CLOGD("Cannot lock window");
         }
+        const auto processFrameDelta=std::chrono::steady_clock::now()-processFrameBegin;
+        CLOGD("Time process frame %d",(int)std::chrono::duration_cast<std::chrono::milliseconds>(processFrameDelta).count());
     }
     // Connect via android java first (workaround ?!)
     // 0 on success, -1 otherwise

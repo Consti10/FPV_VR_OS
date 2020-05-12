@@ -1,6 +1,5 @@
 #include <SettingsOSDStyle.h>
 #include "TextElements1.h"
-#include "CPUPriorities.hpp"
 
 #define TAG "TextElements1"
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)

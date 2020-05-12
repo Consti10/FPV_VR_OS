@@ -7,7 +7,6 @@
 
 #include "GLRStereoNormal.h"
 #include "Extensions.hpp"
-#include "CPUPriorities.hpp"
 #include <FBRManager.h>
 #include <VRFrameCPUChronometer.h>
 #include "../Scene/Video/SurfaceTextureUpdate.hpp"

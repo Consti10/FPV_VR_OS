@@ -2,9 +2,9 @@
 // Created by Constantin on 06.12.2017.
 //
 
+#include <CPUPriority.hpp>
 #include "GLRStereoSuperSync.h"
 #include "Extensions.hpp"
-#include "CPUPriorities.hpp"
 
 
 #include "vr/gvr/capi/include/gvr.h"
@@ -39,7 +39,7 @@ void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
 void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject surfaceTexture,int exclusiveVRCore) {
     mSurfaceTextureUpdate.initUpdateTexImageJAVA(env,obj,surfaceTexture);
     setAffinity(exclusiveVRCore);
-    setCPUPriority(CPU_PRIORITY_GLRENDERER_STEREO_FB,"GLRStereoSuperSync");
+    CPUPriority::setCPUPriority(FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO_FB,TAG);
     mTelemetryReceiver.setOpenGLFPS(-1);
     //This will block until mFBRManager->requestExitSuperSyncLoop() is called
     LOGD("entering superSync loop. GLThread will be blocked");

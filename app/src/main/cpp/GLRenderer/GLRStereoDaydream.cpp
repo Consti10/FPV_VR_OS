@@ -12,13 +12,12 @@
 #include <memory>
 #include <GLBufferHelper.hpp>
 #include <MatrixHelper.h>
-#include "CPUPriorities.hpp"
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
 #include <gvr_util/util.h>
 #include <GLHelper.hpp>
 
-#define TAG "GLRendererDaydream"
+constexpr auto TAG="GLRendererDaydream";
 
 GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP):
         mTelemetryReceiver(telemetryReceiver),

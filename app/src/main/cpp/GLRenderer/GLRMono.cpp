@@ -2,8 +2,8 @@
 
 #include <vr/gvr/capi/include/gvr.h>
 #include <MatrixHelper.h>
+#include <CPUPriority.hpp>
 #include "GLRMono.h"
-#include "CPUPriorities.hpp"
 
 
 constexpr auto TAG="GLRendererMono";
@@ -42,7 +42,7 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0,0,width,height);
     glClearColor(0.0f,0,0,0.0f);
-    setCPUPriority(CPU_PRIORITY_GLRENDERER_MONO,TAG);
+    CPUPriority::setCPUPriority(FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     cpuFrameTime.reset();
     const float videoRatio=4.0f/3.0f;
     float videoZ=-10;

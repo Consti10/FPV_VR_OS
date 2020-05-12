@@ -10,6 +10,7 @@
 #include <jni.h>
 #include <android/native_window_jni.h>
 #include <setjmp.h>
+#include <chrono>
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
@@ -37,6 +38,7 @@ namespace MJPEGDecodeAndroid{
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
     // input uvc_frame_t frame has to be of type MJPEG
     static void DecodeMJPEGtoANativeWindowBuffer(uvc_frame_t* frame_mjpeg,const ANativeWindow_Buffer& nativeWindowBuffer){
+        const auto before=std::chrono::steady_clock::now();
         //debugANativeWindowBuffer(nativeWindowBuffer);
         if(nativeWindowBuffer.width!=frame_mjpeg->width || nativeWindowBuffer.height!=frame_mjpeg->height){
             CLOGD("Error window & frame : size / width does not match");
@@ -91,6 +93,11 @@ namespace MJPEGDecodeAndroid{
         //
         jpeg_finish_decompress(&dinfo);
         jpeg_destroy_decompress(&dinfo);
+        //
+        const auto after=std::chrono::steady_clock::now();
+        const auto delta=after-before;
+        CLOGD("Time decoding MJPEG %d ms",(int)std::chrono::duration_cast<std::chrono::milliseconds>(delta).count());
     }
 }
+
 #endif //UVCCAMERA_MJPEGDECODEANDROID_HPP
