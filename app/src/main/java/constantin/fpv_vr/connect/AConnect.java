@@ -73,8 +73,8 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         setContentView(R.layout.activity_connect);
         Toolbar myToolbar =  findViewById(R.id.connect_toolbar);
         myToolbar.setTitleTextColor(Color.WHITE);
+        myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("");
         mContext=this;
     }
 
