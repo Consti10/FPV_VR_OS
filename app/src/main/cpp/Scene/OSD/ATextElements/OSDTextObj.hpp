@@ -4,7 +4,7 @@
 
 
 #include <ColoredGeometry.hpp>
-#include <MDebug.hpp>
+#include <AndroidLogger.hpp>
 #include "StylizedString.hpp"
 #include "../ElementBatching/CpuGpuBuff.h"
 #include "../../General/IPositionable.hpp"
@@ -87,7 +87,7 @@ public:
             return;
         }
         if(StylizedString::length(ss)>maxNChars){
-            MDebug::log(StylizedString::debug(ss),TAG);
+            LOGD(TAG)<<StylizedString::debug(ss);
             mText={{L"E>n"}};
         }else{
             mText=ss;
@@ -113,7 +113,7 @@ public:
         }
         if(xOffset<0 || xOffset>mPosition.Width){
             xOffset=0;
-            __android_log_print(ANDROID_LOG_DEBUG,TAG.c_str(),"ERROR: xOff too big/small %ls xOffset: %f",mText.at(0).string.c_str(),xOffset);
+            //TODO LOGE(TAG)<<"xOff too big/small "<<mText.at(0).string<<" xOffset: "<<xOffset;
         }
         if(textRecalculationNeeded){
             textBuffer->zeroContent();

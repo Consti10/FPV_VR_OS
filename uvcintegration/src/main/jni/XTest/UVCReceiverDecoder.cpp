@@ -10,15 +10,15 @@
 #include <thread>
 #include <atomic>
 
-//#include "../NDKHelper/MDebug.hpp"
-//#include "../NDKHelper/NDKArrayHelper.hpp"
 #include "MJPEGDecodeAndroid.hpp"
-// TODO this is not good !
-#include <MDebug.hpp>
-#include <CPUPriority.hpp>
-#include <NDKThreadHelper.hpp>
+#include "NDKThreadHelper.hpp"
+#include "CPUPriority.hpp"
+
 
 static constexpr const auto TAG="UVCReceiverDecoder";
+#define MLOGD LOGD(TAG)
+#define MLOGE LOGE(TAG)
+
 class UVCReceiverDecoder{
 private:
     // Window that holds the buffer(s) into which uvc frames will be decoded
@@ -62,10 +62,10 @@ public:
         int deltaFrameSequence=frame_mjpeg->sequence-lastUvcFrameSequenceNr;
         lastUvcFrameSequenceNr=frame_mjpeg->sequence;
         if(deltaFrameSequence!=1){
-            CLOGD("Probably dropped frame %d",deltaFrameSequence);
+            MLOGD<<"Probably dropped frame "<<deltaFrameSequence;
         }
         if(aNativeWindow==nullptr){
-            CLOGD("No surface");
+            MLOGD<<"No surface";
             return;
         }
         ANativeWindow_Buffer buffer;
@@ -74,10 +74,10 @@ public:
             MJPEGDecodeAndroid::DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg,buffer);
             ANativeWindow_unlockAndPost(aNativeWindow);
         }else{
-            CLOGD("Cannot lock window");
+            MLOGD<<"Cannot lock window";
         }
         const auto processFrameDelta=std::chrono::steady_clock::now()-processFrameBegin;
-        CLOGD("Time process frame %d",(int)std::chrono::duration_cast<std::chrono::milliseconds>(processFrameDelta).count());
+        MLOGD<<"Time process frame "<<(int)std::chrono::duration_cast<std::chrono::milliseconds>(processFrameDelta).count()<<"ms";
     }
     // Connect via android java first (workaround ?!)
     // 0 on success, -1 otherwise
@@ -92,9 +92,9 @@ public:
         const char* usbfs="/dev/bus/usb";
         res = uvc_init2(&ctx,NULL,usbfs);
         if (res < 0) {
-            CLOGD("Error uvc_init %d",res);
+            MLOGE<<"Error uvc_init "<<res;
         }
-        CLOGD("UVC initialized");
+        MLOGD<<"UVC initialized";
         /* Locates the first attached UVC device, stores in dev */
         //res = uvc_find_device(
         //        ctx, &dev,
@@ -104,13 +104,13 @@ public:
         if (res < 0) {
             uvc_perror(res, "uvc_find_device"); /* no devices found */
         } else {
-            CLOGD("Device found");
+            MLOGD<<"Device found";
             /* Try to open the device: requires exclusive access */
             res = uvc_open(dev, &devh);
             if (res < 0) {
-                CLOGD("Error uvc_open"); /* unable to open device */
+                MLOGE<<"Error uvc_open"; /* unable to open device */
             } else {
-                CLOGD("Device opened");
+                MLOGD<<"Device opened";
 
                 //X MJPEG only
                 res = uvc_get_stream_ctrl_format_size(
@@ -125,9 +125,9 @@ public:
                 } else {
                     res = uvc_start_streaming(devh, &ctrl, this->callbackProcessFrame, this, 0);
                     if (res < 0) {
-                        CLOGD("Error start_streaming %d",res); /* unable to start stream */
+                        MLOGE<<"Error start_streaming "<<res; /* unable to start stream */
                     } else {
-                        CLOGD("Streaming...");
+                        MLOGD<<"Streaming...";
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
                         return 0;

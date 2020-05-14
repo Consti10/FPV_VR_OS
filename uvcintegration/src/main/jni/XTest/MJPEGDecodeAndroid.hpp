@@ -10,13 +10,13 @@
 #include <android/native_window_jni.h>
 #include <setjmp.h>
 #include <chrono>
-#include <MDebug.hpp>
+#include "AndroidLogger.hpp"
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
 // Including this file adds dependency on Android and libjpeg-turbo
-
 namespace MJPEGDecodeAndroid{
+    static constexpr auto TAG="MJPEGDecodeAndroid";
     //  error handling (must be set !)
     struct error_mgr {
         struct jpeg_error_mgr super;
@@ -27,12 +27,12 @@ namespace MJPEGDecodeAndroid{
         char err_msg[1024];
         (*dinfo->err->format_message)(dinfo, err_msg);
         err_msg[1023] = 0;
-        LOG::D("LIBJPEG ERROR %s", err_msg);
+        LOGD(TAG)<<"LIBJPEG ERROR %s"<<err_msg;
         longjmp(myerr->jmp, 1);
     }
     // Helper that prints the current configuration of ANativeWindow_Buffer
     static void debugANativeWindowBuffer(const ANativeWindow_Buffer& buffer){
-        LOG::D("ANativeWindow_Buffer: W H Stride Format %d %d %d %d",buffer.width,buffer.height,buffer.stride,buffer.format);
+        LOGD(TAG)<<"ANativeWindow_Buffer: W H "<<buffer.width<<" "<<buffer.height<<"Stride Format"<<buffer.stride<<" "<<buffer.format;
     }
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
@@ -41,7 +41,7 @@ namespace MJPEGDecodeAndroid{
         const auto before=std::chrono::steady_clock::now();
         //debugANativeWindowBuffer(nativeWindowBuffer);
         if(nativeWindowBuffer.width!=frame_mjpeg->width || nativeWindowBuffer.height!=frame_mjpeg->height){
-            LOG::D("Error window & frame : size / width does not match");
+            LOGE(TAG)<<"Error window & frame : size / width does not match";
             return;
         }
         struct jpeg_decompress_struct dinfo;
@@ -67,7 +67,7 @@ namespace MJPEGDecodeAndroid{
             dinfo.out_color_space = JCS_RGB565;
             BYTES_PER_PIXEL=2;
         }else{
-            LOG::D("Unsupported image format");
+            LOGE(TAG)<<"Unsupported image format";
             return;
         }
         dinfo.dct_method = JDCT_IFAST;
@@ -96,7 +96,7 @@ namespace MJPEGDecodeAndroid{
         //
         const auto after=std::chrono::steady_clock::now();
         const auto delta=after-before;
-        CLOGD("Time decoding MJPEG %d ms",(int)std::chrono::duration_cast<std::chrono::milliseconds>(delta).count());
+        LOGD(TAG)<<"Time decoding MJPEG "<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<" ms";
     }
 }
 

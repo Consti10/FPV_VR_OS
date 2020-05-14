@@ -41,7 +41,7 @@ mVideoTexture(videoTexture),mMode(mode){
             mInsta360SphereB.uploadGL(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_270,0.5,0.5,210,0.05,0),GL_TRIANGLE_STRIP);
             break;
         default:
-            LOGD("Unknown type %d",mMode);
+            LOGE(TAG)<<"Unknown type "<<mMode;
     }
 }
 

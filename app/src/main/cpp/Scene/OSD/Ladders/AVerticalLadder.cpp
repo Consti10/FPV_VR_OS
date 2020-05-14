@@ -192,7 +192,7 @@ void AVerticalLadder::updateGL() {
     int newMiddleValue;
     if(verticalLadderValue-40<=currentMinimum || verticalLadderValue+40>=currentMaximum){
         newMiddleValue=roundToMultiple((int)verticalLadderValue,PRECALCULATED_RANGE_BOOTH_SIDES);
-        LOGD("Recalculation needed. height m: %d | new middle value: %d",(int)verticalLadderValue,newMiddleValue);
+        LOGD(TAG)<<"Recalculation needed. height m: "<<(int)verticalLadderValue<<" | new middle value: "<<newMiddleValue;
         updateLadderStringsRange(newMiddleValue);
     }
     updateMainString(verticalLadderValue);
