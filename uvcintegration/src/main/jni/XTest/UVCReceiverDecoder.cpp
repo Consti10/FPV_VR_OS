@@ -10,11 +10,13 @@
 #include <thread>
 #include <atomic>
 
-#include "../NDKHelper/MDebug.hpp"
-#include "../NDKHelper/NDKArrayHelper.hpp"
+//#include "../NDKHelper/MDebug.hpp"
+//#include "../NDKHelper/NDKArrayHelper.hpp"
 #include "MJPEGDecodeAndroid.hpp"
 // TODO this is not good !
-#include "../../../../../../../LiveVideo10ms/VideoTelemetryShared/Helper/CPUPriority.hpp"
+#include <MDebug.hpp>
+#include <CPUPriority.hpp>
+#include <NDKThreadHelper.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 class UVCReceiverDecoder{
@@ -54,8 +56,7 @@ public:
     // Using less threads (no extra thread for decoding) reduces throughput but also latency
     void processFrame(uvc_frame_t* frame_mjpeg){
         const auto processFrameBegin=std::chrono::steady_clock::now();
-        // highest prio
-        CPUPriority::setCPUPriority(FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,TAG);
+        NDKThreadHelper::attachAndSetProcessThreadPriority(javaVm,FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,TAG);
         std::lock_guard<std::mutex> lock(mMutexNativeWindow);
         //CLOGD("Got uvc_frame_t %d  ms: %f",frame_mjpeg->sequence,(frame_mjpeg->capture_time.tv_usec/1000)/1000.0f);
         int deltaFrameSequence=frame_mjpeg->sequence-lastUvcFrameSequenceNr;
@@ -156,6 +157,7 @@ public:
             isStreaming=false;
         }
     }
+    JavaVM* javaVm;
 };
 
 // ------------------------------------- Native Bindings -------------------------------------
@@ -173,7 +175,9 @@ inline UVCReceiverDecoder *native(jlong ptr) {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jclass jclass1) {
-    return jptr(new UVCReceiverDecoder());
+    auto* tmp=new UVCReceiverDecoder();
+    env->GetJavaVM(&tmp->javaVm);
+    return jptr(tmp);
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jclass jclass1, jlong p) {

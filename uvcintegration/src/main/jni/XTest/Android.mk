@@ -19,6 +19,8 @@ LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
 #LOCAL_LDLIBS += -ljnigraphics
 
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../../LiveVideo10ms/VideoTelemetryShared/Helper/
+
 # If we remove dependency of libusb here we can build both libusb and libuvc as static libraries uvc usb1.0
 # Then include libuvc as a static library here
 LOCAL_STATIC_LIBRARIES +=libuvc_static

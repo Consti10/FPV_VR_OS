@@ -3,6 +3,7 @@
 #include <vr/gvr/capi/include/gvr.h>
 #include <MatrixHelper.h>
 #include <CPUPriority.hpp>
+#include <NDKThreadHelper.hpp>
 #include "GLRMono.h"
 
 
@@ -21,6 +22,7 @@ GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetry
 }
 
 void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalVideoTexture) {
+    NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>();
@@ -42,7 +44,6 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0,0,width,height);
     glClearColor(0.0f,0,0,0.0f);
-    CPUPriority::setCPUPriority(FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     cpuFrameTime.reset();
     const float videoRatio=4.0f/3.0f;
     float videoZ=-10;

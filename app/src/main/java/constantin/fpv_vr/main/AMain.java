@@ -76,6 +76,8 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
         notifyUserStartedForUVC();
+
+        Thread.currentThread().getPriority();
     }
 
     @Override

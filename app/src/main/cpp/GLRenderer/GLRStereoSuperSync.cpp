@@ -3,6 +3,7 @@
 //
 
 #include <CPUPriority.hpp>
+#include <NDKThreadHelper.hpp>
 #include "GLRStereoSuperSync.h"
 #include "Extensions.hpp"
 
@@ -11,6 +12,7 @@
 #include "vr/gvr/capi/include/gvr_types.h"
 
 constexpr auto TAG="GLRStereoSuperSync";
+#define MLOGD LOGD(TAG)
 #define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 //#define CHANGE_SWAP_COLOR
@@ -39,12 +41,12 @@ void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
 void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject surfaceTexture,int exclusiveVRCore) {
     mSurfaceTextureUpdate.initUpdateTexImageJAVA(env,obj,surfaceTexture);
     setAffinity(exclusiveVRCore);
-    CPUPriority::setCPUPriority(FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO_FB,TAG);
+    NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO_FB,TAG);
     mTelemetryReceiver.setOpenGLFPS(-1);
     //This will block until mFBRManager->requestExitSuperSyncLoop() is called
-    LOGD("entering superSync loop. GLThread will be blocked");
+    MLOGD<<"entering superSync loop. GLThread will be blocked";
     mFBRManager->enterDirectRenderingLoop(env);
-    LOGD("exited superSync loop. GLThread unblocked");
+    MLOGD<<"exited superSync loop. GLThread unblocked";
     mSurfaceTextureUpdate.deleteUpdateTexImageJAVA(env,obj);
 }
 
@@ -152,12 +154,12 @@ JNI_METHOD(void, nativeOnSurfaceChanged)
 }
 JNI_METHOD(void, nativeEnterSuperSyncLoop)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jobject surfaceTexture,jint exclusiveVRCore) {
-    LOGD("nativeEnterSuperSyncLoop()");
+    MLOGD<<"nativeEnterSuperSyncLoop()";
     native(glRendererStereo)->enterSuperSyncLoop(env,obj, surfaceTexture,(int)exclusiveVRCore);
 }
 JNI_METHOD(void, nativeExitSuperSyncLoop)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {
-    LOGD("nativeExitSuperSyncLoop()");
+    MLOGD<<"nativeExitSuperSyncLoop()";
     native(glRendererStereo)->exitSuperSyncLoop();
 }
 JNI_METHOD(void, nativeDoFrame)

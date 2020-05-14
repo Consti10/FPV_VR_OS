@@ -11,7 +11,6 @@
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
 
-#define PRINT_LOGS
 //#define CHANGE_SWAP_COLOR
 constexpr auto TAG= "GLRendererStereo";
 
@@ -19,6 +18,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <MatrixHelper.h>
 #include <CardboardViewportOcclusion.hpp>
 #include <CPUPriority.hpp>
+#include <NDKThreadHelper.hpp>
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
 videoMode(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),
@@ -44,7 +44,7 @@ void GLRStereoNormal::placeGLElements(){
 }
 
 void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint videoTexture) {
-    CPUPriority::setCPUPriority(FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,TAG);
+    NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);

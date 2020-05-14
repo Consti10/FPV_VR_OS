@@ -2,11 +2,10 @@
 // Created by Constantin on 1/29/2019.
 //
 
-#include <android/log.h>
 #include <array>
 #include <sstream>
 #include <SharedPreferences.hpp>
-#include <MDebug.hpp>
+#include <AndroidLogger.hpp>
 #include "SettingsVR.h"
 #include "IDVR.hpp"
 
@@ -25,7 +24,7 @@ SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext) {
 
     GHT_OSD_FIXED_TO_HEAD=settingsN.getBoolean(IDVR::GHT_OSD_FIXED_TO_HEAD,false);
 
-    LOGD("%f %d",VR_SCENE_SCALE_PERCENTAGE,VR_DISTORTION_CORRECTION_MODE);
+    LOGD("SettingsVR")<<VR_SCENE_SCALE_PERCENTAGE<<" "<<VR_DISTORTION_CORRECTION_MODE;
 }
 
 
