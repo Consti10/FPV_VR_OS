@@ -11,12 +11,12 @@ import androidx.annotation.Nullable;
 
 // Handles receiving & decoding of UVC devices that supply MJPEG frames (like ROTG02)
 public class UVCReceiverDecoder {
-    private static final String TAG="UVCReceiverDecoder";
+    private static final String TAG= "";
     static{
         //System.loadLibrary("jpeg-turbo");
         //System.loadLibrary("usb1.0");
         //System.loadLibrary("uvc");
-        System.loadLibrary("UVCReceiverDecoder");
+        System.loadLibrary("");
     }
     private long nativeInstance;
     private boolean alreadyStreaming=false;
