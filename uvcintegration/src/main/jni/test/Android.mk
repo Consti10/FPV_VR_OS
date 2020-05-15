@@ -20,6 +20,8 @@ LOCAL_LDLIBS += -landroid
 #LOCAL_LDLIBS += -ljnigraphics
 
 #LOCAL_C_INCLUDES := $(V_CORE_DIR)/../VideoTelemetryShared/Helper/Android.mk
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../lol
+
 
 # If we remove dependency of libusb here we can build both libusb and libuvc as static libraries uvc usb1.0
 # Then include libuvc as a static library here

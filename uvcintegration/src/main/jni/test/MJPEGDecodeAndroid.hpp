@@ -10,7 +10,7 @@
 #include <android/native_window_jni.h>
 #include <setjmp.h>
 #include <chrono>
-#include "AndroidLogger.hpp"
+#include <AndroidLogger.hpp>
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
