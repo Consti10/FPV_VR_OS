@@ -56,6 +56,7 @@ namespace MJPEGDecodeAndroid{
             /* This frame is missing the Huffman tables: fill in the standard ones */
             insert_huff_tables(&dinfo);
         }
+        LOGD(TAG)<<"Input color space is "<<dinfo.jpeg_color_space;
         unsigned int BYTES_PER_PIXEL;
         if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM || nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM){
             dinfo.out_color_space = JCS_EXT_RGBA;

@@ -16,7 +16,7 @@ public class UVCReceiverDecoder {
         //System.loadLibrary("jpeg-turbo");
         //System.loadLibrary("usb1.0");
         //System.loadLibrary("uvc");
-        System.loadLibrary("");
+        System.loadLibrary("UVCReceiverDecoder");
     }
     private long nativeInstance;
     private boolean alreadyStreaming=false;
