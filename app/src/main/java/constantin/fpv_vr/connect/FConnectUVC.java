@@ -1,11 +1,8 @@
 package constantin.fpv_vr.connect;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +13,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.databinding.ConnectUvcFragmentBinding;
-import constantin.fpv_vr.main.AMain;
 import constantin.fpv_vr.settings.SJ;
 
 public class FConnectUVC extends Fragment implements View.OnClickListener{
