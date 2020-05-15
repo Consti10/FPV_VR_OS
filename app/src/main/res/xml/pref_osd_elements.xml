@@ -353,7 +353,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:title="Other settings">
+            android:title="Advanced">
             <SwitchPreference
                 android:key="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
                 android:title="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
