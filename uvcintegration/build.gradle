@@ -8,6 +8,11 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        externalNativeBuild {
+            ndkBuild {
+                arguments "V_CORE_DIR=${project(':VideoCore').getProjectDir().getAbsolutePath().replace("\\", "/")}"
+            }
+        }
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a"
         }

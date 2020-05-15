@@ -6,4 +6,6 @@ include $(PROJ_PATH)/libjpeg-turbo/Android.mk
 
 include $(PROJ_PATH)/libusb/android/jni/Android.mk
 include $(PROJ_PATH)/libuvc/android/jni/Android.mk
+
+#include $(V_CORE_DIR)/../VideoTelemetryShared/Android.mk
 include $(PROJ_PATH)/XTest/Android.mk
