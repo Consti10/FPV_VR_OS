@@ -82,13 +82,14 @@ public class SJ {
     //******************************** pref_default **************************************
 
     // OSD
+    // not pref_osd_elements ! since they are named other
     public static boolean OSD_DISABLE_ALL_OVERLAY_ELEMENTS(final Context context){
-        final SharedPreferences pref_osd_elements=context.getSharedPreferences("pref_osd_elements",MODE_PRIVATE);
+        final SharedPreferences pref_osd_elements=context.getSharedPreferences("pref_osd",MODE_PRIVATE);
         return pref_osd_elements.getBoolean(context.getString(R.string.OSD_DISABLE_ALL_OVERLAY_ELEMENTS),false);
     }
     @SuppressLint("ApplySharedPref")
     public static void OSD_DISABLE_ALL_OVERLAY_ELEMENTS(final Context context, final boolean value){
-        final SharedPreferences pref_osd_elements=context.getSharedPreferences("pref_osd_elements",MODE_PRIVATE);
+        final SharedPreferences pref_osd_elements=context.getSharedPreferences("pref_osd",MODE_PRIVATE);
         pref_osd_elements.edit().putBoolean(context.getString(R.string.OSD_DISABLE_ALL_OVERLAY_ELEMENTS),value).commit();
     }
 

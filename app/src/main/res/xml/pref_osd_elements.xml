@@ -351,6 +351,7 @@
                 android:summary="Display a warning if used capacity falls below BATT_CAPACITY_MAH_USED_WARNING"
                 android:defaultValue="false" />
         </PreferenceScreen>
+
         <PreferenceScreen
             android:title="Other settings">
             <SwitchPreference
