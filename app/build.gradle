@@ -3,6 +3,7 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
+    //ndkVersion rootProject.ndkVersion
 
     defaultConfig {
         applicationId "constantin.fpv_vr.wifibroadcast"
@@ -100,7 +101,7 @@ dependencies {
 
     implementation 'com.mapzen.android:prefs-plus:1.0.0'
     //firebase stuff
-    implementation 'com.google.firebase:firebase-core:17.4.0'
+    implementation 'com.google.firebase:firebase-core:17.4.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.crashlytics.sdk.android:crashlytics-ndk:2.1.1'
     //implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
@@ -110,6 +111,8 @@ dependencies {
 
     //Screen recording
     implementation 'com.github.HBiSoft:HBRecorder:0.1.7'
+
+    //implementation "com.android.ndk.thirdparty:curl:7.69.1-alpha-1"
 }
 
 apply plugin: 'com.google.gms.google-services'

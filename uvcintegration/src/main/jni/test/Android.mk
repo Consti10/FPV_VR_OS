@@ -17,10 +17,10 @@ LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
 
 LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
-#LOCAL_LDLIBS += -ljnigraphics
+LOCAL_LDLIBS += -ljnigraphics
 
-#LOCAL_C_INCLUDES := $(V_CORE_DIR)/../VideoTelemetryShared/Helper/Android.mk
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../lol
+LOCAL_C_INCLUDES := $(V_CORE_DIR)/../VideoTelemetryShared/Helper
+#LOCAL_C_INCLUDES := $(LOCAL_PATH)/../lol
 
 
 # If we remove dependency of libusb here we can build both libusb and libuvc as static libraries uvc usb1.0

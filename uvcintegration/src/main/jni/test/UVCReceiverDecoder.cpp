@@ -5,15 +5,13 @@
 
 #include <libusb.h>
 #include <libuvc.h>
-#include <stdio.h>
 #include <cstring>
 #include <thread>
 #include <atomic>
 
-#include "MJPEGDecodeAndroid.hpp"
-#include "NDKThreadHelper.hpp"
-#include "CPUPriority.hpp"
-
+#include <MJPEGDecodeAndroid.hpp>
+#include <NDKThreadHelper.hpp>
+#include <CPUPriority.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 #define MLOGD LOGD(TAG)
@@ -30,16 +28,17 @@ private:
     static void callbackProcessFrame(uvc_frame_t* frame, void* self){
         ((UVCReceiverDecoder *) self)->processFrame(frame);
     }
-    uvc_context_t *ctx;
-    uvc_device_t *dev;
-    uvc_device_handle_t *devh;
-    boolean isStreaming;
+    uvc_context_t *ctx=nullptr;
+    uvc_device_t *dev=nullptr;
+    uvc_device_handle_t *devh=nullptr;
+    boolean isStreaming=false;
     static constexpr unsigned int VIDEO_STREAM_WIDTH=640;
     static constexpr unsigned int VIDEO_STREAM_HEIGHT=480;
     static constexpr unsigned int VIDEO_STREAM_FPS=30;
     int lastUvcFrameSequenceNr=0;
     bool processFramePrioritySet=false;
 public:
+    JavaVM* javaVm;
     // nullptr: clean up and remove
     // valid surface: acquire the ANativeWindow
     void setSurface(JNIEnv* env,jobject surface){
@@ -162,7 +161,6 @@ public:
             isStreaming=false;
         }
     }
-    JavaVM* javaVm;
 };
 
 // ------------------------------------- Native Bindings -------------------------------------
