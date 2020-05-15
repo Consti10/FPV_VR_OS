@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="imageOfExampleVideo"
-        android:src="@drawable/screenshot_test_video"
+        android:src="@drawable/screenshot_2020_05_15_14_02_06_min"
         tools:ignore="HardcodedText" />
 
     <TextView
