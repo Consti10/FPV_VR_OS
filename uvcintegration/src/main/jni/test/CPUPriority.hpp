@@ -118,7 +118,7 @@ namespace FPV_VR_PRIORITY{
     constexpr int CPU_PRIORITY_GLRENDERER_STEREO=-16; //The GL thread also should get 1 whole cpu core
     constexpr int CPU_PRIORITY_UDPRECEIVER_VIDEO=-16;  //needs low latency and does not use the cpu that much
     constexpr int CPU_PRIORITY_DECODER_OUTPUT=-16;     //needs low latency and does not use the cpu that much
-    constexpr int CPU_PRIORITY_UVC_FRAME_CALLBACK=-16; //needs low latency but uses CPU a lot (decoding)
+    constexpr int CPU_PRIORITY_UVC_FRAME_CALLBACK=-19; //needs low latency but uses CPU a lot (decoding). If prio is not high enough, frames will be dropped
     // These are much lower
     constexpr int CPU_PRIORITY_GLRENDERER_MONO=-4; //only shows the OSD not video
     constexpr int CPU_PRIORITY_UDPRECEIVER_TELEMETRY=-4; //not as important as video but also needs almost no CPU processing time

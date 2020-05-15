@@ -56,7 +56,7 @@ namespace MJPEGDecodeAndroid{
             /* This frame is missing the Huffman tables: fill in the standard ones */
             insert_huff_tables(&dinfo);
         }
-        LOGD(TAG)<<"Input color space is "<<dinfo.jpeg_color_space;
+        //LOGD(TAG)<<"Input color space is "<<dinfo.jpeg_color_space;
         unsigned int BYTES_PER_PIXEL;
         if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM || nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM){
             dinfo.out_color_space = JCS_EXT_RGBA;
@@ -67,6 +67,9 @@ namespace MJPEGDecodeAndroid{
         }else if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM){
             dinfo.out_color_space = JCS_RGB565;
             BYTES_PER_PIXEL=2;
+        }else if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420){
+            dinfo.out_color_space = JCS_YCbCr;
+            BYTES_PER_PIXEL=3;
         }else{
             LOGE(TAG)<<"Unsupported image format";
             return;
@@ -97,7 +100,7 @@ namespace MJPEGDecodeAndroid{
         //
         const auto after=std::chrono::steady_clock::now();
         const auto delta=after-before;
-        LOGD(TAG)<<"Time decoding MJPEG "<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<" ms";
+        //LOGD(TAG)<<"Time decoding MJPEG "<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<" ms";
     }
 }
 

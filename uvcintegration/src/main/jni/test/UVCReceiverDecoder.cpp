@@ -38,6 +38,7 @@ private:
     static constexpr unsigned int VIDEO_STREAM_HEIGHT=480;
     static constexpr unsigned int VIDEO_STREAM_FPS=30;
     int lastUvcFrameSequenceNr=0;
+    bool processFramePrioritySet=false;
 public:
     // nullptr: clean up and remove
     // valid surface: acquire the ANativeWindow
@@ -56,7 +57,10 @@ public:
     // Using less threads (no extra thread for decoding) reduces throughput but also latency
     void processFrame(uvc_frame_t* frame_mjpeg){
         const auto processFrameBegin=std::chrono::steady_clock::now();
-        NDKThreadHelper::attachAndSetProcessThreadPriority(javaVm,FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,TAG);
+        if(!processFramePrioritySet){
+            NDKThreadHelper::attachAndSetProcessThreadPriority(javaVm,FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,TAG);
+            processFramePrioritySet=true;
+        }
         std::lock_guard<std::mutex> lock(mMutexNativeWindow);
         //CLOGD("Got uvc_frame_t %d  ms: %f",frame_mjpeg->sequence,(frame_mjpeg->capture_time.tv_usec/1000)/1000.0f);
         int deltaFrameSequence=frame_mjpeg->sequence-lastUvcFrameSequenceNr;
@@ -77,7 +81,7 @@ public:
             MLOGD<<"Cannot lock window";
         }
         const auto processFrameDelta=std::chrono::steady_clock::now()-processFrameBegin;
-        MLOGD<<"Time process frame "<<(int)std::chrono::duration_cast<std::chrono::milliseconds>(processFrameDelta).count()<<"ms";
+        //MLOGD<<"Time process frame "<<(int)std::chrono::duration_cast<std::chrono::milliseconds>(processFrameDelta).count()<<"ms";
     }
     // Connect via android java first (workaround ?!)
     // 0 on success, -1 otherwise
@@ -123,6 +127,7 @@ public:
                 if (res < 0) {
                     uvc_perror(res, "get_mode"); /* device doesn't provide a matching stream */
                 } else {
+                    processFramePrioritySet=false;
                     res = uvc_start_streaming(devh, &ctrl, this->callbackProcessFrame, this, 0);
                     if (res < 0) {
                         MLOGE<<"Error start_streaming "<<res; /* unable to start stream */
