@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <TrueColor.hpp>
+#include <codecvt>
 
 //A Stylized String is a string with added scale and color
 //Since OSD text might include different styles for sub-parts of one string (e.g. Dec: 60 fps) should have different colors for 'Dec' and '60fps'
@@ -35,6 +36,12 @@ public:
             len+=ss.string.length();
         }
         return len;
+    }
+    std::string asNormalString()const{
+        using convert_type = std::codecvt_utf8<wchar_t>;
+        std::wstring_convert<convert_type, wchar_t> converter;
+        const std::string converted_str = converter.to_bytes( ss.str());
+        return converted_str;
     }
     static std::string debug(const std::vector<StylizedString>& text1){
         std::stringstream ss;

@@ -113,7 +113,7 @@ public:
         }
         if(xOffset<0 || xOffset>mPosition.Width){
             xOffset=0;
-            //TODO LOGE(TAG)<<"xOff too big/small "<<mText.at(0).string<<" xOffset: "<<xOffset;
+            LOGE(TAG)<<"xOff too big/small "<<mText.at(0).asNormalString()<<" xOffset: "<<xOffset;
         }
         if(textRecalculationNeeded){
             textBuffer->zeroContent();
