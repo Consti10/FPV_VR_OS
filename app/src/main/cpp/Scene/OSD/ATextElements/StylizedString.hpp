@@ -40,7 +40,7 @@ public:
     std::string asNormalString()const{
         using convert_type = std::codecvt_utf8<wchar_t>;
         std::wstring_convert<convert_type, wchar_t> converter;
-        const std::string converted_str = converter.to_bytes( ss.str());
+        const std::string converted_str = converter.to_bytes(string);
         return converted_str;
     }
     static std::string debug(const std::vector<StylizedString>& text1){
