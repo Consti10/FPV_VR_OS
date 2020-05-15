@@ -96,6 +96,6 @@
     <string name="TE2_EZWB_RSSI_ADAPTERS_1to6">TE2 EZWB RSSI ADAPTERS 1to6</string>
     <string name="TE2_FLIGHT_MODE">TE2 FLIGHT MODE</string>
 
-
+    <string name="OSD_DISABLE_ALL_OVERLAY_ELEMENTS">OSD_DISABLE_ALL_OVERLAY_ELEMENTS</string>
 
 </resources>

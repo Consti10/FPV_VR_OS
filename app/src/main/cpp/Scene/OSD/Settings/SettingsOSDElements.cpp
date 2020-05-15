@@ -164,7 +164,7 @@ SettingsOSDElements::SettingsOSDElements(JNIEnv *env, jobject androidContext) {
         //oTextElement2.enableXX.push_back(TelemetryReceiver::EZWB_RSSI_ADAPTER4);
         //oTextElement2.enableXX.push_back(TelemetryReceiver::EZWB_RSSI_ADAPTER5);
     }
+    OSD_DISABLE_ALL_OVERLAY_ELEMENTS=prefOSDElements.getBoolean(IDOSD::OSD_DISABLE_ALL_OVERLAY_ELEMENTS);
     //LOGD("%d %d %d",oSpeedL.scale,oCompassL.scale,oArtificialHorizon.scale);
-
 }
 

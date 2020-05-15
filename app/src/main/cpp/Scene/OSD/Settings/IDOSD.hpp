@@ -79,6 +79,7 @@ public:
     static constexpr const char* TE2_EZWB_BLOCKS="TE2 EZWB BLOCKS";
     static constexpr const char* TE2_EZWB_RSSI_ADAPTERS_1to6="TE2 EZWB RSSI ADAPTERS 1to6";
     static constexpr const char* TE2_FLIGHT_MODE="TE2 FLIGHT MODE";
+    static constexpr const char* OSD_DISABLE_ALL_OVERLAY_ELEMENTS="OSD_DISABLE_ALL_OVERLAY_ELEMENTS";
 };
 
 #endif //CONSTI_10_100_IDOSD

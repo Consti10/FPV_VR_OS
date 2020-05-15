@@ -351,5 +351,13 @@
                 android:summary="Display a warning if used capacity falls below BATT_CAPACITY_MAH_USED_WARNING"
                 android:defaultValue="false" />
         </PreferenceScreen>
+        <PreferenceScreen
+            android:title="Other settings">
+            <SwitchPreference
+                android:key="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
+                android:title="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
+                android:summary="Do not enable any overlay elements (if you are using en axternal OSD)"
+                android:defaultValue="false" />
+        </PreferenceScreen>
     </PreferenceScreen>
 </PreferenceScreen>
