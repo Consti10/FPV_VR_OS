@@ -19,7 +19,12 @@ LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
 LOCAL_LDLIBS += -ljnigraphics
 
-LOCAL_C_INCLUDES := $(V_CORE_DIR)/../VideoTelemetryShared/Helper
+
+DIR_VideoTelemetryShared := $(LOCAL_PATH)/../../../../../../LiveVideo10ms/VideoTelemetryShared
+# Android.mk doesnt work with absolute paths
+# DIR_VideoTelemetryShared := $(V_CORE_DIR)/../VideoTelemetryShared
+
+LOCAL_C_INCLUDES := $(DIR_VideoTelemetryShared)/Helper
 #LOCAL_C_INCLUDES := $(LOCAL_PATH)/../lol
 
 
@@ -34,6 +39,7 @@ LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
 		UVCReceiverDecoder.cpp \
+		#$(DIR_VideoTelemetryShared)/Helper/ZDummy.cpp \
 
 LOCAL_MODULE    := UVCReceiverDecoder
 # Here we need a shared library since it has to be bundled with the .apk (here are the native bindings)
