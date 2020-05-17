@@ -2,7 +2,7 @@
 
 #include <vr/gvr/capi/include/gvr.h>
 #include <MatrixHelper.h>
-#include <CPUPriority.hpp>
+#include <AndroidThreadPrioValues.hpp>
 #include <NDKThreadHelper.hpp>
 #include "GLRMono.h"
 

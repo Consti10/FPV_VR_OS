@@ -11,7 +11,7 @@
 
 #include <MJPEGDecodeAndroid.hpp>
 #include <NDKThreadHelper.hpp>
-#include <CPUPriority.hpp>
+#include <AndroidThreadPrioValues.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 #define MLOGD LOGD(TAG)

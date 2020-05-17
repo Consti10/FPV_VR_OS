@@ -17,7 +17,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <android/choreographer.h>
 #include <MatrixHelper.h>
 #include <CardboardViewportOcclusion.hpp>
-#include <CPUPriority.hpp>
+#include <AndroidThreadPrioValues.hpp>
 #include <NDKThreadHelper.hpp>
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):

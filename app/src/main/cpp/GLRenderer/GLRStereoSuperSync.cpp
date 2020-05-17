@@ -2,9 +2,10 @@
 // Created by Constantin on 06.12.2017.
 //
 
-#include <CPUPriority.hpp>
-#include <NDKThreadHelper.hpp>
+
 #include "GLRStereoSuperSync.h"
+#include <AndroidThreadPrioValues.hpp>
+#include <NDKThreadHelper.hpp>
 #include "Extensions.hpp"
 
 
