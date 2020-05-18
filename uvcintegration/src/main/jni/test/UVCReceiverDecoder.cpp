@@ -13,8 +13,8 @@
 #include <NDKThreadHelper.hpp>
 #include <AndroidThreadPrioValues.hpp>
 #include <NDKArrayHelper.hpp>
-//#include <GroundRecorderRAW.hpp>
-//#include <FileHelper>
+#include <GroundRecorderRAW.hpp>
+#include <FileHelper.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 #define MLOGD LOGD(TAG)
@@ -41,7 +41,7 @@ private:
     int lastUvcFrameSequenceNr=0;
     bool processFramePrioritySet=false;
     JavaVM* javaVm;
-    //std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
+    std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
 public:
     UVCReceiverDecoder(JNIEnv* env){
         env->GetJavaVM(&javaVm);
@@ -86,6 +86,9 @@ public:
         }else{
             MLOGD<<"Cannot lock window";
         }
+        if(groundRecorderRAW){
+            groundRecorderRAW->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
+        }
         const auto processFrameDelta=std::chrono::steady_clock::now()-processFrameBegin;
         //MLOGD<<"Time process frame "<<(int)std::chrono::duration_cast<std::chrono::milliseconds>(processFrameDelta).count()<<"ms";
     }
@@ -93,7 +96,7 @@ public:
     // 0 on success, -1 otherwise
     int startReceiving(int vid, int pid, int fd,
                         int busnum,int devAddr,
-                        const std::string usbfs){
+                        const std::string usbfs,const std::string GroundRecordingDirectory){
         uvc_stream_ctrl_t ctrl;
         uvc_error_t res;
         /* Initialize a UVC service context. Libuvc will set up its own libusb
@@ -139,7 +142,7 @@ public:
                         MLOGD<<"Streaming...";
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
-                        //groundRecorderRAW=std::make_unique<GroundRecoderRAW>(FileHelper::findUnusedFilename("",""));
+                        //groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GroundRecordingDirectory,"mjpeg"));
                         return 0;
                     }
                 }
@@ -161,6 +164,7 @@ public:
             uvc_unref_device(dev);
             uvc_exit(ctx);
             isStreaming=false;
+            groundRecorderRAW.reset();
         }
     }
 };
@@ -192,10 +196,11 @@ JNI_METHOD(jint, nativeStartReceiving)
 (JNIEnv *env, jclass jclass1,jlong nativeInstance,
  jint vid, jint pid, jint fd,
  jint busnum,jint devAddr,
- jstring usbfs_str
+ jstring usbfs_str,jstring GroundRecordingDirectory
 ) {
     const std::string usbfs=NDKArrayHelper::DynamicSizeString(env,usbfs_str);
-    return native(nativeInstance)->startReceiving(vid,pid,fd,busnum,devAddr,usbfs);
+    const std::string GroundRecordingDirectory2=NDKArrayHelper::DynamicSizeString(env,GroundRecordingDirectory);
+    return native(nativeInstance)->startReceiving(vid,pid,fd,busnum,devAddr,usbfs,GroundRecordingDirectory2);
 }
 JNI_METHOD(void, nativeStopReceiving)
 (JNIEnv *env, jclass jclass1, jlong p) {

@@ -3,11 +3,14 @@ package constantin.test;
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
 
 import androidx.annotation.Nullable;
+
+import java.io.File;
 
 // Handles receiving & decoding of UVC devices that supply MJPEG frames (like ROTG02)
 public class UVCReceiverDecoder {
@@ -46,10 +49,20 @@ public class UVCReceiverDecoder {
             usbfs_str=usbfs_str2.toString();
         }
         //
-        int success=nativeStartReceiving(nativeInstance,device.getVendorId(),device.getProductId(),connection.getFileDescriptor(),busnum,devnum, usbfs_str);
+        int success=nativeStartReceiving(nativeInstance,device.getVendorId(),device.getProductId(),connection.getFileDescriptor(),busnum,devnum, usbfs_str,getDirectoryToSaveDataTo());
         if(success==0){
             alreadyStreaming=true;
         }
+    }
+
+    private static String getDirectoryToSaveDataTo(){
+        final String ret= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/FPV_VR/MJPEG/";
+        File dir = new File(ret);
+        if (!dir.exists()) {
+            final boolean mkdirs = dir.mkdirs();
+            //System.out.println("mkdirs res"+mkdirs);
+        }
+        return ret;
     }
 
     public void stopReceiving(){
@@ -69,7 +82,7 @@ public class UVCReceiverDecoder {
     private static native long nativeConstruct();
     private static native void nativeDelete(long nativeInstance);
     // returns 0 on success
-    private static native int nativeStartReceiving(long nativeInstance,int venderId, int productId, int fileDescriptor, int busNum, int devAddr, String usbfs);
+    private static native int nativeStartReceiving(long nativeInstance,int venderId, int productId, int fileDescriptor, int busNum, int devAddr, String usbfs,String GroundRecordingDirectory);
     private static native void nativeStopReceiving(long nativeInstance);
     private static native void nativeSetSurface(long nativeInstance,Surface surface);
 
