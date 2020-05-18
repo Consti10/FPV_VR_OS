@@ -37,7 +37,7 @@ public class AStereoNormal extends VrActivity {
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);
             final TelemetryReceiver telemetryReceiver=new TelemetryReceiver(this,0,0);
-            mGLRStereoNormal = new GLRStereoNormal(this,uvcPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+            mGLRStereoNormal = new GLRStereoNormal(this,uvcPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext(),mGLViewStereo);
             uvcPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         }else{
             final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
@@ -46,7 +46,7 @@ public class AStereoNormal extends VrActivity {
             final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
                     new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
-            mGLRStereoNormal = new GLRStereoNormal(this,videoPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext());
+            mGLRStereoNormal = new GLRStereoNormal(this,videoPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext(),mGLViewStereo);
             videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         }
         mGLViewStereo.setRenderer(mGLRStereoNormal);

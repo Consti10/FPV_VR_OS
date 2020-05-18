@@ -65,7 +65,9 @@ public:
     void processFrame(uvc_frame_t* frame_mjpeg){
         const auto processFrameBegin=std::chrono::steady_clock::now();
         if(!processFramePrioritySet){
-            NDKThreadHelper::attachAndSetProcessThreadPriority(javaVm,FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,TAG);
+            NDKThreadHelper::setProcessThreadPriorityAttachDetach(javaVm,
+                                                                  FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,
+                                                                  TAG);
             processFramePrioritySet=true;
         }
         std::lock_guard<std::mutex> lock(mMutexNativeWindow);
