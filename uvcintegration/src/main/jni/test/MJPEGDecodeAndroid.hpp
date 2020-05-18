@@ -15,7 +15,20 @@
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
 // Including this file adds dependency on Android and libjpeg-turbo
-namespace MJPEGDecodeAndroid{
+// now class since then I can reuse the jpeg_decompress_struct dinfo member (and do not need to re-allocate & init)
+class MJPEGDecodeAndroid{
+public:
+    MJPEGDecodeAndroid(){
+        struct error_mgr jerr;
+        dinfo.err = jpeg_std_error(&jerr.super);
+        jerr.super.error_exit = _error_exit;
+        jpeg_create_decompress(&dinfo);
+    }
+    ~MJPEGDecodeAndroid(){
+        jpeg_destroy_decompress(&dinfo);
+    }
+private:
+   struct jpeg_decompress_struct dinfo;
     static constexpr auto TAG="MJPEGDecodeAndroid";
     //  error handling (must be set !)
     struct error_mgr {
@@ -30,6 +43,7 @@ namespace MJPEGDecodeAndroid{
         LOGD(TAG)<<"LIBJPEG ERROR %s"<<err_msg;
         longjmp(myerr->jmp, 1);
     }
+public:
     // Helper that prints the current configuration of ANativeWindow_Buffer
     static void debugANativeWindowBuffer(const ANativeWindow_Buffer& buffer){
         LOGD(TAG)<<"ANativeWindow_Buffer: W H "<<buffer.width<<" "<<buffer.height<<"Stride Format"<<buffer.stride<<" "<<buffer.format;
@@ -37,18 +51,18 @@ namespace MJPEGDecodeAndroid{
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
     // input uvc_frame_t frame has to be of type MJPEG
-    static void DecodeMJPEGtoANativeWindowBuffer(uvc_frame_t* frame_mjpeg,const ANativeWindow_Buffer& nativeWindowBuffer){
+    void DecodeMJPEGtoANativeWindowBuffer(uvc_frame_t* frame_mjpeg,const ANativeWindow_Buffer& nativeWindowBuffer){
         const auto before=std::chrono::steady_clock::now();
         //debugANativeWindowBuffer(nativeWindowBuffer);
         if(nativeWindowBuffer.width!=frame_mjpeg->width || nativeWindowBuffer.height!=frame_mjpeg->height){
             LOGE(TAG)<<"Error window & frame : size / width does not match";
             return;
         }
-        struct jpeg_decompress_struct dinfo;
+        // We need to set the error manager every time else it will crash (I have no idea why )
+        // https://stackoverflow.com/questions/11613040/why-does-jpeg-decompress-create-crash-without-error-message
         struct error_mgr jerr;
         dinfo.err = jpeg_std_error(&jerr.super);
         jerr.super.error_exit = _error_exit;
-        jpeg_create_decompress(&dinfo);
 
         jpeg_mem_src(&dinfo, (const unsigned char*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
         jpeg_read_header(&dinfo, TRUE);
@@ -86,8 +100,7 @@ namespace MJPEGDecodeAndroid{
             jsamparray[i]=(JSAMPARRAY)row;
         }
         unsigned int scanline_count = 0;
-        while (dinfo.output_scanline < dinfo.output_height)
-        {
+        while (dinfo.output_scanline < dinfo.output_height){
             // JSAMPROW row = (JSAMPROW)(((unsigned char*)nativeWindowBuffer.bits) + (scanline_count * scanline_len));
             JSAMPROW row2= (JSAMPROW)jsamparray[scanline_count];
             auto lines_read=jpeg_read_scanlines(&dinfo,&row2, 8);
@@ -96,12 +109,11 @@ namespace MJPEGDecodeAndroid{
         }
         //
         jpeg_finish_decompress(&dinfo);
-        jpeg_destroy_decompress(&dinfo);
         //
         const auto after=std::chrono::steady_clock::now();
         const auto delta=after-before;
-        //LOGD(TAG)<<"Time decoding MJPEG "<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<" ms";
+        LOGD(TAG)<<"Time decoding MJPEG "<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<" ms";
     }
-}
+};
 
 #endif //UVCCAMERA_MJPEGDECODEANDROID_HPP

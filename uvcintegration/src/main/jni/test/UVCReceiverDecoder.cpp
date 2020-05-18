@@ -42,6 +42,7 @@ private:
     bool processFramePrioritySet=false;
     JavaVM* javaVm;
     std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
+    MJPEGDecodeAndroid mMJPEGDecodeAndroid;
 public:
     UVCReceiverDecoder(JNIEnv* env){
         env->GetJavaVM(&javaVm);
@@ -81,7 +82,7 @@ public:
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
-            MJPEGDecodeAndroid::DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg,buffer);
+            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg,buffer);
             ANativeWindow_unlockAndPost(aNativeWindow);
         }else{
             MLOGD<<"Cannot lock window";
