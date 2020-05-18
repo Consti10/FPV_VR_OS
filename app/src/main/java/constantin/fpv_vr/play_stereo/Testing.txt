@@ -1,0 +1,12 @@
+// Test if calling surfaceTexture.updateTexImage(); multiple times improves latency:
+        // High FPS video (200) , low OpenGL fps(60)
+        int nUpdates=0;
+        for(int i=0;i<4;i++){
+            final long oldTimestamp=surfaceTexture.getTimestamp();
+            surfaceTexture.updateTexImage();
+            if(surfaceTexture.getTimestamp()!=oldTimestamp){
+                nUpdates++;
+            }
+        }
+        log("N of updates "+nUpdates);
+        // Result: N of updates==2 quite a lot, N of updates==3 only once in like 5sec

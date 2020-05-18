@@ -1,9 +1,11 @@
 package constantin.fpv_vr.play_stereo;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.EGLExt;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +14,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.MVrHeadsetParams;
+import constantin.renderingx.core.STHelper;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
@@ -20,6 +23,7 @@ import constantin.video.core.gl.ISurfaceAvailable;
 import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.video.core.video_player.VideoSettings;
 
+import static constantin.renderingx.core.STHelper.updateAndCheck;
 import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
 
 
@@ -28,6 +32,7 @@ import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_AND
  */
 
 public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChanged {
+    static final String TAG="GLRStereoNormal";
     static {
         System.loadLibrary("GLRStereoNormal");
     }
@@ -44,8 +49,9 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private final long nativeGLRendererStereo;
     private VideoSurfaceHolder videoSurfaceHolder;
     private final TelemetryReceiver telemetryReceiver;
+    private final GLSurfaceView glSurfaceView;
 
-    public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
+    public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext,final GLSurfaceView view){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
         videoSurfaceHolder=new VideoSurfaceHolder(context);
@@ -54,6 +60,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
                 gvrApiNativeContext, VideoSettings.videoMode(mContext));
         final MVrHeadsetParams params=new MVrHeadsetParams(context);
         nativeUpdateHeadsetParams(nativeGLRendererStereo,params);
+        glSurfaceView=view;
     }
 
     @Override
@@ -77,7 +84,33 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
-        videoSurfaceHolder.getSurfaceTexture().updateTexImage();
+        final SurfaceTexture surfaceTexture=videoSurfaceHolder.getSurfaceTexture();
+        // 18.05.2020, Android 8
+        // It looks like we can safely use the timestamp to measure delay
+        // Also, if the timestamp changes we know that the update of SurfaceTexture was succesfully
+
+        // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
+        // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 120fps here, but
+        // If a new video buffer appears the application does not wait but rather render immediately
+        // High OpenGL FPS, 25fps video
+        long timeBefore=System.currentTimeMillis();
+        while (true){
+            final boolean update= updateAndCheck(surfaceTexture);
+            if(update){
+                log("Latency until opengl is "+(System.nanoTime()-surfaceTexture.getTimestamp())/1000/1000.0f);
+                break;
+            }else{
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+            if(System.currentTimeMillis()-timeBefore>8){
+                break;
+            }
+        }
+
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
@@ -96,6 +129,9 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
                 decodingInfo.avgHWDecodingTime_ms);
     }
 
+    private void log(final String message){
+        Log.d(TAG,message);
+    }
 
     @Override
     protected void finalize() throws Throwable {
