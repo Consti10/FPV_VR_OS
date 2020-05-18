@@ -12,6 +12,9 @@
 #include <MJPEGDecodeAndroid.hpp>
 #include <NDKThreadHelper.hpp>
 #include <AndroidThreadPrioValues.hpp>
+#include <NDKArrayHelper.hpp>
+//#include <GroundRecorderRAW.hpp>
+//#include <FileHelper>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 #define MLOGD LOGD(TAG)
@@ -37,8 +40,12 @@ private:
     static constexpr unsigned int VIDEO_STREAM_FPS=30;
     int lastUvcFrameSequenceNr=0;
     bool processFramePrioritySet=false;
-public:
     JavaVM* javaVm;
+    //std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
+public:
+    UVCReceiverDecoder(JNIEnv* env){
+        env->GetJavaVM(&javaVm);
+    }
     // nullptr: clean up and remove
     // valid surface: acquire the ANativeWindow
     void setSurface(JNIEnv* env,jobject surface){
@@ -62,7 +69,7 @@ public:
         }
         std::lock_guard<std::mutex> lock(mMutexNativeWindow);
         //CLOGD("Got uvc_frame_t %d  ms: %f",frame_mjpeg->sequence,(frame_mjpeg->capture_time.tv_usec/1000)/1000.0f);
-        int deltaFrameSequence=frame_mjpeg->sequence-lastUvcFrameSequenceNr;
+        int deltaFrameSequence=(int)frame_mjpeg->sequence-lastUvcFrameSequenceNr;
         lastUvcFrameSequenceNr=frame_mjpeg->sequence;
         if(deltaFrameSequence!=1){
             MLOGD<<"Probably dropped frame "<<deltaFrameSequence;
@@ -72,7 +79,7 @@ public:
             return;
         }
         ANativeWindow_Buffer buffer;
-        if(ANativeWindow_lock(aNativeWindow, &buffer, NULL)==0){
+        if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
             MJPEGDecodeAndroid::DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg,buffer);
             ANativeWindow_unlockAndPost(aNativeWindow);
@@ -84,16 +91,15 @@ public:
     }
     // Connect via android java first (workaround ?!)
     // 0 on success, -1 otherwise
-    int startReceiving(jint vid, jint pid, jint fd,
-                        jint busnum,jint devAddr,
-                        jstring usbfs_str){
+    int startReceiving(int vid, int pid, int fd,
+                        int busnum,int devAddr,
+                        const std::string usbfs){
         uvc_stream_ctrl_t ctrl;
         uvc_error_t res;
         /* Initialize a UVC service context. Libuvc will set up its own libusb
          * context. Replace NULL with a libusb_context pointer to run libuvc
          * from an existing libusb context. */
-        const char* usbfs="/dev/bus/usb";
-        res = uvc_init2(&ctx,NULL,usbfs);
+        res = uvc_init2(&ctx,nullptr,usbfs.c_str());
         if (res < 0) {
             MLOGE<<"Error uvc_init "<<res;
         }
@@ -103,7 +109,7 @@ public:
         //        ctx, &dev,
         //        0, 0, NULL); /* filter devices: vendor_id, product_id, "serial_num" */
         //res = uvc_get_device_with_fd(ctx, &dev, pid, vid, NULL, fd, NULL, NULL);
-        res = uvc_get_device_with_fd(ctx, &dev, vid, pid, NULL, fd, busnum, devAddr);
+        res = uvc_get_device_with_fd(ctx, &dev, vid, pid, nullptr, fd, busnum, devAddr);
         if (res < 0) {
             uvc_perror(res, "uvc_find_device"); /* no devices found */
         } else {
@@ -114,7 +120,6 @@ public:
                 MLOGE<<"Error uvc_open"; /* unable to open device */
             } else {
                 MLOGD<<"Device opened";
-
                 //X MJPEG only
                 res = uvc_get_stream_ctrl_format_size(
                         devh, &ctrl,
@@ -127,18 +132,15 @@ public:
                     uvc_perror(res, "get_mode"); /* device doesn't provide a matching stream */
                 } else {
                     processFramePrioritySet=false;
-                    res = uvc_start_streaming(devh, &ctrl, this->callbackProcessFrame, this, 0);
+                    res = uvc_start_streaming(devh, &ctrl, UVCReceiverDecoder::callbackProcessFrame, this, 0);
                     if (res < 0) {
                         MLOGE<<"Error start_streaming "<<res; /* unable to start stream */
                     } else {
                         MLOGD<<"Streaming...";
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
+                        //groundRecorderRAW=std::make_unique<GroundRecoderRAW>(FileHelper::findUnusedFilename("",""));
                         return 0;
-                        sleep(10); /* stream for 10 seconds */
-                        /* End the stream. Blocks until last callback is serviced */
-                        uvc_stop_streaming(devh);
-                        puts("Done streaming.");
                     }
                 }
                 /* Release our handle on the device */
@@ -178,8 +180,7 @@ inline UVCReceiverDecoder *native(jlong ptr) {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jclass jclass1) {
-    auto* tmp=new UVCReceiverDecoder();
-    env->GetJavaVM(&tmp->javaVm);
+    auto* tmp=new UVCReceiverDecoder(env);
     return jptr(tmp);
 }
 JNI_METHOD(void, nativeDelete)
@@ -193,7 +194,8 @@ JNI_METHOD(jint, nativeStartReceiving)
  jint busnum,jint devAddr,
  jstring usbfs_str
 ) {
-    return native(nativeInstance)->startReceiving(vid,pid,fd,busnum,devAddr,usbfs_str);
+    const std::string usbfs=NDKArrayHelper::DynamicSizeString(env,usbfs_str);
+    return native(nativeInstance)->startReceiving(vid,pid,fd,busnum,devAddr,usbfs);
 }
 JNI_METHOD(void, nativeStopReceiving)
 (JNIEnv *env, jclass jclass1, jlong p) {

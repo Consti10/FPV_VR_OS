@@ -25,8 +25,7 @@ DIR_VideoTelemetryShared := $(LOCAL_PATH)/../../../../../../LiveVideo10ms/VideoT
 # DIR_VideoTelemetryShared := $(V_CORE_DIR)/../VideoTelemetryShared
 
 LOCAL_C_INCLUDES := $(DIR_VideoTelemetryShared)/Helper
-#LOCAL_C_INCLUDES := $(LOCAL_PATH)/../lol
-
+LOCAL_C_INCLUDES += $(DIR_VideoTelemetryShared)/InputOutput
 
 # If we remove dependency of libusb here we can build both libusb and libuvc as static libraries uvc usb1.0
 # Then include libuvc as a static library here
@@ -40,6 +39,7 @@ LOCAL_ARM_MODE := arm
 LOCAL_SRC_FILES := \
 		UVCReceiverDecoder.cpp \
 		#$(DIR_VideoTelemetryShared)/Helper/ZDummy.cpp \
+		#$(DIR_VideoTelemetryShared)/InputOutput/ZDummy.cpp \
 
 LOCAL_MODULE    := UVCReceiverDecoder
 # Here we need a shared library since it has to be bundled with the .apk (here are the native bindings)

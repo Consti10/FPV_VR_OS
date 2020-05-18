@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 // Handles receiving & decoding of UVC devices that supply MJPEG frames (like ROTG02)
 public class UVCReceiverDecoder {
-    private static final String TAG= "";
+    private static final String TAG= "UVCReceiverDecoder";
     static{
         //System.loadLibrary("jpeg-turbo");
         //System.loadLibrary("usb1.0");
@@ -30,16 +30,23 @@ public class UVCReceiverDecoder {
             Log.d(TAG,"startReceiving() already called");
             return;
         }
-        final String name = device.getDeviceName();
-        final String[] v = !TextUtils.isEmpty(name) ? name.split("/") : null;
+        final String deviceName = device.getDeviceName();
+        Log.d(TAG,"Device name is "+deviceName);
+        final String[] v = !TextUtils.isEmpty(deviceName) ? deviceName.split("/") : null;
         int busnum = 0;
         int devnum = 0;
+        String usbfs_str= "/dev/bus/usb";
         if (v != null) {
             busnum = Integer.parseInt(v[v.length-2]);
             devnum = Integer.parseInt(v[v.length-1]);
+            StringBuilder usbfs_str2 = new StringBuilder();
+            for(int i=0;i<v.length-2;i++){
+                usbfs_str2.append("/").append(v[i]);
+            }
+            usbfs_str=usbfs_str2.toString();
         }
         //
-        int success=nativeStartReceiving(nativeInstance,device.getVendorId(),device.getProductId(),connection.getFileDescriptor(),busnum,devnum,device.getDeviceName());
+        int success=nativeStartReceiving(nativeInstance,device.getVendorId(),device.getProductId(),connection.getFileDescriptor(),busnum,devnum, usbfs_str);
         if(success==0){
             alreadyStreaming=true;
         }

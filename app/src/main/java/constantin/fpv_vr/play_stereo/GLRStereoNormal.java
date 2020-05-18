@@ -85,7 +85,6 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         //EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
     }
 
-
     @Override
     public void onVideoRatioChanged(int videoW, int videoH) {
         nativeOnVideoRatioChanged(nativeGLRendererStereo,videoW,videoH);
