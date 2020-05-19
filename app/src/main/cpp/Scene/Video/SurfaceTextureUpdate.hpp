@@ -16,8 +16,26 @@
 #include <jni.h>
 #include <android/surface_texture.h>
 #ifndef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
+
+//#define TMP __ANDROID_API__
+//#undef __ANDROID_API__
+//#define __ANDROID_API__ 28
+
 #include <android/surface_texture_jni.h>
+#include <android/surface_texture.h>
+
+//#undef __ANDROID_API__
+//#define __ANDROID_API__ TMP
+
+//#include <stdint.h>
+//#include <sys/cdefs.h>
+//__BEGIN_DECLS
+//int ASurfaceTexture_updateTexImage(ASurfaceTexture* st);
+//void ASurfaceTexture_release(ASurfaceTexture* st);
+//__END_DECLS
+
 #endif
+
 
 //Only SuperSync needs this one, else we can call updateTexImage() in java
 //Helper for calling the java updateTexImage() method from cpp code

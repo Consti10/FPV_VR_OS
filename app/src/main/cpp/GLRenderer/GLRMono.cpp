@@ -19,6 +19,7 @@ GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetry
     if(gvr_context!= nullptr) {
         gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     }
+
 }
 
 void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalVideoTexture) {
