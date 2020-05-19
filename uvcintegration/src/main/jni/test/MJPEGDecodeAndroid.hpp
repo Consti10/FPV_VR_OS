@@ -9,8 +9,8 @@
 #include <jni.h>
 #include <android/native_window_jni.h>
 #include <setjmp.h>
-#include <chrono>
 #include <AndroidLogger.hpp>
+#include <TimeHelper.hpp>
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
@@ -52,7 +52,7 @@ public:
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
     // input uvc_frame_t frame has to be of type MJPEG
     void DecodeMJPEGtoANativeWindowBuffer(uvc_frame_t* frame_mjpeg,const ANativeWindow_Buffer& nativeWindowBuffer){
-        const auto before=std::chrono::steady_clock::now();
+        MEASURE_FUNCTION_EXECUTION_TIME
         //debugANativeWindowBuffer(nativeWindowBuffer);
         if(nativeWindowBuffer.width!=frame_mjpeg->width || nativeWindowBuffer.height!=frame_mjpeg->height){
             LOGE(TAG)<<"Error window & frame : size / width does not match";
@@ -111,8 +111,6 @@ public:
         jpeg_finish_decompress(&dinfo);
         //
         const auto after=std::chrono::steady_clock::now();
-        const auto delta=after-before;
-        LOGD(TAG)<<"Time decoding MJPEG "<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<" ms";
     }
 };
 

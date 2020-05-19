@@ -15,10 +15,10 @@
 #include <NDKArrayHelper.hpp>
 #include <GroundRecorderRAW.hpp>
 #include <FileHelper.hpp>
+#include <TimeHelper.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
-#define MLOGD LOGD(TAG)
-#define MLOGE LOGE(TAG)
+
 
 class UVCReceiverDecoder{
 private:
@@ -63,7 +63,7 @@ public:
     // I cannot experience dropped frames - ?
     // Using less threads (no extra thread for decoding) reduces throughput but also latency
     void processFrame(uvc_frame_t* frame_mjpeg){
-        const auto processFrameBegin=std::chrono::steady_clock::now();
+        MEASURE_FUNCTION_EXECUTION_TIME
         if(!processFramePrioritySet){
             NDKThreadHelper::setProcessThreadPriorityAttachDetach(javaVm,
                                                                   FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,
@@ -92,8 +92,6 @@ public:
         if(groundRecorderRAW){
             groundRecorderRAW->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
         }
-        const auto processFrameDelta=std::chrono::steady_clock::now()-processFrameBegin;
-        //MLOGD<<"Time process frame "<<(int)std::chrono::duration_cast<std::chrono::milliseconds>(processFrameDelta).count()<<"ms";
     }
     // Connect via android java first (workaround ?!)
     // 0 on success, -1 otherwise

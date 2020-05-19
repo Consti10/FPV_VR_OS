@@ -13,8 +13,6 @@
 #include "vr/gvr/capi/include/gvr_types.h"
 
 constexpr auto TAG="GLRStereoSuperSync";
-#define MLOGD LOGD(TAG)
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 //#define CHANGE_SWAP_COLOR
 

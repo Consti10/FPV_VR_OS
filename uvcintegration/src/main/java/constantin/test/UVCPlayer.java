@@ -1,10 +1,12 @@
 package constantin.test;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
@@ -15,10 +17,12 @@ import android.view.SurfaceHolder;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -33,9 +37,10 @@ public class UVCPlayer extends BroadcastReceiver implements LifecycleObserver {
     private static final String TAG="UVCPlayer";
     private final UVCReceiverDecoder mUVCReceiverDecoder=new UVCReceiverDecoder();
     public static final String ACTION_USB_PERMISSION =
-            "com.android.example.USB_PERMISSION";
+            "constantin.fpv_vr.wifibroadcast.USB_PERMISSION";
     public static final String USB_DEVICE_ATTACHED="android.hardware.usb.action.USB_DEVICE_ATTACHED";
     public static final String USB_DEVICE_DETACHED="android.hardware.usb.action.USB_DEVICE_DETACHED";
+    private static final int MY_REQUEST_CODE=1020;
 
     private final AppCompatActivity parent;
     private final UsbManager usbManager;
@@ -52,7 +57,9 @@ public class UVCPlayer extends BroadcastReceiver implements LifecycleObserver {
         if (action.contentEquals(ACTION_USB_PERMISSION)) {
             Log.d(TAG,"ACTION_USB_PERMISSION");
             final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-            if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+            Log.d(TAG,"Has device "+(device!=null));
+            Log.d(TAG,"Has boolean extra "+intent.hasExtra(UsbManager.EXTRA_PERMISSION_GRANTED));
+            if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, true)) {
                 if(device != null){
                     final UsbDeviceConnection connection=usbManager.openDevice(device);
                     if(connection==null){
@@ -63,7 +70,9 @@ public class UVCPlayer extends BroadcastReceiver implements LifecycleObserver {
                 }
             }
             else {
-                Toast.makeText(context,"ERROR permission denied for device "+device,Toast.LENGTH_LONG).show();
+                final String message="ERROR permission denied for device "+device.toString();
+                Log.d(TAG,message);
+                Toast.makeText(context,"ERROR permission denied. Please contact developer.",Toast.LENGTH_LONG).show();
             }
 
         }else if(action.contentEquals(USB_DEVICE_ATTACHED)){
@@ -91,25 +100,36 @@ public class UVCPlayer extends BroadcastReceiver implements LifecycleObserver {
     }
 
     private void startAlreadyConnectedUSBDevice(){
-        final PendingIntent permissionIntent = PendingIntent.getBroadcast(parent, 0, new Intent(UVCPlayer.ACTION_USB_PERMISSION), 0);
-        final HashMap<String, UsbDevice> deviceList =usbManager.getDeviceList();
-
-        Log.d(TAG,"There are "+deviceList.size()+" devices connected");
-        UVCHelper.filterFOrUVC(deviceList);
-
-        final Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-        while(deviceIterator.hasNext()){
-            final UsbDevice device = deviceIterator.next();
-            Log.d(TAG,"USB Device"+device.getDeviceName());
-            usbManager.requestPermission(device, permissionIntent);
+        if (ContextCompat.checkSelfPermission(parent, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG,"Error camera not granted");
         }
+        final HashMap<String, UsbDevice> deviceList =usbManager.getDeviceList();
+        UVCHelper.printDeviceInfo(deviceList);
+        final ArrayList<UsbDevice> uvcDevices=UVCHelper.filterFOrUVC(deviceList);
+        if(uvcDevices.size()==0){
+            Log.d(TAG,"No connected UVC devices");
+            return;
+        }
+        if(uvcDevices.size()!=1){
+            Log.e(TAG,"Too many connected devices");
+        }
+        final UsbDevice uvcDevice=uvcDevices.get(0);
+        Log.d(TAG,"Connecting to"+uvcDevice.getDeviceName());
+        if(usbManager.hasPermission(uvcDevice)){
+            Log.d(TAG,"Already has permission");
+        }else{
+            Log.d(TAG,"No permission yet");
+        }
+        final PendingIntent permissionIntent = PendingIntent.getBroadcast(parent, MY_REQUEST_CODE, new Intent(ACTION_USB_PERMISSION), 0);
+        usbManager.requestPermission(uvcDevice, permissionIntent);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private void resume(){
         Log.d(TAG,"resume");
         //register the broadcast receiver
-        final IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_USB_PERMISSION);
         filter.addAction(USB_DEVICE_ATTACHED);
         filter.addAction(USB_DEVICE_DETACHED);
         parent.registerReceiver(this,filter);

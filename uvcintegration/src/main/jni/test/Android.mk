@@ -17,7 +17,7 @@ LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
 
 LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
-LOCAL_LDLIBS += -ljnigraphics
+#LOCAL_LDLIBS += -ljnigraphics
 
 
 DIR_VideoTelemetryShared := $(LOCAL_PATH)/../../../../../../LiveVideo10ms/VideoTelemetryShared

@@ -110,7 +110,7 @@ dependencies {
     implementation "com.google.vr:sdk-base:$mGvrVersion"
 
     //Screen recording
-    implementation 'com.github.HBiSoft:HBRecorder:0.1.7'
+    implementation 'com.github.HBiSoft:HBRecorder:0.1.6'
 
     //implementation "com.android.ndk.thirdparty:curl:7.69.1-alpha-1"
 }

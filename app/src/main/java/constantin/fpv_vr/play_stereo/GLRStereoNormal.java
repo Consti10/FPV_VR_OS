@@ -85,30 +85,31 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
         final SurfaceTexture surfaceTexture=videoSurfaceHolder.getSurfaceTexture();
-        // 18.05.2020, Android 8
-        // It looks like we can safely use the timestamp to measure delay
-        // Also, if the timestamp changes we know that the update of SurfaceTexture was succesfully
-
-        // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
-        // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 120fps here, but
-        // If a new video buffer appears the application does not wait but rather render immediately
-        // High OpenGL FPS, 25fps video
-        long timeBefore=System.currentTimeMillis();
-        while (true){
-            final boolean update= updateAndCheck(surfaceTexture);
-            if(update){
-                log("Latency until opengl is "+(System.nanoTime()-surfaceTexture.getTimestamp())/1000/1000.0f);
-                break;
-            }else{
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
+        if(SJ.DisableVSYNC(mContext)){
+            // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
+            // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 120fps here, but
+            // instead of sleeping I poll on the surfaceTexture in small intervalls if a new frame is available
+            // As soon as a new video frame is available, I render the OpenGL frame immediately
+            // High OpenGL FPS, 25fps video
+            long timeBefore=System.currentTimeMillis();
+            while (true){
+                final boolean update= updateAndCheck(surfaceTexture);
+                if(update){
+                    log("Latency until opengl is "+(System.nanoTime()-surfaceTexture.getTimestamp())/1000/1000.0f);
+                    break;
+                }else{
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+                if(System.currentTimeMillis()-timeBefore>8){
                     break;
                 }
             }
-            if(System.currentTimeMillis()-timeBefore>8){
-                break;
-            }
+        }else{
+            surfaceTexture.updateTexImage();
         }
 
         if(SJ.Disable60FPSLock(mContext)){
