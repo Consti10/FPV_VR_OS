@@ -4,8 +4,6 @@
 
 #include "ATextElement.h"
 
-#define TAG "TextElements1"
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 ATextElement::ATextElement():
         IUpdateable(TAG),IDrawable(TAG)

@@ -24,7 +24,7 @@ SettingsVR::SettingsVR(JNIEnv *env, jobject androidContext) {
 
     GHT_OSD_FIXED_TO_HEAD=settingsN.getBoolean(IDVR::GHT_OSD_FIXED_TO_HEAD,false);
 
-    LOGD("SettingsVR")<<VR_SCENE_SCALE_PERCENTAGE<<" "<<VR_DISTORTION_CORRECTION_MODE;
+    MLOGD<<VR_SCENE_SCALE_PERCENTAGE<<" "<<VR_DISTORTION_CORRECTION_MODE;
 }
 
 

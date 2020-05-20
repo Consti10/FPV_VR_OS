@@ -29,7 +29,6 @@ public:
     }
 private:
    struct jpeg_decompress_struct dinfo;
-    static constexpr auto TAG="MJPEGDecodeAndroid";
     //  error handling (must be set !)
     struct error_mgr {
         struct jpeg_error_mgr super;
@@ -40,13 +39,13 @@ private:
         char err_msg[1024];
         (*dinfo->err->format_message)(dinfo, err_msg);
         err_msg[1023] = 0;
-        LOGD(TAG)<<"LIBJPEG ERROR %s"<<err_msg;
+        MLOGD<<"LIBJPEG ERROR %s"<<err_msg;
         longjmp(myerr->jmp, 1);
     }
 public:
     // Helper that prints the current configuration of ANativeWindow_Buffer
     static void debugANativeWindowBuffer(const ANativeWindow_Buffer& buffer){
-        LOGD(TAG)<<"ANativeWindow_Buffer: W H "<<buffer.width<<" "<<buffer.height<<"Stride Format"<<buffer.stride<<" "<<buffer.format;
+        MLOGD<<"ANativeWindow_Buffer: W H "<<buffer.width<<" "<<buffer.height<<"Stride Format"<<buffer.stride<<" "<<buffer.format;
     }
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
@@ -55,7 +54,7 @@ public:
         MEASURE_FUNCTION_EXECUTION_TIME
         //debugANativeWindowBuffer(nativeWindowBuffer);
         if(nativeWindowBuffer.width!=frame_mjpeg->width || nativeWindowBuffer.height!=frame_mjpeg->height){
-            LOGE(TAG)<<"Error window & frame : size / width does not match";
+            MLOGD<<"Error window & frame : size / width does not match";
             return;
         }
         // We need to set the error manager every time else it will crash (I have no idea why )
@@ -85,7 +84,7 @@ public:
             dinfo.out_color_space = JCS_YCbCr;
             BYTES_PER_PIXEL=3;
         }else{
-            LOGE(TAG)<<"Unsupported image format";
+            MLOGD<<"Unsupported image format";
             return;
         }
         dinfo.dct_method = JDCT_IFAST;

@@ -7,8 +7,7 @@
 #include <GLBufferHelper.hpp>
 #include <GLHelper.hpp>
 
-#define TAG "VerticalLadder"
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
+constexpr auto TAG="AVerticalLadder";
 
 AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,const TelemetryReceiver& telemetryReceiver,
                                const bool leftHanded,const int unitsBetween):
@@ -192,7 +191,7 @@ void AVerticalLadder::updateGL() {
     int newMiddleValue;
     if(verticalLadderValue-40<=currentMinimum || verticalLadderValue+40>=currentMaximum){
         newMiddleValue=roundToMultiple((int)verticalLadderValue,PRECALCULATED_RANGE_BOOTH_SIDES);
-        LOGD(TAG)<<"Recalculation needed. height m: "<<(int)verticalLadderValue<<" | new middle value: "<<newMiddleValue;
+        MLOGD<<"Recalculation needed. height m: "<<(int)verticalLadderValue<<" | new middle value: "<<newMiddleValue;
         updateLadderStringsRange(newMiddleValue);
     }
     updateMainString(verticalLadderValue);

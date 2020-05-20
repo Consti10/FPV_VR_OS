@@ -14,27 +14,26 @@
 //#endif
 
 #include <jni.h>
+#ifdef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
 #include <android/surface_texture.h>
-#ifndef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
+#else
+#include <android/surface_texture_jni.h>
+#include <android/surface_texture.h>
 
-//#define TMP __ANDROID_API__
-//#undef __ANDROID_API__
-//#define __ANDROID_API__ 28
+#undef __ANDROID_API__
+#define __ANDROID_API__ 28
+#undef __INTRODUCED_IN
+#define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=21")))
 
 #include <android/surface_texture_jni.h>
 #include <android/surface_texture.h>
 
-//#undef __ANDROID_API__
-//#define __ANDROID_API__ TMP
+#undef __ANDROID_API__
+#undef __INTRODUCED_IN
+#define __ANDROID_API__ 21
+#define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
 
-//#include <stdint.h>
-//#include <sys/cdefs.h>
-//__BEGIN_DECLS
-//int ASurfaceTexture_updateTexImage(ASurfaceTexture* st);
-//void ASurfaceTexture_release(ASurfaceTexture* st);
-//__END_DECLS
-
-#endif
+#endif //FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
 
 
 //Only SuperSync needs this one, else we can call updateTexImage() in java
@@ -50,29 +49,29 @@ public:
     void initUpdateTexImageJAVA(JNIEnv *env, jobject obj,jobject surfaceTexture) {
 #ifdef FPV_VR_USE_JAVA_FOR_SURFACE_TEXTURE_UPDATE
         jclass jcSurfaceTexture = env->FindClass("android/graphics/SurfaceTexture");
-    LOGD("SurfaceTextureStart");
+    MLOGD<<"SurfaceTextureStart";
     if ( jcSurfaceTexture == nullptr ) {
-        LOGD( "FindClass( SurfaceTexture ) failed");
+        MLOGD<< "FindClass( SurfaceTexture ) failed";
     }
     // find the constructor that takes an int
     jmethodID constructor = env->GetMethodID( jcSurfaceTexture, "<init>", "(I)V" );
     if ( constructor == nullptr) {
-        LOGD( "GetMethodID( <init> ) failed" );
+        MLOGD<<"GetMethodID( <init> ) failed";
     }
     localRefSurfaceTexture = env->NewGlobalRef( surfaceTexture);
     if ( localRefSurfaceTexture == nullptr ) {
-        LOGD( "NewGlobalRef() failed" );
+        MLOGD<<"NewGlobalRef() failed";
     }
     // Now that we have a globalRef, we can free the localRef
     env->DeleteLocalRef( surfaceTexture );
     //get the java methods that can be called with a valid surfaceTexture instance and JNI env
     updateTexImageMethodId = env->GetMethodID( jcSurfaceTexture, "updateTexImage", "()V" );
     if ( !updateTexImageMethodId ) {
-        LOGD("couldn't get updateTexImageMethodId" );
+        MLOGD<<"couldn't get updateTexImageMethodId";
     }
     getTimestampMethodId = env->GetMethodID( jcSurfaceTexture, "getTimestamp", "()J" );
     if ( !getTimestampMethodId ) {
-        LOGD( "couldn't get getTimestampMethodId" );
+        MLOGD<<"couldn't get getTimestampMethodId";
     }
 #else
         mSurfaceTexture=ASurfaceTexture_fromSurfaceTexture(env,surfaceTexture);

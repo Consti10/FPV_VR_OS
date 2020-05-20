@@ -21,7 +21,6 @@ class OSDTextObj {
 public:
     static constexpr const int N_BACKGROUND_VERTICES=3*4;
     static constexpr const int N_OUTLINE_VERTICES=4*2;
-    inline static const std::string TAG="OSDTextObj";
     enum BOUNDS{LEFT,MIDDLE,RIGHT};
     const bool enableOutline;
     const bool enableBackground;
@@ -87,7 +86,7 @@ public:
             return;
         }
         if(StylizedString::length(ss)>maxNChars){
-            LOGD(TAG)<<StylizedString::debug(ss);
+            MLOGD<<StylizedString::debug(ss);
             mText={{L"E>n"}};
         }else{
             mText=ss;
@@ -113,7 +112,7 @@ public:
         }
         if(xOffset<0 || xOffset>mPosition.Width){
             xOffset=0;
-            LOGE(TAG)<<"xOff too big/small "<<mText.at(0).asNormalString()<<" xOffset: "<<xOffset;
+            MLOGE<<"xOff too big/small "<<mText.at(0).asNormalString()<<" xOffset: "<<xOffset;
         }
         if(textRecalculationNeeded){
             textBuffer->zeroContent();

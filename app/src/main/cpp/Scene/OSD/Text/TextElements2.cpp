@@ -154,7 +154,7 @@ void TextElements2::setupPosition() {
                                  smallRowHeight);
             }break;
             default:
-                LOGE(TAG)<<"Should not happen "<<ID;
+                MLOGE<<"Should not happen "<<ID;
                 break;
         }
     }

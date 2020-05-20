@@ -159,7 +159,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         ((Activity)activityContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final Snackbar snackbar;
+               final Snackbar snackbar;
                 if(v!=null){
                     snackbar=Snackbar.make(v, message, Snackbar.LENGTH_INDEFINITE);
                     snackbar.setAction("OK", new View.OnClickListener() {

@@ -16,9 +16,9 @@
 #include <GroundRecorderRAW.hpp>
 #include <FileHelper.hpp>
 #include <TimeHelper.hpp>
+//#include <GroundRecorderMP4.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
-
 
 class UVCReceiverDecoder{
 private:
@@ -143,7 +143,7 @@ public:
                         MLOGD<<"Streaming...";
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
-                        //groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GroundRecordingDirectory,"mjpeg"));
+                        groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GroundRecordingDirectory,"mjpg"));
                         return 0;
                     }
                 }

@@ -82,6 +82,7 @@ public class UVCPlayer extends BroadcastReceiver implements LifecycleObserver {
                 if(!usbManager.hasPermission(device)){
                     final PendingIntent permissionIntent = PendingIntent.getBroadcast(parent, 0, new Intent(UVCPlayer.ACTION_USB_PERMISSION), 0);
                     usbManager.requestPermission(device, permissionIntent);
+
                 }else{
                     final UsbDeviceConnection connection=usbManager.openDevice(device);
                     if(connection==null){
