@@ -16,7 +16,7 @@
 #include <GroundRecorderRAW.hpp>
 #include <FileHelper.hpp>
 #include <TimeHelper.hpp>
-//#include <GroundRecorderMP4.hpp>
+#include <GroundRecorderMP4.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 
@@ -42,6 +42,7 @@ private:
     bool processFramePrioritySet=false;
     JavaVM* javaVm;
     std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
+    //std::unique_ptr<GroundRecorderMP4> groundRecorderMP4;
     MJPEGDecodeAndroid mMJPEGDecodeAndroid;
 public:
     UVCReceiverDecoder(JNIEnv* env){
@@ -92,6 +93,9 @@ public:
         if(groundRecorderRAW){
             groundRecorderRAW->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
         }
+        //if(groundRecorderMP4){
+        //    groundRecorderMP4->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
+        //}
     }
     // Connect via android java first (workaround ?!)
     // 0 on success, -1 otherwise
@@ -144,6 +148,7 @@ public:
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
                         groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GroundRecordingDirectory,"mjpg"));
+                        //groundRecorderMP4=std::make_unique<GroundRecorderMP4>(GroundRecordingDirectory);
                         return 0;
                     }
                 }
