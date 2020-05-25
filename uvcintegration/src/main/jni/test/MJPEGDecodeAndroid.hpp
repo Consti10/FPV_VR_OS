@@ -108,8 +108,6 @@ public:
         }
         //
         jpeg_finish_decompress(&dinfo);
-        //
-        const auto after=std::chrono::steady_clock::now();
     }
 };
 

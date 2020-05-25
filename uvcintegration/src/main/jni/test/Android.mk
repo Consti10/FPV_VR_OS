@@ -18,6 +18,7 @@ LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
 LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
 LOCAL_LDLIBS += -lmediandk
+#LOCAL_LDLIBS += -lOpenMAXAL
 #LOCAL_LDLIBS += -ljnigraphics
 
 
@@ -39,6 +40,7 @@ LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
 		UVCReceiverDecoder.cpp \
+		Encoder/SimpleEncoder.cpp \
 		#$(DIR_VideoTelemetryShared)/Helper/ZDummy.cpp \
 		#$(DIR_VideoTelemetryShared)/InputOutput/ZDummy.cpp \
 

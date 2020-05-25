@@ -17,6 +17,7 @@
 #include <FileHelper.hpp>
 #include <TimeHelper.hpp>
 #include <GroundRecorderMP4.hpp>
+#include "Encoder/SimpleEncoder.h"
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 
