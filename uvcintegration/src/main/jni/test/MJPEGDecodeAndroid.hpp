@@ -61,11 +61,8 @@ public:
 
         jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
-        if (dinfo.dc_huff_tbl_ptrs[0] == NULL) {
-            /* This frame is missing the Huffman tables: fill in the standard ones */
-            insert_huff_tables(&dinfo);
-            MLOGD<<"Missing huff tables";
-        }
+
+
         //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components;
         //unsigned int BYTES_PER_PIXEL;
         unsigned int BYTES_PER_PIXEL;
@@ -117,10 +114,7 @@ public:
 
         jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
-        if (dinfo.dc_huff_tbl_ptrs[0] == NULL) {
-            /* This frame is missing the Huffman tables: fill in the standard ones */
-            insert_huff_tables(&dinfo);
-        }
+        
         //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components;
         //unsigned int BYTES_PER_PIXEL;
         dinfo.out_color_space = JCS_YCbCr;
