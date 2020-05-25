@@ -45,6 +45,7 @@ private:
     std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
     //std::unique_ptr<GroundRecorderMP4> groundRecorderMP4;
     MJPEGDecodeAndroid mMJPEGDecodeAndroid;
+    SimpleEncoder simpleEncoder;
 public:
     UVCReceiverDecoder(JNIEnv* env){
         env->GetJavaVM(&javaVm);
@@ -56,9 +57,11 @@ public:
         if(surface==nullptr){
             ANativeWindow_release(aNativeWindow);
             aNativeWindow=nullptr;
+            simpleEncoder.stop();
         }else{
             aNativeWindow=ANativeWindow_fromSurface(env,surface);
             ANativeWindow_setBuffersGeometry(aNativeWindow,VIDEO_STREAM_WIDTH,VIDEO_STREAM_HEIGHT,AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM);
+            simpleEncoder.start();
         }
     }
     // Investigate: Even tough the documentation warns about dropping frames if processing takes too long
@@ -86,7 +89,7 @@ public:
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
-            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg,buffer);
+            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer((const unsigned char*)frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
             ANativeWindow_unlockAndPost(aNativeWindow);
         }else{
             MLOGD<<"Cannot lock window";

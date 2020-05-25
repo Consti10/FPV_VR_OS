@@ -50,20 +50,16 @@ public:
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
     // input uvc_frame_t frame has to be of type MJPEG
-    void DecodeMJPEGtoANativeWindowBuffer(uvc_frame_t* frame_mjpeg,const ANativeWindow_Buffer& nativeWindowBuffer){
+    void DecodeMJPEGtoANativeWindowBuffer(const unsigned char* mpegData,size_t mpegDataSize,const ANativeWindow_Buffer& nativeWindowBuffer){
         MEASURE_FUNCTION_EXECUTION_TIME
         //debugANativeWindowBuffer(nativeWindowBuffer);
-        if(nativeWindowBuffer.width!=frame_mjpeg->width || nativeWindowBuffer.height!=frame_mjpeg->height){
-            MLOGD<<"Error window & frame : size / width does not match";
-            return;
-        }
         // We need to set the error manager every time else it will crash (I have no idea why )
         // https://stackoverflow.com/questions/11613040/why-does-jpeg-decompress-create-crash-without-error-message
         struct error_mgr jerr;
         dinfo.err = jpeg_std_error(&jerr.super);
         jerr.super.error_exit = _error_exit;
 
-        jpeg_mem_src(&dinfo, (const unsigned char*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
+        jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
         if (dinfo.dc_huff_tbl_ptrs[0] == NULL) {
             /* This frame is missing the Huffman tables: fill in the standard ones */

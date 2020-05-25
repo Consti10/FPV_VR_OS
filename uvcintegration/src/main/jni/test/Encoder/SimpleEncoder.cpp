@@ -4,6 +4,7 @@
 
 #include "SimpleEncoder.h"
 #include <AndroidLogger.hpp>
+#include "../MJPEGDecodeAndroid.hpp"
 
 void SimpleEncoder::start() {
     mEncoderThread=new std::thread(&SimpleEncoder::loopEncoder, this);
