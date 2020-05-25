@@ -25,7 +25,7 @@ public class UVCReceiverDecoder {
     private boolean alreadyStreaming=false;
 
     public UVCReceiverDecoder(){
-        nativeInstance=nativeConstruct();
+        nativeInstance=nativeConstruct(getDirectoryToSaveDataTo());
     }
 
     public void startReceiving(final Context context,final UsbDevice device,final UsbDeviceConnection connection){
@@ -49,7 +49,7 @@ public class UVCReceiverDecoder {
             usbfs_str=usbfs_str2.toString();
         }
         //
-        int success=nativeStartReceiving(nativeInstance,device.getVendorId(),device.getProductId(),connection.getFileDescriptor(),busnum,devnum, usbfs_str,getDirectoryToSaveDataTo());
+        int success=nativeStartReceiving(nativeInstance,device.getVendorId(),device.getProductId(),connection.getFileDescriptor(),busnum,devnum, usbfs_str);
         if(success==0){
             alreadyStreaming=true;
         }
@@ -79,10 +79,10 @@ public class UVCReceiverDecoder {
         nativeSetSurface(nativeInstance,surface);
     }
 
-    private static native long nativeConstruct();
+    private static native long nativeConstruct(String GroundRecordingDirectory);
     private static native void nativeDelete(long nativeInstance);
     // returns 0 on success
-    private static native int nativeStartReceiving(long nativeInstance,int venderId, int productId, int fileDescriptor, int busNum, int devAddr, String usbfs,String GroundRecordingDirectory);
+    private static native int nativeStartReceiving(long nativeInstance,int venderId, int productId, int fileDescriptor, int busNum, int devAddr, String usbfs);
     private static native void nativeStopReceiving(long nativeInstance);
     private static native void nativeSetSurface(long nativeInstance,Surface surface);
 

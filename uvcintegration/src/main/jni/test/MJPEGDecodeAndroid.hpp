@@ -64,8 +64,10 @@ public:
         if (dinfo.dc_huff_tbl_ptrs[0] == NULL) {
             /* This frame is missing the Huffman tables: fill in the standard ones */
             insert_huff_tables(&dinfo);
+            MLOGD<<"Missing huff tables";
         }
-        //LOGD(TAG)<<"Input color space is "<<dinfo.jpeg_color_space;
+        //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components;
+        //unsigned int BYTES_PER_PIXEL;
         unsigned int BYTES_PER_PIXEL;
         if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM || nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM){
             dinfo.out_color_space = JCS_EXT_RGBA;
@@ -78,7 +80,7 @@ public:
             BYTES_PER_PIXEL=2;
         }else if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420){
             dinfo.out_color_space = JCS_YCbCr;
-            BYTES_PER_PIXEL=3;
+            BYTES_PER_PIXEL=2;
         }else{
             MLOGD<<"Unsupported image format";
             return;
@@ -87,7 +89,6 @@ public:
         jpeg_start_decompress(&dinfo);
         // libjpeg error ? - output_components is 3 ofr RGB_565 ?
         //CLOGD("dinfo.output_components %d | %d",dinfo.output_components,dinfo.out_color_components);
-
         const unsigned int scanline_len = ((unsigned int)nativeWindowBuffer.stride) * BYTES_PER_PIXEL;
         JSAMPARRAY jsamparray[dinfo.output_height];
         for(int i=0;i<dinfo.output_height;i++){
@@ -102,9 +103,57 @@ public:
             // unfortunately reads only one line at a time CLOGD("Lines read %d",lines_read);
             scanline_count+=lines_read;
         }
-        //
         jpeg_finish_decompress(&dinfo);
     }
+
+    void DecodeMJPEGtoEncoderBuffer(const unsigned char* mpegData,size_t mpegDataSize,void* bits,int stride){
+        MEASURE_FUNCTION_EXECUTION_TIME
+        //debugANativeWindowBuffer(nativeWindowBuffer);
+        // We need to set the error manager every time else it will crash (I have no idea why )
+        // https://stackoverflow.com/questions/11613040/why-does-jpeg-decompress-create-crash-without-error-message
+        struct error_mgr jerr;
+        dinfo.err = jpeg_std_error(&jerr.super);
+        jerr.super.error_exit = _error_exit;
+
+        jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
+        jpeg_read_header(&dinfo, TRUE);
+        if (dinfo.dc_huff_tbl_ptrs[0] == NULL) {
+            /* This frame is missing the Huffman tables: fill in the standard ones */
+            insert_huff_tables(&dinfo);
+        }
+        //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components;
+        //unsigned int BYTES_PER_PIXEL;
+        dinfo.out_color_space = JCS_YCbCr;
+        float BYTES_PER_PIXEL=1.5f;
+        //dinfo.raw_data_out=true;
+        dinfo.dct_method = JDCT_IFAST;
+        jpeg_start_decompress(&dinfo);
+        // libjpeg error ? - output_components is 3 ofr RGB_565 ?
+        //CLOGD("dinfo.output_components %d | %d",dinfo.output_components,dinfo.out_color_components);
+        //dinfo.
+
+        const unsigned int scanline_len = ((unsigned int)stride) * BYTES_PER_PIXEL;
+        JSAMPARRAY jsamparray[dinfo.output_height];
+        for(int i=0;i<dinfo.output_height;i++){
+            JSAMPROW row = (JSAMPROW)(((unsigned char*)bits) + (i*scanline_len));
+            jsamparray[i]=(JSAMPARRAY)row;
+        }
+        unsigned int scanline_count = 0;
+        while (dinfo.output_scanline < dinfo.output_height){
+            // JSAMPROW row = (JSAMPROW)(((unsigned char*)nativeWindowBuffer.bits) + (scanline_count * scanline_len));
+            JSAMPROW row2= (JSAMPROW)jsamparray[scanline_count];
+            auto lines_read=jpeg_read_scanlines(&dinfo,&row2, 8);
+            //JSAMPIMAGE row2= (JSAMPIMAGE)jsamparray[scanline_count];
+            //auto lines_read=jpeg_read_raw_data(dinfo,&row2, 8);
+            // unfortunately reads only one line at a time CLOGD("Lines read %d",lines_read);
+            scanline_count+=lines_read;
+        }
+        //jpeg_read_raw_data()
+        //
+        jpeg_finish_decompress(&dinfo);
+
+    }
+
 };
 
 #endif //UVCCAMERA_MJPEGDECODEANDROID_HPP

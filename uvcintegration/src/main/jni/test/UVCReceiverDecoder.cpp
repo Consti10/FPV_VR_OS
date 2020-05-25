@@ -42,12 +42,14 @@ private:
     int lastUvcFrameSequenceNr=0;
     bool processFramePrioritySet=false;
     JavaVM* javaVm;
+    const std::string GROUND_RECORDING_DIRECTORY;
     std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
     //std::unique_ptr<GroundRecorderMP4> groundRecorderMP4;
     MJPEGDecodeAndroid mMJPEGDecodeAndroid;
     SimpleEncoder simpleEncoder;
 public:
-    UVCReceiverDecoder(JNIEnv* env){
+    UVCReceiverDecoder(JNIEnv* env,std::string GROUND_RECORDING_DIRECTORY2):GROUND_RECORDING_DIRECTORY(std::move(GROUND_RECORDING_DIRECTORY2)),simpleEncoder(GROUND_RECORDING_DIRECTORY){
+        javaVm=nullptr;
         env->GetJavaVM(&javaVm);
     }
     // nullptr: clean up and remove
@@ -86,6 +88,9 @@ public:
             MLOGD<<"No surface";
             return;
         }
+        simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
+
+
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
@@ -105,7 +110,7 @@ public:
     // 0 on success, -1 otherwise
     int startReceiving(int vid, int pid, int fd,
                         int busnum,int devAddr,
-                        const std::string usbfs,const std::string GroundRecordingDirectory){
+                        const std::string usbfs){
         uvc_stream_ctrl_t ctrl;
         uvc_error_t res;
         /* Initialize a UVC service context. Libuvc will set up its own libusb
@@ -151,7 +156,7 @@ public:
                         MLOGD<<"Streaming...";
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
-                        groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GroundRecordingDirectory,"mjpg"));
+                        //groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GROUND_RECORDING_DIRECTORY,"mjpg"));
                         //groundRecorderMP4=std::make_unique<GroundRecorderMP4>(GroundRecordingDirectory);
                         return 0;
                     }
@@ -193,8 +198,8 @@ inline UVCReceiverDecoder *native(jlong ptr) {
 }
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jclass jclass1) {
-    auto* tmp=new UVCReceiverDecoder(env);
+(JNIEnv *env, jclass jclass1,jstring groundRecordingDir) {
+    auto* tmp=new UVCReceiverDecoder(env,NDKArrayHelper::DynamicSizeString(env,groundRecordingDir));
     return jptr(tmp);
 }
 JNI_METHOD(void, nativeDelete)
@@ -206,11 +211,10 @@ JNI_METHOD(jint, nativeStartReceiving)
 (JNIEnv *env, jclass jclass1,jlong nativeInstance,
  jint vid, jint pid, jint fd,
  jint busnum,jint devAddr,
- jstring usbfs_str,jstring GroundRecordingDirectory
+ jstring usbfs_str
 ) {
     const std::string usbfs=NDKArrayHelper::DynamicSizeString(env,usbfs_str);
-    const std::string GroundRecordingDirectory2=NDKArrayHelper::DynamicSizeString(env,GroundRecordingDirectory);
-    return native(nativeInstance)->startReceiving(vid,pid,fd,busnum,devAddr,usbfs,GroundRecordingDirectory2);
+    return native(nativeInstance)->startReceiving(vid,pid,fd,busnum,devAddr,usbfs);
 }
 JNI_METHOD(void, nativeStopReceiving)
 (JNIEnv *env, jclass jclass1, jlong p) {
