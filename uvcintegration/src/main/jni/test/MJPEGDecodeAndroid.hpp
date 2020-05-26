@@ -146,7 +146,7 @@ public:
         //std::vector<uint8_t> decodedData(640*480*16/8);
         //uint8_t* data=decodedData.data();
 
-        
+
         jpeg_finish_decompress(&dinfo);
         //*buffer = out_buf;
 
@@ -162,52 +162,26 @@ public:
         int v_samp_factor[3];
         unsigned char *base[3];
         unsigned char *last[3];
-        int stride[3];
 
         yuv[0] = y;
         yuv[1] = u;
         yuv[2] = v;
 
+        for(int i=0;i<3;i++){
+            MLOGD<<i<<"h samp factor"<<dinfo.comp_info[i].h_samp_factor<<"v samp factor "<<dinfo.comp_info[i].v_samp_factor;
+        }
         for (int i = 0; i < 3; i++){
             v_samp_factor[i] = dinfo.comp_info[i].v_samp_factor;
-            stride[i] = out_buf->planes[i].fmt_width;
             base[i] = (unsigned char*)out_buf->planes[i].data;
-            last[i] = base[i] + (stride[i] * (out_buf->planes[i].fmt_height - 1));
+            last[i] = base[i] + (out_buf->planes[i].fmt_width * (out_buf->planes[i].fmt_height - 1));
         }
 
         for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
             for (int j = 0; j < (v_samp_factor[0] * DCTSIZE); ++j){
-                /* Y */
-                yuv[0][j] = base[0] + (i + j) * stride[0];
 
-                /* U,V */
-                // pixel_format == V4L2_PIX_FMT_YUV420M
-                if (false)
-                {
-                    /* Y */
-                    yuv[0][j] = base[0] + (i + j) * stride[0];
-                    if ((yuv[0][j] > last[0]))
-                        yuv[0][j] = last[0];
-                    /* U */
-                    if (v_samp_factor[1] == v_samp_factor[0]) {
-                        yuv[1][j] = base[1] + ((i + j) / 2) * stride[1];
-                    } else if (j < (v_samp_factor[1] * DCTSIZE)) {
-                        yuv[1][j] = base[1] + ((i / 2) + j) * stride[1];
-                    }
-                    if ((yuv[1][j] > last[1]))
-                        yuv[1][j] = last[1];
-                    /* V */
-                    if (v_samp_factor[2] == v_samp_factor[0]) {
-                        yuv[2][j] = base[2] + ((i + j) / 2) * stride[2];
-                    } else if (j < (v_samp_factor[2] * DCTSIZE)) {
-                        yuv[2][j] = base[2] + ((i / 2) + j) * stride[2];
-                    }
-                    if ((yuv[2][j] > last[2]))
-                        yuv[2][j] = last[2];
-                }else{
-                    yuv[1][j] = base[1] + (i + j) * stride[1];
-                    yuv[2][j] = base[2] + (i + j) * stride[2];
-                }
+                yuv[0][j] = base[0] + (i + j) * out_buf->planes[0].fmt_width;
+                yuv[1][j] = base[1] + (i + j) * out_buf->planes[1].fmt_width;
+                yuv[2][j] = base[2] + (i + j) * out_buf->planes[2].fmt_width;
             }
 
             int lines = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) yuv, v_samp_factor[0] * DCTSIZE);
