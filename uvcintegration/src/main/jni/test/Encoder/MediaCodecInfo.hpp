@@ -46,15 +46,21 @@ namespace YUVFrameGenerator{
                 return true;
         }
     }
-    constexpr uint8_t TEST_Y = 120;                  // YUV values for colored rect
-    constexpr uint8_t TEST_U = 160;
-    constexpr uint8_t TEST_V = 200;
+    // YUV values for purple
+    constexpr uint8_t PURPLE_Y = 120;
+    constexpr uint8_t PURPLE_U = 160;
+    constexpr uint8_t PURPLE_V = 200;
 
     // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex
     void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
         // Full width/height for luma ( Y )
         constexpr size_t WIDTH=640;
         constexpr size_t HEIGHT=480;
+        constexpr size_t FRAME_BUFFER_SIZE_B= WIDTH * HEIGHT * 12 / 8;
+        if(frameDataSize < FRAME_BUFFER_SIZE_B){
+            MLOGE<<"Frame buffer size not suefficcient";
+            return;
+        }
         // Half width / height for chroma (U,V btw Cb,Cr)
         constexpr size_t HALF_WIDTH= WIDTH / 2;
         constexpr size_t HALF_HEIGHT= HEIGHT / 2;
@@ -67,40 +73,38 @@ namespace YUVFrameGenerator{
         // CbCrPlane[y][x][1] == Cr (V) value for pixel x,y
         auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&frameData[WIDTH * HEIGHT]));
         // Check - YUV420 has 12 bit per pixel (1.5 bytes)
-        static_assert(sizeof(YPlane)+sizeof(CbCrPlane)==WIDTH*HEIGHT*12 / 8);
+        static_assert(sizeof(YPlane)+sizeof(CbCrPlane) == FRAME_BUFFER_SIZE_B);
 
         boolean semiPlanar = isSemiPlanarYUV(colorFormat);
         // Set to zero.  In YUV this is a dull green.
-        std::memset(frameData,0,frameDataSize);
+        std::memset(frameData, 0, FRAME_BUFFER_SIZE_B);
 
-        constexpr int RECT_W=WIDTH/4;
-        constexpr int RECT_H=HEIGHT/2;
+        constexpr int COLORED_RECT_W= WIDTH / 4;
+        constexpr int COLORED_RECT_H= HEIGHT / 2;
 
         //frameIndex %= 8;
         frameIndex = (frameIndex / 8) % 8;    // use this instead for debug -- easier to see
         int startX;
-        int startY;
+        const int startY=frameIndex<4 ? 0 : HEIGHT / 2;
         if (frameIndex < 4) {
-            startX = frameIndex * RECT_W;
-            startY = 0;
+            startX = frameIndex * COLORED_RECT_W;
         } else {
-            startX = (7 - frameIndex) * RECT_W;
-            startY = HEIGHT / 2;
+            startX = frameIndex % 4 * COLORED_RECT_W;
         }
 
-        for (int x = startX; x <startX + RECT_W;x++) {
-            for (int y = startY; y < startY + RECT_H; y++) {
+        for (int x = startX; x < startX + COLORED_RECT_W; x++) {
+            for (int y = startY; y < startY + COLORED_RECT_H; y++) {
                 if (semiPlanar) {
                     // full-size Y, followed by UV pairs at half resolution
                     // e.g. Nexus 4 OMX.qcom.video.encoder.avc COLOR_FormatYUV420SemiPlanar
                     // e.g. Galaxy Nexus OMX.TI.DUCATI1.VIDEO.H264E
                     //        OMX_TI_COLOR_FormatYUV420PackedSemiPlanar
                     //frameData[y * WIDTH + x] = (uint8_t) TEST_Y;
-                    YPlane[y][x]=TEST_Y;
+                    YPlane[y][x]=PURPLE_Y;
                     const bool even=(x % 2) == 0 && (y % 2) == 0;
                     if (even) {
-                        CbCrPlane[y/2][x/2][0]=TEST_U;
-                        CbCrPlane[y/2][x/2][1]=TEST_V;
+                        CbCrPlane[y/2][x/2][0]=PURPLE_U;
+                        CbCrPlane[y/2][x/2][1]=PURPLE_V;
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x] = TEST_U;
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x + 1] = TEST_V;
                     }
@@ -108,18 +112,17 @@ namespace YUVFrameGenerator{
                     // full-size Y, followed by quarter-size U and quarter-size V
                     // e.g. Nexus 10 OMX.Exynos.AVC.Encoder COLOR_FormatYUV420Planar
                     // e.g. Nexus 7 OMX.Nvidia.h264.encoder COLOR_FormatYUV420Planar
-                    frameData[y * WIDTH + x] = TEST_Y;
+                    // NOT TESTED !
+                    frameData[y * WIDTH + x] = PURPLE_Y;
                     if ((x & 0x01) == 0 && (y & 0x01) == 0) {
-                        frameData[WIDTH * HEIGHT + (y / 2) * HALF_WIDTH + (x / 2)] = TEST_U;
+                        frameData[WIDTH * HEIGHT + (y / 2) * HALF_WIDTH + (x / 2)] = PURPLE_U;
                         frameData[WIDTH * HEIGHT + HALF_WIDTH * (HEIGHT / 2) +
-                                  (y / 2) * HALF_WIDTH + (x / 2)] = TEST_V;
+                                  (y / 2) * HALF_WIDTH + (x / 2)] = PURPLE_V;
                     }
                 }
             }
         }
     }
-
-
 
 
 }
