@@ -77,8 +77,8 @@ namespace YUVFrameGenerator{
             startX = (7 - frameIndex) * RECT_W;
             startY = HEIGHT / 2;
         }
-        for (int y = startY + RECT_H - 1; y >= startY; --y) {
-            for (int x = startX + RECT_W - 1; x >= startX; --x) {
+        for (int y = startY;y <startY+ RECT_H;y++) {
+            for (int x = startX; x <startX + RECT_W;x++) {
                 if (semiPlanar) {
                     // full-size Y, followed by UV pairs at half resolution
                     // e.g. Nexus 4 OMX.qcom.video.encoder.avc COLOR_FormatYUV420SemiPlanar
