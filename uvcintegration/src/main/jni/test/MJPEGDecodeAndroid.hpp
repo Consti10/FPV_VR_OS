@@ -61,8 +61,6 @@ public:
 
         jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
-
-
         //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components;
         //unsigned int BYTES_PER_PIXEL;
         unsigned int BYTES_PER_PIXEL;
@@ -114,14 +112,39 @@ public:
 
         jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
-        
-        //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components;
+
+        MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components<<" data precision "<<dinfo.data_precision;
+        MLOGD<<"h samp factor"<<dinfo.comp_info[0].h_samp_factor<<"v samp factor "<<dinfo.comp_info[0].v_samp_factor;
         //unsigned int BYTES_PER_PIXEL;
         dinfo.out_color_space = JCS_YCbCr;
         float BYTES_PER_PIXEL=1.5f;
         //dinfo.raw_data_out=true;
         dinfo.dct_method = JDCT_IFAST;
         jpeg_start_decompress(&dinfo);
+        dinfo.raw_data_out=true;
+
+        if (dinfo.comp_info[0].h_samp_factor == 2)
+        {
+            if (dinfo.comp_info[0].v_samp_factor == 2)
+            {
+                MLOGD<<"V4L2_PIX_FMT_YUV420M";
+            }
+            else
+            {
+                MLOGD<<"V4L2_PIX_FMT_YUV422M";
+            }
+        }
+        else
+        {
+            if (dinfo.comp_info[0].v_samp_factor == 1)
+            {
+                MLOGD<<"V4L2_PIX_FMT_YUV444M";
+            }
+            else
+            {
+                MLOGD<<" V4L2_PIX_FMT_YUV422RM";
+            }
+        }
         // libjpeg error ? - output_components is 3 ofr RGB_565 ?
         //CLOGD("dinfo.output_components %d | %d",dinfo.output_components,dinfo.out_color_components);
         //dinfo.
@@ -138,14 +161,136 @@ public:
             JSAMPROW row2= (JSAMPROW)jsamparray[scanline_count];
             auto lines_read=jpeg_read_scanlines(&dinfo,&row2, 8);
             //JSAMPIMAGE row2= (JSAMPIMAGE)jsamparray[scanline_count];
-            //auto lines_read=jpeg_read_raw_data(dinfo,&row2, 8);
+            //auto lines_read=jpeg_read_raw_data(&dinfo,&row2, 8);
             // unfortunately reads only one line at a time CLOGD("Lines read %d",lines_read);
+             //jpeg_read_raw_data()
             scanline_count+=lines_read;
         }
         //jpeg_read_raw_data()
         //
         jpeg_finish_decompress(&dinfo);
 
+    }
+
+    class NvBufferPlane{
+    public:
+        unsigned char data[640*480];
+        size_t fmt_width=640;
+        size_t fmt_height=480;
+    };
+    struct NvBuffer{
+        NvBufferPlane planes[3];
+    };
+
+    void decodeToYUVXXXBuffer(NvBuffer& out_buff, unsigned char * in_buf,unsigned long in_buf_size){
+        MEASURE_FUNCTION_EXECUTION_TIME
+        // Error manager stuff
+        struct error_mgr jerr;
+        dinfo.err = jpeg_std_error(&jerr.super);
+        jerr.super.error_exit = _error_exit;
+        // end error manager
+        uint32_t pixel_format = 0;
+
+        dinfo.out_color_space = JCS_YCbCr;
+        jpeg_mem_src(&dinfo, in_buf, in_buf_size);
+        dinfo.out_color_space = JCS_YCbCr;
+
+        jpeg_read_header(&dinfo, TRUE);
+        dinfo.out_color_space = JCS_YCbCr;
+        if(dinfo.jpeg_color_space!=dinfo.out_color_space){
+            MLOGE<<"Wrong usage";
+        }
+
+        //out_buf = new NvBuffer(pixel_format, cinfo.image_width,
+        //                       cinfo.image_height, 0);
+        //out_buf->allocateMemory();
+
+        dinfo.do_fancy_upsampling = FALSE;
+        dinfo.do_block_smoothing = FALSE;
+        dinfo.dct_method = JDCT_FASTEST;
+        dinfo.raw_data_out = TRUE;
+        jpeg_start_decompress (&dinfo);
+
+        /* For some widths jpeglib requires more horizontal padding than I420
+         * provides. In those cases we need to decode into separate buffers and then
+         * copy over the data into our final picture buffer, otherwise jpeglib might
+         * write over the end of a line into the beginning of the next line,
+         * resulting in blocky artifacts on the left side of the picture. */
+        if (dinfo.output_width % (dinfo.max_h_samp_factor * DCTSIZE)){
+            MLOGD<<"decodeIndirect";
+            //decodeIndirect(out_buf, pixel_format);
+        }else{
+            MLOGD<<"decodeDirect";
+            decodeDirect(&out_buff);
+        }
+
+        jpeg_finish_decompress(&dinfo);
+        //*buffer = out_buf;
+
+        MLOGD<<"Succesfully decoded Buffer ";
+    }
+
+    void decodeDirect(NvBuffer *out_buf)
+    {
+        unsigned char **line[3];
+        unsigned char *y[4 * DCTSIZE] = { NULL, };
+        unsigned char *u[4 * DCTSIZE] = { NULL, };
+        unsigned char *v[4 * DCTSIZE] = { NULL, };
+        int v_samp_factor[3];
+        unsigned char *base[3], *last[3];
+        int stride[3];
+
+        line[0] = y;
+        line[1] = u;
+        line[2] = v;
+
+        for (int i = 0; i < 3; i++){
+            v_samp_factor[i] = dinfo.comp_info[i].v_samp_factor;
+            stride[i] = out_buf->planes[i].fmt_width;
+            base[i] = out_buf->planes[i].data;
+            last[i] = base[i] + (stride[i] * (out_buf->planes[i].fmt_height - 1));
+        }
+
+        for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
+            for (int j = 0; j < (v_samp_factor[0] * DCTSIZE); ++j){
+                /* Y */
+                line[0][j] = base[0] + (i + j) * stride[0];
+
+                /* U,V */
+                // pixel_format == V4L2_PIX_FMT_YUV420M
+                if (false)
+                {
+                    /* Y */
+                    line[0][j] = base[0] + (i + j) * stride[0];
+                    if ((line[0][j] > last[0]))
+                        line[0][j] = last[0];
+                    /* U */
+                    if (v_samp_factor[1] == v_samp_factor[0]) {
+                        line[1][j] = base[1] + ((i + j) / 2) * stride[1];
+                    } else if (j < (v_samp_factor[1] * DCTSIZE)) {
+                        line[1][j] = base[1] + ((i / 2) + j) * stride[1];
+                    }
+                    if ((line[1][j] > last[1]))
+                        line[1][j] = last[1];
+                    /* V */
+                    if (v_samp_factor[2] == v_samp_factor[0]) {
+                        line[2][j] = base[2] + ((i + j) / 2) * stride[2];
+                    } else if (j < (v_samp_factor[2] * DCTSIZE)) {
+                        line[2][j] = base[2] + ((i / 2) + j) * stride[2];
+                    }
+                    if ((line[2][j] > last[2]))
+                        line[2][j] = last[2];
+                }else{
+                    line[1][j] = base[1] + (i + j) * stride[1];
+                    line[2][j] = base[2] + (i + j) * stride[2];
+                }
+            }
+
+            int lines = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) line, v_samp_factor[0] * DCTSIZE);
+            if ((!lines)){
+                MLOGD<<"jpeg_read_raw_data() returned 0";
+            }
+        }
     }
 
 };

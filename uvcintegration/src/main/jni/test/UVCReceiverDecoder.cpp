@@ -68,7 +68,7 @@ public:
     }
     // Investigate: Even tough the documentation warns about dropping frames if processing takes too long
     // I cannot experience dropped frames - ?
-    // Using less threads (no extra thread for decoding) reduces throughput but also latency
+    // Using less threads (no extra thread for decoding) reduces latency but also negatively affects troughput
     void processFrame(uvc_frame_t* frame_mjpeg){
         MEASURE_FUNCTION_EXECUTION_TIME
         if(!processFramePrioritySet){
@@ -89,7 +89,7 @@ public:
             return;
         }
         simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
-
+        //mMJPEGDecodeAndroid.decodeToYUVXXXBuffer((uint8_t*)frame_mjpeg->data,frame_mjpeg->actual_bytes);
 
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
@@ -101,6 +101,8 @@ public:
         }
         if(groundRecorderRAW){
             groundRecorderRAW->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
+            groundRecorderRAW.reset();
+            groundRecorderRAW=nullptr;
         }
         //if(groundRecorderMP4){
         //    groundRecorderMP4->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
@@ -156,7 +158,7 @@ public:
                         MLOGD<<"Streaming...";
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
-                        //groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GROUND_RECORDING_DIRECTORY,"mjpg"));
+                        //groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GROUND_RECORDING_DIRECTORY,"jpg"));
                         //groundRecorderMP4=std::make_unique<GroundRecorderMP4>(GroundRecordingDirectory);
                         return 0;
                     }

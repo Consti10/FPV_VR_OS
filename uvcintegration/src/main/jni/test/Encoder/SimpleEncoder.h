@@ -29,7 +29,6 @@ private:
     MJPEGDecodeAndroid mjpegDecodeAndroid;
 public:
     SimpleEncoder(const std::string GROUND_RECORDING_DIRECTORY1):GROUND_RECORDING_DIRECTORY(GROUND_RECORDING_DIRECTORY1){
-
     }
     void start();
     void addBufferData(const uint8_t* data,const size_t data_len);

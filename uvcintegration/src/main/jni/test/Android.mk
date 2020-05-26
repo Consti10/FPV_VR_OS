@@ -18,7 +18,7 @@ LOCAL_CFLAGS += -O3 -fstrict-aliasing -fprefetch-loop-arrays
 LOCAL_LDLIBS += -llog
 LOCAL_LDLIBS += -landroid
 LOCAL_LDLIBS += -lmediandk
-#LOCAL_LDLIBS += -lOpenMAXAL
+LOCAL_LDLIBS += -lOpenMAXAL
 #LOCAL_LDLIBS += -ljnigraphics
 
 
