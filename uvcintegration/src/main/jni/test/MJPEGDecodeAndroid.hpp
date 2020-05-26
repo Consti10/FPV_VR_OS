@@ -232,17 +232,18 @@ public:
 
     void decodeDirect(NvBuffer *out_buf)
     {
-        unsigned char **line[3];
+        unsigned char **yuv[3];
         unsigned char *y[4 * DCTSIZE] = { NULL, };
         unsigned char *u[4 * DCTSIZE] = { NULL, };
         unsigned char *v[4 * DCTSIZE] = { NULL, };
         int v_samp_factor[3];
-        unsigned char *base[3], *last[3];
+        unsigned char *base[3];
+        unsigned char *last[3];
         int stride[3];
 
-        line[0] = y;
-        line[1] = u;
-        line[2] = v;
+        yuv[0] = y;
+        yuv[1] = u;
+        yuv[2] = v;
 
         for (int i = 0; i < 3; i++){
             v_samp_factor[i] = dinfo.comp_info[i].v_samp_factor;
@@ -254,39 +255,39 @@ public:
         for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
             for (int j = 0; j < (v_samp_factor[0] * DCTSIZE); ++j){
                 /* Y */
-                line[0][j] = base[0] + (i + j) * stride[0];
+                yuv[0][j] = base[0] + (i + j) * stride[0];
 
                 /* U,V */
                 // pixel_format == V4L2_PIX_FMT_YUV420M
                 if (false)
                 {
                     /* Y */
-                    line[0][j] = base[0] + (i + j) * stride[0];
-                    if ((line[0][j] > last[0]))
-                        line[0][j] = last[0];
+                    yuv[0][j] = base[0] + (i + j) * stride[0];
+                    if ((yuv[0][j] > last[0]))
+                        yuv[0][j] = last[0];
                     /* U */
                     if (v_samp_factor[1] == v_samp_factor[0]) {
-                        line[1][j] = base[1] + ((i + j) / 2) * stride[1];
+                        yuv[1][j] = base[1] + ((i + j) / 2) * stride[1];
                     } else if (j < (v_samp_factor[1] * DCTSIZE)) {
-                        line[1][j] = base[1] + ((i / 2) + j) * stride[1];
+                        yuv[1][j] = base[1] + ((i / 2) + j) * stride[1];
                     }
-                    if ((line[1][j] > last[1]))
-                        line[1][j] = last[1];
+                    if ((yuv[1][j] > last[1]))
+                        yuv[1][j] = last[1];
                     /* V */
                     if (v_samp_factor[2] == v_samp_factor[0]) {
-                        line[2][j] = base[2] + ((i + j) / 2) * stride[2];
+                        yuv[2][j] = base[2] + ((i + j) / 2) * stride[2];
                     } else if (j < (v_samp_factor[2] * DCTSIZE)) {
-                        line[2][j] = base[2] + ((i / 2) + j) * stride[2];
+                        yuv[2][j] = base[2] + ((i / 2) + j) * stride[2];
                     }
-                    if ((line[2][j] > last[2]))
-                        line[2][j] = last[2];
+                    if ((yuv[2][j] > last[2]))
+                        yuv[2][j] = last[2];
                 }else{
-                    line[1][j] = base[1] + (i + j) * stride[1];
-                    line[2][j] = base[2] + (i + j) * stride[2];
+                    yuv[1][j] = base[1] + (i + j) * stride[1];
+                    yuv[2][j] = base[2] + (i + j) * stride[2];
                 }
             }
 
-            int lines = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) line, v_samp_factor[0] * DCTSIZE);
+            int lines = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) yuv, v_samp_factor[0] * DCTSIZE);
             if ((!lines)){
                 MLOGD<<"jpeg_read_raw_data() returned 0";
             }
