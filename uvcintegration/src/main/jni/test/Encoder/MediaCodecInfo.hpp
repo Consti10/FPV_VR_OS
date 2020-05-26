@@ -52,13 +52,23 @@ namespace YUVFrameGenerator{
 
     // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex
     void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
+        // Full width/height for luma ( Y )
         constexpr size_t WIDTH=640;
         constexpr size_t HEIGHT=480;
+        // Half width / height for chroma (U,V btw Cb,Cr)
+        constexpr size_t HALF_WIDTH= WIDTH / 2;
+        constexpr size_t HALF_HEIGHT= HEIGHT / 2;
 
-        // The Y plane has full resolution
-        uint8_t (&YPlane)[WIDTH][HEIGHT] = *static_cast<uint8_t (*)[WIDTH][HEIGHT]>(static_cast<void*>(frameData));
+        // For some reason HEIGHT comes before WIDTH here ?!
+        // The Y plane has full resolution.
+        auto& YPlane = *static_cast<uint8_t (*)[HEIGHT][WIDTH]>(static_cast<void*>(frameData));
+        // The CbCrPlane only has half resolution in both x and y direction ( 4:2:0 )
+        // CbCrPlane[y][x][0] == Cb (U) value for pixel x,y and
+        // CbCrPlane[y][x][1] == Cr (V) value for pixel x,y
+        auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&frameData[WIDTH * HEIGHT]));
+        // Check - YUV420 has 12 bit per pixel (1.5 bytes)
+        static_assert(sizeof(YPlane)+sizeof(CbCrPlane)==WIDTH*HEIGHT*12 / 8);
 
-        const int HALF_WIDTH = WIDTH / 2;
         boolean semiPlanar = isSemiPlanarYUV(colorFormat);
         // Set to zero.  In YUV this is a dull green.
         std::memset(frameData,0,frameDataSize);
@@ -85,12 +95,14 @@ namespace YUVFrameGenerator{
                     // e.g. Nexus 4 OMX.qcom.video.encoder.avc COLOR_FormatYUV420SemiPlanar
                     // e.g. Galaxy Nexus OMX.TI.DUCATI1.VIDEO.H264E
                     //        OMX_TI_COLOR_FormatYUV420PackedSemiPlanar
-                    frameData[y * WIDTH + x] = (uint8_t) TEST_Y;
-                    //YPlane[x][y]=TEST_Y;
-
-                    if ((x & 0x01) == 0 && (y & 0x01) == 0) {
-                        frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x] = TEST_U;
-                        frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x + 1] = TEST_V;
+                    //frameData[y * WIDTH + x] = (uint8_t) TEST_Y;
+                    YPlane[y][x]=TEST_Y;
+                    const bool even=(x % 2) == 0 && (y % 2) == 0;
+                    if (even) {
+                        CbCrPlane[y/2][x/2][0]=TEST_U;
+                        CbCrPlane[y/2][x/2][1]=TEST_V;
+                        //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x] = TEST_U;
+                        //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x + 1] = TEST_V;
                     }
                 } else {
                     // full-size Y, followed by quarter-size U and quarter-size V
@@ -108,44 +120,7 @@ namespace YUVFrameGenerator{
     }
 
 
-    // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex
-    void generateFrame3(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
-        // Set to zero.  In YUV this is a dull green.
-        std::memset(frameData,0,frameDataSize);
 
-        // Full width/height for luma
-        constexpr size_t WIDTH=640;
-        constexpr size_t HEIGHT=480;
-        // Half width / height for chroma
-        constexpr size_t H_WIDTH= WIDTH / 2;
-        constexpr size_t H_HEIGHT= HEIGHT / 2;
-
-
-        // The Y plane has full resolution
-        uint8_t (&YPlane)[WIDTH][HEIGHT] = *static_cast<uint8_t (*)[WIDTH][HEIGHT]>(static_cast<void*>(frameData));
-        // The CbCrPlane only has half resolution in both x and y direction ( 4:2:0 )
-        // CbCrPlane[x][y][0] == Cb (U) value for pixel x,y and
-        // CbCrPlane[x][y][1] == Cr (V) value for pixel x,y
-        uint8_t (&CbCrPlane)[H_WIDTH][H_HEIGHT][2] = *static_cast<uint8_t(*)[H_WIDTH][H_HEIGHT][2]>(static_cast<void*>(&frameData[WIDTH*HEIGHT]));
-        // Check - YUV420 has 12 bit per pixel (1.5 bytes)
-        static_assert(sizeof(YPlane)+sizeof(CbCrPlane)==WIDTH*HEIGHT*12 / 8);
-        for(int w=0;w<WIDTH;w++){
-            for(int h=0;h<HEIGHT;h++){
-                if(w< 120 && h<120){
-                    YPlane[w][h]=TEST_Y;
-                }
-            }
-        }
-        for(int w=0;w<H_WIDTH;w++){
-            for(int h=0;h<H_HEIGHT;h++){
-                if(w< 120/2 && h<120/2){
-                    CbCrPlane[w][h][0]=TEST_U;
-                    CbCrPlane[w][h][0]=TEST_V;
-                }
-            }
-        }
-
-    }
 
 }
 #endif //FPV_VR_OS_MEDIACODECINFO_HPP
