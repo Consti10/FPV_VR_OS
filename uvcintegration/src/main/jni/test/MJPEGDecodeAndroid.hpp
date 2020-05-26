@@ -49,7 +49,6 @@ public:
     }
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
-    // input uvc_frame_t frame has to be of type MJPEG
     void DecodeMJPEGtoANativeWindowBuffer(const unsigned char* mpegData,size_t mpegDataSize,const ANativeWindow_Buffer& nativeWindowBuffer){
         MEASURE_FUNCTION_EXECUTION_TIME
         //debugANativeWindowBuffer(nativeWindowBuffer);
@@ -102,7 +101,7 @@ public:
         }
         jpeg_finish_decompress(&dinfo);
     }
-    
+
     class NvBufferPlane{
     public:
         unsigned char data[640*480];

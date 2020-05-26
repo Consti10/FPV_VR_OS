@@ -80,7 +80,7 @@ void SimpleEncoder::loopEncoder() {
         }
         // Get input buffer if possible
         {
-            std::lock_guard<std::mutex> lock(inputBufferDataMutex);
+            /*std::lock_guard<std::mutex> lock(inputBufferDataMutex);
             if(!inputBufferData.empty()){
                 const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
                 if(index>0){
@@ -90,6 +90,13 @@ void SimpleEncoder::loopEncoder() {
                     //mjpegDecodeAndroid.DecodeMJPEGtoEncoderBuffer(inputBufferData.data(),inputBufferData.size(),buf,640);
                     MJPEGDecodeAndroid::NvBuffer out_buff;
 
+                    constexpr size_t I=1,J=1,K=1;
+                    // 4:2:0 means full Y resolution and half Cb and half Cr resolution
+                    // Since android format is SemiPlanar Cb and Cr are packed together into the same plane
+
+                    uint8_t (&arr3d)[I][J][K] = *static_cast<uint8_t(*)[I][J][K]>(static_cast<void*>(buf));
+
+
                     mjpegDecodeAndroid.decodeToYUVXXXBuffer(out_buff,inputBufferData.data(),inputBufferData.size());
                     memcpy(buf,out_buff.planes[0].data,640*480);
                     const size_t chromaDataOffset=640*480;
@@ -97,10 +104,15 @@ void SimpleEncoder::loopEncoder() {
                     const auto pCb=out_buff.planes[1].data;
                     const auto pCr=out_buff.planes[2].data;
                     size_t offset=0;
+                    // 4:2:2
+                    // width==horizontal== half resolution
+                    // height=vertical==full resolution
                     for(int w=0;w<WIDTH/2;w++){
+                        const int wCb=w;
                         for(int h=0;h<HEIGHT/2;h++){
+                            const int hCr=h*2;
                             uint8_t u=out_buff.planes[1].data[w];
-                            uint8_t v=out_buff.planes[2].data[h*2];
+                            uint8_t v=out_buff.planes[2].data[h];
                             buf[640*480+offset]=u;
                             offset++;
                             buf[640*480+offset]=v;
@@ -114,8 +126,8 @@ void SimpleEncoder::loopEncoder() {
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                     frameTimeUs+=8*1000;
                 }
-            }
-            /*const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
+            }*/
+            const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
                 size_t inputBufferSize;
                 void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
@@ -124,8 +136,8 @@ void SimpleEncoder::loopEncoder() {
                 frameIndex++;
 
                 AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
-                frameTimeUs+=16*1000;
-            }*/
+                frameTimeUs+=8*1000;
+            }
         }
         {
             AMediaCodecBufferInfo info;
