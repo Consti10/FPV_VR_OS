@@ -106,10 +106,12 @@ public:
     public:
         static constexpr size_t fmt_width=640;
         static constexpr size_t fmt_height=480;
-        unsigned char data[fmt_width][fmt_height];
+        uint8_t data[fmt_width][fmt_height];
     };
-    struct NvBuffer{
-        NvBufferPlane planes[3];
+
+    class NvBuffer{
+    public:
+       NvBufferPlane planes[3];
     };
 
     void decodeToYUVXXXBuffer(NvBuffer& out_buff, unsigned char * in_buf,unsigned long in_buf_size){

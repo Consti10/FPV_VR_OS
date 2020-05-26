@@ -99,8 +99,8 @@ void SimpleEncoder::loopEncoder() {
                     for(int i=0;i<WIDTH/2;i++){
                         for(int j=0;j<HEIGHT/2;j++){
                             auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&buf[WIDTH * HEIGHT]));
-                            CbCrPlane[j][i][0]=out_buff.planes[1].data[i][j];
-                            CbCrPlane[j][i][1]=out_buff.planes[2].data[i][j];
+                            //CbCrPlane[j][i][0]=out_buff.planes[1].data[i][j];
+                            //CbCrPlane[j][i][1]=out_buff.planes[2].data[i][j];
                         }
                     }
 
