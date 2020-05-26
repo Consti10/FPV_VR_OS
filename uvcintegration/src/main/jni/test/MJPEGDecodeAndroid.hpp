@@ -159,8 +159,7 @@ public:
         MLOGD<<"Succesfully decoded Buffer ";
     }
 
-    void decodeDirect(NvBuffer *out_buf)
-    {
+    void decodeDirect(NvBuffer *out_buf){
         unsigned char **yuv[3];
         unsigned char *y[4 * DCTSIZE] = { NULL, };
         unsigned char *u[4 * DCTSIZE] = { NULL, };
@@ -179,6 +178,7 @@ public:
         }
 
         for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
+
             for (int j = 0; j < (v_samp_factor[0] * DCTSIZE); ++j){
 
                 yuv[0][j] = (unsigned char*)out_buf->planes[0].data + (i + j) * out_buf->planes[0].fmt_width;
