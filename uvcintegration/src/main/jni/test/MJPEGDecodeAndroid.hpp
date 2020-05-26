@@ -61,7 +61,9 @@ public:
 
         jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
-        //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components;
+        //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components<<" data precision "<<dinfo.data_precision;
+        //MLOGD<<"h samp factor"<<dinfo.comp_info[0].h_samp_factor<<"v samp factor "<<dinfo.comp_info[0].v_samp_factor;
+
         //unsigned int BYTES_PER_PIXEL;
         unsigned int BYTES_PER_PIXEL;
         if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM || nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM){
@@ -100,78 +102,7 @@ public:
         }
         jpeg_finish_decompress(&dinfo);
     }
-
-    void DecodeMJPEGtoEncoderBuffer(const unsigned char* mpegData,size_t mpegDataSize,void* bits,int stride){
-        MEASURE_FUNCTION_EXECUTION_TIME
-        //debugANativeWindowBuffer(nativeWindowBuffer);
-        // We need to set the error manager every time else it will crash (I have no idea why )
-        // https://stackoverflow.com/questions/11613040/why-does-jpeg-decompress-create-crash-without-error-message
-        struct error_mgr jerr;
-        dinfo.err = jpeg_std_error(&jerr.super);
-        jerr.super.error_exit = _error_exit;
-
-        jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
-        jpeg_read_header(&dinfo, TRUE);
-
-        MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components<<" data precision "<<dinfo.data_precision;
-        MLOGD<<"h samp factor"<<dinfo.comp_info[0].h_samp_factor<<"v samp factor "<<dinfo.comp_info[0].v_samp_factor;
-        //unsigned int BYTES_PER_PIXEL;
-        dinfo.out_color_space = JCS_YCbCr;
-        float BYTES_PER_PIXEL=1.5f;
-        //dinfo.raw_data_out=true;
-        dinfo.dct_method = JDCT_IFAST;
-        jpeg_start_decompress(&dinfo);
-        dinfo.raw_data_out=true;
-
-        if (dinfo.comp_info[0].h_samp_factor == 2)
-        {
-            if (dinfo.comp_info[0].v_samp_factor == 2)
-            {
-                MLOGD<<"V4L2_PIX_FMT_YUV420M";
-            }
-            else
-            {
-                MLOGD<<"V4L2_PIX_FMT_YUV422M";
-            }
-        }
-        else
-        {
-            if (dinfo.comp_info[0].v_samp_factor == 1)
-            {
-                MLOGD<<"V4L2_PIX_FMT_YUV444M";
-            }
-            else
-            {
-                MLOGD<<" V4L2_PIX_FMT_YUV422RM";
-            }
-        }
-        // libjpeg error ? - output_components is 3 ofr RGB_565 ?
-        //CLOGD("dinfo.output_components %d | %d",dinfo.output_components,dinfo.out_color_components);
-        //dinfo.
-
-        const unsigned int scanline_len = ((unsigned int)stride) * BYTES_PER_PIXEL;
-        JSAMPARRAY jsamparray[dinfo.output_height];
-        for(int i=0;i<dinfo.output_height;i++){
-            JSAMPROW row = (JSAMPROW)(((unsigned char*)bits) + (i*scanline_len));
-            jsamparray[i]=(JSAMPARRAY)row;
-        }
-        unsigned int scanline_count = 0;
-        while (dinfo.output_scanline < dinfo.output_height){
-            // JSAMPROW row = (JSAMPROW)(((unsigned char*)nativeWindowBuffer.bits) + (scanline_count * scanline_len));
-            JSAMPROW row2= (JSAMPROW)jsamparray[scanline_count];
-            auto lines_read=jpeg_read_scanlines(&dinfo,&row2, 8);
-            //JSAMPIMAGE row2= (JSAMPIMAGE)jsamparray[scanline_count];
-            //auto lines_read=jpeg_read_raw_data(&dinfo,&row2, 8);
-            // unfortunately reads only one line at a time CLOGD("Lines read %d",lines_read);
-             //jpeg_read_raw_data()
-            scanline_count+=lines_read;
-        }
-        //jpeg_read_raw_data()
-        //
-        jpeg_finish_decompress(&dinfo);
-
-    }
-
+    
     class NvBufferPlane{
     public:
         unsigned char data[640*480];
