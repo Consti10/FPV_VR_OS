@@ -104,9 +104,9 @@ public:
 
     class NvBufferPlane{
     public:
-        unsigned char data[640*480];
-        size_t fmt_width=640;
-        size_t fmt_height=480;
+        static constexpr size_t fmt_width=640;
+        static constexpr size_t fmt_height=480;
+        unsigned char data[fmt_width][fmt_height];
     };
     struct NvBuffer{
         NvBufferPlane planes[3];
@@ -141,19 +141,12 @@ public:
         dinfo.raw_data_out = TRUE;
         jpeg_start_decompress (&dinfo);
 
-        /* For some widths jpeglib requires more horizontal padding than I420
-         * provides. In those cases we need to decode into separate buffers and then
-         * copy over the data into our final picture buffer, otherwise jpeglib might
-         * write over the end of a line into the beginning of the next line,
-         * resulting in blocky artifacts on the left side of the picture. */
-        if (dinfo.output_width % (dinfo.max_h_samp_factor * DCTSIZE)){
-            MLOGD<<"decodeIndirect";
-            //decodeIndirect(out_buf, pixel_format);
-        }else{
-            MLOGD<<"decodeDirect";
-            decodeDirect(&out_buff);
-        }
+        decodeDirect(&out_buff);
+        //JSAMPIMAGE jsampimage;
+        //std::vector<uint8_t> decodedData(640*480*16/8);
+        //uint8_t* data=decodedData.data();
 
+        
         jpeg_finish_decompress(&dinfo);
         //*buffer = out_buf;
 
@@ -178,7 +171,7 @@ public:
         for (int i = 0; i < 3; i++){
             v_samp_factor[i] = dinfo.comp_info[i].v_samp_factor;
             stride[i] = out_buf->planes[i].fmt_width;
-            base[i] = out_buf->planes[i].data;
+            base[i] = (unsigned char*)out_buf->planes[i].data;
             last[i] = base[i] + (stride[i] * (out_buf->planes[i].fmt_height - 1));
         }
 

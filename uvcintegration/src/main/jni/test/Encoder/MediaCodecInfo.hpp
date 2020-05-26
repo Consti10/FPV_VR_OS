@@ -123,7 +123,11 @@ namespace YUVFrameGenerator{
             }
         }
     }
+    // inputData: YUV422 planar
+    template<size_t WIDTH,size_t HEIGHT>
+    void copyYUV422toYUV420(uint8_t inputData[WIDTH*HEIGHT*16/8],uint8_t outputData[WIDTH*HEIGHT*12/8]){
 
+    }
 
 }
 #endif //FPV_VR_OS_MEDIACODECINFO_HPP

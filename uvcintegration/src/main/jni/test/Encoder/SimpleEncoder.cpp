@@ -45,6 +45,9 @@ void SimpleEncoder::loopEncoder() {
     const int32_t FRAME_RATE = 30;
     const int32_t BIT_RATE= 5*1024*1024;
 
+    constexpr size_t HALF_WIDTH= WIDTH / 2;
+    constexpr size_t HALF_HEIGHT= HEIGHT / 2;
+
     AMediaFormat_setString(format, AMEDIAFORMAT_KEY_MIME, "video/avc");
     AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_HEIGHT, HEIGHT);
     AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_WIDTH, WIDTH);
@@ -80,7 +83,7 @@ void SimpleEncoder::loopEncoder() {
         }
         // Get input buffer if possible
         {
-            /*std::lock_guard<std::mutex> lock(inputBufferDataMutex);
+            std::lock_guard<std::mutex> lock(inputBufferDataMutex);
             if(!inputBufferData.empty()){
                 const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
                 if(index>0){
@@ -89,34 +92,15 @@ void SimpleEncoder::loopEncoder() {
                     MLOGD<<"Got input buffer "<<inputBufferSize;
                     //mjpegDecodeAndroid.DecodeMJPEGtoEncoderBuffer(inputBufferData.data(),inputBufferData.size(),buf,640);
                     MJPEGDecodeAndroid::NvBuffer out_buff;
-
-                    constexpr size_t I=1,J=1,K=1;
-                    // 4:2:0 means full Y resolution and half Cb and half Cr resolution
-                    // Since android format is SemiPlanar Cb and Cr are packed together into the same plane
-
-                    uint8_t (&arr3d)[I][J][K] = *static_cast<uint8_t(*)[I][J][K]>(static_cast<void*>(buf));
-
-
                     mjpegDecodeAndroid.decodeToYUVXXXBuffer(out_buff,inputBufferData.data(),inputBufferData.size());
+                    // copy Y component (easy)
                     memcpy(buf,out_buff.planes[0].data,640*480);
-                    const size_t chromaDataOffset=640*480;
-                    const auto chromaDataP=&buf[chromaDataOffset];
-                    const auto pCb=out_buff.planes[1].data;
-                    const auto pCr=out_buff.planes[2].data;
-                    size_t offset=0;
-                    // 4:2:2
-                    // width==horizontal== half resolution
-                    // height=vertical==full resolution
-                    for(int w=0;w<WIDTH/2;w++){
-                        const int wCb=w;
-                        for(int h=0;h<HEIGHT/2;h++){
-                            const int hCr=h*2;
-                            uint8_t u=out_buff.planes[1].data[w];
-                            uint8_t v=out_buff.planes[2].data[h];
-                            buf[640*480+offset]=u;
-                            offset++;
-                            buf[640*480+offset]=v;
-                            offset++;
+                    // copy CbCr component ( loop needed)
+                    for(int i=0;i<WIDTH/2;i++){
+                        for(int j=0;j<HEIGHT/2;j++){
+                            auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&buf[WIDTH * HEIGHT]));
+                            CbCrPlane[j][i][0]=out_buff.planes[1].data[i][j];
+                            CbCrPlane[j][i][1]=out_buff.planes[2].data[i][j];
                         }
                     }
 
@@ -126,8 +110,8 @@ void SimpleEncoder::loopEncoder() {
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                     frameTimeUs+=8*1000;
                 }
-            }*/
-            const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
+            }
+            /*const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
                 size_t inputBufferSize;
                 void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
@@ -137,7 +121,7 @@ void SimpleEncoder::loopEncoder() {
 
                 AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                 frameTimeUs+=8*1000;
-            }
+            }*/
         }
         {
             AMediaCodecBufferInfo info;
