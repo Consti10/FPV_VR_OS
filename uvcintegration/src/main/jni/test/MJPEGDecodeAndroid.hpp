@@ -11,6 +11,7 @@
 #include <setjmp.h>
 #include <AndroidLogger.hpp>
 #include <TimeHelper.hpp>
+#include <vector>
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
@@ -41,6 +42,14 @@ private:
         err_msg[1023] = 0;
         MLOGD<<"LIBJPEG ERROR %s"<<err_msg;
         longjmp(myerr->jmp, 1);
+    }
+    // 'Create array with pointers to an array'
+    static std::vector<uint8_t*> convertToPointers(uint8_t* array1d,size_t dimension1,size_t scanline_width){
+        std::vector<uint8_t*> ret(dimension1);
+        for(int i=0;i<dimension1;i++){
+            ret[i]=array1d+i*scanline_width;
+        }
+        return ret;
     }
 public:
     // Helper that prints the current configuration of ANativeWindow_Buffer
@@ -85,16 +94,17 @@ public:
         jpeg_start_decompress(&dinfo);
         // libjpeg error ? - output_components is 3 ofr RGB_565 ?
         //CLOGD("dinfo.output_components %d | %d",dinfo.output_components,dinfo.out_color_components);
-        const unsigned int scanline_len = ((unsigned int)nativeWindowBuffer.stride) * BYTES_PER_PIXEL;
+        /*const unsigned int scanline_len = ((unsigned int)nativeWindowBuffer.stride) * BYTES_PER_PIXEL;
         JSAMPARRAY jsamparray[dinfo.output_height];
         for(int i=0;i<dinfo.output_height;i++){
             JSAMPROW row = (JSAMPROW)(((unsigned char*)nativeWindowBuffer.bits) + (i*scanline_len));
             jsamparray[i]=(JSAMPARRAY)row;
-        }
+        }*/
+        const unsigned int scanline_len = ((unsigned int)nativeWindowBuffer.stride) * BYTES_PER_PIXEL;
+        const auto tmp=convertToPointers((uint8_t*)nativeWindowBuffer.bits,dinfo.output_height,scanline_len);
         unsigned int scanline_count = 0;
         while (dinfo.output_scanline < dinfo.output_height){
-            // JSAMPROW row = (JSAMPROW)(((unsigned char*)nativeWindowBuffer.bits) + (scanline_count * scanline_len));
-            JSAMPROW row2= (JSAMPROW)jsamparray[scanline_count];
+            JSAMPROW row2= (JSAMPROW)tmp[scanline_count];
             auto lines_read=jpeg_read_scanlines(&dinfo,&row2, 8);
             // unfortunately reads only one line at a time CLOGD("Lines read %d",lines_read);
             scanline_count+=lines_read;
@@ -162,8 +172,6 @@ public:
         unsigned char *u[4 * DCTSIZE] = { NULL, };
         unsigned char *v[4 * DCTSIZE] = { NULL, };
         int v_samp_factor[3];
-        unsigned char *base[3];
-        unsigned char *last[3];
 
         yuv[0] = y;
         yuv[1] = u;
@@ -174,16 +182,14 @@ public:
         }
         for (int i = 0; i < 3; i++){
             v_samp_factor[i] = dinfo.comp_info[i].v_samp_factor;
-            base[i] = (unsigned char*)out_buf->planes[i].data;
-            last[i] = base[i] + (out_buf->planes[i].fmt_width * (out_buf->planes[i].fmt_height - 1));
         }
 
         for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
             for (int j = 0; j < (v_samp_factor[0] * DCTSIZE); ++j){
 
-                yuv[0][j] = base[0] + (i + j) * out_buf->planes[0].fmt_width;
-                yuv[1][j] = base[1] + (i + j) * out_buf->planes[1].fmt_width;
-                yuv[2][j] = base[2] + (i + j) * out_buf->planes[2].fmt_width;
+                yuv[0][j] = (unsigned char*)out_buf->planes[0].data + (i + j) * out_buf->planes[0].fmt_width;
+                yuv[1][j] = (unsigned char*)out_buf->planes[1].data + (i + j) * out_buf->planes[1].fmt_width;
+                yuv[2][j] = (unsigned char*)out_buf->planes[2].data + (i + j) * out_buf->planes[2].fmt_width;
             }
 
             int lines = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) yuv, v_samp_factor[0] * DCTSIZE);
