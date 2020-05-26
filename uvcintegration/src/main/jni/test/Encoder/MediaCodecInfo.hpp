@@ -77,8 +77,9 @@ namespace YUVFrameGenerator{
             startX = (7 - frameIndex) * RECT_W;
             startY = HEIGHT / 2;
         }
-        for (int y = startY;y <startY+ RECT_H;y++) {
-            for (int x = startX; x <startX + RECT_W;x++) {
+
+        for (int x = startX; x <startX + RECT_W;x++) {
+            for (int y = startY; y < startY + RECT_H; y++) {
                 if (semiPlanar) {
                     // full-size Y, followed by UV pairs at half resolution
                     // e.g. Nexus 4 OMX.qcom.video.encoder.avc COLOR_FormatYUV420SemiPlanar
@@ -92,16 +93,16 @@ namespace YUVFrameGenerator{
                         frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x + 1] = TEST_V;
                     }
                 } else {
-                // full-size Y, followed by quarter-size U and quarter-size V
-                // e.g. Nexus 10 OMX.Exynos.AVC.Encoder COLOR_FormatYUV420Planar
-                // e.g. Nexus 7 OMX.Nvidia.h264.encoder COLOR_FormatYUV420Planar
-                frameData[y * WIDTH + x] = TEST_Y;
-                if ((x & 0x01) == 0 && (y & 0x01) == 0) {
-                    frameData[WIDTH * HEIGHT + (y / 2) * HALF_WIDTH + (x / 2)] =  TEST_U;
-                    frameData[WIDTH * HEIGHT + HALF_WIDTH * (HEIGHT / 2) +
-                              (y/2) * HALF_WIDTH + (x/2)] =  TEST_V;
+                    // full-size Y, followed by quarter-size U and quarter-size V
+                    // e.g. Nexus 10 OMX.Exynos.AVC.Encoder COLOR_FormatYUV420Planar
+                    // e.g. Nexus 7 OMX.Nvidia.h264.encoder COLOR_FormatYUV420Planar
+                    frameData[y * WIDTH + x] = TEST_Y;
+                    if ((x & 0x01) == 0 && (y & 0x01) == 0) {
+                        frameData[WIDTH * HEIGHT + (y / 2) * HALF_WIDTH + (x / 2)] = TEST_U;
+                        frameData[WIDTH * HEIGHT + HALF_WIDTH * (HEIGHT / 2) +
+                                  (y / 2) * HALF_WIDTH + (x / 2)] = TEST_V;
+                    }
                 }
-            }
             }
         }
     }
