@@ -94,12 +94,6 @@ public:
         jpeg_start_decompress(&dinfo);
         // libjpeg error ? - output_components is 3 ofr RGB_565 ?
         //CLOGD("dinfo.output_components %d | %d",dinfo.output_components,dinfo.out_color_components);
-        /*const unsigned int scanline_len = ((unsigned int)nativeWindowBuffer.stride) * BYTES_PER_PIXEL;
-        JSAMPARRAY jsamparray[dinfo.output_height];
-        for(int i=0;i<dinfo.output_height;i++){
-            JSAMPROW row = (JSAMPROW)(((unsigned char*)nativeWindowBuffer.bits) + (i*scanline_len));
-            jsamparray[i]=(JSAMPARRAY)row;
-        }*/
         const unsigned int scanline_len = ((unsigned int)nativeWindowBuffer.stride) * BYTES_PER_PIXEL;
         const auto tmp=convertToPointers((uint8_t*)nativeWindowBuffer.bits,dinfo.output_height,scanline_len);
         unsigned int scanline_count = 0;
