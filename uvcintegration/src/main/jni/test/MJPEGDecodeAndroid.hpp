@@ -122,7 +122,8 @@ public:
     // Y plane has full width & height
     // U and V plane both have half width and full height
     template<size_t WIDTH,size_t HEIGHT>
-    struct YUV422Planar{
+    class YUV422Planar{
+    public:
        uint8_t planeY[WIDTH][HEIGHT];
        uint8_t planeU[WIDTH/2][HEIGHT];
        uint8_t planeV[WIDTH/2][HEIGHT];
