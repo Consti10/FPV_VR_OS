@@ -6,6 +6,7 @@
 #define FPV_VR_OS_MEDIACODECINFO_HPP
 
 #include <array>
+#include "MyColorSpaces.hpp"
 
 // Values taken from
 // https://developer.android.com/reference/android/media/MediaCodecInfo.CodecCapabilities
@@ -30,30 +31,10 @@ namespace MediaCodecInfo{
     }
 };
 
-namespace MyColorSpaces{
-    // Y plane has full width & height
-    // U and V plane both have half width and full height
-    template<size_t WIDTH,size_t HEIGHT>
-    class YUV422Planar{
-    public:
-        uint8_t planeY[WIDTH][HEIGHT];
-        uint8_t planeU[WIDTH/2][HEIGHT];
-        uint8_t planeV[WIDTH/2][HEIGHT];
-    }__attribute__((packed));
-    //
-    template<size_t WIDTH,size_t HEIGHT>
-    class YUV420SemiPlanar{
-    public:
-        uint8_t planeY[HEIGHT][WIDTH];
-        uint8_t planeUV[HEIGHT/2][WIDTH/2][2];
-    }__attribute__((packed));
-    static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
-}
-
 // taken from https://android.googlesource.com/platform/cts/+/3661c33/tests/tests/media/src/android/media/cts/EncodeDecodeTest.java
 // and translated to cpp
 namespace YUVFrameGenerator{
-    boolean isSemiPlanarYUV(const int colorFormat) {
+    bool isSemiPlanarYUV(const int colorFormat) {
         using namespace MediaCodecInfo::CodecCapabilities;
         switch (colorFormat) {
             case COLOR_FormatYUV420Planar:
