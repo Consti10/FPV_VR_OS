@@ -14,7 +14,7 @@
 #include <atomic>
 #include <vector>
 #include <media/NdkMediaMuxer.h>
-#include <MJPEGDecodeAndroid.hpp>
+#include "../MJPEGDecodeAndroid.hpp"
 
 class SimpleEncoder {
 private:

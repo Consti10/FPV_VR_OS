@@ -4,7 +4,6 @@
 
 #include "SimpleEncoder.h"
 #include <AndroidLogger.hpp>
-#include "../MJPEGDecodeAndroid.hpp"
 #include <chrono>
 #include <asm/fcntl.h>
 #include <fcntl.h>
@@ -91,12 +90,13 @@ void SimpleEncoder::loopEncoder() {
                     uint8_t* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
                     MLOGD<<"Got input buffer "<<inputBufferSize;
                     //mjpegDecodeAndroid.DecodeMJPEGtoEncoderBuffer(inputBufferData.data(),inputBufferData.size(),buf,640);
-                    MyColorSpaces::YUV422Planar<WIDTH,HEIGHT> out_buff;
+                    MyColorSpaces::YUV422Planar<WIDTH,HEIGHT> bufferYUV422{};
+                    mjpegDecodeAndroid.decodeToYUVXXXBuffer(bufferYUV422, inputBufferData.data(), inputBufferData.size());
 
-                    mjpegDecodeAndroid.decodeToYUVXXXBuffer(out_buff,inputBufferData.data(),inputBufferData.size());
                     auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buf));
                     // copy Y component (easy)
-                    memcpy(framebuffer.planeY,out_buff.planeY,sizeof(out_buff.planeY));
+                    memcpy(framebuffer.planeY, bufferYUV422.planeY, sizeof(bufferYUV422.planeY));
+
                     // copy CbCr component ( loop needed)
                     for(int i=0;i<WIDTH/2;i++){
                         for(int j=0;j<HEIGHT/2;j++){

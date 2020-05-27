@@ -5,7 +5,6 @@
 #ifndef FPV_VR_OS_MEDIACODECINFO_HPP
 #define FPV_VR_OS_MEDIACODECINFO_HPP
 
-#include <array>
 #include "MyColorSpaces.hpp"
 
 // Values taken from
@@ -50,9 +49,7 @@ namespace YUVFrameGenerator{
         }
     }
     // YUV values for purple
-    constexpr uint8_t PURPLE_Y = 120;
-    constexpr uint8_t PURPLE_U = 160;
-    constexpr uint8_t PURPLE_V = 200;
+    constexpr uint8_t PURPLE_YUV[]={120, 160, 200};
 
     // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex
     void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
@@ -96,11 +93,10 @@ namespace YUVFrameGenerator{
                     // e.g. Galaxy Nexus OMX.TI.DUCATI1.VIDEO.H264E
                     //        OMX_TI_COLOR_FormatYUV420PackedSemiPlanar
                     //frameData[y * WIDTH + x] = (uint8_t) TEST_Y;
-                    framebuffer.planeY[y][x]=PURPLE_Y;
+                    framebuffer.setY(x, y, PURPLE_YUV[0]);
                     const bool even=(x % 2) == 0 && (y % 2) == 0;
                     if (even) {
-                        framebuffer.planeUV[y/2][x/2][0]=PURPLE_U;
-                        framebuffer.planeUV[y/2][x/2][1]=PURPLE_V;
+                        framebuffer.setUV(x/2,y/2, PURPLE_YUV[1], PURPLE_YUV[2]);
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x] = TEST_U;
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x + 1] = TEST_V;
                     }
@@ -109,11 +105,11 @@ namespace YUVFrameGenerator{
                     // e.g. Nexus 10 OMX.Exynos.AVC.Encoder COLOR_FormatYUV420Planar
                     // e.g. Nexus 7 OMX.Nvidia.h264.encoder COLOR_FormatYUV420Planar
                     // NOT TESTED !
-                    frameData[y * WIDTH + x] = PURPLE_Y;
+                    frameData[y * WIDTH + x] = PURPLE_YUV[0];
                     if ((x & 0x01) == 0 && (y & 0x01) == 0) {
-                        frameData[WIDTH * HEIGHT + (y / 2) * HALF_WIDTH + (x / 2)] = PURPLE_U;
+                        frameData[WIDTH * HEIGHT + (y / 2) * HALF_WIDTH + (x / 2)] = PURPLE_YUV[1];
                         frameData[WIDTH * HEIGHT + HALF_WIDTH * (HEIGHT / 2) +
-                                  (y / 2) * HALF_WIDTH + (x / 2)] = PURPLE_V;
+                                  (y / 2) * HALF_WIDTH + (x / 2)] = PURPLE_YUV[2];
                     }
                 }
             }

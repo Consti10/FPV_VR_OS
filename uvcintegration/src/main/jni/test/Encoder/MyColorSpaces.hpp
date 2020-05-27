@@ -13,18 +13,30 @@ namespace MyColorSpaces{
     template<size_t WIDTH,size_t HEIGHT>
     class YUV422Planar{
     public:
-        uint8_t planeY[WIDTH][HEIGHT];
-        uint8_t planeU[WIDTH/2][HEIGHT];
-        uint8_t planeV[WIDTH/2][HEIGHT];
+        uint8_t planeY[HEIGHT][WIDTH];
+        uint8_t planeU[HEIGHT][WIDTH/2];
+        uint8_t planeV[HEIGHT][WIDTH/2];
     }__attribute__((packed));
     //
+    // For some reason in this layout height comes before width ?!
     template<size_t WIDTH,size_t HEIGHT>
     class YUV420SemiPlanar{
     public:
         uint8_t planeY[HEIGHT][WIDTH];
         uint8_t planeUV[HEIGHT/2][WIDTH/2][2];
+        void setY(size_t x, size_t y, uint8_t value){
+            planeY[y][x]=value;
+        }
+        void setUV(size_t x, size_t y, uint8_t valueU, uint8_t valueV){
+            planeUV[y][x][0]=valueU;
+            planeUV[y][x][1]=valueV;
+        }
     }__attribute__((packed));
     static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
+
+    //void convert123(const YUV422Planar<640,480>& in,YUV420SemiPlanar<640,480>& out){
+    //
+    //}
 }
 
 #endif //FPV_VR_OS_MYCOLORSPACES_HPP
