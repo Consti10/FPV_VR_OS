@@ -71,6 +71,17 @@ public:
         jpeg_read_header(&dinfo, TRUE);
         //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components<<" data precision "<<dinfo.data_precision;
         //MLOGD<<"h samp factor"<<dinfo.comp_info[0].h_samp_factor<<"v samp factor "<<dinfo.comp_info[0].v_samp_factor;
+        MLOGD<<"min recommended height of scanline buffer. "<<dinfo.rec_outbuf_height;
+        //For decompression, the JPEG file's color space is given in jpeg_color_space,
+        //and this is transformed to the output color space out_color_space.
+        // See jdcolor.c
+        MLOGD<<"jpeg color space is "<<dinfo.jpeg_color_space<<" libjpeg guessed following output colorspace "<<dinfo.out_color_space;
+        // unsigned int scale_num, scale_denom : We do not need scaling since the HW composer does this job for us
+        //MLOGD<<"boolean do_fancy_upsampling (default true) "<<dinfo.do_fancy_upsampling<<" boolean do_block_smoothing (default true) "<<dinfo.do_block_smoothing;
+        //If your interest is merely in bypassing color conversion, we recommend
+        //that you use the standard interface and simply set jpeg_color_space =
+        //in_color_space (or jpeg_color_space = out_color_space for decompression).
+        //
 
         //unsigned int BYTES_PER_PIXEL;
         unsigned int BYTES_PER_PIXEL;
@@ -92,8 +103,10 @@ public:
         }
         dinfo.dct_method = JDCT_IFAST;
         jpeg_start_decompress(&dinfo);
+
         // libjpeg error ? - output_components is 3 ofr RGB_565 ?
-        //CLOGD("dinfo.output_components %d | %d",dinfo.output_components,dinfo.out_color_components);
+        // create the array of pointers that takes stride of nativeWindowBuffer into account
+        // Especially when using RGB (24 bit) stride != image height
         const unsigned int scanline_len = ((unsigned int)nativeWindowBuffer.stride) * BYTES_PER_PIXEL;
         const auto tmp=convertToPointers((uint8_t*)nativeWindowBuffer.bits,dinfo.output_height,scanline_len);
         unsigned int scanline_count = 0;
@@ -105,17 +118,14 @@ public:
         }
         jpeg_finish_decompress(&dinfo);
     }
-
-    class NvBufferPlane{
-    public:
-        static constexpr size_t fmt_width=640;
-        static constexpr size_t fmt_height=480;
-        uint8_t data[fmt_width][fmt_height];
-    };
+    
 
     class NvBuffer{
     public:
-       NvBufferPlane planes[3];
+       //NvBufferPlane planes[3];
+       uint8_t planeY[640][480];
+       uint8_t planeU[320][480];
+       uint8_t planeV[320][480];
     };
 
     void decodeToYUVXXXBuffer(NvBuffer& out_buff, unsigned char * in_buf,unsigned long in_buf_size){
@@ -160,6 +170,12 @@ public:
     }
 
     void decodeDirect(NvBuffer *out_buf){
+        // has to be after start_decompress ?
+        for(int i=0;i<3;i++){
+            MLOGD<<"component "<<i<<" samples per row "<<dinfo.comp_info[i].width_in_blocks*DCTSIZE;
+            MLOGD<<"component "<<i<<" rows in image "<<dinfo.comp_info[i].height_in_blocks*DCTSIZE;
+        }
+
         unsigned char **yuv[3];
         unsigned char *y[4 * DCTSIZE] = { NULL, };
         unsigned char *u[4 * DCTSIZE] = { NULL, };
@@ -178,15 +194,18 @@ public:
         }
 
         for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
+            //jpeg_read_raw_data() returns one MCU row per call, and thus you must pass a
+            //buffer of at least max_v_samp_factor*DCTSIZE scanlines
 
-            for (int j = 0; j < (v_samp_factor[0] * DCTSIZE); ++j){
+            const auto SOME_SIZE=v_samp_factor[0] * DCTSIZE;
+            for (int j = 0; j < SOME_SIZE; ++j){
 
-                yuv[0][j] = (unsigned char*)out_buf->planes[0].data + (i + j) * out_buf->planes[0].fmt_width;
-                yuv[1][j] = (unsigned char*)out_buf->planes[1].data + (i + j) * out_buf->planes[1].fmt_width;
-                yuv[2][j] = (unsigned char*)out_buf->planes[2].data + (i + j) * out_buf->planes[2].fmt_width;
+                yuv[0][j] = (unsigned char*)out_buf->planeY + (i + j) * 640;
+                yuv[1][j] = (unsigned char*)out_buf->planeU + (i + j) * 320;
+                yuv[2][j] = (unsigned char*)out_buf->planeV + (i + j) * 320;
             }
 
-            int lines = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) yuv, v_samp_factor[0] * DCTSIZE);
+            int lines = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) yuv, SOME_SIZE);
             if ((!lines)){
                 MLOGD<<"jpeg_read_raw_data() returned 0";
             }

@@ -94,7 +94,7 @@ void SimpleEncoder::loopEncoder() {
                     MJPEGDecodeAndroid::NvBuffer out_buff;
                     mjpegDecodeAndroid.decodeToYUVXXXBuffer(out_buff,inputBufferData.data(),inputBufferData.size());
                     // copy Y component (easy)
-                    memcpy(buf,out_buff.planes[0].data,640*480);
+                    memcpy(buf,out_buff.planeY,sizeof(out_buff.planeY));
                     // copy CbCr component ( loop needed)
                     for(int i=0;i<WIDTH/2;i++){
                         for(int j=0;j<HEIGHT/2;j++){

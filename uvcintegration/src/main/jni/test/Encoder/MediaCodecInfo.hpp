@@ -91,7 +91,7 @@ namespace YUVFrameGenerator{
         } else {
             startX = frameIndex % 4 * COLORED_RECT_W;
         }
-
+        // fill the wanted area with purple color
         for (int x = startX; x < startX + COLORED_RECT_W; x++) {
             for (int y = startY; y < startY + COLORED_RECT_H; y++) {
                 if (semiPlanar) {

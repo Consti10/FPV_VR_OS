@@ -62,7 +62,12 @@ public:
             simpleEncoder.stop();
         }else{
             aNativeWindow=ANativeWindow_fromSurface(env,surface);
-            ANativeWindow_setBuffersGeometry(aNativeWindow,VIDEO_STREAM_WIDTH,VIDEO_STREAM_HEIGHT,AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM);
+            const auto WANTED_FORMAT=AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM;
+            ANativeWindow_setBuffersGeometry(aNativeWindow,VIDEO_STREAM_WIDTH,VIDEO_STREAM_HEIGHT,WANTED_FORMAT);
+            const auto ACTUAL_FORMAT=ANativeWindow_getFormat(aNativeWindow);
+            if(ACTUAL_FORMAT!=WANTED_FORMAT){
+                MLOGE<<"Actual format is "<<ACTUAL_FORMAT;
+            }
             simpleEncoder.start();
         }
     }
