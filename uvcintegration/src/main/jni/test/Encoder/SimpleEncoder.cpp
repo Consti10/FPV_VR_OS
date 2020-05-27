@@ -83,7 +83,7 @@ void SimpleEncoder::loopEncoder() {
         }
         // Get input buffer if possible
         {
-            /*std::lock_guard<std::mutex> lock(inputBufferDataMutex);
+            std::lock_guard<std::mutex> lock(inputBufferDataMutex);
             if(!inputBufferData.empty()){
                 const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
                 if(index>0){
@@ -91,17 +91,17 @@ void SimpleEncoder::loopEncoder() {
                     uint8_t* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
                     MLOGD<<"Got input buffer "<<inputBufferSize;
                     //mjpegDecodeAndroid.DecodeMJPEGtoEncoderBuffer(inputBufferData.data(),inputBufferData.size(),buf,640);
-                    MJPEGDecodeAndroid::YUV422Planar<WIDTH,HEIGHT> out_buff;
+                    MyColorSpaces::YUV422Planar<WIDTH,HEIGHT> out_buff;
 
                     mjpegDecodeAndroid.decodeToYUVXXXBuffer(out_buff,inputBufferData.data(),inputBufferData.size());
+                    auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buf));
                     // copy Y component (easy)
-                    memcpy(buf,out_buff.planeY,sizeof(out_buff.planeY));
+                    memcpy(framebuffer.planeY,out_buff.planeY,sizeof(out_buff.planeY));
                     // copy CbCr component ( loop needed)
                     for(int i=0;i<WIDTH/2;i++){
                         for(int j=0;j<HEIGHT/2;j++){
-                            auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&buf[WIDTH * HEIGHT]));
-                            CbCrPlane[j][i][0]=out_buff.planeU[i][j];
-                            CbCrPlane[j][i][1]=out_buff.planeV[i][j];
+                            //framebuffer.planeUV[i][j][0]=out_buff.planeU[i][j*2];
+                            //framebuffer.planeUV[i][j][1]=out_buff.planeV[i][j*2];
                         }
                     }
 
@@ -111,8 +111,8 @@ void SimpleEncoder::loopEncoder() {
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                     frameTimeUs+=8*1000;
                 }
-            }*/
-            const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
+            }
+            /*const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
                 size_t inputBufferSize;
                 void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
@@ -122,7 +122,7 @@ void SimpleEncoder::loopEncoder() {
 
                 AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                 frameTimeUs+=8*1000;
-            }
+            }*/
         }
         {
             AMediaCodecBufferInfo info;

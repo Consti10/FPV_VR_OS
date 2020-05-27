@@ -30,6 +30,26 @@ namespace MediaCodecInfo{
     }
 };
 
+namespace MyColorSpaces{
+    // Y plane has full width & height
+    // U and V plane both have half width and full height
+    template<size_t WIDTH,size_t HEIGHT>
+    class YUV422Planar{
+    public:
+        uint8_t planeY[WIDTH][HEIGHT];
+        uint8_t planeU[WIDTH/2][HEIGHT];
+        uint8_t planeV[WIDTH/2][HEIGHT];
+    }__attribute__((packed));
+    //
+    template<size_t WIDTH,size_t HEIGHT>
+    class YUV420SemiPlanar{
+    public:
+        uint8_t planeY[HEIGHT][WIDTH];
+        uint8_t planeUV[HEIGHT/2][WIDTH/2][2];
+    }__attribute__((packed));
+    static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
+}
+
 // taken from https://android.googlesource.com/platform/cts/+/3661c33/tests/tests/media/src/android/media/cts/EncodeDecodeTest.java
 // and translated to cpp
 namespace YUVFrameGenerator{
@@ -53,17 +73,9 @@ namespace YUVFrameGenerator{
     constexpr uint8_t PURPLE_U = 160;
     constexpr uint8_t PURPLE_V = 200;
 
-    template<size_t WIDTH,size_t HEIGHT>
-    class YUV420SemiPlanar{
-    public:
-        uint8_t planeY[HEIGHT][WIDTH];
-        uint8_t planeUV[HEIGHT/2][WIDTH/2][2];
-    }__attribute__((packed));
-    static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
-
-
     // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex
     void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
+        using namespace MyColorSpaces;
         // Full width/height for luma ( Y )
         constexpr size_t WIDTH=640;
         constexpr size_t HEIGHT=480;
