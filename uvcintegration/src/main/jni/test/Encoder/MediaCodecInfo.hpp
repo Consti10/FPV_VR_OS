@@ -56,14 +56,8 @@ namespace YUVFrameGenerator{
     template<size_t WIDTH,size_t HEIGHT>
     class YUV420SemiPlanar{
     public:
-        uint8_t planeY[WIDTH][HEIGHT];
-        uint8_t planeUV[WIDTH/2][HEIGHT/2][2];
-        /*uint8_t getY(size_t x,size_t y)const{
-            return planeY[x][y];
-        };
-        std::array<uint8_t,2> getUV(size_t x,size_t y){
-            return {planeUV[x][y][0],planeUV[x][y][1]};
-        };*/
+        uint8_t planeY[HEIGHT][WIDTH];
+        uint8_t planeUV[HEIGHT/2][WIDTH/2][2];
     }__attribute__((packed));
     static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
 
@@ -83,16 +77,6 @@ namespace YUVFrameGenerator{
         constexpr size_t HALF_HEIGHT= HEIGHT / 2;
 
         auto& framebuffer= *static_cast<YUV420SemiPlanar<640,480>*>(static_cast<void*>(frameData));
-
-        // For some reason HEIGHT comes before WIDTH here ?!
-        // The Y plane has full resolution.
-        auto& YPlane = *static_cast<uint8_t (*)[HEIGHT][WIDTH]>(static_cast<void*>(frameData));
-        // The CbCrPlane only has half resolution in both x and y direction ( 4:2:0 )
-        // CbCrPlane[y][x][0] == Cb (U) value for pixel x,y and
-        // CbCrPlane[y][x][1] == Cr (V) value for pixel x,y
-        auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&frameData[WIDTH * HEIGHT]));
-        // Check - YUV420 has 12 bit per pixel (1.5 bytes)
-        static_assert(sizeof(YPlane)+sizeof(CbCrPlane) == FRAME_BUFFER_SIZE_B);
 
         boolean semiPlanar = isSemiPlanarYUV(colorFormat);
         // Set to zero.  In YUV this is a dull green.
@@ -119,11 +103,11 @@ namespace YUVFrameGenerator{
                     // e.g. Galaxy Nexus OMX.TI.DUCATI1.VIDEO.H264E
                     //        OMX_TI_COLOR_FormatYUV420PackedSemiPlanar
                     //frameData[y * WIDTH + x] = (uint8_t) TEST_Y;
-                    YPlane[y][x]=PURPLE_Y;
+                    framebuffer.planeY[y][x]=PURPLE_Y;
                     const bool even=(x % 2) == 0 && (y % 2) == 0;
                     if (even) {
-                        CbCrPlane[y/2][x/2][0]=PURPLE_U;
-                        CbCrPlane[y/2][x/2][1]=PURPLE_V;
+                        framebuffer.planeUV[y/2][x/2][0]=PURPLE_U;
+                        framebuffer.planeUV[y/2][x/2][1]=PURPLE_V;
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x] = TEST_U;
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x + 1] = TEST_V;
                     }
@@ -144,5 +128,14 @@ namespace YUVFrameGenerator{
     }
 
 
+    // For some reason HEIGHT comes before WIDTH here ?!
+    // The Y plane has full resolution.
+    //auto& YPlane = *static_cast<uint8_t (*)[HEIGHT][WIDTH]>(static_cast<void*>(frameData));
+    // The CbCrPlane only has half resolution in both x and y direction ( 4:2:0 )
+    // CbCrPlane[y][x][0] == Cb (U) value for pixel x,y and
+    // CbCrPlane[y][x][1] == Cr (V) value for pixel x,y
+    //auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&frameData[WIDTH * HEIGHT]));
+    // Check - YUV420 has 12 bit per pixel (1.5 bytes)
+    //static_assert(sizeof(YPlane)+sizeof(CbCrPlane) == FRAME_BUFFER_SIZE_B);
 }
 #endif //FPV_VR_OS_MEDIACODECINFO_HPP
