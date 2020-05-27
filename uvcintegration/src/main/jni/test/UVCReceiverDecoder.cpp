@@ -21,6 +21,13 @@
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 
+namespace ImageFormatXXX{
+    constexpr int NV16=16;
+    constexpr int NV21=21;
+    constexpr int YUV_420_888=35;
+    //constexpr int YUV_422_888=39;
+}
+
 class UVCReceiverDecoder{
 private:
     // Window that holds the buffer(s) into which uvc frames will be decoded
@@ -52,6 +59,7 @@ public:
         javaVm=nullptr;
         env->GetJavaVM(&javaVm);
     }
+
     // nullptr: clean up and remove
     // valid surface: acquire the ANativeWindow
     void setSurface(JNIEnv* env,jobject surface){
@@ -62,7 +70,6 @@ public:
             simpleEncoder.stop();
         }else{
             aNativeWindow=ANativeWindow_fromSurface(env,surface);
-            constexpr auto FORMAT_NV21=17;
 
             const auto WANTED_FORMAT=AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM;
             ANativeWindow_setBuffersGeometry(aNativeWindow,VIDEO_STREAM_WIDTH,VIDEO_STREAM_HEIGHT,WANTED_FORMAT);

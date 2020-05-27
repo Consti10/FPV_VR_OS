@@ -116,7 +116,6 @@ namespace YUVFrameGenerator{
         }
     }
 
-
     // For some reason HEIGHT comes before WIDTH here ?!
     // The Y plane has full resolution.
     //auto& YPlane = *static_cast<uint8_t (*)[HEIGHT][WIDTH]>(static_cast<void*>(frameData));

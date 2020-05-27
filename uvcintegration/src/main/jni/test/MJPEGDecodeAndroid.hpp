@@ -55,13 +55,13 @@ private:
 public:
     // Helper that prints the current configuration of ANativeWindow_Buffer
     static void debugANativeWindowBuffer(const ANativeWindow_Buffer& buffer){
-        MLOGD<<"ANativeWindow_Buffer: W H "<<buffer.width<<" "<<buffer.height<<"Stride Format"<<buffer.stride<<" "<<buffer.format;
+        MLOGD<<"ANativeWindow_Buffer: W H "<<buffer.width<<" "<<buffer.height<<" format "<<buffer.format<<" Stride "<<buffer.stride;
     }
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
     void DecodeMJPEGtoANativeWindowBuffer(const unsigned char* mpegData,size_t mpegDataSize,const ANativeWindow_Buffer& nativeWindowBuffer){
+        debugANativeWindowBuffer(nativeWindowBuffer);
         MEASURE_FUNCTION_EXECUTION_TIME
-        //debugANativeWindowBuffer(nativeWindowBuffer);
         // We need to set the error manager every time else it will crash (I have no idea why )
         // https://stackoverflow.com/questions/11613040/why-does-jpeg-decompress-create-crash-without-error-message
         struct error_mgr jerr;
@@ -72,19 +72,17 @@ public:
         jpeg_read_header(&dinfo, TRUE);
         //MLOGD<<"Input color space is "<<dinfo.jpeg_color_space<<" num components "<<dinfo.num_components<<" data precision "<<dinfo.data_precision;
         //MLOGD<<"h samp factor"<<dinfo.comp_info[0].h_samp_factor<<"v samp factor "<<dinfo.comp_info[0].v_samp_factor;
-        MLOGD<<"min recommended height of scanline buffer. "<<dinfo.rec_outbuf_height;
+        //MLOGD<<"min recommended height of scanline buffer. "<<dinfo.rec_outbuf_height;
         //For decompression, the JPEG file's color space is given in jpeg_color_space,
         //and this is transformed to the output color space out_color_space.
         // See jdcolor.c
-        MLOGD<<"jpeg color space is "<<dinfo.jpeg_color_space<<" libjpeg guessed following output colorspace "<<dinfo.out_color_space;
+        //MLOGD<<"jpeg color space is "<<dinfo.jpeg_color_space<<" libjpeg guessed following output colorspace "<<dinfo.out_color_space;
         // unsigned int scale_num, scale_denom : We do not need scaling since the HW composer does this job for us
         //MLOGD<<"boolean do_fancy_upsampling (default true) "<<dinfo.do_fancy_upsampling<<" boolean do_block_smoothing (default true) "<<dinfo.do_block_smoothing;
         //If your interest is merely in bypassing color conversion, we recommend
         //that you use the standard interface and simply set jpeg_color_space =
         //in_color_space (or jpeg_color_space = out_color_space for decompression).
         //
-
-        //unsigned int BYTES_PER_PIXEL;
         unsigned int BYTES_PER_PIXEL;
         if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM || nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM){
             dinfo.out_color_space = JCS_EXT_RGBA;
@@ -166,31 +164,22 @@ public:
         unsigned char *y[4 * DCTSIZE] = { NULL, };
         unsigned char *u[4 * DCTSIZE] = { NULL, };
         unsigned char *v[4 * DCTSIZE] = { NULL, };
-        int v_samp_factor[3];
+        //int v_samp_factor[3];
 
         auto y2=convertToPointers(&out_buf.planeY[0][0],480,640);
         auto u2=convertToPointers(&out_buf.planeU[0][0],480,320);
         auto v2=convertToPointers(&out_buf.planeV[0][0],480,320);
 
-        //yuv[0] = y;
-        //yuv[1] = u;
-        //yuv[2] = v;
-        for(int i=0;i<3;i++){
-            MLOGD<<i<<"h samp factor"<<dinfo.comp_info[i].h_samp_factor<<"v samp factor "<<dinfo.comp_info[i].v_samp_factor;
-        }
-        for (int i = 0; i < 3; i++){
-            v_samp_factor[i] = dinfo.comp_info[i].v_samp_factor;
-        }
+        //for(int i=0;i<3;i++){
+        //    MLOGD<<i<<"h samp factor"<<dinfo.comp_info[i].h_samp_factor<<"v samp factor "<<dinfo.comp_info[i].v_samp_factor;
+        //}
+
+        auto max_v_samp_factor=dinfo.comp_info[0].v_samp_factor;
         size_t scanline_count=0;
-        for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
+        for (int i = 0; i < (int) dinfo.image_height; i += max_v_samp_factor * DCTSIZE){
             //jpeg_read_raw_data() returns one MCU row per call, and thus you must pass a
             //buffer of at least max_v_samp_factor*DCTSIZE scanlines
-            const auto SOME_SIZE=v_samp_factor[0] * DCTSIZE;
-            /*for (int j = 0; j < SOME_SIZE; ++j){
-                yuv[0][j] = (unsigned char*)out_buf.planeY + (i + j) * 640;
-                yuv[1][j] = (unsigned char*)out_buf.planeU + (i + j) * 320;
-                yuv[2][j] = (unsigned char*)out_buf.planeV + (i + j) * 320;
-            }*/
+            const auto SOME_SIZE=max_v_samp_factor * DCTSIZE;
             yuv[0] = &y2[scanline_count];
             yuv[1] = &u2[scanline_count];
             yuv[2] = &v2[scanline_count];
