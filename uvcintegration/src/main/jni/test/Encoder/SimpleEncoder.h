@@ -25,7 +25,9 @@ private:
     void loopEncoder();
     AMediaCodec* mediaCodec;
     const std::string GROUND_RECORDING_DIRECTORY;
-    int mFD;
+    size_t videoTrackIndex;
+    AMediaMuxer* mediaMuxer=nullptr;
+    int outputFileFD;
     MJPEGDecodeAndroid mjpegDecodeAndroid;
 public:
     SimpleEncoder(const std::string GROUND_RECORDING_DIRECTORY1):GROUND_RECORDING_DIRECTORY(GROUND_RECORDING_DIRECTORY1){
@@ -35,8 +37,6 @@ public:
     void stop();
     std::mutex inputBufferDataMutex;
     std::vector<uint8_t> inputBufferData;
-    size_t videoTrackIndex;
-    AMediaMuxer* mediaMuxer=nullptr;
 };
 
 

@@ -44,9 +44,6 @@ void SimpleEncoder::loopEncoder() {
     const int32_t FRAME_RATE = 30;
     const int32_t BIT_RATE= 5*1024*1024;
 
-    constexpr size_t HALF_WIDTH= WIDTH / 2;
-    constexpr size_t HALF_HEIGHT= HEIGHT / 2;
-
     AMediaFormat_setString(format, AMEDIAFORMAT_KEY_MIME, "video/avc");
     AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_HEIGHT, HEIGHT);
     AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_WIDTH, WIDTH);
@@ -60,7 +57,6 @@ void SimpleEncoder::loopEncoder() {
     // Taken from https://developer.android.com/reference/android/media/MediaCodecInfo.CodecCapabilities#COLOR_Format24bitRGB888
     using namespace MediaCodecInfo::CodecCapabilities;
     constexpr auto ENCODER_COLOR_FORMAT=COLOR_FormatYUV420SemiPlanar;
-
 
     AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT,ENCODER_COLOR_FORMAT);
 
@@ -129,8 +125,8 @@ void SimpleEncoder::loopEncoder() {
             if(index==AMEDIACODEC_INFO_OUTPUT_FORMAT_CHANGED){
                 MLOGD<<"AMEDIACODEC_INFO_OUTPUT_FORMAT_CHANGED";
                 const std::string fn=FileHelper::findUnusedFilename(GROUND_RECORDING_DIRECTORY,"mp4");
-                mFD = open(fn.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
-                mediaMuxer=AMediaMuxer_new(mFD,AMEDIAMUXER_OUTPUT_FORMAT_MPEG_4);
+                outputFileFD = open(fn.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
+                mediaMuxer=AMediaMuxer_new(outputFileFD, AMEDIAMUXER_OUTPUT_FORMAT_MPEG_4);
                 AMediaFormat* format=AMediaCodec_getOutputFormat(mediaCodec);
                 MLOGD<<"Output format:"<<AMediaFormat_toString(format);
                 videoTrackIndex=AMediaMuxer_addTrack(mediaMuxer,format);
@@ -155,7 +151,7 @@ void SimpleEncoder::loopEncoder() {
     if(mediaMuxer!=nullptr){
         AMediaMuxer_stop(mediaMuxer);
         AMediaMuxer_delete(mediaMuxer);
-        close(mFD);
+        close(outputFileFD);
     }
     AMediaCodec_stop(mediaCodec);
 

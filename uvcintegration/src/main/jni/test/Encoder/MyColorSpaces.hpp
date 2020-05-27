@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <array>
 
+// Watch out: For the data layout height comes before width !!
+// I like to use it the other way around - image data = [width][height]
 namespace MyColorSpaces{
     // Y plane has full width & height
     // U and V plane both have half width and full height
@@ -21,8 +23,6 @@ namespace MyColorSpaces{
             return {planeU[yHalf*2][xHalf],planeV[yHalf*2][xHalf]};
         }
     }__attribute__((packed));
-    //
-    // For some reason in this layout height comes before width ?!
     template<size_t WIDTH,size_t HEIGHT>
     class YUV420SemiPlanar{
     public:
