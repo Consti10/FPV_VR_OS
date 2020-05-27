@@ -62,6 +62,8 @@ public:
             simpleEncoder.stop();
         }else{
             aNativeWindow=ANativeWindow_fromSurface(env,surface);
+            constexpr auto FORMAT_NV21=17;
+
             const auto WANTED_FORMAT=AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM;
             ANativeWindow_setBuffersGeometry(aNativeWindow,VIDEO_STREAM_WIDTH,VIDEO_STREAM_HEIGHT,WANTED_FORMAT);
             const auto ACTUAL_FORMAT=ANativeWindow_getFormat(aNativeWindow);

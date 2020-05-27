@@ -6,6 +6,7 @@
 #define FPV_VR_OS_MYCOLORSPACES_HPP
 
 #include <cstdint>
+#include <array>
 
 namespace MyColorSpaces{
     // Y plane has full width & height
@@ -16,6 +17,9 @@ namespace MyColorSpaces{
         uint8_t planeY[HEIGHT][WIDTH];
         uint8_t planeU[HEIGHT][WIDTH/2];
         uint8_t planeV[HEIGHT][WIDTH/2];
+        std::array<uint8_t,2> getUVHalf(size_t xHalf,size_t yHalf){
+            return {planeU[yHalf*2][xHalf],planeV[yHalf*2][xHalf]};
+        }
     }__attribute__((packed));
     //
     // For some reason in this layout height comes before width ?!

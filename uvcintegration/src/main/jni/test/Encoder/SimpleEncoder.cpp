@@ -100,14 +100,12 @@ void SimpleEncoder::loopEncoder() {
                     // copy CbCr component ( loop needed)
                     for(int i=0;i<WIDTH/2;i++){
                         for(int j=0;j<HEIGHT/2;j++){
-                            //framebuffer.planeUV[i][j][0]=out_buff.planeU[i][j*2];
-                            //framebuffer.planeUV[i][j][1]=out_buff.planeV[i][j*2];
+                            auto tmp=bufferYUV422.getUVHalf(i,j);
+                            framebuffer.setUV(i,j,tmp[0],tmp[1]);
                         }
                     }
-
                     inputBufferData.resize(0);
                     //std::memset(buf,1,inputBufferSize);
-
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                     frameTimeUs+=8*1000;
                 }
