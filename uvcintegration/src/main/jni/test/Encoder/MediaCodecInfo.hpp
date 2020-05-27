@@ -5,6 +5,8 @@
 #ifndef FPV_VR_OS_MEDIACODECINFO_HPP
 #define FPV_VR_OS_MEDIACODECINFO_HPP
 
+#include <array>
+
 // Values taken from
 // https://developer.android.com/reference/android/media/MediaCodecInfo.CodecCapabilities
 namespace MediaCodecInfo{
@@ -51,6 +53,21 @@ namespace YUVFrameGenerator{
     constexpr uint8_t PURPLE_U = 160;
     constexpr uint8_t PURPLE_V = 200;
 
+    template<size_t WIDTH,size_t HEIGHT>
+    class YUV420SemiPlanar{
+    public:
+        uint8_t planeY[WIDTH][HEIGHT];
+        uint8_t planeUV[WIDTH/2][HEIGHT/2][2];
+        /*uint8_t getY(size_t x,size_t y)const{
+            return planeY[x][y];
+        };
+        std::array<uint8_t,2> getUV(size_t x,size_t y){
+            return {planeUV[x][y][0],planeUV[x][y][1]};
+        };*/
+    }__attribute__((packed));
+    static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
+
+
     // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex
     void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
         // Full width/height for luma ( Y )
@@ -64,6 +81,8 @@ namespace YUVFrameGenerator{
         // Half width / height for chroma (U,V btw Cb,Cr)
         constexpr size_t HALF_WIDTH= WIDTH / 2;
         constexpr size_t HALF_HEIGHT= HEIGHT / 2;
+
+        auto& framebuffer= *static_cast<YUV420SemiPlanar<640,480>*>(static_cast<void*>(frameData));
 
         // For some reason HEIGHT comes before WIDTH here ?!
         // The Y plane has full resolution.
@@ -123,11 +142,7 @@ namespace YUVFrameGenerator{
             }
         }
     }
-    // inputData: YUV422 planar
-    template<size_t WIDTH,size_t HEIGHT>
-    void copyYUV422toYUV420(uint8_t inputData[WIDTH*HEIGHT*16/8],uint8_t outputData[WIDTH*HEIGHT*12/8]){
 
-    }
 
 }
 #endif //FPV_VR_OS_MEDIACODECINFO_HPP

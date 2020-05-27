@@ -83,7 +83,7 @@ void SimpleEncoder::loopEncoder() {
         }
         // Get input buffer if possible
         {
-            std::lock_guard<std::mutex> lock(inputBufferDataMutex);
+            /*std::lock_guard<std::mutex> lock(inputBufferDataMutex);
             if(!inputBufferData.empty()){
                 const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
                 if(index>0){
@@ -111,8 +111,8 @@ void SimpleEncoder::loopEncoder() {
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                     frameTimeUs+=8*1000;
                 }
-            }
-            /*const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
+            }*/
+            const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
                 size_t inputBufferSize;
                 void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
@@ -122,7 +122,7 @@ void SimpleEncoder::loopEncoder() {
 
                 AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                 frameTimeUs+=8*1000;
-            }*/
+            }
         }
         {
             AMediaCodecBufferInfo info;
