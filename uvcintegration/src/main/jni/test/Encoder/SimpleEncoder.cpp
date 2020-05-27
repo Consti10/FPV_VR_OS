@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <FileHelper.hpp>
-#include "MediaCodecInfo.hpp"
+#include "YUVFrameGenerator.hpp"
 
 void SimpleEncoder::start() {
     running=true;

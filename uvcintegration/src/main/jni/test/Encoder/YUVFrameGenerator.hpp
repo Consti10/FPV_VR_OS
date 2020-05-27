@@ -2,8 +2,8 @@
 // Created by geier on 25/05/2020.
 //
 
-#ifndef FPV_VR_OS_MEDIACODECINFO_HPP
-#define FPV_VR_OS_MEDIACODECINFO_HPP
+#ifndef FPV_VR_OS_YUVFRAMEGENERATOR_HPP
+#define FPV_VR_OS_YUVFRAMEGENERATOR_HPP
 
 #include "MyColorSpaces.hpp"
 
@@ -51,7 +51,7 @@ namespace YUVFrameGenerator{
     // YUV values for purple
     constexpr uint8_t PURPLE_YUV[]={120, 160, 200};
 
-    // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex
+    // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex/8
     void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
         using namespace MyColorSpaces;
         // Full width/height for luma ( Y )
@@ -126,4 +126,4 @@ namespace YUVFrameGenerator{
     // Check - YUV420 has 12 bit per pixel (1.5 bytes)
     //static_assert(sizeof(YPlane)+sizeof(CbCrPlane) == FRAME_BUFFER_SIZE_B);
 }
-#endif //FPV_VR_OS_MEDIACODECINFO_HPP
+#endif //FPV_VR_OS_YUVFRAMEGENERATOR_HPP
