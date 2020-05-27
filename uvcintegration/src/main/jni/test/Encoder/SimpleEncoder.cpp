@@ -91,7 +91,8 @@ void SimpleEncoder::loopEncoder() {
                     uint8_t* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
                     MLOGD<<"Got input buffer "<<inputBufferSize;
                     //mjpegDecodeAndroid.DecodeMJPEGtoEncoderBuffer(inputBufferData.data(),inputBufferData.size(),buf,640);
-                    MJPEGDecodeAndroid::NvBuffer out_buff;
+                    MJPEGDecodeAndroid::YUV422Planar<WIDTH,HEIGHT> out_buff;
+
                     mjpegDecodeAndroid.decodeToYUVXXXBuffer(out_buff,inputBufferData.data(),inputBufferData.size());
                     // copy Y component (easy)
                     memcpy(buf,out_buff.planeY,sizeof(out_buff.planeY));
@@ -99,8 +100,8 @@ void SimpleEncoder::loopEncoder() {
                     for(int i=0;i<WIDTH/2;i++){
                         for(int j=0;j<HEIGHT/2;j++){
                             auto& CbCrPlane = *static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&buf[WIDTH * HEIGHT]));
-                            //CbCrPlane[j][i][0]=out_buff.planes[1].data[i][j];
-                            //CbCrPlane[j][i][1]=out_buff.planes[2].data[i][j];
+                            CbCrPlane[j][i][0]=out_buff.planeU[i][j];
+                            CbCrPlane[j][i][1]=out_buff.planeV[i][j];
                         }
                     }
 

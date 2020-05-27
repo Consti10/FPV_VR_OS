@@ -44,9 +44,9 @@ private:
         longjmp(myerr->jmp, 1);
     }
     // 'Create array with pointers to an array'
-    static std::vector<uint8_t*> convertToPointers(uint8_t* array1d,size_t dimension1,size_t scanline_width){
-        std::vector<uint8_t*> ret(dimension1);
-        for(int i=0;i<dimension1;i++){
+    static std::vector<uint8_t*> convertToPointers(uint8_t* array1d, size_t heightInPx, size_t scanline_width){
+        std::vector<uint8_t*> ret(heightInPx);
+        for(int i=0; i < heightInPx; i++){
             ret[i]=array1d+i*scanline_width;
         }
         return ret;
@@ -119,16 +119,16 @@ public:
         jpeg_finish_decompress(&dinfo);
     }
 
+    // Y plane has full width & height
+    // U and V plane both have half width and full height
+    template<size_t WIDTH,size_t HEIGHT>
+    struct YUV422Planar{
+       uint8_t planeY[WIDTH][HEIGHT];
+       uint8_t planeU[WIDTH/2][HEIGHT];
+       uint8_t planeV[WIDTH/2][HEIGHT];
+    }__attribute__((packed));
 
-    class NvBuffer{
-    public:
-       //NvBufferPlane planes[3];
-       uint8_t planeY[640][480];
-       uint8_t planeU[320][480];
-       uint8_t planeV[320][480];
-    };
-
-    void decodeToYUVXXXBuffer(NvBuffer& out_buff, unsigned char * in_buf,unsigned long in_buf_size){
+    void decodeToYUVXXXBuffer(YUV422Planar<640,480>& out_buff, unsigned char * in_buf, unsigned long in_buf_size){
         MEASURE_FUNCTION_EXECUTION_TIME
         // Error manager stuff
         struct error_mgr jerr;
@@ -157,11 +157,10 @@ public:
         dinfo.raw_data_out = TRUE;
         jpeg_start_decompress (&dinfo);
 
-        decodeDirect(out_buff);
+        decodeDirect2(out_buff);
         //JSAMPIMAGE jsampimage;
         //std::vector<uint8_t> decodedData(640*480*16/8);
         //uint8_t* data=decodedData.data();
-
 
         jpeg_finish_decompress(&dinfo);
         //*buffer = out_buf;
@@ -169,7 +168,48 @@ public:
         MLOGD<<"Succesfully decoded Buffer ";
     }
 
-    void decodeDirect(NvBuffer& out_buf){
+    void decodeDirect2(YUV422Planar<640,480>& out_buf){
+        unsigned char **yuv[3];
+        unsigned char *y[4 * DCTSIZE] = { NULL, };
+        unsigned char *u[4 * DCTSIZE] = { NULL, };
+        unsigned char *v[4 * DCTSIZE] = { NULL, };
+        int v_samp_factor[3];
+
+        auto y2=convertToPointers(&out_buf.planeY[0][0],480,640);
+        auto u2=convertToPointers(&out_buf.planeU[0][0],480,320);
+        auto v2=convertToPointers(&out_buf.planeV[0][0],480,320);
+
+        //yuv[0] = y;
+        //yuv[1] = u;
+        //yuv[2] = v;
+        for(int i=0;i<3;i++){
+            MLOGD<<i<<"h samp factor"<<dinfo.comp_info[i].h_samp_factor<<"v samp factor "<<dinfo.comp_info[i].v_samp_factor;
+        }
+        for (int i = 0; i < 3; i++){
+            v_samp_factor[i] = dinfo.comp_info[i].v_samp_factor;
+        }
+        size_t scanline_count=0;
+        for (int i = 0; i < (int) dinfo.image_height; i += v_samp_factor[0] * DCTSIZE){
+            //jpeg_read_raw_data() returns one MCU row per call, and thus you must pass a
+            //buffer of at least max_v_samp_factor*DCTSIZE scanlines
+            const auto SOME_SIZE=v_samp_factor[0] * DCTSIZE;
+            /*for (int j = 0; j < SOME_SIZE; ++j){
+                yuv[0][j] = (unsigned char*)out_buf.planeY + (i + j) * 640;
+                yuv[1][j] = (unsigned char*)out_buf.planeU + (i + j) * 320;
+                yuv[2][j] = (unsigned char*)out_buf.planeV + (i + j) * 320;
+            }*/
+            yuv[0] = &y2[scanline_count];
+            yuv[1] = &u2[scanline_count];
+            yuv[2] = &v2[scanline_count];
+            auto lines_read = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) yuv, SOME_SIZE);
+            // lines read is always 8
+            MLOGD<<"lines read "<<lines_read;
+            scanline_count+=lines_read;
+        }
+    }
+
+
+    void decodeDirect(YUV422Planar<640,480>& out_buf){
         // has to be after start_decompress ?
         for(int i=0;i<3;i++){
             MLOGD<<"component "<<i<<" samples per row "<<dinfo.comp_info[i].width_in_blocks*DCTSIZE;
