@@ -52,6 +52,13 @@ private:
         }
         return ret;
     }
+    // We need to set the error manager every time else it will crash (I have no idea why )
+    // https://stackoverflow.com/questions/11613040/why-does-jpeg-decompress-create-crash-without-error-message
+    void setErrorManager(){
+        struct error_mgr jerr;
+        dinfo.err = jpeg_std_error(&jerr.super);
+        jerr.super.error_exit = _error_exit;
+    }
 public:
     // Helper that prints the current configuration of ANativeWindow_Buffer
     static void debugANativeWindowBuffer(const ANativeWindow_Buffer& buffer){
@@ -62,11 +69,7 @@ public:
     void DecodeMJPEGtoANativeWindowBuffer(const unsigned char* mpegData,size_t mpegDataSize,const ANativeWindow_Buffer& nativeWindowBuffer){
         debugANativeWindowBuffer(nativeWindowBuffer);
         MEASURE_FUNCTION_EXECUTION_TIME
-        // We need to set the error manager every time else it will crash (I have no idea why )
-        // https://stackoverflow.com/questions/11613040/why-does-jpeg-decompress-create-crash-without-error-message
-        struct error_mgr jerr;
-        dinfo.err = jpeg_std_error(&jerr.super);
-        jerr.super.error_exit = _error_exit;
+        setErrorManager();
 
         jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
@@ -121,11 +124,7 @@ public:
 
     void decodeToYUVXXXBuffer(MyColorSpaces::YUV422Planar<640,480>& out_buff, unsigned char * in_buf, unsigned long in_buf_size){
         MEASURE_FUNCTION_EXECUTION_TIME
-        // Error manager stuff
-        struct error_mgr jerr;
-        dinfo.err = jpeg_std_error(&jerr.super);
-        jerr.super.error_exit = _error_exit;
-        // end error manager
+        setErrorManager();
         uint32_t pixel_format = 0;
 
         dinfo.out_color_space = JCS_YCbCr;
@@ -137,13 +136,6 @@ public:
         if(dinfo.jpeg_color_space!=dinfo.out_color_space){
             MLOGE<<"Wrong usage";
         }
-
-        //out_buf = new NvBuffer(pixel_format, cinfo.image_width,
-        //                       cinfo.image_height, 0);
-        //out_buf->allocateMemory();
-
-        dinfo.do_fancy_upsampling = FALSE;
-        dinfo.do_block_smoothing = FALSE;
         dinfo.dct_method = JDCT_FASTEST;
         dinfo.raw_data_out = TRUE;
         jpeg_start_decompress (&dinfo);
@@ -189,7 +181,6 @@ public:
             scanline_count+=lines_read;
         }
     }
-
 
 };
 
