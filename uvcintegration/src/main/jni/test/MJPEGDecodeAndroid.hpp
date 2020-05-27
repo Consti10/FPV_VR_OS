@@ -81,29 +81,31 @@ public:
     }
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
-    void DecodeMJPEGtoANativeWindowBuffer(const unsigned char* mpegData,size_t mpegDataSize,const ANativeWindow_Buffer& nativeWindowBuffer){
+    void DecodeMJPEGtoANativeWindowBuffer(const uint8_t * jpegData, size_t jpegDataSize, const ANativeWindow_Buffer& nativeWindowBuffer){
         debugANativeWindowBuffer(nativeWindowBuffer);
         MEASURE_FUNCTION_EXECUTION_TIME
-        setErrorManager();
-        jpeg_mem_src(&dinfo,mpegData,mpegDataSize);
-        jpeg_read_header(&dinfo, TRUE);
         unsigned int BYTES_PER_PIXEL;
+        J_COLOR_SPACE wantedOutputColorspace;
         if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM || nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM){
-            dinfo.out_color_space = JCS_EXT_RGBA;
+            wantedOutputColorspace = JCS_EXT_RGBA;
             BYTES_PER_PIXEL=4;
         }else if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM){
-            dinfo.out_color_space = JCS_EXT_RGB;
+            wantedOutputColorspace = JCS_EXT_RGB;
             BYTES_PER_PIXEL=3;
         }else if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM){
-            dinfo.out_color_space = JCS_RGB565;
+            wantedOutputColorspace = JCS_RGB565;
             BYTES_PER_PIXEL=2;
-        }else if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420){
-            dinfo.out_color_space = JCS_YCbCr;
-            BYTES_PER_PIXEL=2;
+        //}else if(nativeWindowBuffer.format==AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420){
+        //    wantedOutputColorspace = JCS_YCbCr;
+        //    BYTES_PER_PIXEL=2;
         }else{
             MLOGD<<"Unsupported image format";
             return;
         }
+        setErrorManager();
+        jpeg_mem_src(&dinfo, jpegData, jpegDataSize);
+        jpeg_read_header(&dinfo, TRUE);
+        dinfo.out_color_space=wantedOutputColorspace;
         dinfo.dct_method = JDCT_IFAST;
         jpeg_start_decompress(&dinfo);
 
@@ -122,19 +124,14 @@ public:
         jpeg_finish_decompress(&dinfo);
     }
 
-
-    void decodeToYUV422(MyColorSpaces::YUV422Planar<640,480>& out_buff, unsigned char * in_buf, unsigned long in_buf_size){
+    void decodeToYUV422(uint8_t * jpegData,size_t jpegDataSize,MyColorSpaces::YUV422Planar<640,480>& out_buff){
         MEASURE_FUNCTION_EXECUTION_TIME
         setErrorManager();
-
-        jpeg_mem_src(&dinfo, in_buf, in_buf_size);
+        jpeg_mem_src(&dinfo, jpegData, jpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
-        if(dinfo.jpeg_color_space!=JCS_YCbCr){
-            MLOGE<<"Wrong usage";
-            return;
-        }
-        // Must be YUV422
+        // The jpeg color space is YUV422 planar if all these requirements are fulfilled
         const bool IS_YUV422=
+                dinfo.jpeg_color_space==JCS_YCbCr &&
                 dinfo.comp_info[0].v_samp_factor==1 &&
                 dinfo.comp_info[1].v_samp_factor==1 &&
                 dinfo.comp_info[2].v_samp_factor==1 &&
@@ -162,18 +159,18 @@ public:
         auto u2=convertToPointers(&out_buf.planeU[0][0],480,320);
         auto v2=convertToPointers(&out_buf.planeV[0][0],480,320);
 
+        //jpeg_read_raw_data() returns one MCU row per call, and thus you must pass a
+        //buffer of at least max_v_samp_factor*DCTSIZE scanlines
         auto max_v_samp_factor=dinfo.comp_info[0].v_samp_factor;
         size_t scanline_count=0;
         for (int i = 0; i < (int) dinfo.image_height; i += max_v_samp_factor * DCTSIZE){
-            //jpeg_read_raw_data() returns one MCU row per call, and thus you must pass a
-            //buffer of at least max_v_samp_factor*DCTSIZE scanlines
             const auto SOME_SIZE=max_v_samp_factor * DCTSIZE;
             yuv[0] = &y2[scanline_count];
             yuv[1] = &u2[scanline_count];
             yuv[2] = &v2[scanline_count];
             auto lines_read = jpeg_read_raw_data (&dinfo, (JSAMPIMAGE) yuv, SOME_SIZE);
             // lines read is always 8
-            MLOGD<<"lines read "<<lines_read;
+            //MLOGD<<"lines read "<<lines_read;
             scanline_count+=lines_read;
         }
     }

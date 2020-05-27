@@ -70,7 +70,6 @@ public:
             simpleEncoder.stop();
         }else{
             aNativeWindow=ANativeWindow_fromSurface(env,surface);
-
             const auto WANTED_FORMAT=AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM;
             ANativeWindow_setBuffersGeometry(aNativeWindow,VIDEO_STREAM_WIDTH,VIDEO_STREAM_HEIGHT,WANTED_FORMAT);
             const auto ACTUAL_FORMAT=ANativeWindow_getFormat(aNativeWindow);
@@ -102,14 +101,15 @@ public:
             MLOGD<<"No surface";
             return;
         }
-        simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
-        //mMJPEGDecodeAndroid.decodeToYUVXXXBuffer((uint8_t*)frame_mjpeg->data,frame_mjpeg->actual_bytes);
+        //simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
 
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
-            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer((const unsigned char*)frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
+            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer((uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
             ANativeWindow_unlockAndPost(aNativeWindow);
+            MyColorSpaces::YUV422Planar<640,480> bufferYUV422{};
+            mMJPEGDecodeAndroid.decodeToYUV422((uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes,bufferYUV422);
         }else{
             MLOGD<<"Cannot lock window";
         }

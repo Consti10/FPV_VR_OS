@@ -91,8 +91,7 @@ void SimpleEncoder::loopEncoder() {
                     MLOGD<<"Got input buffer "<<inputBufferSize;
                     //mjpegDecodeAndroid.DecodeMJPEGtoEncoderBuffer(inputBufferData.data(),inputBufferData.size(),buf,640);
                     MyColorSpaces::YUV422Planar<WIDTH,HEIGHT> bufferYUV422{};
-                    mjpegDecodeAndroid.decodeToYUV422(bufferYUV422, inputBufferData.data(),
-                                                      inputBufferData.size());
+                    mjpegDecodeAndroid.decodeToYUV422(inputBufferData.data(),inputBufferData.size(),bufferYUV422);
 
                     auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buf));
                     // copy Y component (easy)
