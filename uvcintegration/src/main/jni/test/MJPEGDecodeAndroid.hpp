@@ -81,7 +81,7 @@ public:
     }
     // Supports the most common ANativeWindow_Buffer image formats
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
-    void DecodeMJPEGtoANativeWindowBuffer(const uint8_t * jpegData, size_t jpegDataSize, const ANativeWindow_Buffer& nativeWindowBuffer){
+    void DecodeMJPEGtoANativeWindowBuffer(const void* jpegData, size_t jpegDataSize, const ANativeWindow_Buffer& nativeWindowBuffer){
         debugANativeWindowBuffer(nativeWindowBuffer);
         MEASURE_FUNCTION_EXECUTION_TIME
         unsigned int BYTES_PER_PIXEL;
@@ -103,7 +103,7 @@ public:
             return;
         }
         setErrorManager();
-        jpeg_mem_src(&dinfo, jpegData, jpegDataSize);
+        jpeg_mem_src(&dinfo,(const unsigned char*) jpegData,jpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
         dinfo.out_color_space=wantedOutputColorspace;
         dinfo.dct_method = JDCT_IFAST;
@@ -124,10 +124,10 @@ public:
         jpeg_finish_decompress(&dinfo);
     }
 
-    void decodeToYUV422(uint8_t * jpegData,size_t jpegDataSize,MyColorSpaces::YUV422Planar<640,480>& out_buff){
+    void decodeToYUV422(void* jpegData,size_t jpegDataSize,MyColorSpaces::YUV422Planar<640,480>& out_buff){
         MEASURE_FUNCTION_EXECUTION_TIME
         setErrorManager();
-        jpeg_mem_src(&dinfo, jpegData, jpegDataSize);
+        jpeg_mem_src(&dinfo,(const unsigned char*) jpegData, jpegDataSize);
         jpeg_read_header(&dinfo, TRUE);
         // The jpeg color space is YUV422 planar if all these requirements are fulfilled
         const bool IS_YUV422=

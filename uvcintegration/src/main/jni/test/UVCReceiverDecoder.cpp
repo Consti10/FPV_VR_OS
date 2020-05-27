@@ -101,15 +101,15 @@ public:
             MLOGD<<"No surface";
             return;
         }
-        //simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
+        simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
 
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
-            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer((uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
+            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
             ANativeWindow_unlockAndPost(aNativeWindow);
             MyColorSpaces::YUV422Planar<640,480> bufferYUV422{};
-            mMJPEGDecodeAndroid.decodeToYUV422((uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes,bufferYUV422);
+            mMJPEGDecodeAndroid.decodeToYUV422(frame_mjpeg->data, frame_mjpeg->actual_bytes,bufferYUV422);
         }else{
             MLOGD<<"Cannot lock window";
         }
