@@ -102,7 +102,8 @@ public:
         }
         auto jpegData=readUpTo2(2);
         if(!isSOI(jpegData.data())){
-            MLOGE<<"Expect SOI at begin of file"<<jpegData.size();
+            MLOGE<<"Expect SOI as first 2 bytes "<<jpegData.size();
+            //MLOGD<<(int)jpegData[0]<<" "<<(int)jpegData[1];
             return std::nullopt;
         }
         bool lastByteWasMarker=0;
@@ -111,7 +112,7 @@ public:
                 MLOGE<<"couldn't find corresponding EOI";
                 return std::nullopt;
             }
-            const auto readBuffer=readUpTo2(1024);
+            const auto readBuffer=readUpTo2(1024*1024);
             MLOGD << " read " << readBuffer.size();
             // parse read data until EOI
             for(size_t i=0; i < readBuffer.size(); i++){
@@ -122,6 +123,7 @@ public:
                         file.seekg(-wastedBytes, std::ios::cur);
                     }
                     MLOGD<<" Is SOI EOI "<<isSOI(jpegData.data())<<" "<<isEOI(&jpegData[jpegData.size()-2])<<" wasted bytes "<<wastedBytes<<" x "<<readBuffer.size();
+                    MLOGD<<" next are "<<(int)readBuffer[i+1]<<" "<<(int)readBuffer[i+2];
                     return jpegData;
                 }
                 lastByteWasMarker = readBuffer[i] == 0xFF;
