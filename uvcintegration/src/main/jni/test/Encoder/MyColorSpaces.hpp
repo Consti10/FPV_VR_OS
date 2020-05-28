@@ -20,7 +20,9 @@ namespace MyColorSpaces{
         uint8_t planeU[HEIGHT][WIDTH/2];
         uint8_t planeV[HEIGHT][WIDTH/2];
         std::array<uint8_t,2> getUVHalf(size_t xHalf,size_t yHalf)const{
-            return {planeU[yHalf*2][xHalf],planeV[yHalf*2][xHalf]};
+            const auto U=planeU[yHalf*2][xHalf];
+            const auto V=planeV[yHalf*2][xHalf];
+            return {U,V};
         }
     }__attribute__((packed));
     static_assert(sizeof(YUV422Planar<640,480>)==640*480*16/8);
@@ -41,7 +43,7 @@ namespace MyColorSpaces{
     static_assert(sizeof(YUV420SemiPlanar<640,480>)*16/12==sizeof(YUV422Planar<640,480>));
 
     // TODO why inline ? (compiler / header quards issue )
-    inline void copyTo(const MyColorSpaces::YUV422Planar<640,480>& in,MyColorSpaces::YUV420SemiPlanar<640,480>& out){
+    static void copyTo(const MyColorSpaces::YUV422Planar<640,480>& in,MyColorSpaces::YUV420SemiPlanar<640,480>& out){
         // copy Y component (easy)
         memcpy(out.planeY,in.planeY, sizeof(out.planeY));
 
