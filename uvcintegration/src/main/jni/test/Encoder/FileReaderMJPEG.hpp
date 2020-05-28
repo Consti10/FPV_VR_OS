@@ -27,15 +27,6 @@ private:
         std::size_t end;
     };
     std::vector<JPEGImage> images;*/
-    // returns index of first SOI marker, or -1 if none found
-    static ssize_t findNextEOI(const std::vector<uint8_t>& buff){
-        for(size_t i=0;i<buff.size()-1;i+=2){
-            if(buff[i]==0xFF &&  buff[i+1]==0xD9){
-                return i;
-            }
-        }
-        return -1;
-    }
     // read up to maxSize bytes and returns the number of bytes read
     // increases size of buff by n of bytes read
     std::size_t readUpTo(std::vector<uint8_t>& buff,size_t maxWantedDataSize){
@@ -66,6 +57,15 @@ private:
     static bool isEOI(const uint8_t* data){
         return data[0]==0xFF && data[1]==0xD9;
     }
+    // returns index of first SOI marker, or -1 if none found
+    static ssize_t findNextEOI(const std::vector<uint8_t>& buff){
+        for(size_t i=0;i<buff.size()-1;i++){
+            if(buff[i]==0xFF &&  buff[i+1]==0xD9){
+                return i;
+            }
+        }
+        return -1;
+    }
 public:
     void open(const std::string FILENAME){
         file=std::ifstream(FILENAME.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
@@ -95,80 +95,38 @@ public:
         file.close();
     }
     std::optional<std::vector<uint8_t>> getNextFrame(){
-        if (file.eof()) {
-            MLOGD<<"Done with file";
+        if (remaining()<4) {
+            MLOGD<<"Done with file"<<remaining();
             return std::nullopt;
         }
-        const size_t pos=remaining();
         auto jpegData=readUpTo2(2);
-        if(jpegData.size()!=2 || !isSOI(jpegData.data())){
+        if(!isSOI(jpegData.data())){
             MLOGE<<"Expect SOI at begin of file"<<jpegData.size();
             return std::nullopt;
         }
         while(true){
-            if (file.eof()) {
-                MLOGD<<"Done with file";
+            if (remaining()==0) {
+                MLOGE<<"couldn't find corresponding EOI";
                 return std::nullopt;
             }
             auto tmp=readUpTo2(1024);
-            const size_t indexEOI=findNextEOI(tmp);
+            MLOGD<<" read "<<tmp.size();
+            const auto indexEOI=findNextEOI(tmp);
+            MLOGD<<"idx "<<indexEOI;
             if(indexEOI>0){
-                tmp.resize(indexEOI);
+                const ssize_t wastedData=tmp.size()-(indexEOI+2);
+                tmp.resize(indexEOI+2);
                 jpegData.insert(jpegData.end(),tmp.begin(),tmp.end());
+                MLOGD<<"Wasted data"<<wastedData;
+                if(wastedData>0){
+                    file.seekg(-wastedData, std::ios::cur);
+                }
+                MLOGD<<" Is SOI EOI "<<isSOI(jpegData.data())<<" "<<isEOI(&jpegData[jpegData.size()-2]);
                 return jpegData;
             }
             jpegData.insert(jpegData.end(),tmp.begin(),tmp.end());
             MLOGD<<"looping";
         }
-    }
-    std::optional<std::vector<uint8_t>> getNextFrame2(){
-        if (file.eof()) {
-            MLOGD<<"Done with file";
-            return std::nullopt;
-        }
-        if(remaining()<4){
-            MLOGE<<" Something went wrong. .remaining()<4";
-            return std::nullopt;
-        }
-        std::vector<uint8_t> cachedData;
-        cachedData.reserve(MAX_JPEG_SIZE);
-        if(readUpTo(cachedData,2)!=2){
-            MLOGE<<"cannot read first 2 bytes";
-            return std::nullopt;
-        }
-        // check if SOI (start of image)
-        if(!(cachedData[0]==0xFF &&cachedData[1]==0xD8)){
-            MLOGE<<" expect first bytes to be SOI";
-            return std::nullopt;
-        }
-        MLOGD<<" found SOI";
-        if (remaining()<2) {
-            MLOGE<<"Cannot find EOI - not at least 2 bytes left";
-            return std::nullopt;
-        }
-        while(true){
-            const
-            const size_t bytesRead=readUpTo(cachedData,1024);
-        }
-
-
-        const std::size_t cachedDataOffset=cachedData.size();
-        cachedData.resize(cachedDataOffset+1024);
-        file.read((char *)&cachedData[cachedDataOffset],1024);
-        const std::streamsize readData2 = file.gcount();
-        cachedData.resize(cachedDataOffset+readData2);
-        for(size_t j=cachedDataOffset;j<cachedData.size()-1;j+=2){
-            if(cachedData[j]==0xFF && cachedData[j+1]==0xD9){
-                MLOGD<<"EOI found";
-                const size_t endOfJPEG=j+2;
-                cachedData.resize(endOfJPEG);
-                file.seekg(0, std::ios::end);
-                return cachedData;
-            }
-        }
-
-        MLOGE<<" cannot find EOI in 1024*1024 bytes";
-        return std::nullopt;
     }
 };
 
