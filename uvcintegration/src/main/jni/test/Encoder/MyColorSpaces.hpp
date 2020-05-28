@@ -19,7 +19,7 @@ namespace MyColorSpaces{
         uint8_t planeY[HEIGHT][WIDTH];
         uint8_t planeU[HEIGHT][WIDTH/2];
         uint8_t planeV[HEIGHT][WIDTH/2];
-        std::array<uint8_t,2> getUVHalf(size_t xHalf,size_t yHalf){
+        std::array<uint8_t,2> getUVHalf(size_t xHalf,size_t yHalf)const{
             return {planeU[yHalf*2][xHalf],planeV[yHalf*2][xHalf]};
         }
     }__attribute__((packed));
@@ -38,12 +38,22 @@ namespace MyColorSpaces{
         }
     }__attribute__((packed));
     static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
+    static_assert(sizeof(YUV420SemiPlanar<640,480>)*16/12==sizeof(YUV422Planar<640,480>));
+
+    // TODO why inline ? (compiler / header quards issue )
+    inline void copyTo(const MyColorSpaces::YUV422Planar<640,480>& in,MyColorSpaces::YUV420SemiPlanar<640,480>& out){
+        // copy Y component (easy)
+        memcpy(out.planeY,in.planeY, sizeof(out.planeY));
+
+        // copy CbCr component ( loop needed)
+        for(int i=0;i<640/2;i++){
+            for(int j=0;j<480/2;j++){
+                auto tmp=in.getUVHalf(i,j);
+                out.setUV(i,j,tmp[0],tmp[1]);
+            }
+        }
+    }
 }
 
-namespace Test123{
-    //void convert123(const MyColorSpaces::YUV422Planar<640,480>& in,MyColorSpaces::YUV420SemiPlanar<640,480>& out){
-
-    //}
-}
 
 #endif //FPV_VR_OS_MYCOLORSPACES_HPP

@@ -73,9 +73,6 @@ void SimpleEncoder::loopEncoder() {
     int frameTimeUs=0;
     int frameIndex=0;
     while(true){
-        if(!running){
-            break;
-        }
         // Get input buffer if possible
         {
             /*std::lock_guard<std::mutex> lock(inputBufferDataMutex);
@@ -88,18 +85,9 @@ void SimpleEncoder::loopEncoder() {
                     //mjpegDecodeAndroid.DecodeMJPEGtoEncoderBuffer(inputBufferData.data(),inputBufferData.size(),buf,640);
                     MyColorSpaces::YUV422Planar<WIDTH,HEIGHT> bufferYUV422{};
                     mjpegDecodeAndroid.decodeToYUV422(inputBufferData.data(),inputBufferData.size(),bufferYUV422);
-
                     auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buf));
-                    // copy Y component (easy)
-                    memcpy(framebuffer.planeY, bufferYUV422.planeY, sizeof(bufferYUV422.planeY));
+                    MyColorSpaces::copyTo(bufferYUV422,framebuffer);
 
-                    // copy CbCr component ( loop needed)
-                    for(int i=0;i<WIDTH/2;i++){
-                        for(int j=0;j<HEIGHT/2;j++){
-                            auto tmp=bufferYUV422.getUVHalf(i,j);
-                            framebuffer.setUV(i,j,tmp[0],tmp[1]);
-                        }
-                    }
                     inputBufferData.resize(0);
                     //std::memset(buf,1,inputBufferSize);
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
@@ -111,11 +99,15 @@ void SimpleEncoder::loopEncoder() {
                 size_t inputBufferSize;
                 void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
                 MLOGD<<"Got input buffer "<<inputBufferSize;
-                YUVFrameGenerator::generateFrame(frameIndex,ENCODER_COLOR_FORMAT,(uint8_t*)buf,inputBufferSize);
-                frameIndex++;
-
-                AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
-                frameTimeUs+=8*1000;
+                if(!running){
+                    AMediaCodec_queueInputBuffer(mediaCodec,index,0,0,frameTimeUs,AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM);
+                    break;
+                }else{
+                    YUVFrameGenerator::generateFrame(frameIndex,ENCODER_COLOR_FORMAT,(uint8_t*)buf,inputBufferSize);
+                    AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
+                    frameIndex++;
+                    frameTimeUs+=8*1000;
+                }
             }*/
             const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
@@ -124,24 +116,16 @@ void SimpleEncoder::loopEncoder() {
                 MLOGD<<"Got input buffer "<<inputBufferSize;
                 auto mjpegData= fileReaderMjpeg.getNextFrame();
                 if(mjpegData==std::nullopt){
-
+                    AMediaCodec_queueInputBuffer(mediaCodec,index,0,0,frameTimeUs,AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM);
+                    break;
                 }else{
+                    MLOGD<<"Got mjpeg"<<mjpegData->size();
                     MyColorSpaces::YUV422Planar<WIDTH,HEIGHT> bufferYUV422{};
                     mjpegDecodeAndroid.decodeToYUV422(mjpegData->data(),mjpegData->size(),bufferYUV422);
-
                     auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buf));
-                    // copy Y component (easy)
-                    memcpy(framebuffer.planeY, bufferYUV422.planeY, sizeof(bufferYUV422.planeY));
-
-                    // copy CbCr component ( loop needed)
-                    for(int i=0;i<WIDTH/2;i++){
-                        for(int j=0;j<HEIGHT/2;j++){
-                            auto tmp=bufferYUV422.getUVHalf(i,j);
-                            framebuffer.setUV(i,j,tmp[0],tmp[1]);
-                        }
-                    }
+                    MyColorSpaces::copyTo(bufferYUV422,framebuffer);
+                    frameTimeUs+=8*1000;
                 }
-
                 AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                 frameTimeUs+=8*1000;
             }
@@ -172,6 +156,12 @@ void SimpleEncoder::loopEncoder() {
                 AMediaMuxer_writeSampleData(mediaMuxer,videoTrackIndex,data,&info);
 
                 AMediaCodec_releaseOutputBuffer(mediaCodec,index,false);
+
+                if((info.flags & AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM) != 0){
+                    MLOGD<<" Got EOS in output";
+                    break;
+                }
+
             }
         }
         MLOGD<<"Hi from worker";

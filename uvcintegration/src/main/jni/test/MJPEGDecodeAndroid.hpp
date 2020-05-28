@@ -5,7 +5,8 @@
 #ifndef UVCCAMERA_MJPEGDECODEANDROID_HPP
 #define UVCCAMERA_MJPEGDECODEANDROID_HPP
 
-#include "HuffTables.hpp"
+//#include "HuffTables.hpp"
+#include <jpeglib.h>
 #include <jni.h>
 #include <android/native_window_jni.h>
 #include <setjmp.h>
