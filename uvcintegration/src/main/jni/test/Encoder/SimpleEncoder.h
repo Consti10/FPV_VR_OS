@@ -25,7 +25,7 @@ private:
     void loopEncoder();
     AMediaCodec* mediaCodec;
     const std::string GROUND_RECORDING_DIRECTORY;
-    const std::string INPUT_FILE=GROUND_RECORDING_DIRECTORY+"TestInput.mjpeg";
+    const std::string INPUT_FILE=GROUND_RECORDING_DIRECTORY+"TestInput.fpv";
     FileReaderMJPEG fileReaderMjpeg;
     size_t videoTrackIndex;
     AMediaMuxer* mediaMuxer=nullptr;
