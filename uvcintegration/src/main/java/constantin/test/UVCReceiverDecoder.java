@@ -55,7 +55,7 @@ public class UVCReceiverDecoder {
         }
     }
 
-    private static String getDirectoryToSaveDataTo(){
+    public static String getDirectoryToSaveDataTo(){
         final String ret= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/FPV_VR/MJPEG/";
         File dir = new File(ret);
         if (!dir.exists()) {
@@ -86,6 +86,7 @@ public class UVCReceiverDecoder {
     private static native void nativeStopReceiving(long nativeInstance);
     private static native void nativeSetSurface(long nativeInstance,Surface surface);
 
-
+    public static native long nativeStartConvertFile(String GroundRecordingDirectory);
+    public static native long nativeStopConvertFile(long p);
 
 }

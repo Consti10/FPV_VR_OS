@@ -31,18 +31,10 @@ void SimpleEncoder::stop() {
     mEncoderThread= nullptr;
 }
 
-
-//void SimpleEncoder::loopDecoder() {}
-
-void SimpleEncoder::loopEncoder() {
+bool SimpleEncoder::openMediaCodecEncoder(const int wantedColorFormat) {
     AMediaFormat* format = AMediaFormat_new();
     mediaCodec = AMediaCodec_createEncoderByType("video/avc");
     //mediaCodec= AMediaCodec_createCodecByName("OMX.google.h264.encoder");
-
-    const int32_t WIDTH = 640;
-    const int32_t HEIGHT = 480;
-    const int32_t FRAME_RATE = 30;
-    const int32_t BIT_RATE= 5*1024*1024;
 
     AMediaFormat_setString(format, AMEDIAFORMAT_KEY_MIME, "video/avc");
     AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_HEIGHT, HEIGHT);
@@ -54,11 +46,7 @@ void SimpleEncoder::loopEncoder() {
     AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_STRIDE,640);
     //AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_STRIDE,640);
     //AMediaFormat_setInt32(format,AMEDIAFORMAT_KEY_COLOR_FORMAT,)
-    // Taken from https://developer.android.com/reference/android/media/MediaCodecInfo.CodecCapabilities#COLOR_Format24bitRGB888
-    using namespace MediaCodecInfo::CodecCapabilities;
-    constexpr auto ENCODER_COLOR_FORMAT=COLOR_FormatYUV420SemiPlanar;
-
-    AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT,ENCODER_COLOR_FORMAT);
+    AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_COLOR_FORMAT,wantedColorFormat);
 
     auto status=AMediaCodec_configure(mediaCodec,format, nullptr, nullptr, AMEDIACODEC_CONFIGURE_FLAG_ENCODE);
 
@@ -67,8 +55,20 @@ void SimpleEncoder::loopEncoder() {
     AMediaFormat_delete(format);
     if (AMEDIA_OK != status) {
         MLOGE<<"AMediaCodec_configure returned"<<status;
-        return;
+        return false;
     }
+    MLOGD<<"Opened MediaCodec";
+    return true;
+}
+
+
+void SimpleEncoder::loopEncoder() {
+    using namespace MediaCodecInfo::CodecCapabilities;
+    constexpr auto ENCODER_COLOR_FORMAT=COLOR_FormatYUV420SemiPlanar;
+    openMediaCodecEncoder(ENCODER_COLOR_FORMAT);
+
+    fileReaderMjpeg.open(INPUT_FILE);
+
     AMediaCodec_start(mediaCodec);
     int frameTimeUs=0;
     int frameIndex=0;
@@ -78,7 +78,7 @@ void SimpleEncoder::loopEncoder() {
         }
         // Get input buffer if possible
         {
-            std::lock_guard<std::mutex> lock(inputBufferDataMutex);
+            /*std::lock_guard<std::mutex> lock(inputBufferDataMutex);
             if(!inputBufferData.empty()){
                 const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
                 if(index>0){
@@ -105,7 +105,7 @@ void SimpleEncoder::loopEncoder() {
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                     frameTimeUs+=8*1000;
                 }
-            }
+            }*/
             /*const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
                 size_t inputBufferSize;
@@ -117,6 +117,34 @@ void SimpleEncoder::loopEncoder() {
                 AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                 frameTimeUs+=8*1000;
             }*/
+            const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
+            if(index>0){
+                size_t inputBufferSize;
+                void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
+                MLOGD<<"Got input buffer "<<inputBufferSize;
+                auto mjpegData= fileReaderMjpeg.getNextFrame();
+                if(mjpegData==std::nullopt){
+
+                }else{
+                    MyColorSpaces::YUV422Planar<WIDTH,HEIGHT> bufferYUV422{};
+                    mjpegDecodeAndroid.decodeToYUV422(mjpegData->data(),mjpegData->size(),bufferYUV422);
+
+                    auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buf));
+                    // copy Y component (easy)
+                    memcpy(framebuffer.planeY, bufferYUV422.planeY, sizeof(bufferYUV422.planeY));
+
+                    // copy CbCr component ( loop needed)
+                    for(int i=0;i<WIDTH/2;i++){
+                        for(int j=0;j<HEIGHT/2;j++){
+                            auto tmp=bufferYUV422.getUVHalf(i,j);
+                            framebuffer.setUV(i,j,tmp[0],tmp[1]);
+                        }
+                    }
+                }
+
+                AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
+                frameTimeUs+=8*1000;
+            }
         }
         {
             AMediaCodecBufferInfo info;
@@ -156,5 +184,8 @@ void SimpleEncoder::loopEncoder() {
     AMediaCodec_stop(mediaCodec);
 
     AMediaCodec_delete(mediaCodec);
+
+    fileReaderMjpeg.close();
 }
+
 

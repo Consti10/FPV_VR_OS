@@ -9,15 +9,13 @@
 #include <thread>
 #include <atomic>
 
-#include <MJPEGDecodeAndroid.hpp>
 #include <NDKThreadHelper.hpp>
 #include <AndroidThreadPrioValues.hpp>
 #include <NDKArrayHelper.hpp>
 #include <GroundRecorderRAW.hpp>
 #include <FileHelper.hpp>
 #include <TimeHelper.hpp>
-#include <GroundRecorderMP4.hpp>
-#include "Encoder/SimpleEncoder.h"
+#include <SimpleEncoder.h>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 
@@ -53,13 +51,14 @@ private:
     std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
     //std::unique_ptr<GroundRecorderMP4> groundRecorderMP4;
     MJPEGDecodeAndroid mMJPEGDecodeAndroid;
-    SimpleEncoder simpleEncoder;
+    //SimpleEncoder simpleEncoder;
 public:
-    UVCReceiverDecoder(JNIEnv* env,std::string GROUND_RECORDING_DIRECTORY2):GROUND_RECORDING_DIRECTORY(std::move(GROUND_RECORDING_DIRECTORY2)),simpleEncoder(GROUND_RECORDING_DIRECTORY){
+    UVCReceiverDecoder(JNIEnv* env,std::string GROUND_RECORDING_DIRECTORY2):GROUND_RECORDING_DIRECTORY(std::move(GROUND_RECORDING_DIRECTORY2))
+    //,simpleEncoder(GROUND_RECORDING_DIRECTORY)
+    {
         javaVm=nullptr;
         env->GetJavaVM(&javaVm);
     }
-
     // nullptr: clean up and remove
     // valid surface: acquire the ANativeWindow
     void setSurface(JNIEnv* env,jobject surface){
@@ -67,7 +66,7 @@ public:
         if(surface==nullptr){
             ANativeWindow_release(aNativeWindow);
             aNativeWindow=nullptr;
-            simpleEncoder.stop();
+            //simpleEncoder.stop();
         }else{
             aNativeWindow=ANativeWindow_fromSurface(env,surface);
             const auto WANTED_FORMAT=AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM;
@@ -76,7 +75,7 @@ public:
             if(ACTUAL_FORMAT!=WANTED_FORMAT){
                 MLOGE<<"Actual format is "<<ACTUAL_FORMAT;
             }
-            simpleEncoder.start();
+            //simpleEncoder.start();
         }
     }
     // Investigate: Even tough the documentation warns about dropping frames if processing takes too long
@@ -101,7 +100,7 @@ public:
             MLOGD<<"No surface";
             return;
         }
-        simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
+        //simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
 
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
@@ -240,6 +239,20 @@ JNI_METHOD(void, nativeStopReceiving)
 JNI_METHOD(void, nativeSetSurface)
 (JNIEnv *env, jclass jclass1, jlong javaP,jobject surface) {
    native(javaP)->setSurface(env,surface);
+}
+
+JNI_METHOD(jlong, nativeStartConvertFile)
+(JNIEnv *env, jclass jclass1,jstring groundRecordingDir) {
+    auto* simpleEncoder=new SimpleEncoder(NDKArrayHelper::DynamicSizeString(env,groundRecordingDir));
+    simpleEncoder->start();
+    return reinterpret_cast<intptr_t>(simpleEncoder);
+}
+
+JNI_METHOD(void, nativeStopConvertFile)
+(JNIEnv *env, jclass jclass1,jlong simpleEncoder) {
+    auto* simpleEncoder1=reinterpret_cast<SimpleEncoder*>(simpleEncoder);
+    simpleEncoder1->stop();
+    delete simpleEncoder1;
 }
 
 }

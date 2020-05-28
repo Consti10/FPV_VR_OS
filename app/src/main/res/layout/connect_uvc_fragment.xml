@@ -19,6 +19,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="UVC in development.\nSupported device(s): ROTG02\n Go to OSD Settings->OSD Elements->Advanced to enable/disable digital overlay.\n Ground recording to .FPV is not supported"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/b_start_t"
+            android:text="Start T"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/b_stop_t"
+            android:text="Stop T"/>
+
     </LinearLayout>
 
 

@@ -12,7 +12,7 @@
 #include <AndroidLogger.hpp>
 #include <TimeHelper.hpp>
 #include <vector>
-#include "MyColorSpaces.hpp"
+#include <MyColorSpaces.hpp>
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
@@ -74,6 +74,10 @@ private:
         //that you use the standard interface and simply set jpeg_color_space =
         //in_color_space (or jpeg_color_space = out_color_space for decompression).
     }
+    void printStartEnd(uint8_t* data,size_t dataSize){
+        MLOGD<<" Is "<<(int)data[0]<<" "<<(int)data[1];
+        MLOGD<<" Is "<<(int)data[dataSize-2]<<" "<<(int)data[dataSize-1];
+    }
 public:
     // Helper that prints the current configuration of ANativeWindow_Buffer
     static void debugANativeWindowBuffer(const ANativeWindow_Buffer& buffer){
@@ -83,6 +87,9 @@ public:
     // No unnecessary memcpy's & correctly handle stride of ANativeWindow_Buffer
     void DecodeMJPEGtoANativeWindowBuffer(const void* jpegData, size_t jpegDataSize, const ANativeWindow_Buffer& nativeWindowBuffer){
         debugANativeWindowBuffer(nativeWindowBuffer);
+        //printStartEnd((uint8_t*)jpegData,jpegDataSize);
+        MLOGD<<"Size "<<jpegDataSize;
+
         MEASURE_FUNCTION_EXECUTION_TIME
         unsigned int BYTES_PER_PIXEL;
         J_COLOR_SPACE wantedOutputColorspace;

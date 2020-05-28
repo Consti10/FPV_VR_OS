@@ -23,6 +23,7 @@ namespace MyColorSpaces{
             return {planeU[yHalf*2][xHalf],planeV[yHalf*2][xHalf]};
         }
     }__attribute__((packed));
+    static_assert(sizeof(YUV422Planar<640,480>)==640*480*16/8);
     template<size_t WIDTH,size_t HEIGHT>
     class YUV420SemiPlanar{
     public:
@@ -37,9 +38,11 @@ namespace MyColorSpaces{
         }
     }__attribute__((packed));
     static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
+}
 
-    //void convert123(const YUV422Planar<640,480>& in,YUV420SemiPlanar<640,480>& out){
-    //
+namespace Test123{
+    //void convert123(const MyColorSpaces::YUV422Planar<640,480>& in,MyColorSpaces::YUV420SemiPlanar<640,480>& out){
+
     //}
 }
 

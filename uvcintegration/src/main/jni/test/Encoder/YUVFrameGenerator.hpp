@@ -5,7 +5,7 @@
 #ifndef FPV_VR_OS_YUVFRAMEGENERATOR_HPP
 #define FPV_VR_OS_YUVFRAMEGENERATOR_HPP
 
-#include "MyColorSpaces.hpp"
+#include <MyColorSpaces.hpp>
 
 // Values taken from
 // https://developer.android.com/reference/android/media/MediaCodecInfo.CodecCapabilities

@@ -14,10 +14,12 @@ import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.databinding.ConnectUvcFragmentBinding;
 import constantin.fpv_vr.settings.SJ;
+import constantin.test.UVCReceiverDecoder;
 
 public class FConnectUVC extends Fragment implements View.OnClickListener{
     private ConnectUvcFragmentBinding binding;
     private Context mContext;
+    private long p;
 
     @Override
     @SuppressLint("SetTextI18n")
@@ -37,6 +39,12 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
             }).setNegativeButton("No",null).show();
         }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
+        binding.bStartT.setOnClickListener(v -> {
+            p= UVCReceiverDecoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
+        });
+        binding.bStopT.setOnClickListener(v -> {
+            UVCReceiverDecoder.nativeStopConvertFile(p);
+        });
         return binding.getRoot();
     }
 

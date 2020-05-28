@@ -32,6 +32,7 @@ import constantin.fpv_vr.settings.UpdateHelper;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.test.UVCHelper;
+import constantin.test.UVCReceiverDecoder;
 import constantin.video.core.RequestPermissionHelper;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.video_player.VideoSettings;
@@ -76,7 +77,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //}
         notifyUserStartedForUVC();
 
-        Thread.currentThread().getPriority();
     }
 
     @Override
