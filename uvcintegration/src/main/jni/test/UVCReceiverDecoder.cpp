@@ -16,6 +16,7 @@
 #include <FileHelper.hpp>
 #include <TimeHelper.hpp>
 #include <SimpleEncoder.h>
+#include <GroundRecorderFPV.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
 
@@ -48,12 +49,14 @@ private:
     bool processFramePrioritySet=false;
     JavaVM* javaVm;
     const std::string GROUND_RECORDING_DIRECTORY;
-    std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
+    //std::unique_ptr<GroundRecorderRAW> groundRecorderRAW;
+    GroundRecorderFPV groundRecorderFPV;
     //std::unique_ptr<GroundRecorderMP4> groundRecorderMP4;
     MJPEGDecodeAndroid mMJPEGDecodeAndroid;
     //SimpleEncoder simpleEncoder;
 public:
-    UVCReceiverDecoder(JNIEnv* env,std::string GROUND_RECORDING_DIRECTORY2):GROUND_RECORDING_DIRECTORY(std::move(GROUND_RECORDING_DIRECTORY2))
+    UVCReceiverDecoder(JNIEnv* env,std::string GROUND_RECORDING_DIRECTORY2):GROUND_RECORDING_DIRECTORY(std::move(GROUND_RECORDING_DIRECTORY2)),
+    groundRecorderFPV(GROUND_RECORDING_DIRECTORY)
     //,simpleEncoder(GROUND_RECORDING_DIRECTORY)
     {
         javaVm=nullptr;
@@ -112,11 +115,12 @@ public:
         }else{
             MLOGD<<"Cannot lock window";
         }
-        if(groundRecorderRAW){
+        /*if(groundRecorderRAW){
             groundRecorderRAW->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
             groundRecorderRAW.reset();
             groundRecorderRAW=nullptr;
-        }
+        }*/
+        groundRecorderFPV.writePacketIfStarted((uint8_t*)frame_mjpeg->data,frame_mjpeg->actual_bytes,GroundRecorderFPV::PACKET_TYPE_MJPEG_ROTG02,frame_mjpeg->sequence);
         //if(groundRecorderMP4){
         //    groundRecorderMP4->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
         //}
@@ -173,6 +177,7 @@ public:
                         isStreaming=true;
                         //groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GROUND_RECORDING_DIRECTORY,"jpg"));
                         //groundRecorderMP4=std::make_unique<GroundRecorderMP4>(GroundRecordingDirectory);
+                        groundRecorderFPV.start();
                         return 0;
                     }
                 }
@@ -194,7 +199,7 @@ public:
             uvc_unref_device(dev);
             uvc_exit(ctx);
             isStreaming=false;
-            groundRecorderRAW.reset();
+            groundRecorderFPV.stop();
         }
     }
 };
