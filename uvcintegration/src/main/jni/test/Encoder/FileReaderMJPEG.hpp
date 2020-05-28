@@ -40,6 +40,8 @@ private:
         buff.resize(offset+readData);
         return readData;
     }
+
+public:
     std::vector<uint8_t> readUpTo2(size_t maxWantedDataSize){
         std::vector<uint8_t> ret(maxWantedDataSize);
         file.read((char*)ret.data(), maxWantedDataSize);
@@ -66,7 +68,6 @@ private:
         }
         return -1;
     }
-public:
     void open(const std::string FILENAME){
         file=std::ifstream(FILENAME.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
         if (!file.is_open()) {
@@ -104,28 +105,27 @@ public:
             MLOGE<<"Expect SOI at begin of file"<<jpegData.size();
             return std::nullopt;
         }
+        bool lastByteWasMarker=0;
         while(true){
             if (remaining()==0) {
                 MLOGE<<"couldn't find corresponding EOI";
                 return std::nullopt;
             }
-            auto tmp=readUpTo2(1024);
-            MLOGD<<" read "<<tmp.size();
-            const auto indexEOI=findNextEOI(tmp);
-            MLOGD<<"idx "<<indexEOI;
-            if(indexEOI>0){
-                const ssize_t wastedData=tmp.size()-(indexEOI+2);
-                tmp.resize(indexEOI+2);
-                jpegData.insert(jpegData.end(),tmp.begin(),tmp.end());
-                MLOGD<<"Wasted data"<<wastedData;
-                if(wastedData>0){
-                    file.seekg(-wastedData, std::ios::cur);
+            const auto readBuffer=readUpTo2(1024);
+            MLOGD << " read " << readBuffer.size();
+            // parse read data until EOI
+            for(size_t i=0; i < readBuffer.size(); i++){
+                jpegData.push_back(readBuffer[i]);
+                if(lastByteWasMarker && readBuffer[i] == 0xD9){
+                    const size_t wastedBytes= readBuffer.size()-i-1;
+                    if(wastedBytes>0){
+                        file.seekg(-wastedBytes, std::ios::cur);
+                    }
+                    MLOGD<<" Is SOI EOI "<<isSOI(jpegData.data())<<" "<<isEOI(&jpegData[jpegData.size()-2])<<" wasted bytes "<<wastedBytes<<" x "<<readBuffer.size();
+                    return jpegData;
                 }
-                MLOGD<<" Is SOI EOI "<<isSOI(jpegData.data())<<" "<<isEOI(&jpegData[jpegData.size()-2]);
-                return jpegData;
+                lastByteWasMarker = readBuffer[i] == 0xFF;
             }
-            jpegData.insert(jpegData.end(),tmp.begin(),tmp.end());
-            MLOGD<<"looping";
         }
     }
 };

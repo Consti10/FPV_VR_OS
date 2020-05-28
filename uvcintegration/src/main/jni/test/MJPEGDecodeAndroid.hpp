@@ -14,6 +14,7 @@
 #include <TimeHelper.hpp>
 #include <vector>
 #include <MyColorSpaces.hpp>
+#include <FileReaderMJPEG.hpp>
 
 // Since I only need to support android it is cleaner to write my own conversion function.
 // inspired by the uvc_mjpeg_to_rgbx .. functions
@@ -89,7 +90,7 @@ public:
     void DecodeMJPEGtoANativeWindowBuffer(const void* jpegData, size_t jpegDataSize, const ANativeWindow_Buffer& nativeWindowBuffer){
         debugANativeWindowBuffer(nativeWindowBuffer);
         //printStartEnd((uint8_t*)jpegData,jpegDataSize);
-        MLOGD<<"Size "<<jpegDataSize;
+        MLOGD<<"Size "<<jpegDataSize<<" Is SOI EOI "<<FileReaderMJPEG::isSOI((uint8_t*)jpegData)<<" "<<FileReaderMJPEG::isEOI(&((uint8_t*)jpegData)[jpegDataSize-2]);;
 
         MEASURE_FUNCTION_EXECUTION_TIME
         unsigned int BYTES_PER_PIXEL;
