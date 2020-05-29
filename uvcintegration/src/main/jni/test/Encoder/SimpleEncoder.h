@@ -16,7 +16,6 @@
 #include <media/NdkMediaMuxer.h>
 #include <MJPEGDecodeAndroid.hpp>
 #include <FileReaderFPV.h>
-//#include <FileReaderMJPEG.hpp>
 
 class SimpleEncoder {
 private:
