@@ -40,7 +40,6 @@ private:
         buff.resize(offset+readData);
         return readData;
     }
-
 public:
     std::vector<uint8_t> readUpTo2(size_t maxWantedDataSize){
         std::vector<uint8_t> ret(maxWantedDataSize);
