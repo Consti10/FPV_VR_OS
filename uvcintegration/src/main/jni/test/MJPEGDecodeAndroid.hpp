@@ -76,7 +76,7 @@ private:
         //that you use the standard interface and simply set jpeg_color_space =
         //in_color_space (or jpeg_color_space = out_color_space for decompression).
     }
-    void printStartEnd(uint8_t* data,size_t dataSize){
+    static void printStartEnd(uint8_t* data,size_t dataSize){
         MLOGD<<" Is "<<(int)data[0]<<" "<<(int)data[1];
         MLOGD<<" Is "<<(int)data[dataSize-2]<<" "<<(int)data[dataSize-1];
     }
@@ -90,8 +90,6 @@ public:
     void DecodeMJPEGtoANativeWindowBuffer(const void* jpegData, size_t jpegDataSize, const ANativeWindow_Buffer& nativeWindowBuffer){
         debugANativeWindowBuffer(nativeWindowBuffer);
         //printStartEnd((uint8_t*)jpegData,jpegDataSize);
-        //MLOGD<<"Size "<<jpegDataSize<<" Is SOI EOI "<<FileReaderMJPEG::isSOI((uint8_t*)jpegData)<<" "<<FileReaderMJPEG::isEOI(&((uint8_t*)jpegData)[jpegDataSize-2]);;
-
         MEASURE_FUNCTION_EXECUTION_TIME
         unsigned int BYTES_PER_PIXEL;
         J_COLOR_SPACE wantedOutputColorspace;

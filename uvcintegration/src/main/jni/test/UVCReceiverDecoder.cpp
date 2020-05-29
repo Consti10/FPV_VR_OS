@@ -87,9 +87,7 @@ public:
     void processFrame(uvc_frame_t* frame_mjpeg){
         MEASURE_FUNCTION_EXECUTION_TIME
         if(!processFramePrioritySet){
-            NDKThreadHelper::setProcessThreadPriorityAttachDetach(javaVm,
-                                                                  FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,
-                                                                  TAG);
+            NDKThreadHelper::setProcessThreadPriorityAttachDetach(javaVm,FPV_VR_PRIORITY::CPU_PRIORITY_UVC_FRAME_CALLBACK,TAG);
             processFramePrioritySet=true;
         }
         std::lock_guard<std::mutex> lock(mMutexNativeWindow);
@@ -104,7 +102,6 @@ public:
             return;
         }
         //simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
-
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
             //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
@@ -115,15 +112,7 @@ public:
         }else{
             MLOGD<<"Cannot lock window";
         }
-        /*if(groundRecorderRAW){
-            groundRecorderRAW->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
-            groundRecorderRAW.reset();
-            groundRecorderRAW=nullptr;
-        }*/
         groundRecorderFPV.writePacketIfStarted((uint8_t*)frame_mjpeg->data,frame_mjpeg->actual_bytes,GroundRecorderFPV::PACKET_TYPE_MJPEG_ROTG02,frame_mjpeg->sequence);
-        //if(groundRecorderMP4){
-        //    groundRecorderMP4->writeData((uint8_t*)frame_mjpeg->data,frame_mjpeg->data_bytes);
-        //}
     }
     // Connect via android java first (workaround ?!)
     // 0 on success, -1 otherwise
@@ -175,8 +164,6 @@ public:
                         MLOGD<<"Streaming...";
                         //uvc_set_ae_mode(devh, 1); /* e.g., turn on auto exposure */
                         isStreaming=true;
-                        //groundRecorderRAW=std::make_unique<GroundRecorderRAW>(FileHelper::findUnusedFilename(GROUND_RECORDING_DIRECTORY,"jpg"));
-                        //groundRecorderMP4=std::make_unique<GroundRecorderMP4>(GroundRecordingDirectory);
                         groundRecorderFPV.start();
                         return 0;
                     }

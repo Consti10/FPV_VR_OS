@@ -42,7 +42,7 @@ namespace MyColorSpaces{
     static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
     static_assert(sizeof(YUV420SemiPlanar<640,480>)*16/12==sizeof(YUV422Planar<640,480>));
 
-    // TODO why inline ? (compiler / header quards issue )
+    //
     static void copyTo(const MyColorSpaces::YUV422Planar<640,480>& in,MyColorSpaces::YUV420SemiPlanar<640,480>& out){
         // copy Y component (easy)
         memcpy(out.planeY,in.planeY, sizeof(out.planeY));
