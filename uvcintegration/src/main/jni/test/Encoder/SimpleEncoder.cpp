@@ -94,7 +94,7 @@ void SimpleEncoder::loopEncoder() {
                     frameTimeUs+=8*1000;
                 }
             }*/
-            const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
+            /*const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
                 size_t inputBufferSize;
                 void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
@@ -103,16 +103,19 @@ void SimpleEncoder::loopEncoder() {
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,0,frameTimeUs,AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM);
                     break;
                 }else{
-                    //auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buf));
                     auto framebuffer=MyColorSpaces::YUV420SemiPlanar<640,480>(buf);
-                    framebuffer.clear(120,160,200);
+                    //framebuffer.clear(120,160,200);
+                    MyColorSpaces::RGB<640,480> rgb{};
+                    rgb.clear(0);
+                    MyColorSpaces::copyTo<640,480>(rgb,framebuffer);
+
                     //YUVFrameGenerator::generateFrame(frameIndex,ENCODER_COLOR_FORMAT,(uint8_t*)buf,inputBufferSize);
                     AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                     frameIndex++;
                     frameTimeUs+=8*1000;
                 }
-            }
-            /*const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
+            }*/
+            const auto index=AMediaCodec_dequeueInputBuffer(mediaCodec,5*1000);
             if(index>0){
                 size_t inputBufferSize;
                 void* buf = AMediaCodec_getInputBuffer(mediaCodec,(size_t)index,&inputBufferSize);
@@ -133,7 +136,7 @@ void SimpleEncoder::loopEncoder() {
                 }
                 AMediaCodec_queueInputBuffer(mediaCodec,index,0,inputBufferSize,frameTimeUs,0);
                 frameTimeUs+=8*1000;
-            }*/
+            }
         }
         {
             AMediaCodecBufferInfo info;

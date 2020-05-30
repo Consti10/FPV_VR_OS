@@ -8,34 +8,30 @@
 #include <cstdint>
 #include <array>
 #include <array>
+#include <optional>
 
 // Watch out: For the data layout height comes before width !!
 // I like to use it the other way around - image data = [width][height]
 namespace MyColorSpaces{
-    template<size_t WIDTH,size_t HEIGHT>
-    class RGBA{
-    public:
-        uint8_t planeRGBA[HEIGHT][WIDTH][4];
-        void clear(const int frameIndex){
-            constexpr uint8_t red[3]={255,0,0};
-            constexpr uint8_t green[3]={0,255,0};
-            constexpr uint8_t blue[3]={0,255,0};
-            const auto color= (frameIndex / 60) % 2 == 0 ? red : green;
-            for(size_t w=0;w<WIDTH;w++){
-                for(size_t h=0;h<HEIGHT;h++){
-                    planeRGBA[h][w][0]=color[0];
-                    planeRGBA[h][w][1]=color[1];
-                    planeRGBA[h][w][2]=color[2];
-                    planeRGBA[h][w][2]=255;
-                }
-            }
-        }
-    }__attribute__((packed));
-    /*template<size_t WIDTH,size_t HEIGHT,size_t STRIDE>
+
+    // RGB 888 ,no special packing
+    template<size_t WIDTH,size_t HEIGHT> //,size_t STRIDE
     class RGB{
     public:
-        uint8_t planeRGB[HEIGHT][STRIDE][3];
-
+        RGB(void* data1):data((uint8_t*)data1){}
+        RGB():ownedData(WIDTH*HEIGHT*3),data(ownedData->data()){};
+        std::optional<std::vector<uint8_t>> ownedData={};
+        uint8_t* data;
+        //using LOL=uint8_t(*)[HEIGHT][WIDTH][3];
+        uint8_t& R(size_t w,size_t h){
+            return (*static_cast<uint8_t(*)[HEIGHT][WIDTH][3]>(static_cast<void*>(data)))[h][w][0];
+        }
+        uint8_t& G(size_t w,size_t h){
+            return (*static_cast<uint8_t(*)[HEIGHT][WIDTH][3]>(static_cast<void*>(data)))[h][w][1];
+        }
+        uint8_t& B(size_t w,size_t h){
+            return (*static_cast<uint8_t(*)[HEIGHT][WIDTH][3]>(static_cast<void*>(data)))[h][w][2];
+        }
         void clear(const int frameIndex){
             constexpr uint8_t red[3]={255,0,0};
             constexpr uint8_t green[3]={0,255,0};
@@ -43,14 +39,16 @@ namespace MyColorSpaces{
             const auto color= (frameIndex / 60) % 2 == 0 ? red : green;
             for(size_t w=0;w<WIDTH;w++){
                 for(size_t h=0;h<HEIGHT;h++){
-                    planeRGB[h][w][0]=color[0];
-                    planeRGB[h][w][1]=color[1];
-                    planeRGB[h][w][2]=color[2];
+                    R(w,h)=color[0];
+                    G(w,h)=color[1];
+                    B(w,h)=color[2];
                 }
             }
         }
-    }__attribute__((packed));*/
+    };
 
+    // YUV 420 either Planar or SemiPlanar (U,V packed together in pairs of 2)
+    // see https://developer.android.com/reference/android/graphics/ImageFormat.html#YUV_420_888
     template<size_t WIDTH,size_t HEIGHT,bool PLANAR>
     class YUV420{
     public:
@@ -68,8 +66,8 @@ namespace MyColorSpaces{
         }
         uint8_t& U(size_t w,size_t h){
             if constexpr (PLANAR){
-                auto& tmp=*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH]>(static_cast<void*>(&data[LUMA_SIZE_B]));
-                return tmp[h][w];
+                auto& tmp=(*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH]>(static_cast<void*>(&data[LUMA_SIZE_B])));
+                return (*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH]>(static_cast<void*>(&data[LUMA_SIZE_B])))[h][w];
             }
             auto& tmp=*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&data[LUMA_SIZE_B]));
             return tmp[h][w][0];
@@ -137,17 +135,6 @@ namespace MyColorSpaces{
     static_assert(sizeof(YUV422SemiPlanar<640,480>)==sizeof(YUV422Planar<640,480>));
 
     //
-    /*static void copyTo(const YUV422Planar<640,480>& in,YUV420SemiPlanar<640,480>& out){
-        // copy Y component (easy)
-        memcpy(out.planeY,in.planeY, sizeof(out.planeY));
-        // copy CbCr component ( loop needed)
-        for(int i=0;i<640/2;i++){
-            for(int j=0;j<480/2;j++){
-                auto tmp=in.getUVHalf(i,j);
-                out.setUV(i,j,tmp[0],tmp[1]);
-            }
-        }
-    }*/
     static void copyTo(const YUV422Planar<640,480>& in,YUV422SemiPlanar<640,480>& out){
         // copy Y component (easy)
         memcpy(out.planeY,in.planeY, sizeof(out.planeY));
@@ -167,7 +154,7 @@ namespace MyColorSpaces{
     #define RGB2Y(R, G, B) CLIP(( (  66 * (R) + 129 * (G) +  25 * (B) + 128) >> 8) +  16)
     #define RGB2U(R, G, B) CLIP(( ( -38 * (R) -  74 * (G) + 112 * (B) + 128) >> 8) + 128)
     #define RGB2V(R, G, B) CLIP(( ( 112 * (R) -  94 * (G) -  18 * (B) + 128) >> 8) + 128)
-    static std::array<uint8_t,3> convertToYUV(const uint8_t* rgb){
+    static std::array<uint8_t,3> convertToYUV(const std::array<uint8_t,3> rgb){
         uint8_t Y=RGB2Y(rgb[0],rgb[1],rgb[2]);
         uint8_t U=RGB2U(rgb[0],rgb[1],rgb[2]);
         uint8_t V=RGB2V(rgb[0],rgb[1],rgb[2]);
@@ -175,21 +162,20 @@ namespace MyColorSpaces{
     }
 
     template<size_t WIDTH,size_t HEIGHT>
-    static void copyTo(const RGBA<WIDTH,HEIGHT>& in,YUV422SemiPlanar<WIDTH,HEIGHT>& out){
+    static void copyTo(RGB<WIDTH,HEIGHT>& in,YUV420SemiPlanar<WIDTH,HEIGHT>& out){
         for(size_t w=0;w<WIDTH;w++){
             for(size_t h=0;h<HEIGHT;h++){
-                //const uint8_t* rgb=in.planeRGB[h[w];
-                //const auto YUV=convertToYUV(rgb);
-                //out.planeY[h][w]=YUV[0];
-                //out.planeUV[h][w/2][0]=YUV[1];
-                //out.planeUV[h][w/2][1]=YUV[2];
-                out.planeY[h][w]=120;
+                const std::array<uint8_t,3> rgb={in.R(w,h),in.G(w,h),in.B(w,h)};
+                const auto yuv=convertToYUV(rgb);
+                out.Y(w,h)=yuv[0];
             }
         }
         for(size_t w=0;w<WIDTH;w++){
             for(size_t h=0;h<HEIGHT/2;h++){
-                out.planeUV[h][w][0]=160;
-                out.planeUV[h][w][1]=200;
+                const std::array<uint8_t,3> rgb={in.R(w,h),in.G(w,h),in.B(w,h)};
+                const auto yuv=convertToYUV(rgb);
+                out.U(w,h)=yuv[1];
+                out.V(w,h)=yuv[2];
             }
         }
     }

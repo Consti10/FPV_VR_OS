@@ -14,6 +14,7 @@ import android.hardware.usb.UsbManager;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.TextureView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
