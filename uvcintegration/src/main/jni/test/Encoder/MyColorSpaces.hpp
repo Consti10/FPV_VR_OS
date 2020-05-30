@@ -50,60 +50,56 @@ namespace MyColorSpaces{
             }
         }
     }__attribute__((packed));*/
-    template<size_t WIDTH,size_t HEIGHT>
-    class YUV420Planar{
+
+    template<size_t WIDTH,size_t HEIGHT,bool PLANAR>
+    class YUV420{
     public:
-        uint8_t planeY[HEIGHT][WIDTH];
-        uint8_t planeU[HEIGHT/2][WIDTH/2];
-        uint8_t planeV[HEIGHT/2][WIDTH/2];
-        void clear(uint8_t Y,uint8_t U,uint8_t V){
+        YUV420(void* data1):data((uint8_t*)data1){}
+        uint8_t* data;
+        const size_t LUMA_SIZE_B=WIDTH*HEIGHT;
+        const size_t HALF_WIDTH=WIDTH/2;
+        const size_t HALF_HEIGHT=HEIGHT/2;
+        // All these functions return a reference to the Y (U,V) value at position (w,h)
+        // Since the Y plane has full resolution w can be in the range [0,WIDTH[ and h in [0,HEIGHT[
+        // but the U,V plane (both in PLANAR and PACKED mode) is only in the range of [0,HALF_WIDTH[ / [0,HALF_HEIGHT[
+        uint8_t& Y(size_t w,size_t h){
+            auto& tmp=*static_cast<uint8_t(*)[HEIGHT][WIDTH]>(static_cast<void*>(data));
+            return tmp[h][w];
+        }
+        uint8_t& U(size_t w,size_t h){
+            if constexpr (PLANAR){
+                auto& tmp=*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH]>(static_cast<void*>(&data[LUMA_SIZE_B]));
+                return tmp[h][w];
+            }
+            auto& tmp=*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&data[LUMA_SIZE_B]));
+            return tmp[h][w][0];
+        }
+        uint8_t& V(size_t w,size_t h){
+            if constexpr (PLANAR){
+                auto& tmp=*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH]>(static_cast<void*>(&data[LUMA_SIZE_B+HALF_WIDTH*HALF_HEIGHT]));
+                return tmp[h][w];
+            }
+            auto& tmp=*static_cast<uint8_t(*)[HALF_HEIGHT][HALF_WIDTH][2]>(static_cast<void*>(&data[LUMA_SIZE_B]));
+            return tmp[h][w][1];
+        }
+        void clear(uint8_t y,uint8_t u,uint8_t v){
             for(size_t w=0;w<WIDTH;w++){
                 for(size_t h=0;h<HEIGHT;h++){
-                    planeY[h][w]=Y;
+                    Y(w,h)=y;
                 }
             }
-            for(size_t w=0;w<WIDTH/2;w++){
-                for(size_t h=0;h<HEIGHT/2;h++){
-                    planeU[h][w]=U;
-                    planeV[h][w]=V;
+            for(size_t w=0;w<HALF_WIDTH;w++){
+                for(size_t h=0;h<HALF_HEIGHT;h++){
+                    U(w,h)=u;
+                    V(w,h)=v;
                 }
             }
         }
-    }__attribute__((packed));
-
+    };
     template<size_t WIDTH,size_t HEIGHT>
-    class YUV420SemiPlanar{
-    public:
-        uint8_t planeY[HEIGHT][WIDTH];
-        uint8_t planeUV[HEIGHT/2][WIDTH/2][2];
-        void setY(size_t x, size_t y, uint8_t value){
-            planeY[y][x]=value;
-        }
-        void setUV(size_t x, size_t y, uint8_t valueU, uint8_t valueV){
-            planeUV[y][x][0]=valueU;
-            planeUV[y][x][1]=valueV;
-        }
-        uint8_t& LOLY(size_t w,size_t h){
-            return & planeY[0][0]+h*HEIGHT+w;
-        }
-        uint8_t& LOLU(size_t w,size_t h){
-            return & planeUV+h*HEIGHT+w;
-        }
-
-        void clear(uint8_t Y,uint8_t U,uint8_t V){
-            for(size_t w=0;w<WIDTH;w++){
-                for(size_t h=0;h<HEIGHT;h++){
-                    planeY[h][w]=Y;
-                }
-            }
-            for(size_t w=0;w<WIDTH/2;w++){
-                for(size_t h=0;h<HEIGHT/2;h++){
-                    planeUV[h][w][0]=U;
-                    planeUV[h][w][1]=V;
-                }
-            }
-        }
-    }__attribute__((packed));
+    using YUV420Planar = YUV420<WIDTH,HEIGHT,true>;
+    template<size_t WIDTH,size_t HEIGHT>
+    using YUV420SemiPlanar = YUV420<WIDTH,HEIGHT,false>;
 
 
 
@@ -136,12 +132,12 @@ namespace MyColorSpaces{
     }__attribute__((packed));
     //
     static_assert(sizeof(YUV422Planar<640,480>)==640*480*16/8);
-    static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
-    static_assert(sizeof(YUV420SemiPlanar<640,480>)*16/12==sizeof(YUV422Planar<640,480>));
+    //static_assert(sizeof(YUV420SemiPlanar<640,480>)==640*480*12/8);
+    //static_assert(sizeof(YUV420SemiPlanar<640,480>)*16/12==sizeof(YUV422Planar<640,480>));
     static_assert(sizeof(YUV422SemiPlanar<640,480>)==sizeof(YUV422Planar<640,480>));
 
     //
-    static void copyTo(const YUV422Planar<640,480>& in,YUV420SemiPlanar<640,480>& out){
+    /*static void copyTo(const YUV422Planar<640,480>& in,YUV420SemiPlanar<640,480>& out){
         // copy Y component (easy)
         memcpy(out.planeY,in.planeY, sizeof(out.planeY));
         // copy CbCr component ( loop needed)
@@ -151,7 +147,7 @@ namespace MyColorSpaces{
                 out.setUV(i,j,tmp[0],tmp[1]);
             }
         }
-    }
+    }*/
     static void copyTo(const YUV422Planar<640,480>& in,YUV422SemiPlanar<640,480>& out){
         // copy Y component (easy)
         memcpy(out.planeY,in.planeY, sizeof(out.planeY));
@@ -198,8 +194,8 @@ namespace MyColorSpaces{
         }
     }
 
-    template<size_t WIDTH,size_t HEIGHT>
-    static void copyTo(const RGBA<WIDTH,HEIGHT>& in,YUV420SemiPlanar<WIDTH,HEIGHT>& out){
+    /*template<size_t WIDTH,size_t HEIGHT>
+    static void copyTo(const RGBA<WIDTH,HEIGHT>& in,YUV420SemiPlanar<WIDTH,HEIGHT,true>& out){
         for(size_t w=0;w<WIDTH;w++){
             for(size_t h=0;h<HEIGHT;h++){
                 //const uint8_t* rgb=in.planeRGB[h[w];
@@ -216,7 +212,7 @@ namespace MyColorSpaces{
                 out.planeUV[h][w][1]=200;
             }
         }
-    }
+    }*/
 
 
 }

@@ -115,7 +115,8 @@ public:
             //MyColorSpaces::clear(framebuffer);
             //auto& framebuffer= *static_cast<MyColorSpaces::RGBA<640,480>*>(static_cast<void*>(buffer.bits));
             //framebuffer.clear(frameIndex);
-            auto& framebuffer= *static_cast<MyColorSpaces::YUV420Planar<640,480>*>(static_cast<void*>(buffer.bits));
+            //auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480,false>*>(static_cast<void*>(buffer.bits));
+            auto framebuffer=MyColorSpaces::YUV420Planar<640,480>(buffer.bits);
             framebuffer.clear(120,160,200);
 
             frameIndex++;

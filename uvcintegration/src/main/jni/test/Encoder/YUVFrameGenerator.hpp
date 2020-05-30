@@ -81,7 +81,7 @@ namespace YUVFrameGenerator{
         constexpr size_t HALF_WIDTH= WIDTH / 2;
         constexpr size_t HALF_HEIGHT= HEIGHT / 2;
 
-        auto& framebuffer= *static_cast<YUV420SemiPlanar<640,480>*>(static_cast<void*>(frameData));
+        auto framebuffer=YUV420SemiPlanar<640,480>(frameData);
 
         boolean semiPlanar = isSemiPlanarYUV(colorFormat);
         // Set to zero.  In YUV this is a dull green.
@@ -108,10 +108,11 @@ namespace YUVFrameGenerator{
                     // e.g. Galaxy Nexus OMX.TI.DUCATI1.VIDEO.H264E
                     //        OMX_TI_COLOR_FormatYUV420PackedSemiPlanar
                     //frameData[y * WIDTH + x] = (uint8_t) TEST_Y;
-                    framebuffer.setY(x, y, PURPLE_YUV[0]);
+                    framebuffer.Y(x,y)= PURPLE_YUV[0];
                     const bool even=(x % 2) == 0 && (y % 2) == 0;
                     if (even) {
-                        framebuffer.setUV(x/2,y/2, PURPLE_YUV[1], PURPLE_YUV[2]);
+                        framebuffer.U(x/2,y/2)= PURPLE_YUV[1];
+                        framebuffer.V(x/2,y/2)=PURPLE_YUV[2];
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x] = TEST_U;
                         //frameData[WIDTH * HEIGHT + y * HALF_WIDTH + x + 1] = TEST_V;
                     }
