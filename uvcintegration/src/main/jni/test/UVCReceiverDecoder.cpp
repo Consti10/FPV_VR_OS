@@ -101,7 +101,7 @@ public:
         //simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
-            //mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
+            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
             //MyColorSpaces::YUV422Planar<640,480> bufferYUV422{};
             //mMJPEGDecodeAndroid.decodeToYUV422(frame_mjpeg->data, frame_mjpeg->actual_bytes,bufferYUV422);
             //auto& framebuffer= *static_cast<MyColorSpaces::YUV422SemiPlanar<640,480>*>(static_cast<void*>(buffer.bits));
@@ -116,11 +116,9 @@ public:
             //auto& framebuffer= *static_cast<MyColorSpaces::RGBA<640,480>*>(static_cast<void*>(buffer.bits));
             //framebuffer.clear(frameIndex);
             //auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480,false>*>(static_cast<void*>(buffer.bits));
-            auto framebuffer=MyColorSpaces::YUV420SemiPlanar<640,480>(buffer.bits);
-            framebuffer.clear(120,160,200);
-
+            //auto framebuffer=MyColorSpaces::YUV420SemiPlanar<640,480>(buffer.bits);
+            //framebuffer.clear(120,160,200);
             frameIndex++;
-
             ANativeWindow_unlockAndPost(aNativeWindow);
         }else{
             MLOGD<<"Cannot lock window";
