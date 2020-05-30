@@ -1,5 +1,0 @@
-/build
-.cxx/
-.externalNativeBuild/
-/release
-*.iml
