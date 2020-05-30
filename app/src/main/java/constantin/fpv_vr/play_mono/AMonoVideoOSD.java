@@ -98,6 +98,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding.SurfaceViewMonoscopicVideo.setVisibility(View.VISIBLE);
             binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(uvcPlayer==null ? videoPlayer.configure1() : uvcPlayer.configure1());
+            //binding.SurfaceViewMonoscopicVideo.getHolder().setFormat();
         }else{
             mGLRenderer.getVideoSurfaceHolder().setCallBack(uvcPlayer==null ? videoPlayer.configure2() : uvcPlayer.configure2());
             registerForContextMenu(binding.myVRLayout);

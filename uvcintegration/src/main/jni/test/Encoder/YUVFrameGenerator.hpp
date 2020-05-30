@@ -6,34 +6,49 @@
 #define FPV_VR_OS_YUVFRAMEGENERATOR_HPP
 
 #include <MyColorSpaces.hpp>
+#include <LOL.hpp>
 
 // Values taken from
 // https://developer.android.com/reference/android/media/MediaCodecInfo.CodecCapabilities
 namespace MediaCodecInfo{
     namespace CodecCapabilities{
-        constexpr int COLOR_Format24bitRGB888=12;
+        static constexpr int COLOR_Format24bitRGB888=12;
 
-        constexpr int COLOR_FormatYUV420Flexible=2135033992;
-        constexpr int COLOR_FormatYUV420Planar=19;
-        constexpr int COLOR_FormatYUV420PackedPlanar=20;
-        constexpr int COLOR_FormatYUV420SemiPlanar=21;
-        constexpr int COLOR_FormatYUV420PackedSemiPlanar=39;
-        constexpr int COLOR_TI_FormatYUV420PackedSemiPlanar=2130706688;
+        static constexpr int COLOR_FormatYUV420Flexible=2135033992;
+        static constexpr int COLOR_FormatYUV420Planar=19;
+        static constexpr int COLOR_FormatYUV420PackedPlanar=20;
+        static constexpr int COLOR_FormatYUV420SemiPlanar=21;
+        static constexpr int COLOR_FormatYUV420PackedSemiPlanar=39;
+        static constexpr int COLOR_TI_FormatYUV420PackedSemiPlanar=2130706688;
 
-        constexpr int COLOR_FormatYUV422Flexible= 2135042184;
-        constexpr int COLOR_FormatYUV422Planar=22;
-        constexpr int COLOR_FormatYUV422PackedPlanar=23;
-        constexpr int COLOR_FormatYUV422SemiPlanar=24;
-        constexpr int COLOR_FormatYUV422PackedSemiPlanar=40;
+        static constexpr int COLOR_FormatYUV422Flexible= 2135042184;
+        static constexpr int COLOR_FormatYUV422Planar=22;
+        static constexpr int COLOR_FormatYUV422PackedPlanar=23;
+        static constexpr int COLOR_FormatYUV422SemiPlanar=24;
+        static constexpr int COLOR_FormatYUV422PackedSemiPlanar=40;
 
-        constexpr int COLOR_FormatYUV444Flexible=2135181448;
+        static constexpr int COLOR_FormatYUV444Flexible=2135181448;
     }
 };
+// https://chromium.googlesource.com/libyuv/libyuv/+/HEAD/docs/formats.md
+//  I420, NV12 and NV21 are half width, half height
+//  I422, NV16 and NV61 are half width, full height
+//  I444, NV24 and NV42 are full width, full height
+namespace ImageFormatXXX{
+    // NV16 seems to work ?
+    static constexpr int NV16=16;
+    static constexpr int NV21=21;
+    //static constexpr int NV24=
+    static constexpr int YUV_420_888=35;
+    // does not work for ANativeWindow
+    //Surface: dequeueBuffer failed (Out of memory)
+    static constexpr int YUV_422_888=39;
+}
 
 // taken from https://android.googlesource.com/platform/cts/+/3661c33/tests/tests/media/src/android/media/cts/EncodeDecodeTest.java
 // and translated to cpp
 namespace YUVFrameGenerator{
-    bool isSemiPlanarYUV(const int colorFormat) {
+    static bool isSemiPlanarYUV(const int colorFormat) {
         using namespace MediaCodecInfo::CodecCapabilities;
         switch (colorFormat) {
             case COLOR_FormatYUV420Planar:
@@ -49,10 +64,10 @@ namespace YUVFrameGenerator{
         }
     }
     // YUV values for purple
-    constexpr uint8_t PURPLE_YUV[]={120, 160, 200};
+    static constexpr uint8_t PURPLE_YUV[]={120, 160, 200};
 
     // creates a purple rectangle with w=width/4 and h=height/2 that moves 1 square forward with frameIndex/8
-    void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
+    static void generateFrame(int frameIndex, int colorFormat, uint8_t* frameData,size_t frameDataSize) {
         using namespace MyColorSpaces;
         // Full width/height for luma ( Y )
         constexpr size_t WIDTH=640;

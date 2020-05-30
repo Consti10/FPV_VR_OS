@@ -17,15 +17,9 @@
 #include <TimeHelper.hpp>
 #include <SimpleEncoder.h>
 #include <GroundRecorderFPV.hpp>
+#include <YUVFrameGenerator.hpp>
 
 static constexpr const auto TAG="UVCReceiverDecoder";
-
-namespace ImageFormatXXX{
-    constexpr int NV16=16;
-    constexpr int NV21=21;
-    constexpr int YUV_420_888=35;
-    //constexpr int YUV_422_888=39;
-}
 
 class UVCReceiverDecoder{
 private:
@@ -72,15 +66,18 @@ public:
             //simpleEncoder.stop();
         }else{
             aNativeWindow=ANativeWindow_fromSurface(env,surface);
-            const auto WANTED_FORMAT=AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM;
+            const auto WANTED_FORMAT=AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420;
             ANativeWindow_setBuffersGeometry(aNativeWindow,VIDEO_STREAM_WIDTH,VIDEO_STREAM_HEIGHT,WANTED_FORMAT);
             const auto ACTUAL_FORMAT=ANativeWindow_getFormat(aNativeWindow);
             if(ACTUAL_FORMAT!=WANTED_FORMAT){
                 MLOGE<<"Actual format is "<<ACTUAL_FORMAT;
             }
+            //
             //simpleEncoder.start();
         }
     }
+    int frameIndex=0;
+
     // Investigate: Even tough the documentation warns about dropping frames if processing takes too long
     // I cannot experience dropped frames - ?
     // Using less threads (no extra thread for decoding) reduces latency but also negatively affects troughput
@@ -104,11 +101,26 @@ public:
         //simpleEncoder.addBufferData((const uint8_t*)frame_mjpeg->data, frame_mjpeg->actual_bytes);
         ANativeWindow_Buffer buffer;
         if(ANativeWindow_lock(aNativeWindow, &buffer, nullptr)==0){
-            //decode_mjpeg_into_ANativeWindowBuffer2(frame_mjpeg,buffer);
-            mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
+            //mMJPEGDecodeAndroid.DecodeMJPEGtoANativeWindowBuffer(frame_mjpeg->data, frame_mjpeg->actual_bytes,buffer);
+            //MyColorSpaces::YUV422Planar<640,480> bufferYUV422{};
+            //mMJPEGDecodeAndroid.decodeToYUV422(frame_mjpeg->data, frame_mjpeg->actual_bytes,bufferYUV422);
+            //auto& framebuffer= *static_cast<MyColorSpaces::YUV422SemiPlanar<640,480>*>(static_cast<void*>(buffer.bits));
+            //MyColorSpaces::copyTo(bufferYUV422,framebuffer);
+            //auto& framebuffer= *static_cast<MyColorSpaces::RGB<640,480>*>(static_cast<void*>(buffer.bits));
+            //MyColorSpaces::generateFrame(frameIndex,framebuffer);
+            MJPEGDecodeAndroid::debugANativeWindowBuffer(buffer);
+            //MyColorSpaces::RGB<640,480> rgb{};
+            //auto& framebuffer= *static_cast<MyColorSpaces::YUV420SemiPlanar<640,480>*>(static_cast<void*>(buffer.bits));
+            //MyColorSpaces::copyTo<640,480>(rgb,framebuffer);
+            //MyColorSpaces::clear(framebuffer);
+            //auto& framebuffer= *static_cast<MyColorSpaces::RGBA<640,480>*>(static_cast<void*>(buffer.bits));
+            //framebuffer.clear(frameIndex);
+            auto& framebuffer= *static_cast<MyColorSpaces::YUV420Planar<640,480>*>(static_cast<void*>(buffer.bits));
+            framebuffer.clear(120,160,200);
+
+            frameIndex++;
+
             ANativeWindow_unlockAndPost(aNativeWindow);
-            MyColorSpaces::YUV422Planar<640,480> bufferYUV422{};
-            mMJPEGDecodeAndroid.decodeToYUV422(frame_mjpeg->data, frame_mjpeg->actual_bytes,bufferYUV422);
         }else{
             MLOGD<<"Cannot lock window";
         }
