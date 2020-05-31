@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.databinding.ConnectUvcFragmentBinding;
 import constantin.fpv_vr.settings.SJ;
+import constantin.test.SimpleEncoder;
 import constantin.test.UVCReceiverDecoder;
 
 public class FConnectUVC extends Fragment implements View.OnClickListener{
@@ -40,10 +41,10 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
-            p= UVCReceiverDecoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
+            p= SimpleEncoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
         });
         binding.bStopT.setOnClickListener(v -> {
-            UVCReceiverDecoder.nativeStopConvertFile(p);
+            SimpleEncoder.nativeStopConvertFile(p);
         });
         return binding.getRoot();
     }

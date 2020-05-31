@@ -105,7 +105,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.4.2'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.crashlytics.sdk.android:crashlytics-ndk:2.1.1'
-    //implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
 
     //Dafuq ?
     implementation "com.google.vr:sdk-base:$mGvrVersion"
