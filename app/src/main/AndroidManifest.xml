@@ -21,7 +21,7 @@
         <service
             android:name=".connect.TranscodeService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false" />
 
         <activity
             android:name=".main.AMain"
@@ -89,7 +89,7 @@
         <activity
             android:name=".connect.AConnect"
             android:screenOrientation="behind"
-            android:theme="@style/MyStyleNoActionBar"></activity>
+            android:theme="@style/MyStyleNoActionBar" />
         <activity
             android:name=".settings.AGroundRecordingSettings"
             android:screenOrientation="behind"

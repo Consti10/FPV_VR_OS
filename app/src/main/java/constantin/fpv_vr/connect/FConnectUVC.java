@@ -22,7 +22,7 @@ import constantin.test.UVCReceiverDecoder;
 public class FConnectUVC extends Fragment implements View.OnClickListener{
     private ConnectUvcFragmentBinding binding;
     private Context mContext;
-    private long p;
+    private Thread thread;
 
     @Override
     @SuppressLint("SetTextI18n")
@@ -43,16 +43,18 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
-            p= SimpleEncoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
+            thread=new Thread(new SimpleEncoder());
+            thread.start();
+            //p= SimpleEncoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
             /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
             serviceIntent.putExtra(TranscodeService.INPUT_EXTRA, "Foreground Service Example in Android");
             ContextCompat.startForegroundService(mContext, serviceIntent);*/
-
         });
         binding.bStopT.setOnClickListener(v -> {
-            SimpleEncoder.nativeStopConvertFile(p);
-            //Intent serviceIntent = new Intent(mContext, TranscodeService.class);
-           //requireActivity().stopService(serviceIntent);
+            //SimpleEncoder.nativeStopConvertFile(p);
+            /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
+           requireActivity().stopService(serviceIntent);*/
+            thread.interrupt();
         });
         return binding.getRoot();
     }
