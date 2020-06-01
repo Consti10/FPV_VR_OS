@@ -44,15 +44,11 @@ public class TranscodeService extends Service {
         //Intent notificationIntent = new Intent(this, AMain.class);
         //PendingIntent pendingIntent = PendingIntent.getActivity(this,
         //        0, notificationIntent, 0);
-
-
         //do heavy work on a background thread
         //p= SimpleEncoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
         //stopSelf();
         return START_NOT_STICKY;
     }
-
-
 
 
     public void lol(){

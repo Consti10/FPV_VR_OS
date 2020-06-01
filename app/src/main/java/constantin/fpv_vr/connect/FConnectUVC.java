@@ -53,7 +53,7 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         binding.bStopT.setOnClickListener(v -> {
             //SimpleEncoder.nativeStopConvertFile(p);
             /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
-           requireActivity().stopService(serviceIntent);*/
+            requireActivity().stopService(serviceIntent);*/
             thread.interrupt();
         });
         return binding.getRoot();
