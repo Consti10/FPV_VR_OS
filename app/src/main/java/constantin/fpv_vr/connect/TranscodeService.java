@@ -16,6 +16,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -47,12 +48,10 @@ public class TranscodeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String startTranscoding = intent.getStringExtra(EXTRA_START_TRANSCODING_FILE);
-        //String stopTranscoding=intent.getStringExtra(EXTRA_STOP_TRANSCODING_FILE);
-        //System.out.println("Extras: "+startTranscoding+" "+stopTranscoding);
         System.out.println("Extras "+startTranscoding);
-
+        // Create a new Thread for this decoding task
+        // on completion,also run a runnable on the main looper
         final Handler handler=new Handler(getMainLooper());
-        final int index=workerThreads.size();
         final Thread worker=new Thread(new Runnable() {
             @Override
             public void run() {
@@ -63,7 +62,8 @@ public class TranscodeService extends Service {
                     public void run() {
                         final boolean contained=workerThreads.remove(thisWorker);
                         System.out.println("Contained worker thread ?:"+contained);
-                        updateNotification();
+                        // update the notification
+                        NotificationManagerCompat.from(getApplication()).notify(NOTIFICATION_ID,createNotification());
                         if(workerThreads.isEmpty()){
                             stopSelf();
                         }
@@ -71,16 +71,12 @@ public class TranscodeService extends Service {
                 });
             }
         });
+        // Have to add thread to workers array before starting
         workerThreads.add(worker);
         worker.start();
-
-        updateNotification();
-        //Intent notificationIntent = new Intent(this, AMain.class);
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this,
-        //        0, notificationIntent, 0);
-        //do heavy work on a background thread
-        //p= SimpleTranscoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
-        //stopSelf();
+        // update the notification
+        NotificationManagerCompat.from(getApplication()).notify(NOTIFICATION_ID,createNotification());
+        //
         return START_NOT_STICKY;
     }
 
@@ -113,19 +109,6 @@ public class TranscodeService extends Service {
         return notification;
     }
 
-    private void updateNotification(){
-        final Notification notification=createNotification();
-        NotificationManagerCompat.from(getApplication()).notify(NOTIFICATION_ID,notification);
-    }
-
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -141,8 +124,14 @@ public class TranscodeService extends Service {
             }
         }
         Log.d(TAG,"onDestroy2");
+        // Do not forget to delete the notification channel. This will also delete any notifications in this channel
         NotificationManagerCompat.from(getApplication()).deleteNotificationChannel(NOTIFICATION_CHANNEL_ID);
-        //NotificationManagerCompat.from(getApplication()).cancel(NOTIFICATION_CHANNEL_ID,NOTIFICATION_ID);
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
 }
