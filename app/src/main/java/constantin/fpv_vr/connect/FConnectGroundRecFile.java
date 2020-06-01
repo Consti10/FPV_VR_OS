@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import constantin.fpv_vr.databinding.ConnectGrfileFragmentBinding;
 import constantin.telemetry.core.TelemetrySettings;
@@ -38,7 +39,7 @@ public class FConnectGroundRecFile extends Fragment {
                 final String input=v.getText().toString();
                 if(v.equals(binding.editTextFileNameFPV)){
                     final String pathAndFilename=VideoSettings.getDirectoryToSaveDataTo()+input;
-                    if(!fileExists(pathAndFilename)){
+                    if(!FileHelper.fileExists(pathAndFilename)){
                         makeInfoDialog("WARNING ! This video file does not exist.");
                     }
                     VideoSettings.setVS_PLAYBACK_FILENAME(mContext,pathAndFilename);
@@ -48,19 +49,19 @@ public class FConnectGroundRecFile extends Fragment {
             }
         });
         //We need to write the filename double - once for video, once for telemetry lib.
-        final String filenameFPV=extractFilename(VideoSettings.getVS_PLAYBACK_FILENAME(mContext));
+        final String filenameFPV=FileHelper.extractFilename(VideoSettings.getVS_PLAYBACK_FILENAME(mContext));
         binding.editTextFileNameFPV.setText(filenameFPV);
         binding.bEasySelectFileFPV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String directory= VideoSettings.getDirectoryToSaveDataTo();
-                final String[] filenames=getAllFilenamesInDirectory(directory);
+                final ArrayList<String> filenames=FileHelper.getAllFilenamesInDirectory(directory,null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Pick a ground recording file");
-                builder.setItems(filenames, new DialogInterface.OnClickListener() {
+                builder.setItems(filenames.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final String selectedFilename=filenames[which];
+                        final String selectedFilename=filenames.get(which);
                         binding.editTextFileNameFPV.setText(selectedFilename);
                         VideoSettings.setVS_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
                         TelemetrySettings.setT_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
@@ -94,31 +95,6 @@ public class FConnectGroundRecFile extends Fragment {
                 dialog.show();
             }
         });
-    }
-
-    private static boolean fileExists(String fileName){
-        File tempFile = new File(fileName);
-        return tempFile.exists();
-    }
-
-    private static String extractFilename(final String pathWithFilename){
-        String last = pathWithFilename.substring(pathWithFilename.lastIndexOf('/') + 1);
-        System.out.println(pathWithFilename);
-        System.out.println(last);
-        return last;
-    }
-
-    private static String[] getAllFilenamesInDirectory(final String directory){
-        File folder = new File(directory);
-        File[] listOfFiles = folder.listFiles();
-        String[] ret=new String[listOfFiles.length];
-        for(int i=0;i<listOfFiles.length;i++){
-            final File file=listOfFiles[i];
-            final String filename=file.getName();
-            System.out.println(filename);
-            ret[i]=filename;
-        }
-        return ret;
     }
 
 

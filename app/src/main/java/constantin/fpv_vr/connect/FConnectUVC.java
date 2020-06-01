@@ -14,10 +14,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+
 import constantin.fpv_vr.databinding.ConnectUvcFragmentBinding;
 import constantin.fpv_vr.settings.SJ;
+import constantin.telemetry.core.TelemetrySettings;
 import constantin.test.SimpleEncoder;
 import constantin.test.UVCReceiverDecoder;
+import constantin.video.core.video_player.VideoSettings;
 
 public class FConnectUVC extends Fragment implements View.OnClickListener{
     private ConnectUvcFragmentBinding binding;
@@ -43,7 +47,7 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
-            thread=new Thread(new SimpleEncoder());
+            thread=new Thread(new SimpleEncoder(UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv"));
             thread.start();
             //p= SimpleEncoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
             /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
@@ -55,6 +59,25 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
             /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
             requireActivity().stopService(serviceIntent);*/
             thread.interrupt();
+        });
+        binding.bStartT2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String directory= UVCReceiverDecoder.getDirectoryToSaveDataTo();
+                final ArrayList<String> filenames=FileHelper.getAllFilenamesInDirectory(directory,".fpv");
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Pick a ground recording file");
+                builder.setItems(filenames.toArray(new String[0]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String selectedFilename=filenames.get(which);
+                        final String filePath=directory+selectedFilename;
+                        final Thread thread=new Thread(new SimpleEncoder(filePath));
+                        thread.start();
+                    }
+                });
+                builder.show();
+            }
         });
         return binding.getRoot();
     }
