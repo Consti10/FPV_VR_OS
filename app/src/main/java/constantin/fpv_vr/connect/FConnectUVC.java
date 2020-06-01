@@ -26,7 +26,6 @@ import constantin.video.core.video_player.VideoSettings;
 public class FConnectUVC extends Fragment implements View.OnClickListener{
     private ConnectUvcFragmentBinding binding;
     private Context mContext;
-    private Thread thread;
 
     @Override
     @SuppressLint("SetTextI18n")
@@ -47,18 +46,16 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
-            thread=new Thread(new SimpleEncoder(UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv"));
-            thread.start();
-            //p= SimpleEncoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
-            /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
-            serviceIntent.putExtra(TranscodeService.INPUT_EXTRA, "Foreground Service Example in Android");
-            ContextCompat.startForegroundService(mContext, serviceIntent);*/
+            //thread=new Thread(new SimpleTranscoder(UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv"));
+            Intent serviceIntent = new Intent(mContext, TranscodeService.class);
+            serviceIntent.putExtra(TranscodeService.EXTRA_START_TRANSCODING_FILE, UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv");
+            ContextCompat.startForegroundService(mContext, serviceIntent);
         });
         binding.bStopT.setOnClickListener(v -> {
-            //SimpleEncoder.nativeStopConvertFile(p);
-            /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
-            requireActivity().stopService(serviceIntent);*/
-            thread.interrupt();
+            Intent serviceIntent = new Intent(mContext, TranscodeService.class);
+            //serviceIntent.putExtra(TranscodeService.EXTRA_STOP_TRANSCODING_FILE, "STOP X");
+            //requireActivity().startService(serviceIntent);
+            requireActivity().stopService(serviceIntent);
         });
         binding.bStartT2.setOnClickListener(new View.OnClickListener() {
             @Override
