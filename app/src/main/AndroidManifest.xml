@@ -6,9 +6,9 @@
     <!-- Info about networks (EZ-WB connect via WIFI) -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- for the notification -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- for the notification -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:name=".djiintegration.DJIApplication"
         android:allowBackup="false"
@@ -18,19 +18,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
+        <service
+            android:name=".connect.TranscodeService"
+            android:enabled="true"
+            android:exported="true"></service>
 
         <activity
             android:name=".main.AMain"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme"
             android:directBootAware="true"
-            >
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter_rotg02" />
@@ -46,6 +52,7 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter_rotg02" />
@@ -53,7 +60,6 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
                 android:resource="@xml/device_filter_rotg02" />
         </activity>
-
         <activity
             android:name=".play_stereo.AStereoNormal"
             android:screenOrientation="landscape"
@@ -68,6 +74,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/MyStyleFullscreen"
             tools:targetApi="n">
+
             <!--
            <intent-filter>
                <action android:name="android.intent.action.MAIN" />
@@ -82,8 +89,7 @@
         <activity
             android:name=".connect.AConnect"
             android:screenOrientation="behind"
-            android:theme="@style/MyStyleNoActionBar" >
-        </activity>
+            android:theme="@style/MyStyleNoActionBar"></activity>
         <activity
             android:name=".settings.AGroundRecordingSettings"
             android:screenOrientation="behind"
@@ -94,6 +100,7 @@
         <activity
             android:name=".settings.ASettingsVR"
             android:screenOrientation="behind" />
+
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />

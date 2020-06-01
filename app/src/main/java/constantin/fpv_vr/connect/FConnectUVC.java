@@ -3,6 +3,7 @@ package constantin.fpv_vr.connect;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.databinding.ConnectUvcFragmentBinding;
@@ -42,12 +44,19 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
             p= SimpleEncoder.nativeStartConvertFile(UVCReceiverDecoder.getDirectoryToSaveDataTo());
+            /*Intent serviceIntent = new Intent(mContext, TranscodeService.class);
+            serviceIntent.putExtra(TranscodeService.INPUT_EXTRA, "Foreground Service Example in Android");
+            ContextCompat.startForegroundService(mContext, serviceIntent);*/
+
         });
         binding.bStopT.setOnClickListener(v -> {
             SimpleEncoder.nativeStopConvertFile(p);
+            //Intent serviceIntent = new Intent(mContext, TranscodeService.class);
+           //requireActivity().stopService(serviceIntent);
         });
         return binding.getRoot();
     }
+
 
     @Override
     public void onResume() {
