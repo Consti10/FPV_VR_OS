@@ -1,9 +1,8 @@
 #include "OSDRenderer.h"
 #include <BasicGLPrograms.hpp>
 #include <GLHelper.hpp>
+#include <TimeHelper.hpp>
 
-#define TAG "OSDRenderer"
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 
 OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,const BasicGLPrograms& basicGLPrograms,TelemetryReceiver& telemetryReceiver):
         settingsOSDStyle(env,androidContext),
@@ -138,6 +137,7 @@ void OSDRenderer::placeGLElementsStereo(const IPositionable::Rect2D& rectVideoCa
 }
 
 void OSDRenderer::updateAndDrawElementsGL(glm::mat4 ViewM,glm::mat4 ProjM){
+    //MEASURE_FUNCTION_EXECUTION_TIME
     const auto now=std::chrono::steady_clock::now();
     const float flightTimeS=((float)std::chrono::duration_cast<std::chrono::milliseconds>(now-mFLightStart).count())/1000.0f;
     mTelemetryReceiver.setFlightTime(flightTimeS);
@@ -150,6 +150,7 @@ void OSDRenderer::updateAndDrawElementsGL(glm::mat4 ViewM,glm::mat4 ProjM){
 }
 
 void OSDRenderer::drawElementsGL(glm::mat4 ViewM, glm::mat4 ProjM) {
+    //MEASURE_FUNCTION_EXECUTION_TIME
     mBatchingManager.drawGL(ViewM,ProjM);
     IDrawable::drawAll(mDrawables,ViewM,ProjM);
     GLHelper::checkGlError("OSDRenderer::drawElementsGL");

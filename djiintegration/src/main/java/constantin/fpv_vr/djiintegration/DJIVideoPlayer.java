@@ -61,6 +61,7 @@ public class DJIVideoPlayer extends VideoPlayer {
         if(!prioSet){
             Log.d("X","Thread priority"+Thread.currentThread().getPriority());
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+            android.os.Process.setThreadPriority(Thread.MAX_PRIORITY);
             prioSet=true;
         }
         //if (mCodecManager != null) {

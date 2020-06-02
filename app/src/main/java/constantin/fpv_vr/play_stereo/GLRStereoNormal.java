@@ -90,10 +90,9 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
             // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 120fps here, but
             // instead of sleeping I poll on the surfaceTexture in small intervalls if a new frame is available
             // As soon as a new video frame is available, I render the OpenGL frame immediately
-            // High OpenGL FPS, 25fps video
             long timeBefore=System.currentTimeMillis();
             while (true){
-                final boolean update= updateAndCheck(surfaceTexture);
+                final boolean update=updateAndCheck(surfaceTexture);
                 if(update){
                     log("Latency until opengl is "+(System.nanoTime()-surfaceTexture.getTimestamp())/1000/1000.0f);
                     break;
@@ -104,6 +103,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
                         break;
                     }
                 }
+                // Break if elapsed time exceeds n ms.
                 if(System.currentTimeMillis()-timeBefore>8){
                     break;
                 }
@@ -111,7 +111,6 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         }else{
             surfaceTexture.updateTexImage();
         }
-
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }

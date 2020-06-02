@@ -60,6 +60,7 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
     glClearColor(0,0,0,0.0F);
     cpuFrameTime.reset();
 }
@@ -90,7 +91,6 @@ void GLRStereoNormal::onDrawFrame() {
     //std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 
-
 void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     distortionManager.setEye(eye==GVR_LEFT_EYE);
     vrHeadsetParams.setOpenGLViewport(eye);
@@ -111,12 +111,20 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
                                                    : vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;
     }
     const glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendEquation(GL_FUNC_ADD);
     mVideoRenderer->drawVideoCanvas(viewVideo,projection,eye==GVR_LEFT_EYE);
     if(eye==GVR_LEFT_EYE || updateOSDBetweenEyes){
         mOSDRenderer->updateAndDrawElementsGL(viewOSD,projection);
     }else{
         mOSDRenderer->drawElementsGL(viewOSD,projection);
     }
+    //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
+    //glBlendEquation(GL_FUNC_SUBTRACT);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+    //mVideoRenderer->drawVideoCanvas(viewVideo,projection,eye==GVR_LEFT_EYE);
+
     //Render the mesh that occludes everything except the part actually visible inside the headset
     if(mSettingsVR.VR_DISTORTION_CORRECTION_MODE!=0){
         int idx=eye==GVR_LEFT_EYE ? 0 : 1;
