@@ -18,10 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
-        <service
-            android:name=".connect.TranscodeService"
-            android:enabled="true"
-            android:exported="false" />
+
 
         <activity
             android:name=".main.AMain"

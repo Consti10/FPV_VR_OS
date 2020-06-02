@@ -11,17 +11,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
 import constantin.fpv_vr.databinding.ConnectUvcFragmentBinding;
 import constantin.fpv_vr.settings.SJ;
-import constantin.telemetry.core.TelemetrySettings;
-import constantin.test.SimpleEncoder;
+import constantin.test.TranscodeService;
 import constantin.test.UVCReceiverDecoder;
-import constantin.video.core.video_player.VideoSettings;
 
 public class FConnectUVC extends Fragment implements View.OnClickListener{
     private ConnectUvcFragmentBinding binding;
@@ -46,15 +43,10 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
-            //thread=new Thread(new SimpleTranscoder(UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv"));
-            Intent serviceIntent = new Intent(mContext, TranscodeService.class);
-            serviceIntent.putExtra(TranscodeService.EXTRA_START_TRANSCODING_FILE, UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv");
-            ContextCompat.startForegroundService(mContext, serviceIntent);
+            TranscodeService.startTranscoding(mContext,UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv");
         });
         binding.bStopT.setOnClickListener(v -> {
             Intent serviceIntent = new Intent(mContext, TranscodeService.class);
-            //serviceIntent.putExtra(TranscodeService.EXTRA_STOP_TRANSCODING_FILE, "STOP X");
-            //requireActivity().startService(serviceIntent);
             requireActivity().stopService(serviceIntent);
         });
         binding.bStartT2.setOnClickListener(new View.OnClickListener() {
@@ -69,8 +61,9 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
                     public void onClick(DialogInterface dialog, int which) {
                         final String selectedFilename=filenames.get(which);
                         final String filePath=directory+selectedFilename;
-                        final Thread thread=new Thread(new SimpleEncoder(filePath));
-                        thread.start();
+                        TranscodeService.startTranscoding(mContext,filePath);
+                        //final Thread thread=new Thread(new SimpleEncoder(filePath));
+                        //thread.start();
                     }
                 });
                 builder.show();
