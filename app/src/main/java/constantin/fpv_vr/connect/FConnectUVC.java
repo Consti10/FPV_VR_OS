@@ -43,11 +43,10 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
         }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
-            TranscodeService.startTranscoding(mContext,UVCReceiverDecoder.getDirectoryToSaveDataTo()+"TestInput.fpv");
+            TranscodeService.startTranscoding(mContext,"");
         });
         binding.bStopT.setOnClickListener(v -> {
-            Intent serviceIntent = new Intent(mContext, TranscodeService.class);
-            requireActivity().stopService(serviceIntent);
+           TranscodeService.stopTranscoding(mContext);
         });
         binding.bStartT2.setOnClickListener(new View.OnClickListener() {
             @Override
