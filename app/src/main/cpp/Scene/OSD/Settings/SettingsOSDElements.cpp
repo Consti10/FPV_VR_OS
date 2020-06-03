@@ -7,9 +7,6 @@
 #include <jni.h>
 #include <SharedPreferences.hpp>
 
-#define TAG "OSDSettings"
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
-
 SettingsOSDElements::SettingsOSDElements(JNIEnv *env, jobject androidContext) {
     SharedPreferences prefOSDElements(env,androidContext,"pref_osd");
     //Compass Ladder

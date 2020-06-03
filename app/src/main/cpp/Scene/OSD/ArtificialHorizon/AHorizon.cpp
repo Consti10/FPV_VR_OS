@@ -10,8 +10,7 @@
 #include "AHorizon.h"
 #include "GLHelper.hpp"
 
-#define TAG "AHorizon"
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
+constexpr auto TAG="AHorizon";
 
 AHorizon::AHorizon(const AHorizon::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,const TelemetryReceiver &telemetryReceiver):
         IUpdateable(TAG),IDrawable(TAG),

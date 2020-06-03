@@ -9,10 +9,6 @@
 #include <TrueColor.hpp>
 #include <BasicGLPrograms.hpp>
 
-
-#define TAG "BatchingManager"
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
-
 BatchingManager::BatchingManager(const BasicGLPrograms &basicGLPrograms):
         mBasicGLPrograms(basicGLPrograms),
         mTriangleBuffer("Background"),

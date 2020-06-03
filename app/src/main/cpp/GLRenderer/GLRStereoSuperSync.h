@@ -9,6 +9,7 @@
 #include "Extensions.hpp"
 #include <FBRManager.h>
 #include <VRFrameCPUChronometer.h>
+#include <TimeHelper.hpp>
 #include "../Scene/Video/SurfaceTextureUpdate.hpp"
 
 class GLRStereoSuperSync : public GLRStereoNormal{
@@ -24,7 +25,7 @@ public:
      * This has to be called on the GL thread.
      * WARNING: does not return until exitSuperSyncLoop is called. Basically it blocks the GL thread.
     */
-    void enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject surfaceTexture,int exclusiveVRCore);
+    void enterSuperSyncLoop(JNIEnv * env, jobject obj,int exclusiveVRCore);
     /**
      * Exit the SuperSync loop. Since the super sync loop blocks the GLThread, this has to be called from another thread, e.g the UI thread
      * called by the UI's onPause().
@@ -36,7 +37,7 @@ public:
      */
     void setLastVSYNC(int64_t lastVSYNC);
 public:
-    void onSurfaceCreatedX(JNIEnv * env,jobject obj,jint videoTexture);
+    void onSurfaceCreatedX(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId);
     void onSurfaceChangedX(int width, int height);
     // we use the drawEye from GLRStereoNormal void drawEye(gvr::Eye eye);
     /**
@@ -51,7 +52,7 @@ private:
     VRFrameTimeAccumulator mFrameTimeAcc;
     std::unique_ptr<FBRManager> mFBRManager= nullptr;
     int swapColor=0;
-    SurfaceTextureUpdate mSurfaceTextureUpdate;
+    AvgCalculator surfaceTextureDelay;
 };
 
 

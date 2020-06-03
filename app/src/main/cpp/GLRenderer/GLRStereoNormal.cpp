@@ -21,6 +21,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <NDKThreadHelper.hpp>
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
+mSurfaceTextureUpdate(env),
 videoMode(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),
 distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? VDDCManager::NONE : VDDCManager::RADIAL_CARDBOARD),
         mTelemetryReceiver(telemetryReceiver),
@@ -43,16 +44,17 @@ void GLRStereoNormal::placeGLElements(){
     mVideoRenderer->updatePosition(videoZ,videoW,videoH,lastVideoWidthPx,lastVideoHeightPx);
 }
 
-void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jint videoTexture) {
+void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
-    mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)videoTexture,&distortionManager);
+    mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)videoSurfaceTextureId,&distortionManager);
     const auto color=TrueColor2::BLACK;
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
+    mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -65,7 +67,7 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     cpuFrameTime.reset();
 }
 
-void GLRStereoNormal::onDrawFrame() {
+void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
         swapColor++;
         if(swapColor>1){
@@ -79,6 +81,7 @@ void GLRStereoNormal::onDrawFrame() {
         placeGLElements();
     }
     mFPSCalculator.tick();
+    mSurfaceTextureUpdate.updateAndCheck(env);
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
     //start rendering the frame
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
@@ -159,8 +162,8 @@ JNI_METHOD(void, nativeDelete)
 }
 
 JNI_METHOD(void, nativeOnSurfaceCreated)
-(JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoTexture,jobject androidContext) {
-    native(glRendererStereo)->onSurfaceCreated(env,androidContext,videoTexture);
+(JNIEnv *env, jobject obj, jlong glRendererStereo,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
+    native(glRendererStereo)->onSurfaceCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
 }
 
 JNI_METHOD(void, nativeOnSurfaceChanged)
@@ -170,7 +173,7 @@ JNI_METHOD(void, nativeOnSurfaceChanged)
 
 JNI_METHOD(void, nativeOnDrawFrame)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {
-    native(glRendererStereo)->onDrawFrame();
+    native(glRendererStereo)->onDrawFrame(env);
 }
 
 JNI_METHOD(void, nativeOnVideoRatioChanged)

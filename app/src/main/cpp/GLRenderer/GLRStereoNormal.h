@@ -18,6 +18,7 @@
 #include "IVideoFormatChanged.hpp"
 #include <DistortionEngine.h>
 #include <SettingsVR.h>
+#include <Video/SurfaceTextureUpdate.hpp>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -31,9 +32,9 @@ public:
     explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoMode);
 public:
     //not protected because unused by GLRStereoSuperSync
-    void onDrawFrame();
-    void onSurfaceCreated(JNIEnv * env,jobject obj,jint videoTexture);
+    void onSurfaceCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId);
     void onSurfaceChanged(int width, int height);
+    void onDrawFrame(JNIEnv* env);
 protected:
     //All OpenGL calls required to draw one eye (video and osd)
     void drawEye(gvr::Eye eye,bool updateOSDBetweenEyes);
@@ -56,6 +57,8 @@ protected:
 public:
     VDDCManager distortionManager;
     DistortionEngine vrHeadsetParams;
+protected:
+    SurfaceTextureUpdate mSurfaceTextureUpdate;
 };
 
 

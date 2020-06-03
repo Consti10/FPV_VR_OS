@@ -7,10 +7,6 @@
 #include <android/log.h>
 #include <SharedPreferences.hpp>
 
-#define TAG "SettingsOSDStyle"
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
-
-
 SettingsOSDStyle::SettingsOSDStyle(JNIEnv *env, jobject androidContext) {
 //OSD style ------------
     SharedPreferences prefOSDStyle(env,androidContext,"pref_osd");

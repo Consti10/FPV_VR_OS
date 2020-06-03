@@ -27,7 +27,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,boolean qcomTiledRenderingAvailable,
                                         boolean reusableSyncAvailable,int videoMode);
     private native void nativeDelete(long glRendererStereoP);
-    private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
+    private native void nativeOnSurfaceCreated(long glRendererStereoP,Context androidContext,SurfaceTexture videoSurfaceTexture,int videoSurfaceTextureId);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
     private native void nativeEnterSuperSyncLoop(long glRendererStereoP,SurfaceTexture surfaceTexture,int exclusiveVRCore);
     private native void nativeExitSuperSyncLoop(long glRendererMonoP);
@@ -57,7 +57,7 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     @Override
     public void onSurfaceCreated() {
         videoSurfaceHolder.createSurfaceTextureGL();
-        nativeOnSurfaceCreated(nativeGLRSuperSync,videoSurfaceHolder.getTextureId(),mContext);
+        nativeOnSurfaceCreated(nativeGLRSuperSync,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId());
     }
 
     @Override

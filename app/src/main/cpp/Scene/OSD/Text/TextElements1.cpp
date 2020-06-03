@@ -1,8 +1,7 @@
 #include <SettingsOSDStyle.h>
 #include "TextElements1.h"
 
-#define TAG "TextElements1"
-#define LOGD1(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
+constexpr auto TAG="TextElements1";
 
 TextElements1::TextElements1(const TextElements1::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,TelemetryReceiver& telemetryReceiver):
         IUpdateable(TAG),IDrawable(TAG),

@@ -14,7 +14,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.MVrHeadsetParams;
-import constantin.renderingx.core.STHelper;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
@@ -38,7 +37,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     }
     private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode);
     private native void nativeDelete(long glRendererStereoP);
-    private native void nativeOnSurfaceCreated(long glRendererStereoP,int videoTexture,Context androidContext);
+    private native void nativeOnSurfaceCreated(long glRendererStereoP,Context androidContext,SurfaceTexture videoSurfaceTexture,int videoSurfaceTextureId);
     private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
     private native void nativeOnDrawFrame(long glRendererStereoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
@@ -50,6 +49,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private VideoSurfaceHolder videoSurfaceHolder;
     private final TelemetryReceiver telemetryReceiver;
     private final GLSurfaceView glSurfaceView;
+    private final AvgCalculator surfaceTextureDelay =new AvgCalculator();
 
     public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext,final GLSurfaceView view){
         mContext=context;
@@ -66,7 +66,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         videoSurfaceHolder.createSurfaceTextureGL();
-        nativeOnSurfaceCreated(nativeGLRendererStereo,videoSurfaceHolder.getTextureId(),mContext);
+        nativeOnSurfaceCreated(nativeGLRendererStereo,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
-        final SurfaceTexture surfaceTexture=videoSurfaceHolder.getSurfaceTexture();
+        /*final SurfaceTexture surfaceTexture=videoSurfaceHolder.getSurfaceTexture();
         if(SJ.DisableVSYNC(mContext)){
             // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
             // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 120fps here, but
@@ -94,7 +94,8 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
             while (true){
                 final boolean update=updateAndCheck(surfaceTexture);
                 if(update){
-                    log("Latency until opengl is "+(System.nanoTime()-surfaceTexture.getTimestamp())/1000/1000.0f);
+                    surfaceTextureDelay.add(System.nanoTime()-surfaceTexture.getTimestamp());
+                    log("avg Latency until opengl is "+ surfaceTextureDelay.getAvg_ms());
                     break;
                 }else{
                     try {
@@ -103,14 +104,28 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
                         break;
                     }
                 }
-                // Break if elapsed time exceeds n ms.
-                if(System.currentTimeMillis()-timeBefore>8){
+                // Break if elapsed time exceeds minimum FPS
+                if(System.currentTimeMillis()-timeLastFrameRenderedMs>8.3){
                     break;
                 }
+                //if(System.currentTimeMillis()-timeBefore>8){
+                //    break;
+                //}
             }
         }else{
-            surfaceTexture.updateTexImage();
+            //surfaceTexture.updateTexImage();
+            final boolean update=updateAndCheck(surfaceTexture);
+            if(update) {
+                surfaceTextureDelay.add(System.nanoTime() - surfaceTexture.getTimestamp());
+                log("avg Latency until opengl is " + surfaceTextureDelay.getAvg_ms());
+            }
         }
+        timeLastFrameRenderedMs=System.currentTimeMillis();
+        /*final boolean update=updateAndCheck(surfaceTexture);
+        if(update){
+            avgCalculator.add(System.nanoTime()-surfaceTexture.getTimestamp());
+            log("avg Latency until opengl is "+ avgCalculator.getAvg_ms());
+        }*/
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }

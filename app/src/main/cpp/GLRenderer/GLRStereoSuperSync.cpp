@@ -26,8 +26,8 @@ GLRStereoNormal(env,androidContext,telemetryReceiver,gvr_context,videoMode),
     mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,true,f, nullptr);
 }
 
-void GLRStereoSuperSync::onSurfaceCreatedX(JNIEnv *env, jobject androidContext, jint videoTexture) {
-   GLRStereoNormal::onSurfaceCreated(env,androidContext,videoTexture);
+void GLRStereoSuperSync::onSurfaceCreatedX(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
+   GLRStereoNormal::onSurfaceCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
     mFrameTimeAcc.reset();
     initOtherExtensions();
 }
@@ -37,8 +37,7 @@ void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
     glEnable(GL_SCISSOR_TEST);
 }
 
-void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject surfaceTexture,int exclusiveVRCore) {
-    mSurfaceTextureUpdate.initUpdateTexImageJAVA(env,obj,surfaceTexture);
+void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,int exclusiveVRCore) {
     setAffinity(exclusiveVRCore);
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO_FB,TAG);
     mTelemetryReceiver.setOpenGLFPS(-1);
@@ -46,7 +45,6 @@ void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,jobject su
     MLOGD<<"entering superSync loop. GLThread will be blocked";
     mFBRManager->enterDirectRenderingLoop(env);
     MLOGD<<"exited superSync loop. GLThread unblocked";
-    mSurfaceTextureUpdate.deleteUpdateTexImageJAVA(env,obj);
 }
 
 void GLRStereoSuperSync::exitSuperSyncLoop() {
@@ -76,7 +74,11 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     //this probably implies a glFlush(). The problem is that a glFlush() also implies a glEndTilingQcom
     //So we should not call glClear() (or any glCalls that may affect the fb values) before updateTexImageJAVA().
     //or else the GPU might have to copy tiles 2 times
-    mSurfaceTextureUpdate.updateTexImageJAVA(env);
+    //mSurfaceTextureUpdate.updateTexImageJAVA(env);
+    if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+        surfaceTextureDelay.add(*delay);
+        MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+    }
     vrEyeTimeStamps.setTimestamp("updateTexImage1");
     if(mFBRManager->directRenderingMode!=FBRManager::QCOM_TILED_RENDERING){
         //when not using QCOM tiled rendering, we call 'startDirectRendering()' after 'updateTexImage()'
@@ -103,7 +105,11 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     //I don't expect the video stream to have >120fps for a real-time live video feed
     //I am also not quite sure, if the 'updateTexImage()' at the beginning of the frame actually makes it to the eye that is drawn after it
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
-        mSurfaceTextureUpdate.updateTexImageJAVA(env);
+        //mSurfaceTextureUpdate.updateTexImageJAVA(env);
+        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+            surfaceTextureDelay.add(*delay);
+            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+        }
     }
     vrEyeTimeStamps.setTimestamp("updateTexImage2");
     //vrEyeTimeStamps.print();
@@ -144,17 +150,17 @@ JNI_METHOD(void, nativeDelete)
 }
 
 JNI_METHOD(void, nativeOnSurfaceCreated)
-(JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoTexture,jobject androidContext) {
-    native(glRendererStereo)->onSurfaceCreatedX(env,androidContext,videoTexture);
+(JNIEnv *env, jobject obj, jlong glRendererStereo,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
+    native(glRendererStereo)->onSurfaceCreatedX(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
 }
 JNI_METHOD(void, nativeOnSurfaceChanged)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint w,jint h) {
     native(glRendererStereo)->onSurfaceChangedX(w, h);
 }
 JNI_METHOD(void, nativeEnterSuperSyncLoop)
-(JNIEnv *env, jobject obj, jlong glRendererStereo,jobject surfaceTexture,jint exclusiveVRCore) {
+(JNIEnv *env, jobject obj, jlong glRendererStereo,jint exclusiveVRCore) {
     MLOGD<<"nativeEnterSuperSyncLoop()";
-    native(glRendererStereo)->enterSuperSyncLoop(env,obj, surfaceTexture,(int)exclusiveVRCore);
+    native(glRendererStereo)->enterSuperSyncLoop(env,obj,(int)exclusiveVRCore);
 }
 JNI_METHOD(void, nativeExitSuperSyncLoop)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {
