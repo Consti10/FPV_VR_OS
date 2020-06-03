@@ -88,7 +88,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
         while(true){
             if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
                 surfaceTextureDelay.add(*delay);
-                //MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+                MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
                 break;
             }
             if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
@@ -114,7 +114,6 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     cpuFrameTime.stop();
     cpuFrameTime.printAvg(std::chrono::seconds(5));
-    //std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 
 void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
