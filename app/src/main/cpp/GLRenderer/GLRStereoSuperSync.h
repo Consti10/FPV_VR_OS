@@ -52,7 +52,6 @@ private:
     VRFrameTimeAccumulator mFrameTimeAcc;
     std::unique_ptr<FBRManager> mFBRManager= nullptr;
     int swapColor=0;
-    AvgCalculator surfaceTextureDelay;
 };
 
 

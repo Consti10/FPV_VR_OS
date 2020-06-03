@@ -19,6 +19,7 @@
 #include <DistortionEngine.h>
 #include <SettingsVR.h>
 #include <Video/SurfaceTextureUpdate.hpp>
+#include <TimeHelper.hpp>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -59,6 +60,9 @@ public:
     DistortionEngine vrHeadsetParams;
 protected:
     SurfaceTextureUpdate mSurfaceTextureUpdate;
+    AvgCalculator surfaceTextureDelay;
+private:
+    std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
 };
 
 

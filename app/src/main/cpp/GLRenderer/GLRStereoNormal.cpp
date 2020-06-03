@@ -69,7 +69,7 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
 
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
-        swapColor++;
+    swapColor++;
         if(swapColor>1){
             glClearColor(0.0f,0.0f,0.0f,0.0f);
             swapColor=0;
@@ -80,8 +80,27 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
-    mFPSCalculator.tick();
+    if(true){
+        while(true){
+            if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+                surfaceTextureDelay.add(*delay);
+                MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+                break;
+            }
+            if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
+                break;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }else{
+        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+            surfaceTextureDelay.add(*delay);
+            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+        }
+    }
+    lastRenderedFrame=std::chrono::steady_clock::now();
     mSurfaceTextureUpdate.updateAndCheck(env);
+    mFPSCalculator.tick();
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
     //start rendering the frame
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
