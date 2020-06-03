@@ -81,16 +81,21 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
         placeGLElements();
     }
     if(true){
+        // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
+        // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
+        // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
+        // As soon as a new video frame is available, I render the OpenGL frame immediately
         while(true){
             if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
                 surfaceTextureDelay.add(*delay);
-                MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+                //MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
                 break;
             }
             if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
                 break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            TestSleep::sleep(std::chrono::milliseconds(1));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     }else{
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
@@ -99,7 +104,6 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
         }
     }
     lastRenderedFrame=std::chrono::steady_clock::now();
-    mSurfaceTextureUpdate.updateAndCheck(env);
     mFPSCalculator.tick();
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
     //start rendering the frame
@@ -109,7 +113,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     drawEye(GVR_RIGHT_EYE, false);
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     cpuFrameTime.stop();
-    cpuFrameTime.printAvg(5000);
+    cpuFrameTime.printAvg(std::chrono::seconds(5));
     //std::this_thread::sleep_for(std::chrono::milliseconds(5));
 }
 

@@ -63,6 +63,8 @@ protected:
     AvgCalculator surfaceTextureDelay;
 private:
     std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
+    // sleep until either video frame is available or timeout is reached
+    // void sleepUntilVideoFrameAvailable();
 };
 
 
