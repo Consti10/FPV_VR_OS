@@ -84,48 +84,6 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
-        /*final SurfaceTexture surfaceTexture=videoSurfaceHolder.getSurfaceTexture();
-        if(SJ.DisableVSYNC(mContext)){
-            // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
-            // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 120fps here, but
-            // instead of sleeping I poll on the surfaceTexture in small intervalls if a new frame is available
-            // As soon as a new video frame is available, I render the OpenGL frame immediately
-            long timeBefore=System.currentTimeMillis();
-            while (true){
-                final boolean update=updateAndCheck(surfaceTexture);
-                if(update){
-                    surfaceTextureDelay.add(System.nanoTime()-surfaceTexture.getTimestamp());
-                    log("avg Latency until opengl is "+ surfaceTextureDelay.getAvg_ms());
-                    break;
-                }else{
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                }
-                // Break if elapsed time exceeds minimum FPS
-                if(System.currentTimeMillis()-timeLastFrameRenderedMs>8.3){
-                    break;
-                }
-                //if(System.currentTimeMillis()-timeBefore>8){
-                //    break;
-                //}
-            }
-        }else{
-            //surfaceTexture.updateTexImage();
-            final boolean update=updateAndCheck(surfaceTexture);
-            if(update) {
-                surfaceTextureDelay.add(System.nanoTime() - surfaceTexture.getTimestamp());
-                log("avg Latency until opengl is " + surfaceTextureDelay.getAvg_ms());
-            }
-        }
-        timeLastFrameRenderedMs=System.currentTimeMillis();
-        /*final boolean update=updateAndCheck(surfaceTexture);
-        if(update){
-            avgCalculator.add(System.nanoTime()-surfaceTexture.getTimestamp());
-            log("avg Latency until opengl is "+ avgCalculator.getAvg_ms());
-        }*/
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
