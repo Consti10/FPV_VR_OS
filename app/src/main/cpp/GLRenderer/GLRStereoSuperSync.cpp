@@ -29,7 +29,7 @@ GLRStereoNormal(env,androidContext,telemetryReceiver,gvr_context,videoMode),
 void GLRStereoSuperSync::onSurfaceCreatedX(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
    GLRStereoNormal::onSurfaceCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
     mFrameTimeAcc.reset();
-    initOtherExtensions();
+    Extensions::initOtherExtensions();
 }
 
 void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
@@ -38,7 +38,7 @@ void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
 }
 
 void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,int exclusiveVRCore) {
-    setAffinity(exclusiveVRCore);
+    Extensions::setAffinity(exclusiveVRCore);
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO_FB,TAG);
     mTelemetryReceiver.setOpenGLFPS(-1);
     //This will block until mFBRManager->requestExitSuperSyncLoop() is called

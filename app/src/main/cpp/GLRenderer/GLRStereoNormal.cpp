@@ -19,6 +19,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <CardboardViewportOcclusion.hpp>
 #include <AndroidThreadPrioValues.hpp>
 #include <NDKThreadHelper.hpp>
+#include <Extensions.hpp>
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
 mSurfaceTextureUpdate(env),
@@ -65,6 +66,7 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     glBlendEquation(GL_FUNC_ADD);
     glClearColor(0,0,0,0.0F);
     cpuFrameTime.reset();
+
 }
 
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
