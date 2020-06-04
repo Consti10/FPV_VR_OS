@@ -73,6 +73,20 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     HEIGHT=height;
 }
 
+void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint) {
+    while(true){
+        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+            surfaceTextureDelay.add(*delay);
+            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+            break;
+        }
+        if(std::chrono::steady_clock::now()>=maxWaitTimePoint){
+            break;
+        }
+        TestSleep::sleep(std::chrono::milliseconds(1));
+    }
+}
+
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     swapColor++;
@@ -86,23 +100,13 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
-    const auto maxWaitTime=std::chrono::steady_clock::now()+std::chrono::milliseconds(16)-lastRenderedFrame;
     if(true){
         // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
         // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
         // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
         // As soon as a new video frame is available, I render the OpenGL frame immediately
-        while(true){
-            if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
-                surfaceTextureDelay.add(*delay);
-                MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
-                break;
-            }
-            if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
-                break;
-            }
-            TestSleep::sleep(std::chrono::milliseconds(1));
-        }
+        const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(16);
+        waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
     }else{
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
             surfaceTextureDelay.add(*delay);

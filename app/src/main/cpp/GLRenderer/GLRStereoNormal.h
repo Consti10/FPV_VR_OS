@@ -64,7 +64,7 @@ protected:
 private:
     std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
     // sleep until either video frame is available or timeout is reached
-    void sleepUntilVideoFrameAvailable();
+    void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
     int WIDTH,HEIGHT;
 };
 
