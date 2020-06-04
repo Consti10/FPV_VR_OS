@@ -21,6 +21,8 @@ constexpr auto TAG= "GLRendererStereo";
 #include <NDKThreadHelper.hpp>
 #include <Extensions.hpp>
 
+//#define CHANGE_SWAP_COLOR
+
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
 mSurfaceTextureUpdate(env),
 videoMode(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),
@@ -56,6 +58,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     const auto color=TrueColor2::BLACK;
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
+    //Extensions::initQCOMTiling();
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -66,7 +69,8 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     glBlendEquation(GL_FUNC_ADD);
     glClearColor(0,0,0,0.0F);
     cpuFrameTime.reset();
-
+    WIDTH=width;
+    HEIGHT=height;
 }
 
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
@@ -82,7 +86,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
-    if(true){
+    /*if(true){
         // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
         // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
         // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
@@ -97,14 +101,13 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
                 break;
             }
             TestSleep::sleep(std::chrono::milliseconds(1));
-            //std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-    }else{
+    }else{*/
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
             surfaceTextureDelay.add(*delay);
             MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
         }
-    }
+    //}
     lastRenderedFrame=std::chrono::steady_clock::now();
     mFPSCalculator.tick();
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
@@ -116,6 +119,46 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     cpuFrameTime.stop();
     cpuFrameTime.printAvg(std::chrono::seconds(5));
+    /*lastRenderedFrame=std::chrono::steady_clock::now();
+    mFPSCalculator.tick();
+    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
+    while(true){
+        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+            surfaceTextureDelay.add(*delay);
+            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+            break;
+        }
+        if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
+            break;
+        }
+        TestSleep::sleep(std::chrono::milliseconds(1));
+    }
+    Extensions::glStartTilingQCOM(0,0,WIDTH/2,HEIGHT);
+    //start rendering the frame
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+    cpuFrameTime.start();
+    drawEye(GVR_LEFT_EYE,false);
+    Extensions::glEndTilingQCOM();
+    while(true){
+        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+            surfaceTextureDelay.add(*delay);
+            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+            break;
+        }
+        if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
+            break;
+        }
+        TestSleep::sleep(std::chrono::milliseconds(1));
+    }
+    Extensions::glStartTilingQCOM(WIDTH/2,0,WIDTH/2,HEIGHT);
+    glClearColor(1.0f,1.0f,0.0f,0.0f);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+    drawEye(GVR_RIGHT_EYE, false);
+    mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
+    cpuFrameTime.stop();
+    cpuFrameTime.printAvg(std::chrono::seconds(5));
+    Extensions::glEndTilingQCOM();*/
 }
 
 void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
