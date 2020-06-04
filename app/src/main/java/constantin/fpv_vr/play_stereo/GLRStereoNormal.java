@@ -49,7 +49,6 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private VideoSurfaceHolder videoSurfaceHolder;
     private final TelemetryReceiver telemetryReceiver;
     private final GLSurfaceView glSurfaceView;
-    private final AvgCalculator surfaceTextureDelay =new AvgCalculator();
 
     public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext,final GLSurfaceView view){
         mContext=context;

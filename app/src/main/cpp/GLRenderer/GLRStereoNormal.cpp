@@ -86,7 +86,8 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
-    /*if(true){
+    const auto maxWaitTime=std::chrono::steady_clock::now()+std::chrono::milliseconds(16)-lastRenderedFrame;
+    if(true){
         // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
         // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
         // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
@@ -102,12 +103,12 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
             }
             TestSleep::sleep(std::chrono::milliseconds(1));
         }
-    }else{*/
+    }else{
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
             surfaceTextureDelay.add(*delay);
             MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
         }
-    //}
+    }
     lastRenderedFrame=std::chrono::steady_clock::now();
     mFPSCalculator.tick();
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();

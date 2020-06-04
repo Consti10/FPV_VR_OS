@@ -69,7 +69,7 @@ void GLRMono::onDrawFrame() {
         }
     }
     cpuFrameTime.start();
-    if(mVideoRenderer.get()!=nullptr){
+    if(mVideoRenderer){
         if(mVideoRenderer->is360Video()){
             const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
             glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
