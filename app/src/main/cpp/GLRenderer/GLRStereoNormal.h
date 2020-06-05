@@ -70,7 +70,6 @@ private:
     // sleep until either video frame is available or timeout is reached
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
     int WIDTH,HEIGHT;
-    //std::vector<Extensions2::SubmittedFrame> submittedFrames;
     std::queue<Extensions2::SubmittedFrame> mPendingFrames;
 };
 
