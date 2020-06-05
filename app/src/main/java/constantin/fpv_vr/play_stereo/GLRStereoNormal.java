@@ -22,9 +22,7 @@ import constantin.video.core.gl.ISurfaceAvailable;
 import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.video.core.video_player.VideoSettings;
 
-import static constantin.renderingx.core.STHelper.updateAndCheck;
-import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
-
+import static constantin.renderingx.core.views.MyEGLConfigChooser.EGL_ANDROID_front_buffer_auto_refresh;
 
 /** Open GL renderer stereo in normal mode (normal==no SuperSync or daydream, but possibly VSYNC disabled)
  * Description: see AStereoNormal

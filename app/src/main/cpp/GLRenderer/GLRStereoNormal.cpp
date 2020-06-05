@@ -58,8 +58,9 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     const auto color=TrueColor2::BLACK;
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
-    //Extensions::initQCOMTiling();
-    //Extensions2::init();
+    Extensions::initQCOMTiling();
+    Extensions2::init();
+    // ExtensionGL_KHR_DEBUG::enable();
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -74,6 +75,10 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     HEIGHT=height;
 }
 
+// When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
+// To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
+// instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
+// As soon as a new video frame is available, I render the OpenGL frame immediately
 void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint) {
     while(true){
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
@@ -101,71 +106,27 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
-    if(false){
-        // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
-        // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
-        // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
-        // As soon as a new video frame is available, I render the OpenGL frame immediately
-        const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(60);
-        waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
-    }else{
-        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
-            surfaceTextureDelay.add(*delay);
-            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
-        }
-    }
-    lastRenderedFrame=std::chrono::steady_clock::now();
     mFPSCalculator.tick();
-    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
-    //start rendering the frame
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-    cpuFrameTime.start();
-    drawEye(GVR_LEFT_EYE,false);
-    drawEye(GVR_RIGHT_EYE, false);
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
+    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
+    if(mRenderingMode==SUBMIT_FRAMES){
+        if(true){
+            const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(160);
+            waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
+        }else{
+            if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
+                surfaceTextureDelay.add(*delay);
+                //MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+            }
+        }
+        lastRenderedFrame=std::chrono::steady_clock::now();
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+    }
+    cpuFrameTime.start();
+    drawEye(env,GVR_LEFT_EYE,false);
+    drawEye(env,GVR_RIGHT_EYE, false);
     cpuFrameTime.stop();
     cpuFrameTime.printAvg(std::chrono::seconds(5));
-    /*lastRenderedFrame=std::chrono::steady_clock::now();
-    mFPSCalculator.tick();
-    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
-    while(true){
-        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
-            surfaceTextureDelay.add(*delay);
-            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
-            break;
-        }
-        if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
-            break;
-        }
-        TestSleep::sleep(std::chrono::milliseconds(1));
-    }
-    Extensions::glStartTilingQCOM(0,0,WIDTH/2,HEIGHT);
-    //start rendering the frame
-    glClearColor(0.0f,0.0f,0.0f,0.0f);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-    cpuFrameTime.start();
-    drawEye(GVR_LEFT_EYE,false);
-    Extensions::glEndTilingQCOM();
-    while(true){
-        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
-            surfaceTextureDelay.add(*delay);
-            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
-            break;
-        }
-        if((std::chrono::steady_clock::now()-lastRenderedFrame)>std::chrono::milliseconds(16)){
-            break;
-        }
-        TestSleep::sleep(std::chrono::milliseconds(1));
-    }
-    Extensions::glStartTilingQCOM(WIDTH/2,0,WIDTH/2,HEIGHT);
-    glClearColor(1.0f,1.0f,0.0f,0.0f);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-    drawEye(GVR_RIGHT_EYE, false);
-    mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
-    cpuFrameTime.stop();
-    cpuFrameTime.printAvg(std::chrono::seconds(5));
-    Extensions::glEndTilingQCOM();*/
-    //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
     // remove frames we are done with
     /*while(!mPendingFrames.empty()){
         const auto& submittedFrame=mPendingFrames.front();
@@ -188,7 +149,14 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));*/
 }
 
-void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
+void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes){
+    if(mRenderingMode==SUBMIT_HALF_FRAMES){
+        const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(5);
+        waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
+        lastRenderedFrame=std::chrono::steady_clock::now();
+        Extensions::HalfFrameStartTilingQCOM(eye,WIDTH,HEIGHT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+    }
     distortionManager.setEye(eye==GVR_LEFT_EYE);
     vrHeadsetParams.setOpenGLViewport(eye);
     //Now draw
@@ -226,6 +194,10 @@ void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
     if(mSettingsVR.VR_DISTORTION_CORRECTION_MODE!=0){
         int idx=eye==GVR_LEFT_EYE ? 0 : 1;
         mBasicGLPrograms->vc2D.drawX(glm::mat4(1.0f),glm::mat4(1.0f),mOcclusionMesh[idx]);
+    }
+    if(mRenderingMode==SUBMIT_HALF_FRAMES){
+        Extensions::glEndTilingQCOM();
+        eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
     }
 }
 

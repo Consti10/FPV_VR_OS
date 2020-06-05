@@ -17,7 +17,7 @@ import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.video.core.video_player.VideoSettings;
 
-import static constantin.renderingx.core.views.MyEGLWindowSurfaceFactory.EGL_ANDROID_front_buffer_auto_refresh;
+import static constantin.renderingx.core.views.MyEGLConfigChooser.EGL_ANDROID_front_buffer_auto_refresh;
 
 /*
  * Renders OSD and/or video in monoscopic view

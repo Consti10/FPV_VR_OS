@@ -96,7 +96,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     }
     vrEyeTimeStamps.setTimestamp("clear");
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
-    GLRStereoNormal::drawEye(whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE,true);
+    GLRStereoNormal::drawEye(env,whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE,true);
     vrEyeTimeStamps.setTimestamp("drawVideoCanvas");
     mFBRManager->stopDirectRendering(whichEye);
     vrEyeTimeStamps.setTimestamp("stopDR");

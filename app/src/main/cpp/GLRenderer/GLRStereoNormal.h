@@ -42,7 +42,7 @@ public:
     void onDrawFrame(JNIEnv* env);
 protected:
     //All OpenGL calls required to draw one eye (video and osd)
-    void drawEye(gvr::Eye eye,bool updateOSDBetweenEyes);
+    void drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes);
     //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,
     //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
@@ -71,6 +71,11 @@ private:
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
     int WIDTH,HEIGHT;
     std::queue<Extensions2::SubmittedFrame> mPendingFrames;
+    // SUBMIT_FRAMES: Render left and right eye as 1 frame
+    // SUBMIT_HALF_FRAMES: Render left and right eye independently. Requires Front buffer rendering !
+    // Doing so I can update the video texture between frames, reducing latency
+    enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
+    const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
 };
 
 

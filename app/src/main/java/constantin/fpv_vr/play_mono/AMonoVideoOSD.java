@@ -84,7 +84,6 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             mGLSurfaceView.setEGLContextClientVersion(2);
             //Do not use MSAA in mono mode
             mGLSurfaceView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
-            mGLSurfaceView.setEGLWindowSurfaceFactory(new MyEGLWindowSurfaceFactory());
             mGLSurfaceView.setPreserveEGLContextOnPause(true);
             // make transparent when using android surface for video
             if(USE_ANDROID_SURFACE_FOR_VIDEO){
