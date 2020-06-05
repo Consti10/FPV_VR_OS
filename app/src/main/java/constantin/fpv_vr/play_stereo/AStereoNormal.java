@@ -53,6 +53,7 @@ public class AStereoNormal extends VrActivity {
         mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         mGLViewStereo.setPreserveEGLContextOnPause(true);
         mVrLayout.setPresentationView(mGLViewStereo);
+        //mVrLayout.setVrOverlayEnabled(false);
         setContentView(mVrLayout);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, mVrLayout.getGvrApi());
     }

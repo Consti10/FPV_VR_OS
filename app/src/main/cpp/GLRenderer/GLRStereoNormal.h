@@ -20,6 +20,10 @@
 #include <SettingsVR.h>
 #include <Video/SurfaceTextureUpdate.hpp>
 #include <TimeHelper.hpp>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <Extensions.hpp>
+#include <queue>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -66,6 +70,8 @@ private:
     // sleep until either video frame is available or timeout is reached
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
     int WIDTH,HEIGHT;
+    //std::vector<Extensions2::SubmittedFrame> submittedFrames;
+    std::queue<Extensions2::SubmittedFrame> mPendingFrames;
 };
 
 

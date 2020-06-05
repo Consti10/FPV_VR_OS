@@ -59,6 +59,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
     //Extensions::initQCOMTiling();
+    //Extensions2::init();
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -100,12 +101,12 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
-    if(true){
+    if(false){
         // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
         // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
         // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
         // As soon as a new video frame is available, I render the OpenGL frame immediately
-        const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(16);
+        const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(60);
         waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
     }else{
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
@@ -164,6 +165,27 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     cpuFrameTime.stop();
     cpuFrameTime.printAvg(std::chrono::seconds(5));
     Extensions::glEndTilingQCOM();*/
+    //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
+    // remove frames we are done with
+    /*while(!mPendingFrames.empty()){
+        const auto& submittedFrame=mPendingFrames.front();
+        auto stats=Extensions2::getFrameTimestamps(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),submittedFrame.frameId);
+        if(stats){
+            Extensions2::logStats(submittedFrame.creationTime,*stats);
+            mPendingFrames.pop();
+        }else{
+            break;
+        }
+    }
+    auto thisFrame=Extensions2::getNextFrameId(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
+    if(thisFrame){
+        if(mPendingFrames.size()>4){
+            mPendingFrames.pop();
+        }
+        mPendingFrames.push(Extensions2::SubmittedFrame{std::chrono::steady_clock::now(),*thisFrame});
+    }
+    MLOGD<<"Frames in queue "<<mPendingFrames.size();
+    Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));*/
 }
 
 void GLRStereoNormal::drawEye(gvr::Eye eye,bool updateOSDBetweenEyes){
