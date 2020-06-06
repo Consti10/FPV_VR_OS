@@ -58,9 +58,9 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     const auto color=TrueColor2::BLACK;
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
-    Extensions::initQCOMTiling();
+    QCOM_tiled_rendering::init();
     Extensions2::init();
-    // ExtensionGL_KHR_DEBUG::enable();
+    //GL_KHR_DEBUG::enable();
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -96,9 +96,8 @@ void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     swapColor++;
-        if(swapColor>1){
+        if(swapColor % 2){
             glClearColor(0.0f,0.0f,0.0f,0.0f);
-            swapColor=0;
         }else{
             glClearColor(1.0f,1.0f,0.0f,0.0f);
         }
@@ -154,7 +153,7 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
         const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(5);
         waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
         lastRenderedFrame=std::chrono::steady_clock::now();
-        Extensions::HalfFrameStartTilingQCOM(eye,WIDTH,HEIGHT);
+        QCOM_tiled_rendering::HalfFrameStartTilingQCOM(eye,WIDTH,HEIGHT);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     }
     distortionManager.setEye(eye==GVR_LEFT_EYE);
@@ -196,7 +195,7 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
         mBasicGLPrograms->vc2D.drawX(glm::mat4(1.0f),glm::mat4(1.0f),mOcclusionMesh[idx]);
     }
     if(mRenderingMode==SUBMIT_HALF_FRAMES){
-        Extensions::glEndTilingQCOM();
+        QCOM_tiled_rendering::EndTilingQCOM();
         eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
     }
 }

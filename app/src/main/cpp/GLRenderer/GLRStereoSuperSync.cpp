@@ -38,7 +38,7 @@ void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
 }
 
 void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,int exclusiveVRCore) {
-    Extensions::setAffinity(exclusiveVRCore);
+    LOLX::setAffinity(exclusiveVRCore);
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO_FB,TAG);
     mTelemetryReceiver.setOpenGLFPS(-1);
     //This will block until mFBRManager->requestExitSuperSyncLoop() is called

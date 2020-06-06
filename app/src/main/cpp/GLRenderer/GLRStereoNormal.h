@@ -75,7 +75,7 @@ private:
     // SUBMIT_HALF_FRAMES: Render left and right eye independently. Requires Front buffer rendering !
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
-    const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
+    const RENDERING_MODE mRenderingMode=SUBMIT_HALF_FRAMES;
 };
 
 
