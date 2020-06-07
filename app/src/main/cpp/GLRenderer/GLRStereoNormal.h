@@ -69,13 +69,14 @@ private:
     std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
     // sleep until either video frame is available or timeout is reached
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
+    void calculateFrameTimes();
     int WIDTH,HEIGHT;
     std::queue<Extensions2::SubmittedFrame> mPendingFrames;
     // SUBMIT_FRAMES: Render left and right eye as 1 frame
     // SUBMIT_HALF_FRAMES: Render left and right eye independently. Requires Front buffer rendering !
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
-    const RENDERING_MODE mRenderingMode=SUBMIT_HALF_FRAMES;
+    const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
 };
 
 

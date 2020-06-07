@@ -20,6 +20,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <AndroidThreadPrioValues.hpp>
 #include <NDKThreadHelper.hpp>
 #include <Extensions.hpp>
+#include <android/trace.h>
 
 //#define CHANGE_SWAP_COLOR
 
@@ -59,8 +60,8 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
     QCOM_tiled_rendering::init();
+    ANDROID_presentation_time::init();
     Extensions2::init();
-    //GL_KHR_DEBUG::enable();
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -93,7 +94,34 @@ void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono
     }
 }
 
+void GLRStereoNormal::calculateFrameTimes() {
+    // remove frames we are done with
+    while(!mPendingFrames.empty()){
+        const auto& submittedFrame=mPendingFrames.front();
+        auto stats=Extensions2::getFrameTimestamps(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),submittedFrame.frameId);
+        if(stats){
+            //Extensions2::logStats(submittedFrame.creationTime,*stats);
+            MLOGD<<"video texture to present "<<MyTimeHelper::R(std::chrono::nanoseconds(stats->DISPLAY_PRESENT_TIME_ANDROID-submittedFrame.creationTime.time_since_epoch().count()));
+            mPendingFrames.pop();
+        }else{
+            break;
+        }
+    }
+    auto thisFrame=Extensions2::getNextFrameId(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
+    if(thisFrame){
+        if(mPendingFrames.size()>4){
+            mPendingFrames.pop();
+        }
+        mPendingFrames.push(Extensions2::SubmittedFrame{std::chrono::steady_clock::now(),*thisFrame});
+    }
+    //MLOGD<<"Frames in queue "<<mPendingFrames.size();
+    //Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
+}
+
+
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
+    ATrace_beginSection("GLRStereoNormal::onDrawFrame");
+    MLOGD<<"Tracing enabled "<<ATrace_isEnabled();
 #ifdef CHANGE_SWAP_COLOR
     swapColor++;
         if(swapColor % 2){
@@ -109,6 +137,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
     if(mRenderingMode==SUBMIT_FRAMES){
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
         if(true){
             const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(160);
             waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
@@ -119,41 +148,23 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
             }
         }
         lastRenderedFrame=std::chrono::steady_clock::now();
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     }
     cpuFrameTime.start();
     drawEye(env,GVR_LEFT_EYE,false);
     drawEye(env,GVR_RIGHT_EYE, false);
     cpuFrameTime.stop();
     cpuFrameTime.printAvg(std::chrono::seconds(5));
-    // remove frames we are done with
-    /*while(!mPendingFrames.empty()){
-        const auto& submittedFrame=mPendingFrames.front();
-        auto stats=Extensions2::getFrameTimestamps(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),submittedFrame.frameId);
-        if(stats){
-            Extensions2::logStats(submittedFrame.creationTime,*stats);
-            mPendingFrames.pop();
-        }else{
-            break;
-        }
-    }
-    auto thisFrame=Extensions2::getNextFrameId(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
-    if(thisFrame){
-        if(mPendingFrames.size()>4){
-            mPendingFrames.pop();
-        }
-        mPendingFrames.push(Extensions2::SubmittedFrame{std::chrono::steady_clock::now(),*thisFrame});
-    }
-    MLOGD<<"Frames in queue "<<mPendingFrames.size();
-    Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));*/
+    calculateFrameTimes();
+    ANDROID_presentation_time::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    ATrace_endSection();
 }
 
 void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes){
     if(mRenderingMode==SUBMIT_HALF_FRAMES){
+        QCOM_tiled_rendering::HalfFrameStartTilingQCOM(eye,WIDTH,HEIGHT);
         const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(5);
         waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
         lastRenderedFrame=std::chrono::steady_clock::now();
-        QCOM_tiled_rendering::HalfFrameStartTilingQCOM(eye,WIDTH,HEIGHT);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     }
     distortionManager.setEye(eye==GVR_LEFT_EYE);
