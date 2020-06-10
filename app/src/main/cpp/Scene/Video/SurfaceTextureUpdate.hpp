@@ -38,6 +38,7 @@
 
 #include <optional>
 #include <chrono>
+#include <TimeHelper.hpp>
 
 //Helper for calling the ASurfaceTexture_XXX method with a fallback for minApi<28
 // 03.06.2020 confirmed that the ASurfaceTexture_XXX methods call native code directly (not java)
@@ -109,8 +110,25 @@ public:
         updateTexImageJAVA(env);
         const long newTimestamp=getTimestamp(env);
         if(newTimestamp!=oldTimestamp){
+            const auto diff=newTimestamp-oldTimestamp;
+            MLOGD<<"Diff "<<MyTimeHelper::R(std::chrono::nanoseconds(diff));
             const auto delay=std::chrono::steady_clock::now().time_since_epoch()-std::chrono::nanoseconds(newTimestamp);
             return delay;
+        }
+        return std::nullopt;
+    }
+    // Poll on the SurfaceTexture in small intervalls until either a new frame was dequeued
+    // or the timeout was reached. return same as above
+    std::optional<std::chrono::steady_clock::duration> waitUntilFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint){
+        while(true){
+            if(const auto delay=updateAndCheck(env)){
+                return delay;
+            }
+            //const auto leftSleepTime=maxWaitTimePoint-std::chrono::steady_clock::now();
+            if(std::chrono::steady_clock::now()>=maxWaitTimePoint){
+                break;
+            }
+            TestSleep::sleep(std::chrono::milliseconds(1));
         }
         return std::nullopt;
     }

@@ -5,15 +5,8 @@ package constantin.fpv_vr.play_stereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
-import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.util.Log;
-
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLSurface;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.connect.AConnect;
@@ -22,7 +15,6 @@ import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.VrActivity;
-import constantin.renderingx.core.views.DebugEGLContextFactory;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.renderingx.core.views.MyVRLayout;
@@ -41,8 +33,6 @@ public class AStereoNormal extends VrActivity {
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
-        //mGLViewStereo.setEGLContextFactory(new DebugEGLContextFactory());
-
         final GLRStereoNormal mGLRStereoNormal;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);
@@ -66,6 +56,18 @@ public class AStereoNormal extends VrActivity {
         //mVrLayout.setVrOverlayEnabled(false);
         setContentView(mVrLayout);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, mVrLayout.getGvrApi());
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        //Debug.startMethodTracing();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        //Debug.stopMethodTracing();
     }
 
 }

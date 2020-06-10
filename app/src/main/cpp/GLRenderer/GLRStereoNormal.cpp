@@ -80,17 +80,15 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
 // To not waste too much CPU & GPU on frames where the video did not change I limit the OpenGL FPS to max. 60fps here, but
 // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
 // As soon as a new video frame is available, I render the OpenGL frame immediately
+// This is not as efficient as using a condition variable but since the callback is invoked in java it might be hard to implement that
 void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint) {
-    while(true){
-        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
-            surfaceTextureDelay.add(*delay);
-            MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
-            break;
-        }
-        if(std::chrono::steady_clock::now()>=maxWaitTimePoint){
-            break;
-        }
-        TestSleep::sleep(std::chrono::milliseconds(1));
+    if(const auto delay=mSurfaceTextureUpdate.waitUntilFrameAvailable(env,maxWaitTimePoint)){
+        surfaceTextureDelay.add(*delay);
+        MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
+    }else{
+        MLOGD<<"Timeout";
+        ATrace_beginSection("Timeout");
+        ATrace_endSection();
     }
 }
 
@@ -101,7 +99,7 @@ void GLRStereoNormal::calculateFrameTimes() {
         auto stats=Extensions2::getFrameTimestamps(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),submittedFrame.frameId);
         if(stats){
             //Extensions2::logStats(submittedFrame.creationTime,*stats);
-            MLOGD<<"video texture to present "<<MyTimeHelper::R(std::chrono::nanoseconds(stats->DISPLAY_PRESENT_TIME_ANDROID-submittedFrame.creationTime.time_since_epoch().count()));
+            MLOGD<<"To present "<<MyTimeHelper::R(std::chrono::nanoseconds(stats->DISPLAY_PRESENT_TIME_ANDROID-submittedFrame.creationTime.time_since_epoch().count()));
             mPendingFrames.pop();
         }else{
             break;
@@ -118,17 +116,10 @@ void GLRStereoNormal::calculateFrameTimes() {
     //Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
 }
 
-
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     ATrace_beginSection("GLRStereoNormal::onDrawFrame");
-    MLOGD<<"Tracing enabled "<<ATrace_isEnabled();
 #ifdef CHANGE_SWAP_COLOR
-    swapColor++;
-        if(swapColor % 2){
-            glClearColor(0.0f,0.0f,0.0f,0.0f);
-        }else{
-            glClearColor(1.0f,1.0f,0.0f,0.0f);
-        }
+    GLHelper::updateSetClearColor(swapColor);
 #endif
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
@@ -137,9 +128,9 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
     if(mRenderingMode==SUBMIT_FRAMES){
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+        ATrace_beginSection("My updateVideoFrame");
         if(true){
-            const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(160);
+            const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(33);
             waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
         }else{
             if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
@@ -148,51 +139,64 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
             }
         }
         lastRenderedFrame=std::chrono::steady_clock::now();
+        ATrace_endSection();
+        //
+        ATrace_beginSection("MglClear");
+        QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+        ATrace_endSection();
     }
     cpuFrameTime.start();
     drawEye(env,GVR_LEFT_EYE,false);
     drawEye(env,GVR_RIGHT_EYE, false);
     cpuFrameTime.stop();
     cpuFrameTime.printAvg(std::chrono::seconds(5));
-    calculateFrameTimes();
-    ANDROID_presentation_time::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    //calculateFrameTimes();
+    //ANDROID_presentation_time::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
     ATrace_endSection();
+    QCOM_tiled_rendering::EndTilingQCOM();
 }
 
-void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes){
-    if(mRenderingMode==SUBMIT_HALF_FRAMES){
-        QCOM_tiled_rendering::HalfFrameStartTilingQCOM(eye,WIDTH,HEIGHT);
-        const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(5);
-        waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
-        lastRenderedFrame=std::chrono::steady_clock::now();
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes) {
+    ATrace_beginSection((std::string("GLRStereoNormal::drawEye ")+(eye==0 ? "left" : "right")).c_str());
+    if (mRenderingMode == SUBMIT_HALF_FRAMES) {
+        QCOM_tiled_rendering::HalfFrameStartTilingQCOM(eye, WIDTH, HEIGHT);
+        const std::chrono::steady_clock::time_point timeWhenWaitingExpires =
+                lastRenderedFrame + std::chrono::milliseconds(5);
+        waitUntilVideoFrameAvailable(env, timeWhenWaitingExpires);
+        lastRenderedFrame = std::chrono::steady_clock::now();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
-    distortionManager.setEye(eye==GVR_LEFT_EYE);
+    distortionManager.setEye(eye == GVR_LEFT_EYE);
     vrHeadsetParams.setOpenGLViewport(eye);
     //Now draw
-    const auto rotation=vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
+    const auto rotation = vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
     glm::mat4 viewVideo;
     glm::mat4 viewOSD;
-    if(mVideoRenderer->is360Video()){
+    if (mVideoRenderer->is360Video()) {
         //When rendering 360° video,always fully track head rotation for video, optionally lock OSD
-        viewVideo= vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
-        viewOSD= mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye):
-                vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotation;
-    }else{
+        viewVideo = vrHeadsetParams.GetEyeFromHeadMatrix(eye) * rotation;
+        viewOSD = mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye) :
+                  vrHeadsetParams.GetEyeFromHeadMatrix(eye) * rotation;
+    } else {
         //Else, track video only if head tracking is enabled, lock OSD if requested
-        const auto rotationWithAxesDisabled=removeRotationAroundSpecificAxes(rotation,mSettingsVR.GHT_X,mSettingsVR.GHT_Y,mSettingsVR.GHT_Z);
-        viewVideo=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;
-        viewOSD= mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)
-                                                   : vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotationWithAxesDisabled;
+        const auto rotationWithAxesDisabled = removeRotationAroundSpecificAxes(rotation,
+                                                                               mSettingsVR.GHT_X,
+                                                                               mSettingsVR.GHT_Y,
+                                                                               mSettingsVR.GHT_Z);
+        viewVideo = vrHeadsetParams.GetEyeFromHeadMatrix(eye) * rotationWithAxesDisabled;
+        viewOSD = mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)
+                                                    : vrHeadsetParams.GetEyeFromHeadMatrix(eye) *
+                                                      rotationWithAxesDisabled;
     }
-    const glm::mat4 projection=vrHeadsetParams.GetProjectionMatrix(eye);
+    const glm::mat4 projection = vrHeadsetParams.GetProjectionMatrix(eye);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_ADD);
-    mVideoRenderer->drawVideoCanvas(viewVideo,projection,eye==GVR_LEFT_EYE);
-    if(eye==GVR_LEFT_EYE || updateOSDBetweenEyes){
-        mOSDRenderer->updateAndDrawElementsGL(viewOSD,projection);
-    }else{
-        mOSDRenderer->drawElementsGL(viewOSD,projection);
+    mVideoRenderer->drawVideoCanvas(viewVideo, projection, eye == GVR_LEFT_EYE);
+    if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
+        mOSDRenderer->updateAndDrawElementsGL(viewOSD, projection);
+    } else {
+        mOSDRenderer->drawElementsGL(viewOSD, projection);
     }
     //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_SUBTRACT);
@@ -201,14 +205,15 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     //mVideoRenderer->drawVideoCanvas(viewVideo,projection,eye==GVR_LEFT_EYE);
 
     //Render the mesh that occludes everything except the part actually visible inside the headset
-    if(mSettingsVR.VR_DISTORTION_CORRECTION_MODE!=0){
-        int idx=eye==GVR_LEFT_EYE ? 0 : 1;
-        mBasicGLPrograms->vc2D.drawX(glm::mat4(1.0f),glm::mat4(1.0f),mOcclusionMesh[idx]);
+    if (mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0) {
+        int idx = eye == GVR_LEFT_EYE ? 0 : 1;
+        mBasicGLPrograms->vc2D.drawX(glm::mat4(1.0f), glm::mat4(1.0f), mOcclusionMesh[idx]);
     }
-    if(mRenderingMode==SUBMIT_HALF_FRAMES){
+    if (mRenderingMode == SUBMIT_HALF_FRAMES) {
         QCOM_tiled_rendering::EndTilingQCOM();
-        eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
+        eglSwapBuffers(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW));
     }
+    ATrace_endSection();
 }
 
 
