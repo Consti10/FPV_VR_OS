@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
         google()
         jcenter()
@@ -36,10 +36,9 @@ allprojects {
         androidxpreferenceVersion='1.1.0'
         mGvrVersion = '1.180.0'
         //ndkVersion = '21.1.6363665'
-        }
+    }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
