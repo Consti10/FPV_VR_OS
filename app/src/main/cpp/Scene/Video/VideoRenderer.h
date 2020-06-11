@@ -36,7 +36,8 @@ public:
     bool is360Video(){
         return mMode>1;
     }
-private:
+
+public:
     VertexBuffer mEquirectangularSphereB; //Equirectangular Sphere
     VertexBuffer mInsta360SphereB;
     VertexIndexBuffer mVideoCanvasB;//whole video frame (u.v coordinates). Tesselated

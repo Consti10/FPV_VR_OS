@@ -59,9 +59,26 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     const auto color=TrueColor2::BLACK;
     CardboardViewportOcclusion::uploadOcclusionMeshLeftRight(vrHeadsetParams,color,mOcclusionMesh);
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
-    QCOM_tiled_rendering::init();
-    ANDROID_presentation_time::init();
+    //QCOM_tiled_rendering::init();
+    //ANDROID_presentation_time::init();
     Extensions2::init();
+    //
+    /*glGenTextures(1, &renderTexture);
+    glBindTexture(GL_TEXTURE_2D,renderTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, RENDER_TEX_W,RENDER_TEX_H, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    // Create render target.
+    glGenFramebuffers(1, &renderFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, renderFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           renderTexture, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
+    GLHelper::checkGlError("onSurfaceCreated");*/
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -142,7 +159,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
         ATrace_endSection();
         //
         ATrace_beginSection("MglClear");
-        QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
+        //QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
         ATrace_endSection();
     }
@@ -154,7 +171,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     //calculateFrameTimes();
     //ANDROID_presentation_time::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
     ATrace_endSection();
-    QCOM_tiled_rendering::EndTilingQCOM();
+    //QCOM_tiled_rendering::EndTilingQCOM();
 }
 
 void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes) {
@@ -193,11 +210,14 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_ADD);
     mVideoRenderer->drawVideoCanvas(viewVideo, projection, eye == GVR_LEFT_EYE);
-    if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
+    // new HA
+    mVideoRenderer->mGLProgramTextureExt->drawX(renderTexture,viewVideo,projection,mVideoRenderer->mVideoCanvasB);
+
+    /*if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
         mOSDRenderer->updateAndDrawElementsGL(viewOSD, projection);
     } else {
         mOSDRenderer->drawElementsGL(viewOSD, projection);
-    }
+    }*/
     //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_SUBTRACT);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

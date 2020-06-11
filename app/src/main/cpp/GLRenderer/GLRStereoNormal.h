@@ -77,6 +77,9 @@ private:
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
     const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
+    GLuint renderTexture;
+    GLuint renderFramebuffer;
+    const int RENDER_TEX_W=1280,RENDER_TEX_H=720;
 };
 
 
