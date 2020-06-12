@@ -25,6 +25,8 @@
 #include <Extensions.hpp>
 #include <queue>
 
+// #define USE_INTERMEDIATE_DISTORTION
+
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
     /**
@@ -78,11 +80,11 @@ private:
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
     const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
-
+#ifdef USE_INTERMEDIATE_DISTORTION
     GLuint framebuffer_;        // framebuffer object
     GLuint texture_;            // distortion texture
-
     const int RENDER_TEX_W=1280,RENDER_TEX_H=1440;
+#endif
 };
 
 

@@ -64,6 +64,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     Extensions2::init();
     KHR_debug::enable();
     //
+#ifdef USE_INTERMEDIATE_DISTORTION
     GLHelper::checkGlError("onSurfaceCreated1");
     mTextureRenderer=std::make_unique<GLProgramTexture>(false,&distortionManager);
     // Create render texture.
@@ -86,6 +87,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
         MLOGE<<"Framebuffer not complete "<<status;
     }
     glBindFramebuffer(GL_FRAMEBUFFER,0);
+#endif
     GLHelper::checkGlError("onSurfaceCreated2");
 }
 
@@ -146,16 +148,19 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
+#ifdef USE_INTERMEDIATE_DISTORTION
     glBindFramebuffer(GL_FRAMEBUFFER,framebuffer_);
     glClearColor(1,0,0,0.5f);
     glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    distortionManager.updateDistortionWithIdentity();
     mOSDRenderer->updateAndDrawElementsGL(glm::mat4(1.0f),  glm::perspective(80.0f,(GLfloat)RENDER_TEX_W/(GLfloat)RENDER_TEX_H,0.01f,1000.0f));
+    vrHeadsetParams.updateDistortionManager(distortionManager);
     glFlush();
     glBindFramebuffer(GL_FRAMEBUFFER,0);
     glClearColor(0,0,0,0);
-
+#endif
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
@@ -232,13 +237,15 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     //glBlendEquation(GL_FUNC_ADD);
     mVideoRenderer->drawVideoCanvas(viewVideo, projection, eye == GVR_LEFT_EYE);
     // new HA
+#ifdef USE_INTERMEDIATE_DISTORTION
     mTextureRenderer->drawX(texture_,viewVideo,projection,mVideoRenderer->mVideoCanvasB);
-
-    /*if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
+#else
+    if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
         mOSDRenderer->updateAndDrawElementsGL(viewOSD, projection);
     } else {
         mOSDRenderer->drawElementsGL(viewOSD, projection);
-    }*/
+    }
+#endif
     //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_SUBTRACT);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
