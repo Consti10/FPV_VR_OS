@@ -55,6 +55,7 @@ protected:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
+    std::unique_ptr<GLProgramTexture> mTextureRenderer=nullptr;
     //One for left and right eye each
     std::array<VertexBuffer,2> mOcclusionMesh;
     int swapColor=0;
@@ -77,9 +78,11 @@ private:
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
     const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
-    GLuint renderTexture;
-    GLuint renderFramebuffer;
-    const int RENDER_TEX_W=1280,RENDER_TEX_H=720;
+
+    GLuint framebuffer_;        // framebuffer object
+    GLuint texture_;            // distortion texture
+
+    const int RENDER_TEX_W=1280,RENDER_TEX_H=1440;
 };
 
 

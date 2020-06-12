@@ -15,6 +15,7 @@ import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.VrActivity;
+import constantin.renderingx.core.views.DebugEGLContextFactory;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.renderingx.core.views.MyVRLayout;
@@ -32,6 +33,7 @@ public class AStereoNormal extends VrActivity {
         MyVRLayout mVrLayout = new MyVRLayout(this);
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         mGLViewStereo.setEGLContextClientVersion(2);
+        mGLViewStereo.setEGLContextFactory(new DebugEGLContextFactory());
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
         final GLRStereoNormal mGLRStereoNormal;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){

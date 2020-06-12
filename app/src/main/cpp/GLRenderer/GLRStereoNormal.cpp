@@ -62,23 +62,31 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     //QCOM_tiled_rendering::init();
     //ANDROID_presentation_time::init();
     Extensions2::init();
+    KHR_debug::enable();
     //
-    /*glGenTextures(1, &renderTexture);
-    glBindTexture(GL_TEXTURE_2D,renderTexture);
+    GLHelper::checkGlError("onSurfaceCreated1");
+    mTextureRenderer=std::make_unique<GLProgramTexture>(false,&distortionManager);
+    // Create render texture.
+    glGenTextures(1, &texture_);
+    glBindTexture(GL_TEXTURE_2D, texture_);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, RENDER_TEX_W,RENDER_TEX_H, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, RENDER_TEX_W,RENDER_TEX_H, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, 0);
     // Create render target.
-    glGenFramebuffers(1, &renderFramebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, renderFramebuffer);
+    glGenFramebuffers(1, &framebuffer_);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                           renderTexture, 0);
+                           texture_, 0);
+    auto status=glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if(status!=GL_FRAMEBUFFER_COMPLETE){
+        MLOGE<<"Framebuffer not complete "<<status;
+    }
     glBindFramebuffer(GL_FRAMEBUFFER,0);
-    GLHelper::checkGlError("onSurfaceCreated");*/
+    GLHelper::checkGlError("onSurfaceCreated2");
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -138,15 +146,26 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
+    glBindFramebuffer(GL_FRAMEBUFFER,framebuffer_);
+    glClearColor(1,0,0,0.5f);
+    glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
+    glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    mOSDRenderer->updateAndDrawElementsGL(glm::mat4(1.0f),  glm::perspective(80.0f,(GLfloat)RENDER_TEX_W/(GLfloat)RENDER_TEX_H,0.01f,1000.0f));
+    glFlush();
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
+    glClearColor(0,0,0,0);
+
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
     mFPSCalculator.tick();
+    MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
     if(mRenderingMode==SUBMIT_FRAMES){
         ATrace_beginSection("My updateVideoFrame");
-        if(true){
+        if(false){
             const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(33);
             waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
         }else{
@@ -186,6 +205,8 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     }
     distortionManager.setEye(eye == GVR_LEFT_EYE);
     vrHeadsetParams.setOpenGLViewport(eye);
+    //
+    //
     //Now draw
     const auto rotation = vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
     glm::mat4 viewVideo;
@@ -211,7 +232,7 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     //glBlendEquation(GL_FUNC_ADD);
     mVideoRenderer->drawVideoCanvas(viewVideo, projection, eye == GVR_LEFT_EYE);
     // new HA
-    mVideoRenderer->mGLProgramTextureExt->drawX(renderTexture,viewVideo,projection,mVideoRenderer->mVideoCanvasB);
+    mTextureRenderer->drawX(texture_,viewVideo,projection,mVideoRenderer->mVideoCanvasB);
 
     /*if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
         mOSDRenderer->updateAndDrawElementsGL(viewOSD, projection);
