@@ -21,6 +21,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <NDKThreadHelper.hpp>
 #include <Extensions.hpp>
 #include <android/trace.h>
+#include <TexturedGeometry.hpp>
 
 //#define CHANGE_SWAP_COLOR
 
@@ -46,6 +47,13 @@ void GLRStereoNormal::placeGLElements(){
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     mVideoRenderer->updatePosition(videoZ,videoW,videoH,lastVideoWidthPx,lastVideoHeightPx);
+#ifdef USE_INTERMEDIATE_DISTORTION
+    const int TESSELATION_FACTOR=20;
+    const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.4f},0.0f,1.0f,true,true);
+    mOSDCanvasLeftEye.uploadGL(vid1.first,vid1.second);
+    const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.4f},0.0f,1.0f,true,true);
+    mOSDCanvasRightEye.uploadGL(vid2.first,vid2.second);
+#endif
 }
 
 void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
@@ -150,7 +158,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #endif
 #ifdef USE_INTERMEDIATE_DISTORTION
     glBindFramebuffer(GL_FRAMEBUFFER,framebuffer_);
-    glClearColor(1,0,0,0.5f);
+    glClearColor(1,0,0,0.0f);
     glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -236,9 +244,8 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_ADD);
     mVideoRenderer->drawVideoCanvas(viewVideo, projection, eye == GVR_LEFT_EYE);
-    // new HA
 #ifdef USE_INTERMEDIATE_DISTORTION
-    mTextureRenderer->drawX(texture_,viewVideo,projection,mVideoRenderer->mVideoCanvasB);
+    mTextureRenderer->drawX(texture_,viewVideo,projection,eye==GVR_LEFT_EYE ? mOSDCanvasLeftEye : mOSDCanvasRightEye);
 #else
     if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
         mOSDRenderer->updateAndDrawElementsGL(viewOSD, projection);

@@ -7,6 +7,8 @@ package constantin.fpv_vr.play_stereo;
 
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.widget.TextView;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.connect.AConnect;

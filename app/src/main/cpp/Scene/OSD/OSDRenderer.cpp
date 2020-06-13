@@ -106,6 +106,9 @@ void OSDRenderer::placeGLElementsStereo(const IPositionable::Rect2D& rectVideoCa
     float paddingY=rectVideoCanvas.mHeight-rectVideoCanvas.mHeight*(settingsOSDStyle.OSD_STEREO_FOVY_SCALE*0.01f);
     IPositionable::Rect2D rectOSDOverlay(rectVideoCanvas.mX+paddingX/2.0f,rectVideoCanvas.mY+paddingY/2.0f,rectVideoCanvas.mZ,
                                         rectVideoCanvas.mWidth-paddingX,rectVideoCanvas.mHeight-paddingY);
+
+    MLOGD<<"OSD rect"<<rectOSDOverlay.mWidth/rectOSDOverlay.mHeight;
+
     if(mTextElements1){
         mTextElements1->setTextHeight(textHeightStereo);
         mTextElements1->setWorldPosition(mTextElements1->calculatePositionStereo(rectOSDOverlay));
