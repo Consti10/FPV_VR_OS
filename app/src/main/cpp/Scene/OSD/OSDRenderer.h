@@ -28,12 +28,17 @@
 class OSDRenderer{
 public:
     OSDRenderer(JNIEnv* env,jobject androidContext,const BasicGLPrograms& basicGLPrograms,TelemetryReceiver& telemetryReceiver);
+    void placeLOL(const float ratio);
     void placeGLElementsMono(const IPositionable::Rect2D& rectViewport);
     void placeGLElementsStereo(const IPositionable::Rect2D& rectVideoCanvas);
     void updateAndDrawElementsGL(glm::mat4 ViewM, glm::mat4 ProjM);
     void drawElementsGL(glm::mat4 ViewM, glm::mat4 ProjM);
     const SettingsOSDStyle settingsOSDStyle;
     const SettingsOSDElements settingsOSDElements;
+    //
+    static constexpr const float MIN_Z_DISTANCE=0.01f;
+    static constexpr const float MAX_Z_DISTANCE=100.0f;
+    glm::mat4 projMatrixMono;
 private:
     BatchingManager mBatchingManager;
     TelemetryReceiver& mTelemetryReceiver;

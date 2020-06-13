@@ -83,7 +83,8 @@ private:
 #ifdef USE_INTERMEDIATE_DISTORTION
     GLuint framebuffer_;        // framebuffer object
     GLuint texture_;            // distortion texture
-    const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W* 1.42222;
+    const float OSD_RATIO=4.0f/3.0f;
+    const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
     VertexIndexBuffer mOSDCanvasLeftEye;
     VertexIndexBuffer mOSDCanvasRightEye;
 #endif

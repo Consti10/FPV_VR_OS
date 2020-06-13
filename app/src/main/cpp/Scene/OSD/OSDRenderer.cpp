@@ -159,5 +159,18 @@ void OSDRenderer::drawElementsGL(glm::mat4 ViewM, glm::mat4 ProjM) {
     GLHelper::checkGlError("OSDRenderer::drawElementsGL");
 }
 
+void OSDRenderer::placeLOL(const float ratio) {
+    const float videoRatio=4.0f/3.0f;
+    float videoZ=-10;
+    float videoH=glm::tan(glm::radians(45.0f)*0.5f)*10*2;
+    float videoW=videoH*ratio;
+    float videoX=-videoW/2.0f;
+    float videoY=-videoH/2.0f;
+
+    placeGLElementsMono(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
+
+    projMatrixMono=glm::perspective(glm::radians(45.0f),ratio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
+}
+
 
 

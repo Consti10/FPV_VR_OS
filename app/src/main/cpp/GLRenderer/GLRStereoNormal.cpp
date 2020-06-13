@@ -37,6 +37,7 @@ distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? VDDCManager::NO
 }
 
 void GLRStereoNormal::placeGLElements(){
+
     float videoW=10;
     float videoH=videoW*1.0f/lastVideoFormat;
     float videoX=-videoW/2.0f;
@@ -45,14 +46,16 @@ void GLRStereoNormal::placeGLElements(){
     //of exactly DEFAULT_FOV_FILLED_BY_SCENE
     float videoZ=-videoW/2.0f/glm::tan(glm::radians(SettingsVR::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
-    mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     mVideoRenderer->updatePosition(videoZ,videoW,videoH,lastVideoWidthPx,lastVideoHeightPx);
 #ifdef USE_INTERMEDIATE_DISTORTION
+    mOSDRenderer->placeLOL(OSD_RATIO);
     const int TESSELATION_FACTOR=20;
-    const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.4f},0.0f,1.0f,true,true);
+    const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
     mOSDCanvasLeftEye.uploadGL(vid1.first,vid1.second);
-    const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.4f},0.0f,1.0f,true,true);
+    const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
     mOSDCanvasRightEye.uploadGL(vid2.first,vid2.second);
+#else
+    mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
 #endif
 }
 
@@ -163,7 +166,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     distortionManager.updateDistortionWithIdentity();
-    mOSDRenderer->updateAndDrawElementsGL(glm::mat4(1.0f),  glm::perspective(80.0f,(GLfloat)RENDER_TEX_W/(GLfloat)RENDER_TEX_H,0.01f,1000.0f));
+    mOSDRenderer->updateAndDrawElementsGL(glm::mat4(1.0f),  mOSDRenderer->projMatrixMono);
     vrHeadsetParams.updateDistortionManager(distortionManager);
     glFlush();
     glBindFramebuffer(GL_FRAMEBUFFER,0);
@@ -218,7 +221,6 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     }
     distortionManager.setEye(eye == GVR_LEFT_EYE);
     vrHeadsetParams.setOpenGLViewport(eye);
-    //
     //
     //Now draw
     const auto rotation = vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();

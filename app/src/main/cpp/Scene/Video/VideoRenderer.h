@@ -36,7 +36,6 @@ public:
     bool is360Video(){
         return mMode>1;
     }
-
 public:
     VertexBuffer mEquirectangularSphereB; //Equirectangular Sphere
     VertexBuffer mInsta360SphereB;
@@ -50,6 +49,9 @@ public:
     const unsigned int TESSELATION_FACTOR=10;
     const VIDEO_RENDERING_MODE mMode;
     const GLuint mVideoTexture;
+
+public:
+
 };
 
 #endif //CONSTI10_FPV_VR_OS_VIDEO_RENDERER

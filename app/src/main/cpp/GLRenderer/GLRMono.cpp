@@ -40,23 +40,15 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     float displayRatio=(float) width/(float)height;
     mOSDProjectionM=glm::perspective(glm::radians(45.0f),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     m360ProjectionM=glm::perspective(glm::radians(optionalVideo360FOV),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
+    cpuFrameTime.reset();
+    mOSDRenderer->placeLOL(displayRatio);
+    if(mVideoRenderer){
+        mVideoRenderer->updatePosition(0,0,0,lastVideoWidthPx,lastVideoHeightPx);
+    }
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0,0,width,height);
     glClearColor(0.0f,0,0,0.0f);
-    cpuFrameTime.reset();
-    const float videoRatio=4.0f/3.0f;
-    float videoZ=-10;
-    float videoH=glm::tan(glm::radians(45.0f)*0.5f)*10*2;
-    float videoW=videoH*displayRatio;
-    float videoX=-videoW/2.0f;
-    float videoY=-videoH/2.0f;
-    if(enableOSD){
-        mOSDRenderer->placeGLElementsMono(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
-    }
-    if(mVideoRenderer){
-        mVideoRenderer->updatePosition(0,0,0,lastVideoWidthPx,lastVideoHeightPx);
-    }
 }
 
 
