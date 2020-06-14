@@ -179,7 +179,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
     if(mRenderingMode==SUBMIT_FRAMES){
         ATrace_beginSection("My updateVideoFrame");
-        if(false){
+        if(true){
             const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(33);
             waitUntilVideoFrameAvailable(env,timeWhenWaitingExpires);
         }else{
