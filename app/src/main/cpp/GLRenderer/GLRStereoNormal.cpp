@@ -37,7 +37,6 @@ distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? VDDCManager::NO
 }
 
 void GLRStereoNormal::placeGLElements(){
-
     float videoW=10;
     float videoH=videoW*1.0f/lastVideoFormat;
     float videoX=-videoW/2.0f;
@@ -85,9 +84,8 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, RENDER_TEX_W,RENDER_TEX_H, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, 0);
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     // Create render target.
     glGenFramebuffers(1, &framebuffer_);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
