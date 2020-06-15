@@ -25,7 +25,7 @@
 #include <Extensions.hpp>
 #include <queue>
 
-#define USE_INTERMEDIATE_DISTORTION
+//#define USE_INTERMEDIATE_DISTORTION
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
