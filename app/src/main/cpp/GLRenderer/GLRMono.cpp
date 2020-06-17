@@ -40,7 +40,7 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     float displayRatio=(float) width/(float)height;
     m360ProjectionM=glm::perspective(glm::radians(optionalVideo360FOV),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     cpuFrameTime.reset();
-    mOSDRenderer->placeLOL(displayRatio);
+    mOSDRenderer->placeLOL(width,height);
     if(mVideoRenderer){
         mVideoRenderer->updatePosition(0,0,0,lastVideoWidthPx,lastVideoHeightPx);
     }

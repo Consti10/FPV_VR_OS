@@ -47,7 +47,7 @@ void GLRStereoNormal::placeGLElements(){
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     mVideoRenderer->updatePosition(videoZ,videoW,videoH,lastVideoWidthPx,lastVideoHeightPx);
 #ifdef USE_INTERMEDIATE_DISTORTION
-    mOSDRenderer->placeLOL(OSD_RATIO);
+    mOSDRenderer->placeLOL(RENDER_TEX_W,RENDER_TEX_H);
     const int TESSELATION_FACTOR=20;
     const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
     mOSDCanvasLeftEye.uploadGL(vid1.first,vid1.second);

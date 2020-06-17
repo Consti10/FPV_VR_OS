@@ -49,9 +49,12 @@ OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,const BasicGLProgram
     mFLightStart=std::chrono::steady_clock::now();
 }
 
-void OSDRenderer::placeLOL(const float ratio) {
-    float videoZ=-1;
-    float videoH=glm::tan(glm::radians(45.0f)*0.5f)*1*2;
+void OSDRenderer::placeLOL(const int widthPx,const int heightPx) {
+    const float ratio=(float)widthPx/(float)heightPx;
+    float videoZ=0;
+    float videoH=heightPx;//glm::tan(glm::radians(45.0f)*0.5f)*1*2;
+    MLOGD<<"W H "<<widthPx<<" "<<heightPx<<"ratio "<<ratio;
+   // float videoH=1;
     float videoW=videoH*ratio;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
@@ -99,7 +102,10 @@ void OSDRenderer::placeLOL(const float ratio) {
     mFLightStart=std::chrono::steady_clock::now();
     //
     mOSDProjectionM=glm::perspective(glm::radians(45.0f),ratio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
-    //mOSDProjectionM=glm::ortho()
+    //mOSDProjectionM=glm::ortho(0,1920,0,1080);
+    // Simple ortographic projection that transforms pixel coordinates into OpenGL NDC coordinates
+    // For example range (0,0)(640,480) to (-1,-1) and (1,1)
+    mOSDProjectionM=glm::ortho(-videoW/2.0f,videoW/2.0f,-videoH/2.0f,videoH/2.0f);
     //mOSDProjectionM=glm::mat4(1.0f);
 }
 

@@ -28,7 +28,7 @@
 class OSDRenderer{
 public:
     OSDRenderer(JNIEnv* env,jobject androidContext,const BasicGLPrograms& basicGLPrograms,TelemetryReceiver& telemetryReceiver);
-    void placeLOL(const float ratio);
+    void placeLOL(const int widthPx,const int heightPx);
 public:
     void updateAndDrawElementsGL();
     const SettingsOSDStyle settingsOSDStyle;

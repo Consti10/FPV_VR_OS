@@ -5,6 +5,7 @@ package constantin.fpv_vr.play_stereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
+import android.graphics.Canvas;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -34,6 +35,7 @@ public class AStereoNormal extends VrActivity {
         super.onCreate(savedInstanceState);
         MyVRLayout mVrLayout = new MyVRLayout(this);
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
+
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLContextFactory(new DebugEGLContextFactory());
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
