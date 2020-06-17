@@ -53,9 +53,9 @@ void OSDRenderer::placeLOL(const int widthPx,const int heightPx) {
     const float ratio=(float)widthPx/(float)heightPx;
     float videoZ=0;
     float videoH=heightPx;//glm::tan(glm::radians(45.0f)*0.5f)*1*2;
-    MLOGD<<"W H "<<widthPx<<" "<<heightPx<<"ratio "<<ratio;
+    //MLOGD<<"W H "<<widthPx<<" "<<heightPx<<"ratio "<<ratio;
    // float videoH=1;
-    float videoW=videoH*ratio;
+    float videoW=widthPx;//
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
 
@@ -101,7 +101,7 @@ void OSDRenderer::placeLOL(const int widthPx,const int heightPx) {
     GLHelper::checkGlError("OSDRenderer::placeGLElementsMono");
     mFLightStart=std::chrono::steady_clock::now();
     //
-    mOSDProjectionM=glm::perspective(glm::radians(45.0f),ratio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
+    //mOSDProjectionM=glm::perspective(glm::radians(45.0f),ratio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     //mOSDProjectionM=glm::ortho(0,1920,0,1080);
     // Simple ortographic projection that transforms pixel coordinates into OpenGL NDC coordinates
     // For example range (0,0)(640,480) to (-1,-1) and (1,1)

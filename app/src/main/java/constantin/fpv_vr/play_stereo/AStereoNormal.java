@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.view.View;
 import android.widget.TextView;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
@@ -35,7 +36,6 @@ public class AStereoNormal extends VrActivity {
         super.onCreate(savedInstanceState);
         MyVRLayout mVrLayout = new MyVRLayout(this);
         MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
-
         mGLViewStereo.setEGLContextClientVersion(2);
         mGLViewStereo.setEGLContextFactory(new DebugEGLContextFactory());
         mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
