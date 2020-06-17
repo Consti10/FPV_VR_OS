@@ -41,7 +41,7 @@ void GLRStereoDaydream::placeGLElements() {
     videoZ=-videoW/2.0f/(glm::tan(glm::radians(45.0f))*1.6f);
     videoZ*=1.1f;
     videoZ*=2;
-    mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
+    //mOSDRenderer->placeLOL(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
     mVideoRenderer->updatePosition(videoZ,videoW,videoH,1920,1080);
 }
 
@@ -143,10 +143,10 @@ void GLRStereoDaydream::drawEyeOSD(gvr::Eye eye) {
     const auto projectionM=toGLM(perspective);
     if(eye==0){
         //mVideoRenderer->punchHole(leftEye,projection);
-        mOSDRenderer->updateAndDrawElementsGL(viewM,projectionM);
+        //mOSDRenderer->updateAndDrawElementsGL(viewM,projectionM);
     }else{
         //mVideoRenderer->punchHole(rightEye,projection);
-        mOSDRenderer->drawElementsGL(viewM,projectionM);
+        //mOSDRenderer->drawElementsGL(viewM,projectionM);
     }
     glLineWidth(6.0f);
     /*mBasicGLPrograms->vc.beforeDraw(glBufferVC);
@@ -162,9 +162,9 @@ void GLRStereoDaydream::drawEyeOSDVDDC(gvr::Eye eye) {
     auto projM=vrHeadsetParams.GetProjectionMatrix(eye);
 
     if(eye==0){
-        mOSDRenderer->updateAndDrawElementsGL(viewM,projM);
+        //mOSDRenderer->updateAndDrawElementsGL(viewM,projM);
     }else{
-        mOSDRenderer->drawElementsGL(viewM,projM);
+        //mOSDRenderer->drawElementsGL(viewM,projM);
     }
 
     glLineWidth(3.0f);

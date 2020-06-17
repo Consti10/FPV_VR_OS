@@ -25,7 +25,7 @@
 #include <Extensions.hpp>
 #include <queue>
 
-//#define USE_INTERMEDIATE_DISTORTION
+#define USE_INTERMEDIATE_DISTORTION
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -84,6 +84,7 @@ private:
     GLuint framebuffer_;        // framebuffer object
     GLuint texture_;            // distortion texture
     const float OSD_RATIO=4.0f/3.0f;
+    // Pixel maxiumum:  W 2300x1150
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
     VertexIndexBuffer mOSDCanvasLeftEye;
     VertexIndexBuffer mOSDCanvasRightEye;

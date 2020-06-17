@@ -49,7 +49,6 @@ public:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
 private:
     const glm::mat4 mViewM=glm::mat4(1.0f);
-    glm::mat4 mOSDProjectionM=glm::mat4(1.0f);
     glm::mat4 m360ProjectionM=glm::mat4(1.0f);
     glm::mat4 monoForward360=glm::mat4(1.0f);
     static constexpr const float MIN_Z_DISTANCE=0.01f;

@@ -38,7 +38,6 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
 
 void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) {
     float displayRatio=(float) width/(float)height;
-    mOSDProjectionM=glm::perspective(glm::radians(45.0f),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     m360ProjectionM=glm::perspective(glm::radians(optionalVideo360FOV),displayRatio,MIN_Z_DISTANCE,MAX_Z_DISTANCE);
     cpuFrameTime.reset();
     mOSDRenderer->placeLOL(displayRatio);
@@ -67,11 +66,11 @@ void GLRMono::onDrawFrame() {
             tmpHeadPoseGLM= tmpHeadPoseGLM*monoForward360;
             mVideoRenderer->drawVideoCanvas360(tmpHeadPoseGLM,m360ProjectionM);
         }else{
-            mVideoRenderer->drawVideoCanvas(mViewM,mOSDProjectionM, true);
+            mVideoRenderer->drawVideoCanvas(mViewM,mOSDRenderer->mOSDProjectionM, true);
         }
     }
     if(enableOSD){
-        mOSDRenderer->updateAndDrawElementsGL(mViewM,mOSDProjectionM);
+        mOSDRenderer->updateAndDrawElementsGL();
     }
     mFPSCalculator.tick();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());

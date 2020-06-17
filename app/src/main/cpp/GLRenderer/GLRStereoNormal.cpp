@@ -98,6 +98,8 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     glBindFramebuffer(GL_FRAMEBUFFER,0);
 #endif
     GLHelper::checkGlError("onSurfaceCreated2");
+    //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
+    //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
 }
 
 void GLRStereoNormal::onSurfaceChanged(int width, int height) {
@@ -164,7 +166,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     distortionManager.updateDistortionWithIdentity();
-    mOSDRenderer->updateAndDrawElementsGL(glm::mat4(1.0f),  mOSDRenderer->projMatrixMono);
+    mOSDRenderer->updateAndDrawElementsGL();
     vrHeadsetParams.updateDistortionManager(distortionManager);
     glFlush();
     glBindFramebuffer(GL_FRAMEBUFFER,0);
