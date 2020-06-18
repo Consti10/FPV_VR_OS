@@ -75,6 +75,17 @@
             android:onClick="onClick"
             tools:ignore="HardcodedText" />
 
+
+        <Button
+            android:id="@+id/b_Exp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:text="EXP"
+            android:onClick="onClick"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
 

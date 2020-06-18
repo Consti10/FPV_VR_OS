@@ -18,6 +18,7 @@ import com.hbisoft.hbrecorder.HBRecorder;
 import com.hbisoft.hbrecorder.HBRecorderListener;
 
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.ATestlayout;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;
@@ -32,7 +33,6 @@ import constantin.fpv_vr.settings.UpdateHelper;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.test.UVCHelper;
-import constantin.test.UVCReceiverDecoder;
 import constantin.video.core.RequestPermissionHelper;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.video_player.VideoSettings;
@@ -160,6 +160,9 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 break;
             case R.id.b_VRSettings:
                 startActivity(new Intent().setClass(this, ASettingsVR.class));
+                break;
+            case R.id.b_Exp:
+                startActivity(new Intent().setClass(this, ATestlayout.class));
                 break;
         }
     }

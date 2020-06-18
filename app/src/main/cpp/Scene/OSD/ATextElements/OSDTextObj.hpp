@@ -15,8 +15,6 @@
  * Uses BatchingManager and therefore can be used by OSD elements with little overhead
  */
 
-
-
 class OSDTextObj {
 public:
     static constexpr const int N_BACKGROUND_VERTICES=3*4;

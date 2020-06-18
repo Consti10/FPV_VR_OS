@@ -14,4 +14,11 @@
     <color name="DEFAULT_OSD_TEXT_FILL_COLOR3">#FFFFFF</color>
     <color name="DEFAULT_OSD_TEXT_OUTLINE_COLOR">#000000</color>
 
+
+    <color name="light_font">#FBFBFB</color>
+    <color name="grey_font">#ff9e9e9e</color>
+    <color name="text_shadow">#7F000000</color>
+    <color name="text_shadow_white">#FFFFFF</color>
+
+
 </resources>
