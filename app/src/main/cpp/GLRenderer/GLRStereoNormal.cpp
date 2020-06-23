@@ -69,8 +69,8 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     //
     GLHelper::checkGlError("onSurfaceCreated1");
     // Create render texture.
-    glGenTextures(1, &texture_);
-    glBindTexture(GL_TEXTURE_2D, texture_);
+    glGenTextures(1, &osdTexture);
+    glBindTexture(GL_TEXTURE_2D, osdTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -79,10 +79,10 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, RENDER_TEX_W,RENDER_TEX_H, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     // Create render target.
-    glGenFramebuffers(1, &framebuffer_);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
+    glGenFramebuffers(1, &osdFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, osdFramebuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                           texture_, 0);
+                           osdTexture, 0);
     auto status=glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if(status!=GL_FRAMEBUFFER_COMPLETE){
         MLOGE<<"Framebuffer not complete "<<status;
@@ -150,7 +150,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
-    glBindFramebuffer(GL_FRAMEBUFFER,framebuffer_);
+    glBindFramebuffer(GL_FRAMEBUFFER, osdFramebuffer);
     glClearColor(1,0,0,0.0f);
     glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
@@ -258,7 +258,7 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
     //const auto vid1=VideoRenderer::createMeshForMode(videoMode,positionZ,width,height);
     vrCompositorRenderer.addLayer(vid0,videoTextureId, true);
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    vrCompositorRenderer.addLayer(osd,texture_, false);
+    vrCompositorRenderer.addLayer(osd, osdTexture, false);
 }
 
 
