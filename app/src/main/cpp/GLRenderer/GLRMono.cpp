@@ -10,7 +10,7 @@
 constexpr auto TAG="GLRendererMono";
 
 
-GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoRenderer::VIDEO_RENDERING_MODE videoMode,bool enableOSD):
+GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode,bool enableOSD):
     videoMode(videoMode),
     enableOSD(enableOSD),
     mFPSCalculator("OpenGL FPS",2000),
@@ -25,14 +25,12 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>();
     if(enableOSD){
-        mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
-        mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
+        mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
     }
     //RM_2D_MONOSCOPIC is handled by the android hw composer in monoscopic 2d rendering
-    if(videoMode!=VideoRenderer::RM_2D_MONOSCOPIC){
-        mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)optionalVideoTexture, nullptr);
+    if(videoMode!=VideoGeometryHelper::RM_2D_MONOSCOPIC){
+        //mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)optionalVideoTexture, nullptr);
     }
 }
 
@@ -42,7 +40,7 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     cpuFrameTime.reset();
     mOSDRenderer->placeLOL(width,height);
     if(mVideoRenderer){
-        mVideoRenderer->updatePosition(0,0,0,lastVideoWidthPx,lastVideoHeightPx);
+        //mVideoRenderer->updatePosition(0,0,0,lastVideoWidthPx,lastVideoHeightPx);
     }
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -60,14 +58,14 @@ void GLRMono::onDrawFrame() {
     }
     cpuFrameTime.start();
     if(mVideoRenderer){
-        if(mVideoRenderer->is360Video()){
+        /*if(mVideoRenderer->is360Video()){
             const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
             glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
             tmpHeadPoseGLM= tmpHeadPoseGLM*monoForward360;
             mVideoRenderer->drawVideoCanvas360(tmpHeadPoseGLM,m360ProjectionM);
         }else{
             mVideoRenderer->drawVideoCanvas(mViewM,mOSDRenderer->mOSDProjectionM, true);
-        }
+        }*/
     }
     if(enableOSD){
         mOSDRenderer->updateAndDrawElementsGL();
@@ -107,7 +105,7 @@ extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver,jlong nativeGvrContext,jint videoMode,jboolean enableOSD) {
-    return jptr(new GLRMono(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(nativeGvrContext), static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode),enableOSD));
+    return jptr(new GLRMono(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(nativeGvrContext), static_cast<VideoGeometryHelper::VIDEO_RENDERING_MODE>(videoMode),enableOSD));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {

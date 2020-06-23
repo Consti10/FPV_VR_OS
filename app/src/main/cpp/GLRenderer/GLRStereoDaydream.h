@@ -14,7 +14,6 @@
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
 #include <FPSCalculator.h>
-#include <Video/VideoRenderer.h>
 #include <DistortionEngine.h>
 #include <SettingsVR.h>
 
@@ -44,7 +43,7 @@ private:
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
 
-    std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
+    //std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     int videoSurfaceID=GVR_EXTERNAL_SURFACE_ID_NONE;
     float headset_fovY_full=30;
     float headset_ipd_full=0.2f;

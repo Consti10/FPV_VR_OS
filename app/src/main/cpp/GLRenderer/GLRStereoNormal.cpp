@@ -1,7 +1,6 @@
 
 #include "GLRStereoNormal.h"
 #include "jni.h"
-#include "../Scene/Video/VideoRenderer.h"
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,7 +26,7 @@ constexpr auto TAG= "GLRendererStereo";
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
 mSurfaceTextureUpdate(env),
-videoMode(static_cast<VideoRenderer::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),
+videoMode(static_cast<VideoGeometryHelper::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),
 distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? VDDCManager::NONE : VDDCManager::RADIAL_CARDBOARD),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
@@ -46,7 +45,6 @@ void GLRStereoNormal::placeGLElements(){
     //of exactly DEFAULT_FOV_FILLED_BY_SCENE
     float videoZ=-videoW/2.0f/glm::tan(glm::radians(SettingsVR::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
-    //mVideoRenderer->updatePosition(videoZ,videoW,videoH,lastVideoWidthPx,lastVideoHeightPx);
     updatePosition(videoZ,videoW,videoH);
     mOSDRenderer->placeLOL(RENDER_TEX_W,RENDER_TEX_H);
 }
@@ -56,11 +54,9 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     vrCompositorRenderer.initializeGL();
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
-    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
-    mBasicGLPrograms->text.loadTextRenderingData(env, androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
+
+    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
     videoTextureId=(GLuint)videoSurfaceTextureId;
-    mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)videoSurfaceTextureId,&distortionManager);
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
     //QCOM_tiled_rendering::init();
     //ANDROID_presentation_time::init();
@@ -215,7 +211,8 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     const auto rotation = vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
     glm::mat4 viewVideo;
     glm::mat4 viewOSD;
-    if (mVideoRenderer->is360Video()) {
+    // TODO mVideoRenderer->is360Video()
+    if (false) {
         //When rendering 360° video,always fully track head rotation for video, optionally lock OSD
         viewVideo = vrHeadsetParams.GetEyeFromHeadMatrix(eye) * rotation;
         viewOSD = mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye) :
@@ -234,14 +231,12 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     const glm::mat4 projection = vrHeadsetParams.GetProjectionMatrix(eye);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_ADD);
-    //mVideoRenderer->drawVideoCanvas(viewVideo, projection, eye == GVR_LEFT_EYE);
     vrCompositorRenderer.drawLayers(viewVideo, eye);
 
     //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_SUBTRACT);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-    //mVideoRenderer->drawVideoCanvas(viewVideo,projection,eye==GVR_LEFT_EYE);
 
     if (mRenderingMode == SUBMIT_HALF_FRAMES) {
         QCOM_tiled_rendering::EndTilingQCOM();
@@ -254,9 +249,10 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
     vrCompositorRenderer.removeLayers();
     const unsigned int TESSELATION_FACTOR=10;
 
-    const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
-    //const auto vid1=VideoRenderer::createMeshForMode(videoMode,positionZ,width,height);
-    vrCompositorRenderer.addLayer(vid0,videoTextureId, true);
+    //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
+    const auto vid1=VideoGeometryHelper::createMeshForMode(videoMode,positionZ,width,height);
+    vrCompositorRenderer.addLayer(vid1,videoTextureId, true);
+
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
     vrCompositorRenderer.addLayer(osd, osdTexture, false);
 }

@@ -33,7 +33,8 @@ add_library( Scene
         ${SCENE_PATH}/OSD/OSDRenderer.cpp
         ${SCENE_PATH}/OSD/Settings/SettingsOSDElements.cpp
         ${SCENE_PATH}/OSD/Settings/SettingsOSDStyle.cpp
-        ${SCENE_PATH}/Video/VideoRenderer.cpp)
+        # ${SCENE_PATH}/Video/VideoRenderer.cpp
+        )
 target_link_libraries( Scene GLPrograms TelemetryReceiver ${log-lib} android EGL GLESv2 GLESv3 Time)
 include_directories(${SCENE_PATH}/OSD/Settings)
 

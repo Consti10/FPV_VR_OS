@@ -13,7 +13,6 @@
 #include "../Time/FPSCalculator.h"
 #include <vr/gvr/capi/include/gvr.h>
 #include <vector>
-#include <Video/VideoRenderer.h>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
 #include <DistortionEngine.h>
@@ -25,6 +24,7 @@
 #include <Extensions.hpp>
 #include <queue>
 #include <VrCompositorRenderer.h>
+#include <Video/VideoGeometryHelper.hpp>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -54,10 +54,8 @@ protected:
     const SettingsVR mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
-    std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
-    std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     int swapColor=0;
-    const VideoRenderer::VIDEO_RENDERING_MODE videoMode;
+    const VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode;
 public:
     VDDCManager distortionManager;
     DistortionEngine vrHeadsetParams;

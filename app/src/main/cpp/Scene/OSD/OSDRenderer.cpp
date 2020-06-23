@@ -4,44 +4,48 @@
 #include <TimeHelper.hpp>
 
 
-OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,const BasicGLPrograms& basicGLPrograms,TelemetryReceiver& telemetryReceiver):
+OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver):
         settingsOSDStyle(env,androidContext),
         settingsOSDElements(env,androidContext),
-        mBatchingManager(basicGLPrograms),
+        mBasicGLPrograms(nullptr),
+        mBatchingManager(mBasicGLPrograms),
         mTelemetryReceiver(telemetryReceiver){
+    //
+    mBasicGLPrograms.text.loadTextRenderingData(env, androidContext,settingsOSDStyle.OSD_TEXT_FONT_TYPE);
+
     if(settingsOSDElements.oTextElement1.isEnabled()){
-        mTextElements1=new TextElements1(settingsOSDElements.oTextElement1,settingsOSDStyle,basicGLPrograms,mBatchingManager,telemetryReceiver);
+        mTextElements1=new TextElements1(settingsOSDElements.oTextElement1,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
         mDrawables.push_back(mTextElements1);
         mUpdateables.push_back(mTextElements1);
     }
     if(!settingsOSDElements.OSD_DISABLE_ALL_OVERLAY_ELEMENTS){
         if(settingsOSDElements.oArtificialHorizon.isEnabled()){
-            mAHorizon=new AHorizon(settingsOSDElements.oArtificialHorizon,settingsOSDStyle,basicGLPrograms,mBatchingManager,telemetryReceiver);
+            mAHorizon=new AHorizon(settingsOSDElements.oArtificialHorizon,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
             mDrawables.push_back(mAHorizon);
             mUpdateables.push_back(mAHorizon);
         }
         if(settingsOSDElements.oCompassL.enable){
-            mCompassLadder=new CompassLadder(settingsOSDElements.oCompassL,settingsOSDStyle,basicGLPrograms,mBatchingManager,telemetryReceiver);
+            mCompassLadder=new CompassLadder(settingsOSDElements.oCompassL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
             mDrawables.push_back(mCompassLadder);
             mUpdateables.push_back(mCompassLadder);
         }
         if(settingsOSDElements.oAltitudeL.enable){
-            mAltitudeLadder=new VLAltitude(settingsOSDElements.oAltitudeL,settingsOSDStyle,basicGLPrograms,mBatchingManager,telemetryReceiver);
+            mAltitudeLadder=new VLAltitude(settingsOSDElements.oAltitudeL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
             mDrawables.push_back(mAltitudeLadder);
             mUpdateables.push_back(mAltitudeLadder);
         }
         if(settingsOSDElements.oSpeedL.enable){
-            mSpeedLadder=new VLSpeed(settingsOSDElements.oSpeedL,settingsOSDStyle,basicGLPrograms,mBatchingManager,telemetryReceiver);
+            mSpeedLadder=new VLSpeed(settingsOSDElements.oSpeedL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
             mDrawables.push_back(mSpeedLadder);
             mUpdateables.push_back(mSpeedLadder);
         }
         if(settingsOSDElements.oTextElement2.isEnabled()){
-            mTextElements2=new TextElements2(settingsOSDElements.oTextElement2,settingsOSDStyle,basicGLPrograms,mBatchingManager,telemetryReceiver);
+            mTextElements2=new TextElements2(settingsOSDElements.oTextElement2,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
             mDrawables.push_back(mTextElements2);
             mUpdateables.push_back(mTextElements2);
         }
         if(settingsOSDElements.oTextWarning.isEnabled()){
-            mTEWarning=new TEWarning(settingsOSDElements.oTextWarning,basicGLPrograms,mBatchingManager,telemetryReceiver);
+            mTEWarning=new TEWarning(settingsOSDElements.oTextWarning,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
             mDrawables.push_back(mTEWarning);
             mUpdateables.push_back(mTEWarning);
         }

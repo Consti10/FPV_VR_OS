@@ -27,7 +27,7 @@
 
 class OSDRenderer{
 public:
-    OSDRenderer(JNIEnv* env,jobject androidContext,const BasicGLPrograms& basicGLPrograms,TelemetryReceiver& telemetryReceiver);
+    OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver);
     void placeLOL(const int widthPx,const int heightPx);
 public:
     void updateAndDrawElementsGL();
@@ -39,6 +39,7 @@ public:
     glm::mat4 mOSDProjectionM;
     const glm::mat4 IDENTITY_M=glm::mat4(1.0f);
 private:
+    BasicGLPrograms mBasicGLPrograms;
     BatchingManager mBatchingManager;
     TelemetryReceiver& mTelemetryReceiver;
     //OSD elements

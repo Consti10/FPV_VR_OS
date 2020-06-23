@@ -42,7 +42,7 @@ void GLRStereoDaydream::placeGLElements() {
     videoZ*=1.1f;
     videoZ*=2;
     //mOSDRenderer->placeLOL(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
-    mVideoRenderer->updatePosition(videoZ,videoW,videoH,1920,1080);
+    //mVideoRenderer->updatePosition(videoZ,videoW,videoH,1920,1080);
 }
 
 void GLRStereoDaydream::updateBufferViewports() {
@@ -65,10 +65,10 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     swap_chain = std::make_unique<gvr::SwapChain>(gvr_api_->CreateSwapChain(specs));
 
     mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
-    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,*mBasicGLPrograms,mTelemetryReceiver);
+    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
 
-    mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_2D_STEREO,0,nullptr);
+    //mVideoRenderer=std::make_unique<VideoRenderer>(VideoRenderer::VIDEO_RENDERING_MODE::RM_2D_STEREO,0,nullptr);
     placeGLElements();
     //
     float tesselatedRectSize=2.5; //6.2f

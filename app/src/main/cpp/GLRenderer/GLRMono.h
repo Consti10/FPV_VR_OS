@@ -23,11 +23,12 @@
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
 #include <Chronometer.h>
-#include <Video/VideoRenderer.h>
+#include <VrCompositorRenderer.h>
+#include <Video/VideoGeometryHelper.hpp>
 
 class GLRMono: public IVideoFormatChanged{
 public:
-    GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoRenderer::VIDEO_RENDERING_MODE videoMode,bool enableOSD);
+    GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode,bool enableOSD);
 public:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture=0);
     void onSurfaceChanged(int width, int height,float optionalVideo360FOV=0);
@@ -39,13 +40,12 @@ private:
     TelemetryReceiver& mTelemetryReceiver;
     Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
-    const VideoRenderer::VIDEO_RENDERING_MODE videoMode;
+    const VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode;
     const bool enableOSD;
 public:
-    std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     //These fields are only active when also rendering video
-    std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
+    std::unique_ptr<VrCompositorRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
 private:
     const glm::mat4 mViewM=glm::mat4(1.0f);
