@@ -257,10 +257,8 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
     const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
     //const auto vid1=VideoRenderer::createMeshForMode(videoMode,positionZ,width,height);
     vrCompositorRenderer.addLayer(vid0,videoTextureId, true);
-#ifdef USE_INTERMEDIATE_DISTORTION
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
     vrCompositorRenderer.addLayer(osd,texture_, false);
-#endif
 }
 
 

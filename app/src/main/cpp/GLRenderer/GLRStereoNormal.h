@@ -82,8 +82,6 @@ private:
     const float OSD_RATIO=4.0f/3.0f;
     // Pixel maxiumum:  W 2300x1150
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
-    //VertexIndexBuffer mOSDCanvasLeftEye;
-    //VertexIndexBuffer mOSDCanvasRightEye;
     GLuint videoTextureId;
     void updatePosition(const float positionZ,const float width,const float height);
 };
