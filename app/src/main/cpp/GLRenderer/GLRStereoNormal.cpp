@@ -48,16 +48,7 @@ void GLRStereoNormal::placeGLElements(){
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     //mVideoRenderer->updatePosition(videoZ,videoW,videoH,lastVideoWidthPx,lastVideoHeightPx);
     updatePosition(videoZ,videoW,videoH);
-#ifdef USE_INTERMEDIATE_DISTORTION
     mOSDRenderer->placeLOL(RENDER_TEX_W,RENDER_TEX_H);
-    const int TESSELATION_FACTOR=20;
-    const auto vid1=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    //mOSDCanvasLeftEye.uploadGL(vid1.first,vid1.second);
-    const auto vid2=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    //mOSDCanvasRightEye.uploadGL(vid2.first,vid2.second);
-#else
-    mOSDRenderer->placeGLElementsStereo(IPositionable::Rect2D(videoX,videoY,videoZ,videoW,videoH));
-#endif
 }
 
 void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
@@ -76,9 +67,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     Extensions2::init();
     KHR_debug::enable();
     //
-#ifdef USE_INTERMEDIATE_DISTORTION
     GLHelper::checkGlError("onSurfaceCreated1");
-    mTextureRenderer=std::make_unique<GLProgramTexture>(false,&distortionManager);
     // Create render texture.
     glGenTextures(1, &texture_);
     glBindTexture(GL_TEXTURE_2D, texture_);
@@ -99,7 +88,6 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
         MLOGE<<"Framebuffer not complete "<<status;
     }
     glBindFramebuffer(GL_FRAMEBUFFER,0);
-#endif
     GLHelper::checkGlError("onSurfaceCreated2");
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
@@ -162,7 +150,6 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
-#ifdef USE_INTERMEDIATE_DISTORTION
     glBindFramebuffer(GL_FRAMEBUFFER,framebuffer_);
     glClearColor(1,0,0,0.0f);
     glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
@@ -174,7 +161,6 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     glFlush();
     glBindFramebuffer(GL_FRAMEBUFFER,0);
     glClearColor(0,0,0,0);
-#endif
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
@@ -251,15 +237,6 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
     //mVideoRenderer->drawVideoCanvas(viewVideo, projection, eye == GVR_LEFT_EYE);
     vrCompositorRenderer.drawLayers(viewVideo, eye);
 
-#ifdef USE_INTERMEDIATE_DISTORTION
-    //mTextureRenderer->drawX(texture_,viewVideo,projection,eye==GVR_LEFT_EYE ? mOSDCanvasLeftEye : mOSDCanvasRightEye);
-#else
-    if (eye == GVR_LEFT_EYE || updateOSDBetweenEyes) {
-        mOSDRenderer->updateAndDrawElementsGL(viewOSD, projection);
-    } else {
-        mOSDRenderer->drawElementsGL(viewOSD, projection);
-    }
-#endif
     //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_SUBTRACT);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

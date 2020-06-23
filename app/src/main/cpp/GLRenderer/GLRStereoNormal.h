@@ -26,8 +26,6 @@
 #include <queue>
 #include <VrCompositorRenderer.h>
 
-#define USE_INTERMEDIATE_DISTORTION
-
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
     /**
@@ -56,9 +54,8 @@ protected:
     const SettingsVR mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
-    std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
-    std::unique_ptr<GLProgramTexture> mTextureRenderer=nullptr;
+    std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     int swapColor=0;
     const VideoRenderer::VIDEO_RENDERING_MODE videoMode;
 public:
@@ -80,16 +77,13 @@ private:
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
     const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
-#ifdef USE_INTERMEDIATE_DISTORTION
     GLuint framebuffer_;        // framebuffer object
     GLuint texture_;            // distortion texture
     const float OSD_RATIO=4.0f/3.0f;
     // Pixel maxiumum:  W 2300x1150
-
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
     //VertexIndexBuffer mOSDCanvasLeftEye;
     //VertexIndexBuffer mOSDCanvasRightEye;
-#endif
     GLuint videoTextureId;
     void updatePosition(const float positionZ,const float width,const float height);
 };

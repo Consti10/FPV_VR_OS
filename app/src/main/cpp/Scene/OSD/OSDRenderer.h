@@ -52,6 +52,7 @@ private:
     std::vector<IDrawable*> mDrawables={};
     std::vector<IUpdateable*> mUpdateables={};
     std::chrono::steady_clock::time_point mFLightStart;
+    //
 };
 
 #endif
