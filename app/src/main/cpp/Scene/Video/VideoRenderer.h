@@ -8,7 +8,9 @@
 #include <GLProgramTexture.h>
 #include <GLProgramVC.h>
 #include <GLBufferHelper.hpp>
-
+#include <variant>
+#include <TexturedGeometry.hpp>
+#include <SphereBuilder.hpp>
 
 class VideoRenderer{ //Does not inherit from IDrawable !
 public:
@@ -46,12 +48,43 @@ public:
     std::unique_ptr<GLProgramTextureExt> mGLProgramTextureExt;
     std::unique_ptr<GLProgramTextureExt> mGLProgramTextureExtMappingEnabled;
 
-    const unsigned int TESSELATION_FACTOR=10;
+    static const unsigned int TESSELATION_FACTOR=10;
     const VIDEO_RENDERING_MODE mMode;
     const GLuint mVideoTexture;
-
 public:
-
+    static TexturedGeometry::MeshY createMeshForMode(const VIDEO_RENDERING_MODE videoRenderingMode,const float positionZ, const float width, const float height){
+        switch (videoRenderingMode){
+            case RM_2D_MONOSCOPIC:
+                return TexturedGeometry::MeshY(TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f),GL_TRIANGLES);
+                break;
+            case RM_2D_STEREO:
+                return TexturedGeometry::MeshY(TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f),GL_TRIANGLES);
+                break;
+            case RM_360_DUAL_FISHEYE_INSTA360_1:
+                return TexturedGeometry::MeshY(SphereBuilder::createSphereEquirectangularMonoscopic(),GL_TRIANGLE_STRIP);
+                break;
+            case RM_360_DUAL_FISHEYE_INSTA360_2:
+                return TexturedGeometry::MeshY(SphereBuilder::createSphereDualFisheyeInsta360(),GL_TRIANGLE_STRIP);
+                break;
+            case RM_360_KODAK_SP360_4K_DUAL:
+                return TexturedGeometry::MeshY(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_0,0.5,0.65,190,0.05,0),GL_TRIANGLE_STRIP);
+                break;
+            case RM_360_KODAK_SP360_4K_SINGLE:
+                return TexturedGeometry::MeshY(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_180,0.5,0.5,190,0.0,0),GL_TRIANGLE_STRIP);
+                break;
+            case RM_360_FIREFLY_SPLIT_4K:
+                return TexturedGeometry::MeshY(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_180,0.5,0.5,210,0.05,0),GL_TRIANGLE_STRIP);
+                break;
+            case RM_360_1080P_USB:
+                return TexturedGeometry::MeshY(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_270,0.5,0.5,210,0.05,0),GL_TRIANGLE_STRIP);
+                break;
+            case RM_360_STEREO_PI:
+                return TexturedGeometry::MeshY(SphereBuilder::createSphereFisheye(UvSphere::ROTATE_270,0.5,0.5,210,0.05,0),GL_TRIANGLE_STRIP);
+                break;
+            default:
+                assert("Unknown type ");
+        }
+    }
 };
 
 #endif //CONSTI10_FPV_VR_OS_VIDEO_RENDERER

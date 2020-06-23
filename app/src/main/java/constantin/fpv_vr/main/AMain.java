@@ -18,7 +18,7 @@ import com.hbisoft.hbrecorder.HBRecorder;
 import com.hbisoft.hbrecorder.HBRecorderListener;
 
 import constantin.fpv_vr.R;
-import constantin.fpv_vr.ATestlayout;
+import constantin.fpv_vr.OSD2.ATestlayout;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;

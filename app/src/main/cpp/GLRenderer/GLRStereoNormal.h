@@ -24,6 +24,7 @@
 #include <EGL/eglext.h>
 #include <Extensions.hpp>
 #include <queue>
+#include <VrCompositorRenderer.h>
 
 #define USE_INTERMEDIATE_DISTORTION
 
@@ -58,13 +59,12 @@ protected:
     std::unique_ptr<BasicGLPrograms> mBasicGLPrograms=nullptr;
     std::unique_ptr<VideoRenderer> mVideoRenderer= nullptr;
     std::unique_ptr<GLProgramTexture> mTextureRenderer=nullptr;
-    //One for left and right eye each
-    std::array<VertexBuffer,2> mOcclusionMesh;
     int swapColor=0;
     const VideoRenderer::VIDEO_RENDERING_MODE videoMode;
 public:
     VDDCManager distortionManager;
     DistortionEngine vrHeadsetParams;
+    VrCompositorRenderer vrCompositorRenderer;
 protected:
     SurfaceTextureUpdate mSurfaceTextureUpdate;
     AvgCalculator surfaceTextureDelay;
@@ -87,9 +87,11 @@ private:
     // Pixel maxiumum:  W 2300x1150
 
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
-    VertexIndexBuffer mOSDCanvasLeftEye;
-    VertexIndexBuffer mOSDCanvasRightEye;
+    //VertexIndexBuffer mOSDCanvasLeftEye;
+    //VertexIndexBuffer mOSDCanvasRightEye;
 #endif
+    GLuint videoTextureId;
+    void updatePosition(const float positionZ,const float width,const float height);
 };
 
 

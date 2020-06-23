@@ -116,6 +116,7 @@ dependencies {
     implementation 'com.github.HBiSoft:HBRecorder:0.1.6'
 
     //implementation "com.android.ndk.thirdparty:curl:7.69.1-alpha-1"
+    implementation 'com.github.santaevpavel:OutlineSpan:0.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

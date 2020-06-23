@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
-        <activity android:name=".ATestlayout"></activity>
+        <activity android:name=".OSD2.ATestlayout"
+            android:theme="@style/MyStyleFullscreen">
+        </activity>
         <activity
             android:name=".main.AMain"
             android:directBootAware="true"

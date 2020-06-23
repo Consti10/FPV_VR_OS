@@ -5,7 +5,7 @@
     android:id="@+id/layout_test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="constantin.fpv_vr.ATestlayout"
+    tools:context="constantin.fpv_vr.OSD2.ATestlayout"
     android:orientation="vertical">
 
 
