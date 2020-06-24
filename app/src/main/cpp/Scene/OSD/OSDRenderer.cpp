@@ -7,7 +7,7 @@
 OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver):
         settingsOSDStyle(env,androidContext),
         settingsOSDElements(env,androidContext),
-        mBasicGLPrograms(nullptr),
+        mBasicGLPrograms(),
         mBatchingManager(mBasicGLPrograms),
         mTelemetryReceiver(telemetryReceiver){
     //

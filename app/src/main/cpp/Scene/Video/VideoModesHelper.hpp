@@ -2,13 +2,13 @@
 // Created by geier on 23/06/2020.
 //
 
-#ifndef FPV_VR_OS_VIDEOGEOMETRYHELPER_HPP
-#define FPV_VR_OS_VIDEOGEOMETRYHELPER_HPP
+#ifndef FPV_VR_OS_VIDEOMODESHELPER_HPP
+#define FPV_VR_OS_VIDEOMODESHELPER_HPP
 
 #include <TexturedGeometry.hpp>
 #include <SphereBuilder.hpp>
 
-class VideoGeometryHelper{
+class VideoModesHelper{
 public:
     //Normal: Render a rectangle
     //Stereo: One decoded frame contains images for left and right eye
@@ -26,10 +26,10 @@ public:
     static TexturedGeometry::Mesh createMeshForMode(const VIDEO_RENDERING_MODE videoRenderingMode,const float positionZ, const float width, const float height){
         switch (videoRenderingMode){
             case RM_2D_MONOSCOPIC:
-                return TexturedGeometry::Mesh(TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f),GL_TRIANGLES);
+                return TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
                 break;
             case RM_2D_STEREO:
-                return TexturedGeometry::Mesh(TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,0.5f),GL_TRIANGLES);
+                return TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
                 break;
             case RM_360_DUAL_FISHEYE_INSTA360_1:
                 return TexturedGeometry::Mesh(SphereBuilder::createSphereEquirectangularMonoscopic(),GL_TRIANGLE_STRIP);
@@ -56,6 +56,5 @@ public:
                 assert("Unknown type ");
         }
     }
-
 };
-#endif //FPV_VR_OS_VIDEOGEOMETRYHELPER_HPP
+#endif //FPV_VR_OS_VIDEOMODESHELPER_HPP

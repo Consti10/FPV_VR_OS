@@ -10,7 +10,7 @@
 constexpr auto TAG="GLRendererMono";
 
 
-GLRMono::GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode,bool enableOSD):
+GLRMono::GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context* gvr_context, VideoModesHelper::VIDEO_RENDERING_MODE videoMode, bool enableOSD):
     videoMode(videoMode),
     enableOSD(enableOSD),
     mFPSCalculator("OpenGL FPS",2000),
@@ -29,7 +29,7 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
         mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
     }
     //RM_2D_MONOSCOPIC is handled by the android hw composer in monoscopic 2d rendering
-    if(videoMode!=VideoGeometryHelper::RM_2D_MONOSCOPIC){
+    if(videoMode != VideoModesHelper::RM_2D_MONOSCOPIC){
         //mVideoRenderer=std::make_unique<VideoRenderer>(videoMode,(GLuint)optionalVideoTexture, nullptr);
     }
 }
@@ -105,7 +105,7 @@ extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jobject obj,jobject androidContext,jlong telemetryReceiver,jlong nativeGvrContext,jint videoMode,jboolean enableOSD) {
-    return jptr(new GLRMono(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(nativeGvrContext), static_cast<VideoGeometryHelper::VIDEO_RENDERING_MODE>(videoMode),enableOSD));
+    return jptr(new GLRMono(env, androidContext, *reinterpret_cast<TelemetryReceiver*>(telemetryReceiver), reinterpret_cast<gvr_context *>(nativeGvrContext), static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode), enableOSD));
 }
 JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {

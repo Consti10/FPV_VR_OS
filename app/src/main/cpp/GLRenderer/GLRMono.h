@@ -24,11 +24,11 @@
 #include "IVideoFormatChanged.hpp"
 #include <Chronometer.h>
 #include <VrCompositorRenderer.h>
-#include <Video/VideoGeometryHelper.hpp>
+#include <Video/VideoModesHelper.hpp>
 
 class GLRMono: public IVideoFormatChanged{
 public:
-    GLRMono(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode,bool enableOSD);
+    GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context* gvr_context, VideoModesHelper::VIDEO_RENDERING_MODE videoMode, bool enableOSD);
 public:
     void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture=0);
     void onSurfaceChanged(int width, int height,float optionalVideo360FOV=0);
@@ -40,7 +40,7 @@ private:
     TelemetryReceiver& mTelemetryReceiver;
     Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
-    const VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode;
+    const VideoModesHelper::VIDEO_RENDERING_MODE videoMode;
     const bool enableOSD;
 public:
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;

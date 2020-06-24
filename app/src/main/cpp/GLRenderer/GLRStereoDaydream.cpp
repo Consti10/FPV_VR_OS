@@ -64,7 +64,7 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     specs[0].SetDepthStencilFormat(GVR_DEPTH_STENCIL_FORMAT_DEPTH_16);
     swap_chain = std::make_unique<gvr::SwapChain>(gvr_api_->CreateSwapChain(specs));
 
-    mBasicGLPrograms=std::make_unique<BasicGLPrograms>(&distortionManager);
+    mBasicGLPrograms=std::make_unique<BasicGLPrograms>();
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
     mBasicGLPrograms->text.loadTextRenderingData(env,androidContext,mOSDRenderer->settingsOSDStyle.OSD_TEXT_FONT_TYPE);
 
@@ -73,10 +73,10 @@ void GLRStereoDaydream::onSurfaceCreated(JNIEnv * env,jobject androidContext,jin
     //
     float tesselatedRectSize=2.5; //6.2f
     const float offsetY=0.0f;
-    auto tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{0,0,-2},{tesselatedRectSize,tesselatedRectSize},TrueColor2::BLUE);
+    /*auto tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{0,0,-2},{tesselatedRectSize,tesselatedRectSize},TrueColor2::BLUE);
     nColoredVertices= GLBufferHelper::createUploadGLBuffer(glBufferVC, tmp);
     tmp=ColoredGeometry::makeTessellatedColoredRectWireframe(LINE_MESH_TESSELATION_FACTOR,{0,0,-2},{tesselatedRectSize,tesselatedRectSize},TrueColor2::GREEN);
-    GLBufferHelper::createUploadGLBuffer(glBufferVCX, tmp);
+    GLBufferHelper::createUploadGLBuffer(glBufferVCX, tmp);*/
 }
 
 

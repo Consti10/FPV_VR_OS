@@ -25,15 +25,14 @@ constexpr auto TAG= "GLRendererStereo";
 //#define CHANGE_SWAP_COLOR
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
-mSurfaceTextureUpdate(env),
-videoMode(static_cast<VideoGeometryHelper::VIDEO_RENDERING_MODE>(videoMode)),mSettingsVR(env,androidContext),
-distortionManager(mSettingsVR.VR_DISTORTION_CORRECTION_MODE==0 ? VDDCManager::NONE : VDDCManager::RADIAL_CARDBOARD),
+        mSurfaceTextureUpdate(env),
+        videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
-        vrCompositorRenderer(distortionManager,vrHeadsetParams){
+        vrCompositorRenderer(mSettingsVR.VR_DISTORTION_CORRECTION_MODE == 0 ? VDDCManager::NONE : VDDCManager::RADIAL_CARDBOARD){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
-    vrHeadsetParams.setGvrApi(gvr_api_.get());
+    vrCompositorRenderer.distortionEngine.setGvrApi(gvr_api_.get());
 }
 
 void GLRStereoNormal::placeGLElements(){
@@ -151,9 +150,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    distortionManager.updateDistortionWithIdentity();
     mOSDRenderer->updateAndDrawElementsGL();
-    vrHeadsetParams.updateDistortionManager(distortionManager);
     glFlush();
     glBindFramebuffer(GL_FRAMEBUFFER,0);
     glClearColor(0,0,0,0);
@@ -163,7 +160,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     mFPSCalculator.tick();
     MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
-    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
+    vrCompositorRenderer.distortionEngine.updateLatestHeadSpaceFromStartSpaceRotation();
     if(mRenderingMode==SUBMIT_FRAMES){
         ATrace_beginSection("My updateVideoFrame");
         if(true){
@@ -204,34 +201,10 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
         lastRenderedFrame = std::chrono::steady_clock::now();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
-    distortionManager.setEye(eye == GVR_LEFT_EYE);
-    vrHeadsetParams.setOpenGLViewport(eye);
     //
-    //Now draw
-    const auto rotation = vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation();
-    glm::mat4 viewVideo;
-    glm::mat4 viewOSD;
-    // TODO mVideoRenderer->is360Video()
-    if (false) {
-        //When rendering 360° video,always fully track head rotation for video, optionally lock OSD
-        viewVideo = vrHeadsetParams.GetEyeFromHeadMatrix(eye) * rotation;
-        viewOSD = mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye) :
-                  vrHeadsetParams.GetEyeFromHeadMatrix(eye) * rotation;
-    } else {
-        //Else, track video only if head tracking is enabled, lock OSD if requested
-        const auto rotationWithAxesDisabled = removeRotationAroundSpecificAxes(rotation,
-                                                                               mSettingsVR.GHT_X,
-                                                                               mSettingsVR.GHT_Y,
-                                                                               mSettingsVR.GHT_Z);
-        viewVideo = vrHeadsetParams.GetEyeFromHeadMatrix(eye) * rotationWithAxesDisabled;
-        viewOSD = mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? vrHeadsetParams.GetEyeFromHeadMatrix(eye)
-                                                    : vrHeadsetParams.GetEyeFromHeadMatrix(eye) *
-                                                      rotationWithAxesDisabled;
-    }
-    const glm::mat4 projection = vrHeadsetParams.GetProjectionMatrix(eye);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_ADD);
-    vrCompositorRenderer.drawLayers(viewVideo, eye);
+    vrCompositorRenderer.drawLayers(eye);
 
     //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
     //glBlendEquation(GL_FUNC_SUBTRACT);
@@ -248,13 +221,14 @@ void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes
 void GLRStereoNormal::updatePosition(const float positionZ, const float width, const float height) {
     vrCompositorRenderer.removeLayers();
     const unsigned int TESSELATION_FACTOR=10;
+    const auto headTrackingMode=mSettingsVR.GHT_MODE==0 ? VrCompositorRenderer::NONE:VrCompositorRenderer::FULL;
 
     //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
-    const auto vid1=VideoGeometryHelper::createMeshForMode(videoMode,positionZ,width,height);
-    vrCompositorRenderer.addLayer(vid1,videoTextureId, true);
+    const auto vid1=VideoModesHelper::createMeshForMode(videoMode, positionZ, width, height);
+    vrCompositorRenderer.addLayer(vid1,videoTextureId, true,headTrackingMode);
 
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    vrCompositorRenderer.addLayer(osd, osdTexture, false);
+    vrCompositorRenderer.addLayer(osd, osdTexture, false,headTrackingMode);
 }
 
 
@@ -303,12 +277,10 @@ JNI_METHOD(void, nativeOnVideoRatioChanged)
     native(glRendererStereo)->SetVideoRatio((int)videoW,(int)videoH);
 }
 
-
 JNI_METHOD(void, nativeUpdateHeadsetParams)
 (JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
     const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
-    native(instancePointer)->vrHeadsetParams.updateHeadsetParams(deviceParams);
-    native(instancePointer)->vrHeadsetParams.updateDistortionManager(native(instancePointer)->distortionManager);
+    native(instancePointer)->vrCompositorRenderer.updateHeadsetParams(deviceParams);
 }
 
 }

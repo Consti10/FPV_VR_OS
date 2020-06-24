@@ -24,7 +24,7 @@
 #include <Extensions.hpp>
 #include <queue>
 #include <VrCompositorRenderer.h>
-#include <Video/VideoGeometryHelper.hpp>
+#include <Video/VideoModesHelper.hpp>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -55,10 +55,8 @@ protected:
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     int swapColor=0;
-    const VideoGeometryHelper::VIDEO_RENDERING_MODE videoMode;
+    const VideoModesHelper::VIDEO_RENDERING_MODE videoMode;
 public:
-    VDDCManager distortionManager;
-    DistortionEngine vrHeadsetParams;
     VrCompositorRenderer vrCompositorRenderer;
 protected:
     SurfaceTextureUpdate mSurfaceTextureUpdate;
