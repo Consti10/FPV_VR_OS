@@ -89,7 +89,6 @@ public class VerticalLadder extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setStrokeWidth(10);
         mPaint.setColor(Color.GREEN);
-
         //canvas.save();
         //canvas.restore();
 

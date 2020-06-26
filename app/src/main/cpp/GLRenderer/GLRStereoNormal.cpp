@@ -98,6 +98,14 @@ void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     cpuFrameTime.reset();
     WIDTH=width;
     HEIGHT=height;
+    for(long i=0;i<1000;i++){
+        long n=std::pow(3,i);
+        if(n % 19 < 9 ){
+            MLOGD<<"Found "<<i<<" "<<n;
+        }
+        MLOGD<<n;
+    }
+    MLOGD<<"LOLD";
 }
 
 // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.

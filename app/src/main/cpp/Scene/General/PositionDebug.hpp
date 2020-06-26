@@ -6,7 +6,7 @@
 #define FPV_VR_POSITIONDEBUG_H
 
 #include <GLProgramVC.h>
-#include <GLBufferHelper.hpp>
+#include <GLBuffer.hpp>
 #include <ColoredGeometry.hpp>
 #include "IPositionable.hpp"
 

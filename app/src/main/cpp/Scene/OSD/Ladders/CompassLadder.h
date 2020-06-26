@@ -16,7 +16,7 @@
 #include <OSD/ATextElements/OSDTextObj.hpp>
 #include <OSD/ATextElements/OSDBackgroundObj.hpp>
 #include <SettingsOSDStyle.h>
-#include <GLBufferHelper.hpp>
+#include <GLBuffer.hpp>
 #include "../../General/IDrawable.hpp"
 #include "../../General/IPositionable.hpp"
 #include "../../General/PositionDebug.hpp"

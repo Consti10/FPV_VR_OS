@@ -6,7 +6,7 @@
 #include <SettingsOSDStyle.h>
 #include <TrueColor.hpp>
 #include <ColoredGeometry.hpp>
-#include <GLBufferHelper.hpp>
+#include <GLBuffer.hpp>
 #include "AHorizon.h"
 #include "GLHelper.hpp"
 

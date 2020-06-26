@@ -54,14 +54,15 @@ OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& t
 }
 
 void OSDRenderer::placeLOL(const int widthPx,const int heightPx) {
-    const float ratio=(float)widthPx/(float)heightPx;
-    float videoZ=0;
-    float videoH=heightPx;//glm::tan(glm::radians(45.0f)*0.5f)*1*2;
+    const float ratio=(float)heightPx/(float)widthPx;
+    const float videoZ=0;
+    const float videoW=widthPx;//
+    const float videoH=heightPx; //videoW*ratio
+    //glm::tan(glm::radians(45.0f)*0.5f)*1*2;
     //MLOGD<<"W H "<<widthPx<<" "<<heightPx<<"ratio "<<ratio;
    // float videoH=1;
-    float videoW=widthPx;//
-    float videoX=-videoW/2.0f;
-    float videoY=-videoH/2.0f;
+    const float videoX=-videoW/2.0f;
+    const float videoY=-videoH/2.0f;
 
     const float textHeightMono=videoH*0.045f*(settingsOSDStyle.OSD_MONO_GLOBAL_SCALE*0.01f)*
                                (settingsOSDElements.oTextElement1.scale*0.01f);

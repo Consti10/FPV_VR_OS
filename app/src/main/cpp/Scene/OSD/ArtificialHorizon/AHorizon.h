@@ -17,7 +17,7 @@
 #include <SettingsOSDStyle.h>
 #include "General/IDrawable.hpp"
 #include "General/IPositionable.hpp"
-#include <GLBufferHelper.hpp>
+#include <GLBuffer.hpp>
 
 /**
  * Artificial horizon using Ladders

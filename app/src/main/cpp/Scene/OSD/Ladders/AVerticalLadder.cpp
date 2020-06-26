@@ -4,7 +4,7 @@
 #include "AVerticalLadder.h"
 #include <SettingsOSDStyle.h>
 #include <StringHelper.hpp>
-#include <GLBufferHelper.hpp>
+#include <GLBuffer.hpp>
 #include <GLHelper.hpp>
 
 constexpr auto TAG="AVerticalLadder";
@@ -212,10 +212,10 @@ void AVerticalLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
 
     //draw the ladder strings
     mGLPrograms.text.beforeDraw(mLadderStrings.glBuffer);
-    mGLPrograms.text.draw(mLadderStrings.currTranslationM*ViewM,ProjM,
+    mGLPrograms.text.draw(ProjM*mLadderStrings.currTranslationM,
                            6*MAX_N_CHARS_PER_LADDER_STRING*mLadderStrings.currentDrawOffset1,
                            6*MAX_N_CHARS_PER_LADDER_STRING*mLadderStrings.currentDrawNumber1);
-    mGLPrograms.text.draw(mLadderStrings.currTranslationM*ViewM,ProjM,
+    mGLPrograms.text.draw(ProjM*mLadderStrings.currTranslationM,
                            6*MAX_N_CHARS_PER_LADDER_STRING*mLadderStrings.currentDrawOffset2,
                            6*MAX_N_CHARS_PER_LADDER_STRING*mLadderStrings.currentDrawNumber2);
     mGLPrograms.text.afterDraw();

@@ -10,7 +10,7 @@
 #include <GLProgramTexture.h>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <memory>
-#include <GLBufferHelper.hpp>
+#include <GLBuffer.hpp>
 #include <MatrixHelper.h>
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
