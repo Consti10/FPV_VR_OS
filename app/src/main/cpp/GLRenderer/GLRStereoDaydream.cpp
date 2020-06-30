@@ -22,8 +22,9 @@ constexpr auto TAG="GLRendererDaydream";
 GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP):
         mTelemetryReceiver(telemetryReceiver),
         mSettingsVR(env,androidContext),
-        mFPSCalculator("OpenGL FPS",2000),
-        distortionManager(VDDCManager::RADIAL_CARDBOARD){
+        mFPSCalculator("OpenGL FPS",2000)
+        //,distortionManager(VDDCManager::RADIAL_CARDBOARD)
+        {
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     vrHeadsetParams.setGvrApi(gvr_api_.get());
     this->videoSurfaceID=videoSurfaceID;
@@ -101,7 +102,7 @@ void GLRStereoDaydream::onDrawFrame() {
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    distortionManager.updateDistortionWithIdentity();
+    //distortionManager.updateDistortionWithIdentity();
     for(uint32_t eye=0;eye<2;eye++){
         drawEyeOSD(static_cast<gvr::Eye>(eye));
     }
@@ -115,7 +116,7 @@ void GLRStereoDaydream::onDrawFrame() {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-    vrHeadsetParams.updateDistortionManager(distortionManager);
+    //vrHeadsetParams.updateDistortionManager(distortionManager);
     //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     for(int eye=0;eye<2;eye++){
         drawEyeOSDVDDC(static_cast<gvr::Eye>(eye));
@@ -156,7 +157,7 @@ void GLRStereoDaydream::drawEyeOSD(gvr::Eye eye) {
 
 void GLRStereoDaydream::drawEyeOSDVDDC(gvr::Eye eye) {
     vrHeadsetParams.setOpenGLViewport(eye);
-    distortionManager.setEye(eye==0);
+    //distortionManager.setEye(eye==0);
     const auto rotM=toGLM(gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow()));
     auto viewM=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotM;
     auto projM=vrHeadsetParams.GetProjectionMatrix(eye);

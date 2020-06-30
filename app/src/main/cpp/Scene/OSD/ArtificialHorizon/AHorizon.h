@@ -45,7 +45,7 @@ private:
     void setupPosition() override;
     void updateGL() override;
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) override;
-    std::array<GLProgramVC::Vertex,3+4*3> create3DModelData(float hw,float sixtW);
+    GLProgramVC::ColoredMesh create3DModelData(float hw,float sixtW);
     const BasicGLPrograms& mGLPrograms;
     const SettingsOSDStyle& settingsOSDStyle;
     const TelemetryReceiver& mTelemetryReceiver;
@@ -62,7 +62,7 @@ private:
     LadderLine LadderLines[1];
     float degreeToYTranslationFactor;
     //
-    VertexBuffer mGLBuff3DModel;
+    GLProgramVC::ColoredMesh mGLBuff3DModel;
     glm::mat4 mModelM3DModel;
 };
 

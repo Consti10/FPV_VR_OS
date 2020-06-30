@@ -52,8 +52,8 @@ void AHorizon::setupPosition() {
     {
         float hW=mWidth/2.0f;
         float sixtW=mWidth/6.0f;
-        auto modelData=create3DModelData(hW,sixtW);
-        mGLBuff3DModel.uploadGL(modelData);
+        mGLBuff3DModel=create3DModelData(hW,sixtW);
+        mGLBuff3DModel.uploadGL(true);
         //GLBufferHelper::uploadGLBufferStatic(mGLBuff3DModel, modelData.data(),
         //                                     modelData.size() * sizeof(GLProgramVC::Vertex));
     }
@@ -132,9 +132,9 @@ IPositionable::Rect2D AHorizon::calculatePosition(const IPositionable::Rect2D &o
     return {x,y,z,width,height};
 }
 
-std::array<GLProgramVC::Vertex,3+4*3> AHorizon::create3DModelData(float hW, float sixtW) {
+GLProgramVC::ColoredMesh AHorizon::create3DModelData(float hW, float sixtW) {
     //Copter as colored geometry data
-    return {
+    std::vector<GLProgramVC::Vertex> vertices= {
             GLProgramVC::Vertex{0.0f,0.0f,0.0f-sixtW,TrueColor2::RED}, //
             GLProgramVC::Vertex{0.0f+sixtW,0.0f,0.0f+sixtW,TrueColor2::BLUE}, //bottom right
             GLProgramVC::Vertex{0.0f-sixtW,0.0f,0.0f+sixtW,TrueColor2::YELLOW}, // bottom left
@@ -155,4 +155,5 @@ std::array<GLProgramVC::Vertex,3+4*3> AHorizon::create3DModelData(float hW, floa
             GLProgramVC::Vertex{0.0f-hW,0.0f,0.0f-hW, TrueColor2::RED},
             GLProgramVC::Vertex{0.0f-hW+(hW/4.0f),0.0f,0.0f-hW,TrueColor2::RED}
     };
+    return GLProgramVC::ColoredMesh (vertices,GL_TRIANGLES);
 }

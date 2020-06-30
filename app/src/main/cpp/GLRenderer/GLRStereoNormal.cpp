@@ -30,7 +30,7 @@ GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryRec
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
-        vrCompositorRenderer(mSettingsVR.VR_DISTORTION_CORRECTION_MODE == 0 ? VDDCManager::NONE : VDDCManager::RADIAL_CARDBOARD){
+        vrCompositorRenderer(mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0){
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     vrCompositorRenderer.distortionEngine.setGvrApi(gvr_api_.get());
 }
@@ -62,28 +62,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     Extensions2::init();
     KHR_debug::enable();
     //
-    GLHelper::checkGlError("onSurfaceCreated1");
-    // Create render texture.
-    glGenTextures(1, &osdTexture);
-    glBindTexture(GL_TEXTURE_2D, osdTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    //  GL_RGBA8_OES
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, RENDER_TEX_W,RENDER_TEX_H, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    // Create render target.
-    glGenFramebuffers(1, &osdFramebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, osdFramebuffer);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                           osdTexture, 0);
-    auto status=glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if(status!=GL_FRAMEBUFFER_COMPLETE){
-        MLOGE<<"Framebuffer not complete "<<status;
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
-    GLHelper::checkGlError("onSurfaceCreated2");
+    VrCompositorRenderer::createVrRenderbuffer(osdRenderbuffer,RENDER_TEX_W,RENDER_TEX_H);
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
 }
@@ -153,7 +132,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
-    glBindFramebuffer(GL_FRAMEBUFFER, osdFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, osdRenderbuffer.framebuffer);
     glClearColor(1,0,0,0.0f);
     glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
@@ -236,7 +215,7 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
     vrCompositorRenderer.addLayer(vid1,videoTextureId, true,headTrackingMode);
 
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    vrCompositorRenderer.addLayer(osd, osdTexture, false,headTrackingMode);
+    vrCompositorRenderer.addLayer(osd, osdRenderbuffer.texture, false,headTrackingMode);
 }
 
 

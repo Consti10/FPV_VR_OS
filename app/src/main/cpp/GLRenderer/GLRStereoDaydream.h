@@ -54,7 +54,6 @@ private:
     GLuint glBufferVCX;
     int nColoredVertices;
 public:
-    VDDCManager distortionManager;
     DistortionEngine vrHeadsetParams;
 };
 
