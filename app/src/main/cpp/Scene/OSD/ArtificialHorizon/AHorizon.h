@@ -51,7 +51,7 @@ private:
     const TelemetryReceiver& mTelemetryReceiver;
     const Options& mOptions;
     PositionDebug mPositionDebug;
-    VertexBuffer mGLBuffLadders;
+    GLBuffer<GLProgramLine::Vertex> mGLBuffLadders;
     ModifiableArray<GLProgramVC::Vertex>* mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;

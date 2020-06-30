@@ -116,7 +116,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //Render the lines
     if(mOptions.mode==MODE_2D_LADDERS
        || mOptions.mode==MODE_BOTH_TOGETHER){
-        mGLPrograms.line.beforeDraw(mGLBuffLadders.vertexB);
+        mGLPrograms.line.beforeDraw(mGLBuffLadders.glBufferId);
         mGLPrograms.line.draw(ViewM*mModelMLadders,ProjM,LadderLines[0].vertOffset,LadderLines[0].vertCount);
         mGLPrograms.line.afterDraw();
     }

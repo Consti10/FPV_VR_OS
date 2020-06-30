@@ -53,9 +53,9 @@ private:
     OSDTextObj mTextObjTelemetryValue;
     OSDBackgroundObject mBackgroundObj;
     PositionDebug mPositionDebug;
-    VertexBuffer mGLLadderLinesB;
-    VertexBuffer mGLLadderTextB;
-    VertexBuffer mGLHomeIconB;
+    GLBuffer<GLProgramLine::Vertex> mGLLadderLinesB;
+    GLBuffer<GLProgramText::Character> mGLLadderTextB;
+    GLBuffer<GLProgramText::Character> mGLHomeIconB;
     ModifiableArray<GLProgramVC::Vertex>* mMiddleArrow;
     glm::mat4 mHeadingTranslM;
     glm::mat4 mHomeArrowTM;
