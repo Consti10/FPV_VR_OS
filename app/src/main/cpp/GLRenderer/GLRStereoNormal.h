@@ -15,7 +15,6 @@
 #include <vector>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
-#include <DistortionEngine.h>
 #include <SettingsVR.h>
 #include <Video/SurfaceTextureUpdate.hpp>
 #include <TimeHelper.hpp>

@@ -26,13 +26,12 @@ constexpr auto TAG= "GLRendererStereo";
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
         mSurfaceTextureUpdate(env),
+        gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
         videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
-        vrCompositorRenderer(mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0){
-    gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
-    vrCompositorRenderer.distortionEngine.setGvrApi(gvr_api_.get());
+        vrCompositorRenderer(gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0){
 }
 
 void GLRStereoNormal::placeGLElements(){
@@ -147,7 +146,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     mFPSCalculator.tick();
     MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
-    vrCompositorRenderer.distortionEngine.updateLatestHeadSpaceFromStartSpaceRotation();
+    vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
     if(mRenderingMode==SUBMIT_FRAMES){
         ATrace_beginSection("My updateVideoFrame");
         if(true){

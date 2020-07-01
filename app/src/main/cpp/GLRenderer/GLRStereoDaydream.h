@@ -14,7 +14,6 @@
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
 #include <FPSCalculator.h>
-#include <DistortionEngine.h>
 #include <SettingsVR.h>
 
 //Only fulfills testing purpose(s)
@@ -54,7 +53,7 @@ private:
     GLuint glBufferVCX;
     int nColoredVertices;
 public:
-    DistortionEngine vrHeadsetParams;
+    //DistortionEngine vrHeadsetParams;
 };
 
 

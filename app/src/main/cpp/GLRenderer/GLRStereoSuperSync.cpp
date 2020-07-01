@@ -68,7 +68,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
 
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //when using QCOM tiled rendering, we call 'startDirectRendering()' before 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.distortionEngine.screenWidthP / 2, vrCompositorRenderer.distortionEngine.screenHeightP);
+        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.screenWidthP / 2, vrCompositorRenderer.screenHeightP);
     }
     vrEyeTimeStamps.setTimestamp("startDR");
     //this probably implies a glFlush(). The problem is that a glFlush() also implies a glEndTilingQcom
@@ -82,7 +82,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     vrEyeTimeStamps.setTimestamp("updateTexImage1");
     if(mFBRManager->directRenderingMode!=FBRManager::QCOM_TILED_RENDERING){
         //when not using QCOM tiled rendering, we call 'startDirectRendering()' after 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.distortionEngine.screenWidthP / 2, vrCompositorRenderer.distortionEngine.screenHeightP);
+        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.screenWidthP / 2, vrCompositorRenderer.screenHeightP);
     }
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //so we have to call glClear() before any OpenGL calls that affect framebuffer contents (e.g. draw())
@@ -95,7 +95,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
         //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
     vrEyeTimeStamps.setTimestamp("clear");
-    vrCompositorRenderer.distortionEngine.updateLatestHeadSpaceFromStartSpaceRotation();
+    vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
     GLRStereoNormal::drawEye(env,whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE,true);
     vrEyeTimeStamps.setTimestamp("drawVideoCanvas");
     mFBRManager->stopDirectRendering(whichEye);

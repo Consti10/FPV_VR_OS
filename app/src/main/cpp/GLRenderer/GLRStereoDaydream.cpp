@@ -16,6 +16,7 @@
 #include "vr/gvr/capi/include/gvr_types.h"
 #include <gvr_util/util.h>
 #include <GLHelper.hpp>
+#include <VrCompositorRenderer.h>
 
 constexpr auto TAG="GLRendererDaydream";
 
@@ -23,10 +24,9 @@ GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,Telemetr
         mTelemetryReceiver(telemetryReceiver),
         mSettingsVR(env,androidContext),
         mFPSCalculator("OpenGL FPS",2000)
-        //,distortionManager(VDDCManager::RADIAL_CARDBOARD)
         {
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
-    vrHeadsetParams.setGvrApi(gvr_api_.get());
+    //vrHeadsetParams.setGvrApi(gvr_api_.get());
     this->videoSurfaceID=videoSurfaceID;
     //----------
     buffer_viewports = gvr_api_->CreateEmptyBufferViewportList();
@@ -90,7 +90,7 @@ void GLRStereoDaydream::onDrawFrame() {
     //Calculate & print fps
     mFPSCalculator.tick();
     //LOGD("FPS: %f",mFPSCalculator.getCurrentFPS());
-    vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
+    //vrHeadsetParams.updateLatestHeadSpaceFromStartSpaceRotation();
 
     updateBufferViewports();
 
@@ -107,7 +107,7 @@ void GLRStereoDaydream::onDrawFrame() {
         drawEyeOSD(static_cast<gvr::Eye>(eye));
     }
     frame.Unbind();
-    frame.Submit(buffer_viewports, vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation_());
+    //frame.Submit(buffer_viewports, vrHeadsetParams.GetLatestHeadSpaceFromStartSpaceRotation_());
 
     //
     //glClearColor(0.3f, 0.0f, 0.0f, 0.0f);
@@ -136,7 +136,7 @@ void GLRStereoDaydream::drawEyeOSD(gvr::Eye eye) {
     glViewport(left, bottom, width, height);
 
     const gvr_rectf fov = scratch_viewport.GetSourceFov();
-    const gvr::Mat4f perspective =ndk_hello_vr::PerspectiveMatrixFromView(fov, vrHeadsetParams.MIN_Z_DISTANCE,vrHeadsetParams.MAX_Z_DISTANCE);
+    const gvr::Mat4f perspective =ndk_hello_vr::PerspectiveMatrixFromView(fov, VrCompositorRenderer::MIN_Z_DISTANCE,VrCompositorRenderer::MAX_Z_DISTANCE);
     const auto eyeM=gvr_api_->GetEyeFromHeadMatrix(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     const auto rotM=gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
     const auto viewM=toGLM(ndk_hello_vr::MatrixMul(eyeM,rotM));
@@ -156,11 +156,11 @@ void GLRStereoDaydream::drawEyeOSD(gvr::Eye eye) {
 }
 
 void GLRStereoDaydream::drawEyeOSDVDDC(gvr::Eye eye) {
-    vrHeadsetParams.setOpenGLViewport(eye);
+    //vrHeadsetParams.setOpenGLViewport(eye);
     //distortionManager.setEye(eye==0);
     const auto rotM=toGLM(gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow()));
-    auto viewM=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotM;
-    auto projM=vrHeadsetParams.GetProjectionMatrix(eye);
+    ///auto viewM=vrHeadsetParams.GetEyeFromHeadMatrix(eye)*rotM;
+   // auto projM=vrHeadsetParams.GetProjectionMatrix(eye);
 
     if(eye==0){
         //mOSDRenderer->updateAndDrawElementsGL(viewM,projM);
@@ -221,7 +221,7 @@ JNI_METHOD(void, nativeOnDrawFrame)
 JNI_METHOD(void, nativeUpdateHeadsetParams)
 (JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
     const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
-    native(instancePointer)->vrHeadsetParams.updateHeadsetParams(deviceParams);
+    //native(instancePointer)->vrHeadsetParams.updateHeadsetParams(deviceParams);
 }
 
 }
