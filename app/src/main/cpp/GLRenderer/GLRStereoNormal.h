@@ -24,6 +24,7 @@
 #include <queue>
 #include <VrCompositorRenderer.h>
 #include <Video/VideoModesHelper.hpp>
+#include <VrRenderBuffer.hpp>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -72,7 +73,7 @@ private:
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
     const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
-    VrCompositorRenderer::VrRenderbuffer osdRenderbuffer;
+    VrRenderBuffer osdRenderbuffer;
     const float OSD_RATIO=4.0f/3.0f;
     // Pixel maxiumum:  W 2300x1150
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080

@@ -68,7 +68,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
 
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //when using QCOM tiled rendering, we call 'startDirectRendering()' before 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.screenWidthP / 2, vrCompositorRenderer.screenHeightP);
+        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.SCREEN_WIDTH_PX / 2, vrCompositorRenderer.SCREEN_HEIGHT_PX);
     }
     vrEyeTimeStamps.setTimestamp("startDR");
     //this probably implies a glFlush(). The problem is that a glFlush() also implies a glEndTilingQcom
@@ -82,7 +82,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     vrEyeTimeStamps.setTimestamp("updateTexImage1");
     if(mFBRManager->directRenderingMode!=FBRManager::QCOM_TILED_RENDERING){
         //when not using QCOM tiled rendering, we call 'startDirectRendering()' after 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.screenWidthP / 2, vrCompositorRenderer.screenHeightP);
+        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.SCREEN_WIDTH_PX / 2, vrCompositorRenderer.SCREEN_HEIGHT_PX);
     }
     if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //so we have to call glClear() before any OpenGL calls that affect framebuffer contents (e.g. draw())

@@ -61,7 +61,7 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     Extensions2::init();
     KHR_debug::enable();
     //
-    VrCompositorRenderer::createVrRenderbuffer(osdRenderbuffer,RENDER_TEX_W,RENDER_TEX_H);
+    osdRenderbuffer.initializeGL(RENDER_TEX_W,RENDER_TEX_H);
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
 }
@@ -131,14 +131,11 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
-    glBindFramebuffer(GL_FRAMEBUFFER, osdRenderbuffer.framebuffer);
+    osdRenderbuffer.bind();
     glClearColor(1,0,0,0.0f);
-    glScissor(0,0,RENDER_TEX_W,RENDER_TEX_H);
-    glViewport(0,0,RENDER_TEX_W,RENDER_TEX_H);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     mOSDRenderer->updateAndDrawElementsGL();
-    glFlush();
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
+    osdRenderbuffer.unbind();
     glClearColor(0,0,0,0);
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
