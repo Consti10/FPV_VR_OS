@@ -1,6 +1,5 @@
 include ':app', ':preferences', ':colorpreference'
 include ':djiintegration'
-include ':uvcintegration'
 
 include ':VideoCore'
 project(':VideoCore').projectDir=new File('..\\LiveVideo10ms\\VideoCore')
@@ -8,7 +7,6 @@ include ':uvcintegration'
 project(':uvcintegration').projectDir=new File('..\\LiveVideo10ms\\uvcintegration')
 include ':TelemetryCore'
 project(':TelemetryCore').projectDir=new File('..\\LiveVideo10ms\\TelemetryCore')
-
 
 include ':RenderingXCore'
 project(':RenderingXCore').projectDir=new File('..\\RenderingX\\RenderingXCore')
