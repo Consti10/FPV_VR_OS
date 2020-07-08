@@ -36,8 +36,9 @@ public:
     //
     static constexpr const float MIN_Z_DISTANCE=0.01f;
     static constexpr const float MAX_Z_DISTANCE=100.0f;
-    glm::mat4 mOSDProjectionM;
     const glm::mat4 IDENTITY_M=glm::mat4(1.0f);
+    // orthographic,setup in place()
+    glm::mat4 mOSDProjectionM;
 private:
     BasicGLPrograms mBasicGLPrograms;
     BatchingManager mBatchingManager;

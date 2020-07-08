@@ -40,17 +40,22 @@ private:
     TelemetryReceiver& mTelemetryReceiver;
     Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
-    const VideoModesHelper::VIDEO_RENDERING_MODE videoMode;
-    const bool enableOSD;
-public:
+    const VideoModesHelper::VIDEO_RENDERING_MODE VIDEO_MODE;
+    const bool ENABLE_OSD;
+    const bool ENABLE_VIDEO;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     //These fields are only active when also rendering video
-    std::unique_ptr<VrCompositorRenderer> mVideoRenderer= nullptr;
+    struct OptionalVideoRenderer{
+        std::unique_ptr<GLProgramTextureExt> glProgramTextureExt;
+        GLProgramTexture::TexturedMesh videoMesh;
+        GLuint videoTexture;
+        glm::mat4 monoForward360=glm::mat4(1.0f);
+        glm::mat4 projectionMatrix=glm::mat4(1.0f);
+    };
+    OptionalVideoRenderer mOptionalVideoRender;
+public:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
 private:
-    const glm::mat4 mViewM=glm::mat4(1.0f);
-    glm::mat4 m360ProjectionM=glm::mat4(1.0f);
-    glm::mat4 monoForward360=glm::mat4(1.0f);
     static constexpr const float MIN_Z_DISTANCE=0.01f;
     static constexpr const float MAX_Z_DISTANCE=100.0f;
 
