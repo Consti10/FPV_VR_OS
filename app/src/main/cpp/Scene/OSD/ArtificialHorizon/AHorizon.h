@@ -45,7 +45,7 @@ private:
     void setupPosition() override;
     void updateGL() override;
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) override;
-    GLProgramVC::ColoredMesh create3DModelData(float hw,float sixtW);
+    static GLProgramVC::ColoredMeshData create3DModelData(float hw,float sixtW);
     const BasicGLPrograms& mGLPrograms;
     const SettingsOSDStyle& settingsOSDStyle;
     const TelemetryReceiver& mTelemetryReceiver;

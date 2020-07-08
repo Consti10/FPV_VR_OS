@@ -53,6 +53,7 @@ private:
     glm::mat4 monoForward360=glm::mat4(1.0f);
     static constexpr const float MIN_Z_DISTANCE=0.01f;
     static constexpr const float MAX_Z_DISTANCE=100.0f;
+
 };
 
 
