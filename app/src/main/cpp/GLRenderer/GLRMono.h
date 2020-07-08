@@ -26,6 +26,7 @@
 #include <VrCompositorRenderer.h>
 #include <Video/VideoModesHelper.hpp>
 
+
 class GLRMono: public IVideoFormatChanged{
 public:
     GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context* gvr_context, VideoModesHelper::VIDEO_RENDERING_MODE videoMode, bool enableOSD);

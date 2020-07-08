@@ -41,10 +41,7 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
     float displayRatio=(float) width/(float)height;
     mOptionalVideoRender.projectionMatrix=glm::perspective(glm::radians(optionalVideo360FOV), displayRatio, MIN_Z_DISTANCE, MAX_Z_DISTANCE);
     cpuFrameTime.reset();
-    mOSDRenderer->placeLOL(width,height);
-    //if(ENABLE_VIDEO){
-        //mVideoRenderer->updatePosition(0,0,0,lastVideoWidthPx,lastVideoHeightPx);
-    //}
+    mOSDRenderer->onSurfaceSizeChanged(width, height);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0,0,width,height);
