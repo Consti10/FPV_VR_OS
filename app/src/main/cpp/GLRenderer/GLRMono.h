@@ -48,7 +48,7 @@ private:
     //These fields are only active when also rendering video
     struct OptionalVideoRenderer{
         std::unique_ptr<GLProgramTextureExt> glProgramTextureExt;
-        GLProgramTexture::TexturedMesh videoMesh;
+        TexturedGLMeshBuffer videoMesh;
         GLuint videoTexture;
         glm::mat4 monoForward360=glm::mat4(1.0f);
         glm::mat4 projectionMatrix=glm::mat4(1.0f);

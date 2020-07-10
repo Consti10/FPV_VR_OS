@@ -62,7 +62,7 @@ private:
     LadderLine LadderLines[1];
     float degreeToYTranslationFactor;
     //
-    GLProgramVC::ColoredMesh mGLBuff3DModel;
+    ColoredGLMeshBuffer mGLBuff3DModel;
     glm::mat4 mModelM3DModel;
 };
 
