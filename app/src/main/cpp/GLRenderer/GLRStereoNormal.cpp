@@ -31,7 +31,7 @@ GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryRec
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",2000),
         cpuFrameTime("CPU frame time"),
-        vrCompositorRenderer(gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0){
+        vrCompositorRenderer(gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0,false){
 }
 
 void GLRStereoNormal::placeGLElements(){
@@ -169,7 +169,8 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 void GLRStereoNormal::drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes) {
     ATrace_beginSection((std::string("GLRStereoNormal::drawEye ")+(eye==0 ? "left" : "right")).c_str());
     if (mRenderingMode == SUBMIT_HALF_FRAMES) {
-        QCOM_tiled_rendering::HalfFrameStartTilingQCOM(eye, WIDTH, HEIGHT);
+        auto vieport=vrCompositorRenderer.getViewportForEye(eye);
+        QCOM_tiled_rendering::StartTilingQCOM(vieport);
         const std::chrono::steady_clock::time_point timeWhenWaitingExpires =
                 lastRenderedFrame + std::chrono::milliseconds(5);
         waitUntilVideoFrameAvailable(env, timeWhenWaitingExpires);
