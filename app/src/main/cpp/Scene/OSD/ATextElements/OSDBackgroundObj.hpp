@@ -16,7 +16,7 @@
 class OSDBackgroundObject {
 private:
     const TrueColor mBackgroundColor;
-    ModifiableArray<GLProgramVC::Vertex>* backgroundBuffer;
+    ModifiableArray<ColoredVertex>* backgroundBuffer;
     IPositionable::Rect2D_ mPosition;
     static constexpr const int N_BACKGROUND_VERTICES=3*4;
 public:

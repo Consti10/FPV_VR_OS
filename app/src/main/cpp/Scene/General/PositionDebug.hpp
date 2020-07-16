@@ -39,7 +39,7 @@ public:
     void setWorldPositionDebug(float x, float y, float z, float width, float height){
 #ifndef  DISABLE_DEBUG_DRAW
         if(mEnableDebugDraw){
-            std::vector<GLProgramVC::Vertex> buff(6*TESSELATION*TESSELATION);
+            std::vector<ColoredVertex> buff(6*TESSELATION*TESSELATION);
             ColoredGeometry::makeTesselatedColoredRect(buff.data(),TESSELATION,glm::vec3(x, y, z), glm::vec3(width, 0, 0), glm::vec3(0, height, 0),mColor);
             vertexBuffer.uploadGL(buff);
         }

@@ -24,8 +24,8 @@ public:
     const bool enableBackground;
     const int maxNChars;
     ModifiableArray<GLProgramText::Character>* textBuffer;
-    ModifiableArray<GLProgramVC::Vertex>* backgroundBuffer;
-    ModifiableArray<GLProgramVC::Vertex>* outlineBuffer;
+    ModifiableArray<ColoredVertex>* backgroundBuffer;
+    ModifiableArray<ColoredVertex>* outlineBuffer;
 private:
     const TrueColor mBackgroundColor;
     const TrueColor mOutlineColor;

@@ -52,7 +52,7 @@ private:
     const Options& mOptions;
     PositionDebug mPositionDebug;
     GLBuffer<GLProgramLine::Vertex> mGLBuffLadders;
-    ModifiableArray<GLProgramVC::Vertex>* mMiddleTriangleBuff;
+    ModifiableArray<ColoredVertex>* mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;
     const float RATIO=1.5f;

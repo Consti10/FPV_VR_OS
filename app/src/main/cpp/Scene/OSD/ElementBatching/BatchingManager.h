@@ -19,8 +19,8 @@
 class BatchingManager : public IUpdateable, public IDrawable {
 public:
     explicit BatchingManager(const BasicGLPrograms& basicGLPrograms);
-    ModifiableArray<GLProgramVC::Vertex>* allocateVCTriangles(int nVertices);
-    ModifiableArray<GLProgramVC::Vertex>* allocateVCLines(int nVertices);
+    ModifiableArray<ColoredVertex>* allocateVCTriangles(int nVertices);
+    ModifiableArray<ColoredVertex>* allocateVCLines(int nVertices);
     ModifiableArray<GLProgramText::Character>* allocateText(int nRectangles);
     void initGL();
     void updateGL()override;
@@ -30,8 +30,8 @@ private:
     const BasicGLPrograms& mBasicGLPrograms;
     TrueColor mTextOutlineColor;
     float mTextOutlineStrength;
-    CpuGpuBuff<GLProgramVC::Vertex> mTriangleBuffer;
-    CpuGpuBuff<GLProgramVC::Vertex> mOutlineB;
+    CpuGpuBuff<ColoredVertex> mTriangleBuffer;
+    CpuGpuBuff<ColoredVertex> mOutlineB;
     CpuGpuBuff<GLProgramText::Character> mTextB;
 };
 
