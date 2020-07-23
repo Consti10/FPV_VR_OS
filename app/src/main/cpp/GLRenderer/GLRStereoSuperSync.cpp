@@ -20,10 +20,10 @@ GLRStereoSuperSync::GLRStereoSuperSync(JNIEnv* env,jobject androidContext,Teleme
         bool reusableSyncAvailable,int videoMode):
 GLRStereoNormal(env,androidContext,telemetryReceiver,gvr_context,videoMode),
         mFrameTimeAcc(std::vector<std::string>{"startDR","updateTexImage1","clear","drawVideoCanvas","stopDR","updateTexImage2"}){
-    std::function<void(JNIEnv *env2, bool whichEye, int64_t offsetNS)> f = [this](JNIEnv *env2, bool whichEye, int64_t offsetNS) {
-        this->renderNewEyeCallback(env2,whichEye,offsetNS);
+    std::function<void(JNIEnv *env2, bool leftEye)> f = [this](JNIEnv *env2, bool leftEye) {
+        this->renderNewEyeCallback(env2,leftEye,0);
     };
-    mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,true,f, nullptr);
+    mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,f, nullptr);
 }
 
 void GLRStereoSuperSync::onSurfaceCreatedX(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
@@ -43,7 +43,7 @@ void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,int exclus
     mTelemetryReceiver.setOpenGLFPS(-1);
     //This will block until mFBRManager->requestExitSuperSyncLoop() is called
     MLOGD<<"entering superSync loop. GLThread will be blocked";
-    mFBRManager->enterDirectRenderingLoop(env);
+    mFBRManager->enterDirectRenderingLoop(env,SCREEN_WIDTH,SCREEN_HEIGHT);
     MLOGD<<"exited superSync loop. GLThread unblocked";
 }
 
@@ -66,10 +66,10 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     }
     VREyeDurations vrEyeTimeStamps{whichEye};
 
-    if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
+    //if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //when using QCOM tiled rendering, we call 'startDirectRendering()' before 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.SCREEN_WIDTH_PX / 2, vrCompositorRenderer.SCREEN_HEIGHT_PX);
-    }
+    //    mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.SCREEN_WIDTH_PX / 2, vrCompositorRenderer.SCREEN_HEIGHT_PX);
+    //}
     vrEyeTimeStamps.setTimestamp("startDR");
     //this probably implies a glFlush(). The problem is that a glFlush() also implies a glEndTilingQcom
     //So we should not call glClear() (or any glCalls that may affect the fb values) before updateTexImageJAVA().
@@ -80,37 +80,36 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
         MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
     }
     vrEyeTimeStamps.setTimestamp("updateTexImage1");
-    if(mFBRManager->directRenderingMode!=FBRManager::QCOM_TILED_RENDERING){
+    //if(mFBRManager->directRenderingMode!=FBRManager::QCOM_TILED_RENDERING){
         //when not using QCOM tiled rendering, we call 'startDirectRendering()' after 'updateTexImage()'
-        mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.SCREEN_WIDTH_PX / 2, vrCompositorRenderer.SCREEN_HEIGHT_PX);
-    }
-    if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
+    //    mFBRManager->startDirectRendering(whichEye, vrCompositorRenderer.SCREEN_WIDTH_PX / 2, vrCompositorRenderer.SCREEN_HEIGHT_PX);
+    //}
+    //if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //so we have to call glClear() before any OpenGL calls that affect framebuffer contents (e.g. draw())
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }else{
+    //    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    //}else{
         //we only need a clear when we are using QCOM tiled rendering. MALI GPUs seem to not like clears.
         //see PowerVR.Performance*Recommendations.pdf,6.1: "performing a glClear on half the frame is a "particularClear".
         //according to the article, a particular clear means the GPU has to read in the whole frame first, and then "overdraw" the area that has to be cleared
         //when doing front buffer rendering btw. rendering half-screen images we can only clear half the screen -> therefore I do not call glClear.
         //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }
+    //}
     vrEyeTimeStamps.setTimestamp("clear");
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
-    GLRStereoNormal::drawEye(env,whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE,true);
+    GLRStereoNormal::drawEye(whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     vrEyeTimeStamps.setTimestamp("drawVideoCanvas");
-    mFBRManager->stopDirectRendering(whichEye);
     vrEyeTimeStamps.setTimestamp("stopDR");
     //update the video texture again. If there is no new surfaceTexture Data available, this call returns almost immediately anyway.
     //and only if the decoder produces a stream with >120fps, we "waste" GPU cycles on a surfaceTexture update that won't make it to the screen
     //I don't expect the video stream to have >120fps for a real-time live video feed
     //I am also not quite sure, if the 'updateTexImage()' at the beginning of the frame actually makes it to the eye that is drawn after it
-    if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
+    /*if(mFBRManager->directRenderingMode==FBRManager::QCOM_TILED_RENDERING){
         //mSurfaceTextureUpdate.updateTexImageJAVA(env);
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(env)){
             surfaceTextureDelay.add(*delay);
             MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
         }
-    }
+    }*/
     vrEyeTimeStamps.setTimestamp("updateTexImage2");
     //vrEyeTimeStamps.print();
     mFrameTimeAcc.add(vrEyeTimeStamps);
@@ -119,7 +118,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
 
 
 void GLRStereoSuperSync::setLastVSYNC(int64_t lastVSYNC) {
-    mFBRManager->setLastVSYNC(lastVSYNC);
+    mFBRManager->setVSYNCSentByChoreographer(lastVSYNC);
 }
 
 

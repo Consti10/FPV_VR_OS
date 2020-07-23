@@ -22,7 +22,6 @@
 #include <FPSCalculator.h>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
-#include <Chronometer.h>
 #include <VrCompositorRenderer.h>
 #include <Video/VideoModesHelper.hpp>
 

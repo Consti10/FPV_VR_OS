@@ -105,12 +105,12 @@ dependencies {
 
     implementation 'com.mapzen.android:prefs-plus:1.0.0'
     //firebase stuff
-    implementation 'com.google.firebase:firebase-core:17.4.3'
+    implementation 'com.google.firebase:firebase-core:17.4.4'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.crashlytics.sdk.android:crashlytics-ndk:2.1.1'
 
     //Dafuq ?
-    implementation "com.google.vr:sdk-base:$mGvrVersion"
+    //implementation "com.google.vr:sdk-base:$mGvrVersion"
 
     //Screen recording
     implementation 'com.github.HBiSoft:HBRecorder:0.1.6'

@@ -8,7 +8,6 @@
 
 #include <glm/mat4x4.hpp>
 #include <TelemetryReceiver.h>
-#include "../Time/Chronometer.h"
 #include <vr/gvr/capi/include/gvr_types.h>
 #include "../Time/FPSCalculator.h"
 #include <vr/gvr/capi/include/gvr.h>
@@ -43,13 +42,12 @@ public:
     void onDrawFrame(JNIEnv* env);
 protected:
     //All OpenGL calls required to draw one eye (video and osd)
-    void drawEye(JNIEnv* env,gvr::Eye eye,bool updateOSDBetweenEyes);
+    void drawEye(gvr::Eye eye);
     //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,
     //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
 protected:
     TelemetryReceiver& mTelemetryReceiver;
-    Chronometer cpuFrameTime;
     FPSCalculator mFPSCalculator;
     const SettingsVR mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
@@ -58,15 +56,16 @@ protected:
     const VideoModesHelper::VIDEO_RENDERING_MODE videoMode;
 public:
     VrCompositorRenderer vrCompositorRenderer;
+    JNIEnv* currEnv;
 protected:
     SurfaceTextureUpdate mSurfaceTextureUpdate;
     AvgCalculator surfaceTextureDelay;
+    int SCREEN_WIDTH,SCREEN_HEIGHT;
 private:
     std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
     // sleep until either video frame is available or timeout is reached
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
     void calculateFrameTimes();
-    int WIDTH,HEIGHT;
     std::queue<Extensions2::SubmittedFrame> mPendingFrames;
     // SUBMIT_FRAMES: Render left and right eye as 1 frame
     // SUBMIT_HALF_FRAMES: Render left and right eye independently. Requires Front buffer rendering !
@@ -79,6 +78,11 @@ private:
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
     GLuint videoTextureId;
     void updatePosition(const float positionZ,const float width,const float height);
+    std::chrono::steady_clock::time_point lastLog=std::chrono::steady_clock::now();
+    Chronometer osdCPUTime;
+    AvgCalculator osdGPUTIme;
+    void drawWholeFrame();
+    void drawHalfFrames();
 };
 
 

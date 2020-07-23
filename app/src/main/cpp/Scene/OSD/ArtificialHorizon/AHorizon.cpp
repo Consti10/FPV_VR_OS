@@ -131,28 +131,28 @@ IPositionable::Rect2D AHorizon::calculatePosition(const IPositionable::Rect2D &o
     return {x,y,z,width,height};
 }
 
-GLProgramVC::ColoredMeshData AHorizon::create3DModelData(float hW, float sixtW) {
+ColoredMeshData AHorizon::create3DModelData(float hW, float sixtW) {
     //Copter as colored geometry data
-    std::vector<GLProgramVC::Vertex> vertices= {
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f-sixtW,TrueColor2::RED}, //
-            GLProgramVC::Vertex{0.0f+sixtW,0.0f,0.0f+sixtW,TrueColor2::BLUE}, //bottom right
-            GLProgramVC::Vertex{0.0f-sixtW,0.0f,0.0f+sixtW,TrueColor2::YELLOW}, // bottom left
+    std::vector<ColoredVertex> vertices= {
+            ColoredVertex{0.0f,0.0f,0.0f-sixtW,TrueColor2::RED}, //
+            ColoredVertex{0.0f+sixtW,0.0f,0.0f+sixtW,TrueColor2::BLUE}, //bottom right
+            ColoredVertex{0.0f-sixtW,0.0f,0.0f+sixtW,TrueColor2::YELLOW}, // bottom left
             //1
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f,TrueColor2::RED},
-            GLProgramVC::Vertex{0.0f+hW,0.0f,0.0f-hW, TrueColor2::RED},
-            GLProgramVC::Vertex{0.0f+hW-(hW/4.0f),0.0f,0.0f-hW, TrueColor2::RED},
+            ColoredVertex{0.0f,0.0f,0.0f,TrueColor2::RED},
+            ColoredVertex{0.0f+hW,0.0f,0.0f-hW, TrueColor2::RED},
+            ColoredVertex{0.0f+hW-(hW/4.0f),0.0f,0.0f-hW, TrueColor2::RED},
             //2
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f, TrueColor2::BLUE},
-            GLProgramVC::Vertex{0.0f+hW,0.0f,0.0f+hW, TrueColor2::BLUE},
-            GLProgramVC::Vertex{0.0f+hW-(hW/4.0f),0.0f,0.0f+hW, TrueColor2::BLUE},
+            ColoredVertex{0.0f,0.0f,0.0f, TrueColor2::BLUE},
+            ColoredVertex{0.0f+hW,0.0f,0.0f+hW, TrueColor2::BLUE},
+            ColoredVertex{0.0f+hW-(hW/4.0f),0.0f,0.0f+hW, TrueColor2::BLUE},
             //3
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f, TrueColor2::YELLOW},
-            GLProgramVC::Vertex{0.0f-hW,0.0f,0.0f+hW, TrueColor2::YELLOW},
-            GLProgramVC::Vertex{0.0f-hW+(hW/4.0f),0.0f,0.0f+hW, TrueColor2::YELLOW},
+            ColoredVertex{0.0f,0.0f,0.0f, TrueColor2::YELLOW},
+            ColoredVertex{0.0f-hW,0.0f,0.0f+hW, TrueColor2::YELLOW},
+            ColoredVertex{0.0f-hW+(hW/4.0f),0.0f,0.0f+hW, TrueColor2::YELLOW},
             //4
-            GLProgramVC::Vertex{0.0f,0.0f,0.0f, TrueColor2::RED},
-            GLProgramVC::Vertex{0.0f-hW,0.0f,0.0f-hW, TrueColor2::RED},
-            GLProgramVC::Vertex{0.0f-hW+(hW/4.0f),0.0f,0.0f-hW,TrueColor2::RED}
+            ColoredVertex{0.0f,0.0f,0.0f, TrueColor2::RED},
+            ColoredVertex{0.0f-hW,0.0f,0.0f-hW, TrueColor2::RED},
+            ColoredVertex{0.0f-hW+(hW/4.0f),0.0f,0.0f-hW,TrueColor2::RED}
     };
-    return GLProgramVC::ColoredMeshData(vertices,GL_TRIANGLES);
+    return ColoredMeshData(vertices,GL_TRIANGLES);
 }
