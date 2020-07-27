@@ -46,7 +46,9 @@ void GLRStereoNormal::placeGLElements(){
     mOSDRenderer->onSurfaceSizeChanged(RENDER_TEX_W, RENDER_TEX_H);
 }
 
-void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
+void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,int screenW,int screenH) {
+    SCREEN_WIDTH=screenW;
+    SCREEN_HEIGHT=screenH;
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,TAG);
     vrCompositorRenderer.initializeGL();
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
@@ -63,17 +65,12 @@ void GLRStereoNormal::onSurfaceCreated(JNIEnv * env,jobject androidContext,jobje
     osdRenderbuffer.initializeGL(RENDER_TEX_W,RENDER_TEX_H);
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
-}
-
-void GLRStereoNormal::onSurfaceChanged(int width, int height) {
     placeGLElements();
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
     glClearColor(0,0,0,0.0F);
-    SCREEN_WIDTH=width;
-    SCREEN_HEIGHT=height;
 }
 
 // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
@@ -294,14 +291,9 @@ JNI_METHOD(void, nativeDelete)
     delete native(glRendererStereo);
 }
 
-JNI_METHOD(void, nativeOnSurfaceCreated)
-(JNIEnv *env, jobject obj, jlong glRendererStereo,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
-    native(glRendererStereo)->onSurfaceCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
-}
-
-JNI_METHOD(void, nativeOnSurfaceChanged)
-(JNIEnv *env, jobject obj, jlong glRendererStereo,jint w,jint h) {
-    native(glRendererStereo)->onSurfaceChanged(w, h);
+JNI_METHOD(void, nativeOnContextCreated)
+(JNIEnv *env, jobject obj, jlong glRendererStereo,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,jint screenW,jint screenH) {
+    native(glRendererStereo)->onContextCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId,screenW,screenH);
 }
 
 JNI_METHOD(void, nativeOnDrawFrame)

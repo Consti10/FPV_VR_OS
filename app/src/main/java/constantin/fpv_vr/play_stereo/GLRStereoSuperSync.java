@@ -55,24 +55,9 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     }
 
     @Override
-    public void onSurfaceCreated() {
+    public void onContextCreated(int width, int height){
         videoSurfaceHolder.createSurfaceTextureGL();
         nativeOnSurfaceCreated(nativeGLRSuperSync,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId());
-    }
-
-    @Override
-    public void onSurfaceChanged(int width, int height) {
-        nativeOnSurfaceChanged(nativeGLRSuperSync,width,height);
-    }
-
-    @Override
-    public void enterSuperSyncLoop(final int exclusiveVRCore) {
-        nativeEnterSuperSyncLoop(nativeGLRSuperSync,videoSurfaceHolder.getSurfaceTexture(),exclusiveVRCore);
-    }
-
-    @Override
-    public void requestExitSuperSyncLoop() {
-        nativeExitSuperSyncLoop(nativeGLRSuperSync);
     }
 
 
@@ -85,6 +70,11 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     public void onDecodingInfoChanged(DecodingInfo decodingInfo) {
         telemetryReceiver.setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
                 decodingInfo.avgHWDecodingTime_ms);
+    }
+
+    @Override
+    public void onDrawFrame() {
+
     }
 
     @Override

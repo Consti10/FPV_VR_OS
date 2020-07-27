@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.MVrHeadsetParams;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
+import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
@@ -28,15 +29,15 @@ import static constantin.renderingx.core.views.MyEGLConfigChooser.EGL_ANDROID_fr
  * Description: see AStereoNormal
  */
 
-public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChanged {
+public class GLRStereoNormal implements XGLSurfaceView.Renderer2, IVideoParamsChanged {
     static final String TAG="GLRStereoNormal";
     static {
         System.loadLibrary("GLRStereoNormal");
     }
     private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode);
     private native void nativeDelete(long glRendererStereoP);
-    private native void nativeOnSurfaceCreated(long glRendererStereoP,Context androidContext,SurfaceTexture videoSurfaceTexture,int videoSurfaceTextureId);
-    private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
+    private native void nativeOnContextCreated(long glRendererStereoP,Context androidContext,SurfaceTexture videoSurfaceTexture,int videoSurfaceTextureId,int width,int height);
+    //private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
     private native void nativeOnDrawFrame(long glRendererStereoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
     private native void nativeUpdateHeadsetParams(long nativePointer,MVrHeadsetParams params);
@@ -46,9 +47,8 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
     private final long nativeGLRendererStereo;
     private VideoSurfaceHolder videoSurfaceHolder;
     private final TelemetryReceiver telemetryReceiver;
-    private final GLSurfaceView glSurfaceView;
 
-    public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext,final GLSurfaceView view){
+    public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext,final XGLSurfaceView view){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
         videoSurfaceHolder=new VideoSurfaceHolder(context);
@@ -57,10 +57,16 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
                 gvrApiNativeContext, VideoSettings.videoMode(mContext));
         final MVrHeadsetParams params=new MVrHeadsetParams(context);
         nativeUpdateHeadsetParams(nativeGLRendererStereo,params);
-        glSurfaceView=view;
     }
 
     @Override
+    public void onContextCreated(int width, int height) {
+        videoSurfaceHolder.createSurfaceTextureGL();
+        nativeOnContextCreated(nativeGLRendererStereo,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId(),width,height);
+
+    }
+
+    /*@Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         videoSurfaceHolder.createSurfaceTextureGL();
         nativeOnSurfaceCreated(nativeGLRendererStereo,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId());
@@ -74,10 +80,10 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
             MyEGLConfigChooser.setEglSurfaceAttrib(EGL_ANDROID_front_buffer_auto_refresh,EGL14.EGL_TRUE);
             EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
         }
-    }
+    }*/
 
     @Override
-    public void onDrawFrame(GL10 gl) {
+    public void onDrawFrame() {
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }
@@ -111,4 +117,5 @@ public class GLRStereoNormal implements GLSurfaceView.Renderer, IVideoParamsChan
             super.finalize();
         }
     }
+
 }

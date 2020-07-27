@@ -23,17 +23,17 @@ GLRStereoNormal(env,androidContext,telemetryReceiver,gvr_context,videoMode),
     std::function<void(JNIEnv *env2, bool leftEye)> f = [this](JNIEnv *env2, bool leftEye) {
         this->renderNewEyeCallback(env2,leftEye,0);
     };
-    mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,f, nullptr);
+    mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,f);
 }
 
 void GLRStereoSuperSync::onSurfaceCreatedX(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
-   GLRStereoNormal::onSurfaceCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
+   //XGLRStereoNormal::onSurfaceCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
     mFrameTimeAcc.reset();
     Extensions::initOtherExtensions();
 }
 
 void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
-    GLRStereoNormal::onSurfaceChanged(width,height);
+    //XGLRStereoNormal::onSurfaceChanged(width,height);
     glEnable(GL_SCISSOR_TEST);
 }
 
@@ -48,7 +48,7 @@ void GLRStereoSuperSync::enterSuperSyncLoop(JNIEnv * env, jobject obj,int exclus
 }
 
 void GLRStereoSuperSync::exitSuperSyncLoop() {
-    mFBRManager->requestExitSuperSyncLoop();
+    //mFBRManager->requestExitSuperSyncLoop();
 }
 
 void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_t offsetNS) {

@@ -23,6 +23,8 @@ import constantin.renderingx.core.views.DebugEGLContextFactory;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.renderingx.core.views.MyVRLayout;
+import constantin.renderingx.core.xglview.XEGLConfigChooser;
+import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.test.UVCPlayer;
 import constantin.video.core.video_player.VideoPlayer;
@@ -35,10 +37,9 @@ public class AStereoNormal extends VrActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyVRLayout mVrLayout = new MyVRLayout(this);
-        MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
-        mGLViewStereo.setEGLContextClientVersion(2);
-        mGLViewStereo.setEGLContextFactory(new DebugEGLContextFactory());
-        mGLViewStereo.setEGLConfigChooser(new MyEGLConfigChooser(SJ.DisableVSYNC(this),SJ.MultiSampleAntiAliasing(this)));
+        //MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
+        XGLSurfaceView mGLViewStereo=new XGLSurfaceView(this);
+        mGLViewStereo.setEGLConfigPrams(new XEGLConfigChooser.SurfaceParams(0,SJ.MultiSampleAntiAliasing(this),SJ.DisableVSYNC(this)));
         final GLRStereoNormal mGLRStereoNormal;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);
@@ -56,8 +57,6 @@ public class AStereoNormal extends VrActivity {
             videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         }
         mGLViewStereo.setRenderer(mGLRStereoNormal);
-        mGLViewStereo.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-        mGLViewStereo.setPreserveEGLContextOnPause(true);
         mVrLayout.setPresentationView(mGLViewStereo);
         //mVrLayout.setVrOverlayEnabled(false);
         setContentView(mVrLayout);

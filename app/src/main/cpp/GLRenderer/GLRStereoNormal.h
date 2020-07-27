@@ -37,8 +37,7 @@ public:
     explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoMode);
 public:
     //not protected because unused by GLRStereoSuperSync
-    void onSurfaceCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId);
-    void onSurfaceChanged(int width, int height);
+    void onContextCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,int screenW,int screenH);
     void onDrawFrame(JNIEnv* env);
 protected:
     //All OpenGL calls required to draw one eye (video and osd)
