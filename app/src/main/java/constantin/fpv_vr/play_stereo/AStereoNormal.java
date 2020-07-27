@@ -25,6 +25,7 @@ import constantin.renderingx.core.views.MyGLSurfaceView;
 import constantin.renderingx.core.views.MyVRLayout;
 import constantin.renderingx.core.xglview.XEGLConfigChooser;
 import constantin.renderingx.core.xglview.XGLSurfaceView;
+import constantin.renderingx.core.xglview.XSurfaceParams;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.test.UVCPlayer;
 import constantin.video.core.video_player.VideoPlayer;
@@ -39,7 +40,7 @@ public class AStereoNormal extends VrActivity {
         MyVRLayout mVrLayout = new MyVRLayout(this);
         //MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         XGLSurfaceView mGLViewStereo=new XGLSurfaceView(this);
-        mGLViewStereo.setEGLConfigPrams(new XEGLConfigChooser.SurfaceParams(0,SJ.MultiSampleAntiAliasing(this),SJ.DisableVSYNC(this)));
+        mGLViewStereo.setEGLConfigPrams(new XSurfaceParams(0,SJ.MultiSampleAntiAliasing(this),SJ.DisableVSYNC(this)));
         final GLRStereoNormal mGLRStereoNormal;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);

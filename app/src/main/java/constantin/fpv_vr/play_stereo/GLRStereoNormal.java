@@ -29,7 +29,7 @@ import static constantin.renderingx.core.views.MyEGLConfigChooser.EGL_ANDROID_fr
  * Description: see AStereoNormal
  */
 
-public class GLRStereoNormal implements XGLSurfaceView.Renderer2, IVideoParamsChanged {
+public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVideoParamsChanged {
     static final String TAG="GLRStereoNormal";
     static {
         System.loadLibrary("GLRStereoNormal");
