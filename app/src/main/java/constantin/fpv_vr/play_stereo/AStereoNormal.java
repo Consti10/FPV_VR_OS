@@ -58,6 +58,7 @@ public class AStereoNormal extends VrActivity {
             videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
         }
         mGLViewStereo.setRenderer(mGLRStereoNormal);
+        mGLViewStereo.setmISecondaryContext(mGLRStereoNormal);
         mVrLayout.setPresentationView(mGLViewStereo);
         //mVrLayout.setVrOverlayEnabled(false);
         setContentView(mVrLayout);

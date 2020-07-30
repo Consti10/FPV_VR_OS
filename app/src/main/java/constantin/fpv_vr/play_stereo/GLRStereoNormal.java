@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.MVrHeadsetParams;
 import constantin.renderingx.core.views.MyEGLConfigChooser;
+import constantin.renderingx.core.xglview.GLContextSurfaceLess;
 import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
@@ -29,7 +30,7 @@ import static constantin.renderingx.core.views.MyEGLConfigChooser.EGL_ANDROID_fr
  * Description: see AStereoNormal
  */
 
-public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVideoParamsChanged {
+public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVideoParamsChanged, GLContextSurfaceLess.SecondarySharedContext {
     static final String TAG="GLRStereoNormal";
     static {
         System.loadLibrary("GLRStereoNormal");
@@ -37,10 +38,12 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVide
     private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnContextCreated(long glRendererStereoP,Context androidContext,SurfaceTexture videoSurfaceTexture,int videoSurfaceTextureId,int width,int height);
-    //private native void nativeOnSurfaceChanged(long glRendererStereoP,int width,int height);
     private native void nativeOnDrawFrame(long glRendererStereoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
     private native void nativeUpdateHeadsetParams(long nativePointer,MVrHeadsetParams params);
+    //
+    private native void nativeOnSecondaryContextCreated(long nativePointer,final Context context);
+    private native void nativeOnSecondaryContextDoWork(long nativePointer);
 
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoNormal instance.
@@ -65,22 +68,6 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVide
         nativeOnContextCreated(nativeGLRendererStereo,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId(),width,height);
 
     }
-
-    /*@Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        videoSurfaceHolder.createSurfaceTextureGL();
-        nativeOnSurfaceCreated(nativeGLRendererStereo,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId());
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        nativeOnSurfaceChanged(nativeGLRendererStereo,width,height);
-        if(SJ.DisableVSYNC(mContext)){
-            MyEGLConfigChooser.setEglSurfaceAttrib(EGL14.EGL_RENDER_BUFFER,EGL14.EGL_SINGLE_BUFFER);
-            MyEGLConfigChooser.setEglSurfaceAttrib(EGL_ANDROID_front_buffer_auto_refresh,EGL14.EGL_TRUE);
-            EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
-        }
-    }*/
 
     @Override
     public void onDrawFrame() {
@@ -118,4 +105,13 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVide
         }
     }
 
+    @Override
+    public void onSecondaryContextCreated() {
+        nativeOnSecondaryContextCreated(nativeGLRendererStereo,mContext);
+    }
+
+    @Override
+    public void onSecondaryContextDoWork() {
+        nativeOnSecondaryContextDoWork(nativeGLRendererStereo);
+    }
 }

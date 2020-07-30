@@ -43,7 +43,6 @@ void GLRStereoNormal::placeGLElements(){
     float videoZ=-videoW/2.0f/glm::tan(glm::radians(SettingsVR::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     updatePosition(videoZ,videoW,videoH);
-    mOSDRenderer->onSurfaceSizeChanged(RENDER_TEX_W, RENDER_TEX_H);
 }
 
 void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,int screenW,int screenH) {
@@ -53,7 +52,6 @@ void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobje
     vrCompositorRenderer.initializeGL();
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
     videoTextureId=(GLuint)videoSurfaceTextureId;
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
     //QCOM_tiled_rendering::init();
@@ -62,10 +60,6 @@ void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobje
     KHR_debug::enable();
     KHR_fence_sync::init();
     //
-    osdRenderbuffer.initializeGL(RENDER_TEX_W,RENDER_TEX_H);
-    //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
-    //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
-    placeGLElements();
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -113,23 +107,12 @@ void GLRStereoNormal::calculateFrameTimes() {
     //Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
 }
 
-void GLRStereoNormal::drawWholeFrame() {
+
+void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     ATrace_beginSection("GLRStereoNormal::onDrawFrame");
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
-    osdCPUTime.start();
-    osdRenderbuffer.bind();
-    glClearColor(1,0,0,0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    mOSDRenderer->updateAndDrawElementsGL();
-    FenceSync fenceSync;
-    osdRenderbuffer.unbind();
-    osdCPUTime.stop();
-    fenceSync.wait(1000*1000*10);
-    if(fenceSync.hasAlreadyBeenSatisfied()){
-        osdGPUTIme.add(fenceSync.getDeltaCreationSatisfied());
-    }
     glClearColor(0,0,0,0);
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
@@ -138,6 +121,7 @@ void GLRStereoNormal::drawWholeFrame() {
     MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
+    vrCompositorRenderer.setLayerTextureId(1,osdRenderbuffer.getLatestRenderedTexture());
 
     ATrace_beginSection("My updateVideoFrame");
     if(true){
@@ -168,15 +152,6 @@ void GLRStereoNormal::drawWholeFrame() {
         MLOGD<<"\nOSD CPU "<<osdCPUTime.getAvgReadable()<<"\n"<<"OSD GPU "<<osdGPUTIme.getAvgReadable()<<"\n";
         osdCPUTime.reset();
         osdGPUTIme.reset();
-    }
-}
-
-
-void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
-    if(mRenderingMode==SUBMIT_FRAMES){
-        drawWholeFrame();
-    }else{
-        drawHalfFrames();
     }
 }
 
@@ -212,23 +187,48 @@ void GLRStereoNormal::drawEye(gvr::Eye eye) {
     ATrace_endSection();
 }
 
-void GLRStereoNormal::drawHalfFrames() {
+void GLRStereoNormal::updatePosition(const float positionZ, const float width, const float height) {
+    vrCompositorRenderer.removeLayers();
+    const unsigned int TESSELATION_FACTOR=10;
+    const auto headTrackingMode=mSettingsVR.GHT_MODE==0 ? VrCompositorRenderer::NONE:VrCompositorRenderer::FULL;
+
+    //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
+    const auto vid1=VideoModesHelper::createMeshForMode(videoMode, positionZ, width, height);
+    vrCompositorRenderer.addLayer(vid1,videoTextureId, true,headTrackingMode);
+
+    const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
+    vrCompositorRenderer.addLayer(osd, osdRenderbuffer.getLatestRenderedTexture(), false,headTrackingMode);
+}
+
+
+void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidContext) {
+    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
+    osdRenderbuffer.createRenderTextures(RENDER_TEX_W,RENDER_TEX_H);
+    osdRenderbuffer.createFrameBuffers();
+    //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
+    //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
+    //placeGLElements();
+    mOSDRenderer->onSurfaceSizeChanged(RENDER_TEX_W, RENDER_TEX_H);
+}
+
+
+void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
+    osdRenderbuffer.bind1();
+    glClearColor(1,0,0,0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    mOSDRenderer->updateAndDrawElementsGL();
+    osdRenderbuffer.unbindAndSwap();
+}
+
+
+/*void GLRStereoNormal::drawHalfFrames() {
     ATrace_beginSection("GLRStereoNormal::onDrawFrame");
 #ifdef CHANGE_SWAP_COLOR
     GLHelper::updateSetClearColor(swapColor);
 #endif
-    osdCPUTime.start();
-    osdRenderbuffer.bind();
-    glClearColor(1,0,0,0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    mOSDRenderer->updateAndDrawElementsGL();
-    FenceSync fenceSync;
-    osdRenderbuffer.unbind();
-    osdCPUTime.stop();
-    fenceSync.wait(1000*1000*10);
-    if(fenceSync.hasAlreadyBeenSatisfied()){
-        osdGPUTIme.add(fenceSync.getDeltaCreationSatisfied());
-    }
     glClearColor(0,0,0,0);
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
@@ -249,23 +249,7 @@ void GLRStereoNormal::drawHalfFrames() {
         osdCPUTime.reset();
         osdGPUTIme.reset();
     }
-}
-
-void GLRStereoNormal::updatePosition(const float positionZ, const float width, const float height) {
-    vrCompositorRenderer.removeLayers();
-    const unsigned int TESSELATION_FACTOR=10;
-    const auto headTrackingMode=mSettingsVR.GHT_MODE==0 ? VrCompositorRenderer::NONE:VrCompositorRenderer::FULL;
-
-    //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
-    const auto vid1=VideoModesHelper::createMeshForMode(videoMode, positionZ, width, height);
-    vrCompositorRenderer.addLayer(vid1,videoTextureId, true,headTrackingMode);
-
-    const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    vrCompositorRenderer.addLayer(osd, osdRenderbuffer.texture, false,headTrackingMode);
-}
-
-
-
+}*/
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
@@ -311,6 +295,15 @@ JNI_METHOD(void, nativeUpdateHeadsetParams)
 (JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
     const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
     native(instancePointer)->vrCompositorRenderer.updateHeadsetParams(deviceParams);
+}
+
+JNI_METHOD(void, nativeOnSecondaryContextCreated)
+(JNIEnv *env, jobject obj,jlong p,jobject context) {
+    native(p)->onSecondaryContextCreated(env,context);
+}
+JNI_METHOD(void, nativeOnSecondaryContextDoWork)
+(JNIEnv *env, jobject obj,jlong p) {
+    native(p)->onSecondaryContextDoWork(env);
 }
 
 }

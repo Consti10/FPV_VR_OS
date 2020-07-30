@@ -24,6 +24,7 @@
 #include <VrCompositorRenderer.h>
 #include <Video/VideoModesHelper.hpp>
 #include <VrRenderBuffer.hpp>
+#include <VrRenderBuffer2.hpp>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -39,6 +40,9 @@ public:
     //not protected because unused by GLRStereoSuperSync
     void onContextCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,int screenW,int screenH);
     void onDrawFrame(JNIEnv* env);
+    //
+    void onSecondaryContextCreated(JNIEnv* env,jobject androidContext);
+    void onSecondaryContextDoWork(JNIEnv* env);
 protected:
     //All OpenGL calls required to draw one eye (video and osd)
     void drawEye(gvr::Eye eye);
@@ -71,7 +75,8 @@ private:
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
     const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
-    VrRenderBuffer osdRenderbuffer;
+    //VrRenderBuffer osdRenderbuffer;
+    VrRenderBuffer2 osdRenderbuffer;
     const float OSD_RATIO=4.0f/3.0f;
     // Pixel maxiumum:  W 2300x1150
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
@@ -80,8 +85,6 @@ private:
     std::chrono::steady_clock::time_point lastLog=std::chrono::steady_clock::now();
     Chronometer osdCPUTime;
     AvgCalculator osdGPUTIme;
-    void drawWholeFrame();
-    void drawHalfFrames();
 };
 
 
