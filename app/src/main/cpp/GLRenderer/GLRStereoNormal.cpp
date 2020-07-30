@@ -65,6 +65,7 @@ void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobje
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
     glClearColor(0,0,0,0.0F);
+    placeGLElements();
 }
 
 // When we have VSYNC disabled ( which always means rendering into the front buffer directly) onDrawFrame is called as fast as possible.
