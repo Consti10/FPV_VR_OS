@@ -6,7 +6,7 @@
 #define FPV_VR_GLRSUPERSYNC_H
 
 #include "GLRStereoNormal.h"
-#include "Extensions.hpp"
+#include "Extensions.h"
 #include <FBRManager.h>
 #include <VRFrameCPUChronometer.h>
 #include <TimeHelper.hpp>

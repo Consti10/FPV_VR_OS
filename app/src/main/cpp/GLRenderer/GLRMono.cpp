@@ -13,7 +13,7 @@ constexpr auto TAG="GLRendererMono";
 GLRMono::GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context* gvr_context, VideoModesHelper::VIDEO_RENDERING_MODE videoMode, bool enableOSD):
     VIDEO_MODE(videoMode),
     ENABLE_OSD(enableOSD),
-    mFPSCalculator("OpenGL FPS",2000),
+    mFPSCalculator("OpenGL FPS",std::chrono::seconds(2)),
     cpuFrameTime("CPU frame time"),
     mTelemetryReceiver(telemetryReceiver),
     ENABLE_VIDEO(videoMode!=VideoModesHelper::RM_2D_MONOSCOPIC){

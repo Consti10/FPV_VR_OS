@@ -18,19 +18,18 @@ constexpr auto TAG= "GLRendererStereo";
 #include <CardboardViewportOcclusion.hpp>
 #include <AndroidThreadPrioValues.hpp>
 #include <NDKThreadHelper.hpp>
-#include <Extensions.hpp>
+#include <Extensions.h>
 #include <android/trace.h>
 #include <TexturedGeometry.hpp>
 
-//#define CHANGE_SWAP_COLOR
 
 GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
         mSurfaceTextureUpdate(env),
         gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
         videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
         mTelemetryReceiver(telemetryReceiver),
-        mFPSCalculator("OpenGL FPS",2000),
-        vrCompositorRenderer(gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0,false){
+        mFPSCalculator("OpenGL FPS",std::chrono::seconds(2)),
+        vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0,false){
 }
 
 void GLRStereoNormal::placeGLElements(){
@@ -46,6 +45,7 @@ void GLRStereoNormal::placeGLElements(){
 }
 
 void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,int screenW,int screenH) {
+    Extensions::initializeGL();
     SCREEN_WIDTH=screenW;
     SCREEN_HEIGHT=screenH;
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,TAG);
@@ -54,11 +54,6 @@ void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobje
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     videoTextureId=(GLuint)videoSurfaceTextureId;
     mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
-    //QCOM_tiled_rendering::init();
-    //ANDROID_presentation_time::init();
-    Extensions2::init();
-    KHR_debug::enable();
-    KHR_fence_sync::init();
     //
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
@@ -82,13 +77,14 @@ void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono
         ATrace_beginSection("Timeout");
         ATrace_endSection();
     }
+    MLOGD<<"Delay of SurfaceTexture"<<surfaceTextureDelay.getAvgReadable();
 }
 
 void GLRStereoNormal::calculateFrameTimes() {
     // remove frames we are done with
     while(!mPendingFrames.empty()){
         const auto& submittedFrame=mPendingFrames.front();
-        auto stats=Extensions2::getFrameTimestamps(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),submittedFrame.frameId);
+        auto stats=FrameTimestamps::getFrameTimestamps(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW), submittedFrame.frameId);
         if(stats){
             //Extensions2::logStats(submittedFrame.creationTime,*stats);
             MLOGD<<"To present "<<MyTimeHelper::R(std::chrono::nanoseconds(stats->DISPLAY_PRESENT_TIME_ANDROID-submittedFrame.creationTime.time_since_epoch().count()));
@@ -97,12 +93,12 @@ void GLRStereoNormal::calculateFrameTimes() {
             break;
         }
     }
-    auto thisFrame=Extensions2::getNextFrameId(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
+    auto thisFrame=FrameTimestamps::getNextFrameId(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW));
     if(thisFrame){
         if(mPendingFrames.size()>4){
             mPendingFrames.pop();
         }
-        mPendingFrames.push(Extensions2::SubmittedFrame{std::chrono::steady_clock::now(),*thisFrame});
+        mPendingFrames.push(FrameTimestamps::SubmittedFrame{std::chrono::steady_clock::now(), *thisFrame});
     }
     //MLOGD<<"Frames in queue "<<mPendingFrames.size();
     //Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
@@ -111,9 +107,7 @@ void GLRStereoNormal::calculateFrameTimes() {
 
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     ATrace_beginSection("GLRStereoNormal::onDrawFrame");
-#ifdef CHANGE_SWAP_COLOR
-    GLHelper::updateSetClearColor(swapColor);
-#endif
+    //GLHelper::updateSetClearColor(swapColor);
     glClearColor(0,0,0,0);
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
@@ -122,7 +116,6 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
-    vrCompositorRenderer.setLayerTextureId(1,osdRenderbuffer.getLatestRenderedTexture());
 
     ATrace_beginSection("My updateVideoFrame");
     if(true){
@@ -141,6 +134,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     //QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     ATrace_endSection();
+    vrCompositorRenderer.setLayerTextureId(1,osdRenderbuffer.getLatestRenderedTexture());
     for(int eye=0;eye<2;eye++){
         vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     }
@@ -156,7 +150,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     }
 }
 
-void GLRStereoNormal::drawEye(gvr::Eye eye) {
+/*void GLRStereoNormal::drawEye(gvr::Eye eye) {
     ATrace_beginSection((std::string("GLRStereoNormal::drawEye ")+(eye==0 ? "left" : "right")).c_str());
     if (mRenderingMode == SUBMIT_HALF_FRAMES) {
         auto vieport=vrCompositorRenderer.getViewportForEye(eye);
@@ -184,9 +178,8 @@ void GLRStereoNormal::drawEye(gvr::Eye eye) {
     //FenceSync fenceSync;
     //fenceSync.wait(1000*1000*10);
     //MLOGD<<"Rendering layer took "<<MyTimeHelper::R(fenceSync.getDeltaCreationSatisfied());
-
     ATrace_endSection();
-}
+}*/
 
 void GLRStereoNormal::updatePosition(const float positionZ, const float width, const float height) {
     vrCompositorRenderer.removeLayers();
@@ -214,14 +207,26 @@ void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidConte
 
 
 void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
+    mOSDFPSCalculator.tick();
+    //MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
+    ATrace_beginSection("GLRStereoNormal::onSecondaryContextDoWork");
     osdRenderbuffer.bind1();
+    TimerQuery timerQuery;
+    timerQuery.begin();
+
     glClearColor(1,0,0,0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
     mOSDRenderer->updateAndDrawElementsGL();
+    ATrace_beginSection("GLRStereoNormal::onSecondaryContextDoWork-GPU");
     osdRenderbuffer.unbindAndSwap();
+    timerQuery.end();
+    //timerQuery.print();
+
+    ATrace_endSection();
+    ATrace_endSection();
 }
 
 
@@ -290,12 +295,6 @@ JNI_METHOD(void, nativeOnDrawFrame)
 JNI_METHOD(void, nativeOnVideoRatioChanged)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoW,jint videoH) {
     native(glRendererStereo)->SetVideoRatio((int)videoW,(int)videoH);
-}
-
-JNI_METHOD(void, nativeUpdateHeadsetParams)
-(JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
-    const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
-    native(instancePointer)->vrCompositorRenderer.updateHeadsetParams(deviceParams);
 }
 
 JNI_METHOD(void, nativeOnSecondaryContextCreated)

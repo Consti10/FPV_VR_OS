@@ -40,7 +40,9 @@ public class AStereoNormal extends VrActivity {
         MyVRLayout mVrLayout = new MyVRLayout(this);
         //MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
         XGLSurfaceView mGLViewStereo=new XGLSurfaceView(this);
-        mGLViewStereo.setEGLConfigPrams(new XSurfaceParams(0,SJ.MultiSampleAntiAliasing(this),SJ.DisableVSYNC(this)));
+        mGLViewStereo.setEGLConfigPrams(new XSurfaceParams(0,SJ.MultiSampleAntiAliasing(this),true));
+        mGLViewStereo.DO_SUPERSYNC_MODS=true;
+
         final GLRStereoNormal mGLRStereoNormal;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);

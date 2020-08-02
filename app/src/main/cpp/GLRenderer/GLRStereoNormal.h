@@ -19,7 +19,7 @@
 #include <TimeHelper.hpp>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include <Extensions.hpp>
+#include <Extensions.h>
 #include <queue>
 #include <VrCompositorRenderer.h>
 #include <Video/VideoModesHelper.hpp>
@@ -45,13 +45,14 @@ public:
     void onSecondaryContextDoWork(JNIEnv* env);
 protected:
     //All OpenGL calls required to draw one eye (video and osd)
-    void drawEye(gvr::Eye eye);
+    // void drawEye(gvr::Eye eye);
     //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,
     //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
 protected:
     TelemetryReceiver& mTelemetryReceiver;
     FPSCalculator mFPSCalculator;
+    FPSCalculator mOSDFPSCalculator;
     const SettingsVR mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
@@ -69,13 +70,12 @@ private:
     // sleep until either video frame is available or timeout is reached
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
     void calculateFrameTimes();
-    std::queue<Extensions2::SubmittedFrame> mPendingFrames;
+    std::queue<FrameTimestamps::SubmittedFrame> mPendingFrames;
     // SUBMIT_FRAMES: Render left and right eye as 1 frame
     // SUBMIT_HALF_FRAMES: Render left and right eye independently. Requires Front buffer rendering !
     // Doing so I can update the video texture between frames, reducing latency
     enum RENDERING_MODE{SUBMIT_FRAMES,SUBMIT_HALF_FRAMES};
     const RENDERING_MODE mRenderingMode=SUBMIT_FRAMES;
-    //VrRenderBuffer osdRenderbuffer;
     VrRenderBuffer2 osdRenderbuffer;
     const float OSD_RATIO=4.0f/3.0f;
     // Pixel maxiumum:  W 2300x1150

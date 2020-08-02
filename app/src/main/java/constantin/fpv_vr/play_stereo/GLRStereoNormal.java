@@ -40,7 +40,6 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVide
     private native void nativeOnContextCreated(long glRendererStereoP,Context androidContext,SurfaceTexture videoSurfaceTexture,int videoSurfaceTextureId,int width,int height);
     private native void nativeOnDrawFrame(long glRendererStereoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
-    private native void nativeUpdateHeadsetParams(long nativePointer,MVrHeadsetParams params);
     //
     private native void nativeOnSecondaryContextCreated(long nativePointer,final Context context);
     private native void nativeOnSecondaryContextDoWork(long nativePointer);
@@ -58,8 +57,6 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVide
         videoSurfaceHolder.setCallBack(iSurfaceAvailable);
         nativeGLRendererStereo=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoSettings.videoMode(mContext));
-        final MVrHeadsetParams params=new MVrHeadsetParams(context);
-        nativeUpdateHeadsetParams(nativeGLRendererStereo,params);
     }
 
     @Override

@@ -6,7 +6,7 @@
 #include "GLRStereoSuperSync.h"
 #include <AndroidThreadPrioValues.hpp>
 #include <NDKThreadHelper.hpp>
-#include "Extensions.hpp"
+#include "Extensions.h"
 
 
 #include "vr/gvr/capi/include/gvr.h"
@@ -23,13 +23,13 @@ GLRStereoNormal(env,androidContext,telemetryReceiver,gvr_context,videoMode),
     std::function<void(JNIEnv *env2, bool leftEye)> f = [this](JNIEnv *env2, bool leftEye) {
         this->renderNewEyeCallback(env2,leftEye,0);
     };
-    mFBRManager=std::make_unique<FBRManager>(qcomTiledRenderingAvailable,reusableSyncAvailable,f);
+    mFBRManager=std::make_unique<FBRManager>(f);
 }
 
 void GLRStereoSuperSync::onSurfaceCreatedX(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId) {
    //XGLRStereoNormal::onSurfaceCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId);
     mFrameTimeAcc.reset();
-    Extensions::initOtherExtensions();
+    Extensions::initializeGL();
 }
 
 void GLRStereoSuperSync::onSurfaceChangedX(int width, int height) {
@@ -96,7 +96,7 @@ void GLRStereoSuperSync::renderNewEyeCallback(JNIEnv *env, bool whichEye, int64_
     //}
     vrEyeTimeStamps.setTimestamp("clear");
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
-    GLRStereoNormal::drawEye(whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
+    //GLRStereoNormal::drawEye(whichEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     vrEyeTimeStamps.setTimestamp("drawVideoCanvas");
     vrEyeTimeStamps.setTimestamp("stopDR");
     //update the video texture again. If there is no new surfaceTexture Data available, this call returns almost immediately anyway.
@@ -173,12 +173,6 @@ JNI_METHOD(void, nativeDoFrame)
 JNI_METHOD(void, nativeOnVideoRatioChanged)
 (JNIEnv *env, jobject obj, jlong glRendererStereo,jint videoW,jint videoH) {
     native(glRendererStereo)->SetVideoRatio((int)videoW,(int)videoH);
-}
-
-JNI_METHOD(void, nativeUpdateHeadsetParams)
-(JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
-    const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
-    native(instancePointer)->vrCompositorRenderer.updateHeadsetParams(deviceParams);
 }
 
 }

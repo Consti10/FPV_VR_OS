@@ -33,7 +33,6 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
     private native void nativeExitSuperSyncLoop(long glRendererMonoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
     private native void nativeDoFrame(long glRendererStereoP,long lastVsync);
-    private native void nativeUpdateHeadsetParams(long nativePointer,MVrHeadsetParams params);
 
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoSuperSync instance.
@@ -50,8 +49,6 @@ public class GLRStereoSuperSync implements ViewSuperSync.IRendererSuperSync, IVi
         final boolean reusableSyncAvailable=Extensions.available(context,Extensions.EGL_KHR_reusable_sync);
         nativeGLRSuperSync=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext,qcomTiledRenderingAvailable,reusableSyncAvailable, VideoSettings.videoMode(mContext));
-        final MVrHeadsetParams params=new MVrHeadsetParams(context);
-        nativeUpdateHeadsetParams(nativeGLRSuperSync,params);
     }
 
     @Override

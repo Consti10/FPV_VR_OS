@@ -23,7 +23,7 @@ constexpr auto TAG="GLRendererDaydream";
 GLRStereoDaydream::GLRStereoDaydream(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,int videoSurfaceID,int screenWidthP,int screenHeightP):
         mTelemetryReceiver(telemetryReceiver),
         mSettingsVR(env,androidContext),
-        mFPSCalculator("OpenGL FPS",2000)
+        mFPSCalculator("OpenGL FPS",std::chrono::seconds(2))
         {
     gvr_api_=gvr::GvrApi::WrapNonOwned(gvr_context);
     //vrHeadsetParams.setGvrApi(gvr_api_.get());
@@ -215,13 +215,6 @@ JNI_METHOD(void, nativeOnSurfaceChanged)
 JNI_METHOD(void, nativeOnDrawFrame)
         (JNIEnv *env, jobject obj, jlong glRenderer) {
     native(glRenderer)->onDrawFrame();
-}
-
-
-JNI_METHOD(void, nativeUpdateHeadsetParams)
-(JNIEnv *env, jobject obj, jlong instancePointer,jobject instanceMyVrHeadsetParams) {
-    const MVrHeadsetParams deviceParams=createFromJava(env, instanceMyVrHeadsetParams);
-    //native(instancePointer)->vrHeadsetParams.updateHeadsetParams(deviceParams);
 }
 
 }
