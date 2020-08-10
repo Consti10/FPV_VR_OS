@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 
 import com.google.vr.ndk.base.GvrApi;
+import com.google.vr.ndk.base.GvrLayout;
 import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.GvrViewerParams;
 
@@ -41,6 +42,8 @@ public class GLRStereoDaydream implements GLSurfaceView.Renderer{
         mContext=context;
         GvrView view=new GvrView(context);
         final GvrViewerParams params=view.getGvrViewerParams();
+
+        //GvrLayout.ExternalSurfaceListener
 
         nativeGLRendererDaydream=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 api.getNativeGvrContext(),videoSurfaceID);

@@ -20,9 +20,8 @@ import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
-import constantin.renderingx.core.views.MyEGLConfigChooser;
-import constantin.renderingx.core.views.MyEGLWindowSurfaceFactory;
-import constantin.renderingx.core.views.MyGLSurfaceView;
+import constantin.renderingx.core.old.LifecycleGLSurfaceView;
+import constantin.renderingx.core.old.MyEGLConfigChooser;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.test.UVCPlayer;
 import constantin.video.core.DecodingInfo;
@@ -42,7 +41,6 @@ import constantin.video.core.video_player.VideoSettings;
 
 public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged {
     private ActivityMonoVidOsdBinding binding;
-    //private constantin.fpv_vr.databinding.ActivityMonoGlVidOsdBinding bindingGL;
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
     private TelemetryReceiver telemetryReceiver;
     private GLRMono mGLRenderer;
@@ -77,9 +75,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         }
         // if needed, create and initialize the GLSurfaceView
-        MyGLSurfaceView mGLSurfaceView;
+        LifecycleGLSurfaceView mGLSurfaceView;
         if(!USE_ANDROID_SURFACE_FOR_VIDEO || ENABLE_OSD){
-            mGLSurfaceView=new MyGLSurfaceView(this);
+            mGLSurfaceView=new LifecycleGLSurfaceView(this);
             mGLSurfaceView.setVisibility(View.VISIBLE);
             mGLSurfaceView.setEGLContextClientVersion(2);
             //Do not use MSAA in mono mode
@@ -99,7 +97,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
             binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(uvcPlayer==null ? videoPlayer.configure1() : uvcPlayer.configure1());
             //binding.SurfaceViewMonoscopicVideo.getHolder().setFormat();
         }else{
-            mGLRenderer.getVideoSurfaceHolder().setCallBack(uvcPlayer==null ? videoPlayer.configure2() : uvcPlayer.configure2());
+            //mGLRenderer.getVideoSurfaceHolder().setCallBack(uvcPlayer==null ? videoPlayer.configure2() : uvcPlayer.configure2());
             registerForContextMenu(binding.myVRLayout);
         }
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, binding.myVRLayout.getGvrApi());

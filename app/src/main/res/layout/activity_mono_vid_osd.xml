@@ -26,7 +26,7 @@
     </RelativeLayout>
 
     <!-- this one will hold the opengl surface -->
-    <constantin.renderingx.core.views.MyVRLayout
+    <constantin.renderingx.core.views.VRLayout
         android:id="@+id/myVRLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

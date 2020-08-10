@@ -44,7 +44,7 @@ void GLRStereoNormal::placeGLElements(){
     updatePosition(videoZ,videoW,videoH);
 }
 
-void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,int screenW,int screenH) {
+void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject surfaceTextureHolder) {
     Extensions::initializeGL();
     SCREEN_WIDTH=screenW;
     SCREEN_HEIGHT=screenH;
@@ -52,8 +52,7 @@ void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,jobje
     vrCompositorRenderer.initializeGL();
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
-    videoTextureId=(GLuint)videoSurfaceTextureId;
-    mSurfaceTextureUpdate.setSurfaceTexture(env,videoSurfaceTexture);
+    mSurfaceTextureUpdate.updateFromSurfaceTextureHolder(env,surfaceTextureHolder);
     //
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
@@ -107,7 +106,7 @@ void GLRStereoNormal::calculateFrameTimes() {
 
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     ATrace_beginSection("GLRStereoNormal::onDrawFrame");
-    //GLHelper::updateSetClearColor(swapColor);
+    GLHelper::updateSetClearColor(swapColor);
     glClearColor(0,0,0,0);
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
@@ -188,7 +187,7 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
 
     //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
     const auto vid1=VideoModesHelper::createMeshForMode(videoMode, positionZ, width, height);
-    vrCompositorRenderer.addLayer(vid1,videoTextureId, true,headTrackingMode);
+    vrCompositorRenderer.addLayer(vid1,mSurfaceTextureUpdate.getTextureId(), true,headTrackingMode);
 
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
     vrCompositorRenderer.addLayer(osd, osdRenderbuffer.getLatestRenderedTexture(), false,headTrackingMode);
@@ -282,8 +281,8 @@ JNI_METHOD(void, nativeDelete)
 }
 
 JNI_METHOD(void, nativeOnContextCreated)
-(JNIEnv *env, jobject obj, jlong glRendererStereo,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,jint screenW,jint screenH) {
-    native(glRendererStereo)->onContextCreated(env,androidContext,videoSurfaceTexture,videoSurfaceTextureId,screenW,screenH);
+(JNIEnv *env, jobject obj, jlong glRendererStereo,jobject androidContext,jint screenW,jint screenH,jobject surfaceTextureHolder) {
+    native(glRendererStereo)->onContextCreated(env,androidContext,screenW,screenH,surfaceTextureHolder);
 }
 
 JNI_METHOD(void, nativeOnDrawFrame)

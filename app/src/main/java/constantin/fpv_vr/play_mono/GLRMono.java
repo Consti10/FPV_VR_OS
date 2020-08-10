@@ -12,12 +12,13 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.R;
-import constantin.renderingx.core.views.MyEGLConfigChooser;
+import constantin.renderingx.core.old.MyEGLConfigChooser;
+import constantin.renderingx.core.xglview.SurfaceTextureHolder;
 import constantin.telemetry.core.TelemetryReceiver;
-import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.video.core.video_player.VideoSettings;
 
-import static constantin.renderingx.core.views.MyEGLConfigChooser.EGL_ANDROID_front_buffer_auto_refresh;
+import static constantin.renderingx.core.old.MyEGLConfigChooser.EGL_ANDROID_front_buffer_auto_refresh;
+
 
 /*
  * Renders OSD and/or video in monoscopic view
@@ -39,7 +40,7 @@ public class GLRMono implements GLSurfaceView.Renderer{
     private final Context mContext;
     //Optional, only when playing video that cannot be displayed by a 'normal' android surface
     //(e.g. 360° video)
-    private final VideoSurfaceHolder mVideoSurfaceHolder;
+    private final SurfaceTextureHolder mVideoSurfaceHolder;
     private final boolean disableVSYNC;
 
     public GLRMono(final AppCompatActivity context,final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
@@ -47,21 +48,21 @@ public class GLRMono implements GLSurfaceView.Renderer{
         mContext=context;
         this.disableVSYNC=disableVSYNC;
         if(videoMode!= VideoSettings.VIDEO_MODE_2D_MONOSCOPIC){
-            mVideoSurfaceHolder=new VideoSurfaceHolder(context);
+            mVideoSurfaceHolder=new SurfaceTextureHolder(context,null);
         }else{
             mVideoSurfaceHolder=null;
         }
         nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),videoMode,renderOSD);
     }
 
-    public final VideoSurfaceHolder getVideoSurfaceHolder(){
+    public final SurfaceTextureHolder getVideoSurfaceHolder(){
         return mVideoSurfaceHolder;
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         if(mVideoSurfaceHolder!=null){
-            mVideoSurfaceHolder.createSurfaceTextureGL();
+            mVideoSurfaceHolder.createOnOpenGLThread();
         }
         if(disableVSYNC){
             MyEGLConfigChooser.setEglSurfaceAttrib(EGL14.EGL_RENDER_BUFFER,EGL14.EGL_SINGLE_BUFFER);

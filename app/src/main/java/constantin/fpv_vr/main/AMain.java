@@ -24,7 +24,6 @@ import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.play_mono.AMonoVideoOSD;
 import constantin.fpv_vr.play_stereo.AStereoNormal;
-import constantin.fpv_vr.play_stereo.AStereoSuperSYNC;
 import constantin.fpv_vr.settings.AGroundRecordingSettings;
 import constantin.fpv_vr.settings.ASettingsOSD;
 import constantin.fpv_vr.settings.ASettingsVR;
@@ -144,7 +143,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 if (SJ.DEV_USE_GVR_VIDEO_TEXTURE(this)) {
                     intent.setClass(this, AStereoDaydream.class);
                 } else if (SJ.SuperSync(this)) {
-                    intent.setClass(this, AStereoSuperSYNC.class);
+                    //intent.setClass(this, AStereoSuperSYNC.class);
                 } else {
                     intent.setClass(this, AStereoNormal.class);
                 }

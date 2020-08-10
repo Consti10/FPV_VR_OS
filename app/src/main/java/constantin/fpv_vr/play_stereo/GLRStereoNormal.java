@@ -1,43 +1,32 @@
 package constantin.fpv_vr.play_stereo;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.EGLExt;
-import android.opengl.GLSurfaceView;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 import constantin.fpv_vr.settings.SJ;
-import constantin.renderingx.core.MVrHeadsetParams;
-import constantin.renderingx.core.views.MyEGLConfigChooser;
 import constantin.renderingx.core.xglview.GLContextSurfaceLess;
+import constantin.renderingx.core.xglview.SurfaceTextureHolder;
 import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.gl.ISurfaceAvailable;
-import constantin.video.core.gl.VideoSurfaceHolder;
 import constantin.video.core.video_player.VideoSettings;
 
-import static constantin.renderingx.core.views.MyEGLConfigChooser.EGL_ANDROID_front_buffer_auto_refresh;
 
-/** Open GL renderer stereo in normal mode (normal==no SuperSync or daydream, but possibly VSYNC disabled)
- * Description: see AStereoNormal
- */
 
-public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVideoParamsChanged, GLContextSurfaceLess.SecondarySharedContext {
+public class GLRStereoNormal implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture, IVideoParamsChanged, GLContextSurfaceLess.SecondarySharedContext {
     static final String TAG="GLRStereoNormal";
     static {
         System.loadLibrary("GLRStereoNormal");
     }
     private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode);
     private native void nativeDelete(long glRendererStereoP);
-    private native void nativeOnContextCreated(long glRendererStereoP,Context androidContext,SurfaceTexture videoSurfaceTexture,int videoSurfaceTextureId,int width,int height);
+    private native void nativeOnContextCreated(long glRendererStereoP,Context androidContext,int width,int height,SurfaceTextureHolder surfaceTextureHolder);
     private native void nativeOnDrawFrame(long glRendererStereoP);
     private native void nativeOnVideoRatioChanged(long glRendererStereoP,int videoW,int videoH);
     //
@@ -47,23 +36,18 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRenderer, IVide
     private final Context mContext;
     // Opaque native pointer to the native GLRStereoNormal instance.
     private final long nativeGLRendererStereo;
-    private VideoSurfaceHolder videoSurfaceHolder;
     private final TelemetryReceiver telemetryReceiver;
 
-    public GLRStereoNormal(final AppCompatActivity context, final ISurfaceAvailable iSurfaceAvailable, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext,final XGLSurfaceView view){
+    public GLRStereoNormal(final AppCompatActivity context, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
-        videoSurfaceHolder=new VideoSurfaceHolder(context);
-        videoSurfaceHolder.setCallBack(iSurfaceAvailable);
         nativeGLRendererStereo=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoSettings.videoMode(mContext));
     }
 
     @Override
-    public void onContextCreated(int width, int height) {
-        videoSurfaceHolder.createSurfaceTextureGL();
-        nativeOnContextCreated(nativeGLRendererStereo,mContext,videoSurfaceHolder.getSurfaceTexture(),videoSurfaceHolder.getTextureId(),width,height);
-
+    public void onContextCreated(int width, int height, SurfaceTextureHolder surfaceTextureHolder) {
+        nativeOnContextCreated(nativeGLRendererStereo,mContext,width,height,surfaceTextureHolder);
     }
 
     @Override

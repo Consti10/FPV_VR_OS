@@ -19,13 +19,7 @@ import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.VrActivity;
-import constantin.renderingx.core.views.DebugEGLContextFactory;
-import constantin.renderingx.core.views.MyEGLConfigChooser;
-import constantin.renderingx.core.views.MyGLSurfaceView;
-import constantin.renderingx.core.views.MyVRLayout;
-import constantin.renderingx.core.xglview.XEGLConfigChooser;
-import constantin.renderingx.core.xglview.XGLSurfaceView;
-import constantin.renderingx.core.xglview.XSurfaceParams;
+import constantin.renderingx.core.views.VrView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.test.UVCPlayer;
 import constantin.video.core.video_player.VideoPlayer;
@@ -37,18 +31,16 @@ public class AStereoNormal extends VrActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyVRLayout mVrLayout = new MyVRLayout(this);
-        //MyGLSurfaceView mGLViewStereo = new MyGLSurfaceView(this);
-        XGLSurfaceView mGLViewStereo=new XGLSurfaceView(this);
-        mGLViewStereo.setEGLConfigPrams(new XSurfaceParams(0,SJ.MultiSampleAntiAliasing(this),true));
-        mGLViewStereo.DO_SUPERSYNC_MODS=true;
+        VrView vrView=new VrView(this);
 
         final GLRStereoNormal mGLRStereoNormal;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);
             final TelemetryReceiver telemetryReceiver=new TelemetryReceiver(this,0,0);
-            mGLRStereoNormal = new GLRStereoNormal(this,uvcPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext(),mGLViewStereo);
+            mGLRStereoNormal = new GLRStereoNormal(this, telemetryReceiver,vrView.getGvrApi().getNativeGvrContext());
             uvcPlayer.setIVideoParamsChanged(mGLRStereoNormal);
+            vrView.setRenderer(mGLRStereoNormal,uvcPlayer.configure2());
+            vrView.setmISecondaryContext(mGLRStereoNormal);
         }else{
             final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
                     new DJIVideoPlayer(this):
@@ -56,15 +48,14 @@ public class AStereoNormal extends VrActivity {
             final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
                     new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
-            mGLRStereoNormal = new GLRStereoNormal(this,videoPlayer.configure2(), telemetryReceiver, mVrLayout.getGvrApi().getNativeGvrContext(),mGLViewStereo);
+            mGLRStereoNormal = new GLRStereoNormal(this, telemetryReceiver, vrView.getGvrApi().getNativeGvrContext());
             videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
+            vrView.setRenderer(mGLRStereoNormal,videoPlayer.configure2());
+            vrView.setmISecondaryContext(mGLRStereoNormal);
         }
-        mGLViewStereo.setRenderer(mGLRStereoNormal);
-        mGLViewStereo.setmISecondaryContext(mGLRStereoNormal);
-        mVrLayout.setPresentationView(mGLViewStereo);
         //mVrLayout.setVrOverlayEnabled(false);
-        setContentView(mVrLayout);
-        AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, mVrLayout.getGvrApi());
+        setContentView(vrView);
+        AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this,vrView.getGvrApi());
     }
 
     @Override

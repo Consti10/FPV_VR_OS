@@ -57,14 +57,14 @@ add_library( GLRStereoNormal SHARED
         )
 target_link_libraries( GLRStereoNormal ${GLR_SOME_DEPENDENCIES} )
 
-add_library( GLRStereoSuperSync SHARED
-        GLRenderer/GLRStereoSuperSync.cpp
-        GLRenderer/GLRStereoNormal.cpp
-        )
-target_link_libraries( GLRStereoSuperSync ${GLR_SOME_DEPENDENCIES} SuperSync)
+#add_library( GLRStereoSuperSync SHARED
+#        GLRenderer/GLRStereoSuperSync.cpp
+#        GLRenderer/GLRStereoNormal.cpp
+#        )
+#target_link_libraries( GLRStereoSuperSync ${GLR_SOME_DEPENDENCIES} SuperSync)
 
-add_library( GLRStereoDaydream SHARED
-        ${RX_CORE_DIR}/src/main/cpp/Other/gvr_util/util.cc
-        GLRenderer/GLRStereoDaydream.cpp)
-target_link_libraries( GLRStereoDaydream ${GLR_SOME_DEPENDENCIES} )
+#add_library( GLRStereoDaydream SHARED
+#        ${RX_CORE_DIR}/src/main/cpp/Other/gvr_util/util.cc
+#        GLRenderer/GLRStereoDaydream.cpp)
+#target_link_libraries( GLRStereoDaydream ${GLR_SOME_DEPENDENCIES} )
 

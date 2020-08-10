@@ -15,7 +15,7 @@
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
 #include <SettingsVR.h>
-#include <Video/SurfaceTextureUpdate.hpp>
+#include <SurfaceTextureUpdate.hpp>
 #include <TimeHelper.hpp>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -38,7 +38,7 @@ public:
     explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoMode);
 public:
     //not protected because unused by GLRStereoSuperSync
-    void onContextCreated(JNIEnv * env,jobject androidContext,jobject videoSurfaceTexture,jint videoSurfaceTextureId,int screenW,int screenH);
+    void onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject surfaceTextureHolder);
     void onDrawFrame(JNIEnv* env);
     //
     void onSecondaryContextCreated(JNIEnv* env,jobject androidContext);
@@ -80,7 +80,6 @@ private:
     const float OSD_RATIO=4.0f/3.0f;
     // Pixel maxiumum:  W 2300x1150
     const int RENDER_TEX_W=1440,RENDER_TEX_H=RENDER_TEX_W*1.0f/OSD_RATIO; //1440* 3 / 4 = 1080
-    GLuint videoTextureId;
     void updatePosition(const float positionZ,const float width,const float height);
     std::chrono::steady_clock::time_point lastLog=std::chrono::steady_clock::now();
     Chronometer osdCPUTime;
