@@ -53,7 +53,6 @@ public class AStereoNormal extends VrActivity {
             vrView.setRenderer(mGLRStereoNormal,videoPlayer.configure2());
             vrView.setmISecondaryContext(mGLRStereoNormal);
         }
-        //mVrLayout.setVrOverlayEnabled(false);
         setContentView(vrView);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this,vrView.getGvrApi());
     }
