@@ -20,6 +20,7 @@ import java.util.Enumeration;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.databinding.ConnectManuallyFragmentBinding;
 import constantin.telemetry.core.TestReceiverTelemetry;
+import constantin.video.core.IsConnected;
 import constantin.video.core.TestReceiverVideo;
 
 
@@ -33,7 +34,7 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding=ConnectManuallyFragmentBinding.inflate(inflater);
-        binding.ipAdressesTV.setText(getActiveInetAddresses());
+        binding.ipAdressesTV.setText(IsConnected.getActiveInetAddresses());
         mContext=getActivity();
         FragmentActivity activity=requireActivity();
         mTestReceiverTelemetry=new TestReceiverTelemetry(activity);
@@ -53,31 +54,6 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
     public void onPause() {
         super.onPause();
     }
-
-    //get all Inet4Addresses that are
-    //either wifi or wifi hotspot or usb tethering
-    private static String getActiveInetAddresses(){
-        StringBuilder s= new StringBuilder();
-        try{
-            final Enumeration<NetworkInterface> networkInterfacesEnumeration=NetworkInterface.getNetworkInterfaces();
-            while (networkInterfacesEnumeration.hasMoreElements()){
-                final NetworkInterface networkInterface=networkInterfacesEnumeration.nextElement();
-                if(!networkInterface.isUp() || networkInterface.getName().contains("dummy0") || networkInterface.isLoopback()){
-                    continue;
-                }
-                final Enumeration<InetAddress> inetAddressesEnumeration=networkInterface.getInetAddresses();
-                while (inetAddressesEnumeration.hasMoreElements()){
-                    InetAddress inetAddress=inetAddressesEnumeration.nextElement();
-                    if(inetAddress instanceof Inet4Address){
-                        s.append("Interface ").append(networkInterface.getName()).append(": ").append(inetAddress.getHostAddress()).append("\n");
-                    }
-                }
-            }
-            return s.toString();
-        }catch(Exception e){e.printStackTrace();}
-        return "";
-    }
-
 
     @Override
     public void onClick(View v) {
