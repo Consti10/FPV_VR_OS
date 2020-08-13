@@ -39,8 +39,8 @@ public class AStereoNormal extends VrActivity {
             final TelemetryReceiver telemetryReceiver=new TelemetryReceiver(this,0,0);
             mGLRStereoNormal = new GLRStereoNormal(this, telemetryReceiver,vrView.getGvrApi().getNativeGvrContext());
             uvcPlayer.setIVideoParamsChanged(mGLRStereoNormal);
-            vrView.setRenderer(mGLRStereoNormal,uvcPlayer.configure2());
-            vrView.setmISecondaryContext(mGLRStereoNormal);
+            vrView.getPresentationView().setRenderer(mGLRStereoNormal,uvcPlayer.configure2());
+            vrView.getPresentationView().setmISecondaryContext(mGLRStereoNormal);
         }else{
             final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
                     new DJIVideoPlayer(this):
@@ -50,8 +50,8 @@ public class AStereoNormal extends VrActivity {
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
             mGLRStereoNormal = new GLRStereoNormal(this, telemetryReceiver, vrView.getGvrApi().getNativeGvrContext());
             videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
-            vrView.setRenderer(mGLRStereoNormal,videoPlayer.configure2());
-            vrView.setmISecondaryContext(mGLRStereoNormal);
+            vrView.getPresentationView().setRenderer(mGLRStereoNormal,videoPlayer.configure2());
+            vrView.getPresentationView().setmISecondaryContext(mGLRStereoNormal);
         }
         setContentView(vrView);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this,vrView.getGvrApi());

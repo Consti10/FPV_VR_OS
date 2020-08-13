@@ -133,7 +133,6 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     //QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
     ATrace_endSection();
-    vrCompositorRenderer.setLayerTextureId(1,osdRenderbuffer.getLatestRenderedTexture());
     for(int eye=0;eye<2;eye++){
         vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     }
@@ -149,36 +148,6 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     }
 }
 
-/*void GLRStereoNormal::drawEye(gvr::Eye eye) {
-    ATrace_beginSection((std::string("GLRStereoNormal::drawEye ")+(eye==0 ? "left" : "right")).c_str());
-    if (mRenderingMode == SUBMIT_HALF_FRAMES) {
-        auto vieport=vrCompositorRenderer.getViewportForEye(eye);
-        QCOM_tiled_rendering::StartTilingQCOM(vieport);
-        const std::chrono::steady_clock::time_point timeWhenWaitingExpires =
-                lastRenderedFrame + std::chrono::milliseconds(5);
-        waitUntilVideoFrameAvailable(currEnv, timeWhenWaitingExpires);
-        lastRenderedFrame = std::chrono::steady_clock::now();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }
-    //
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glBlendEquation(GL_FUNC_ADD);
-    vrCompositorRenderer.drawLayers(eye);
-
-    //glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
-    //glBlendEquation(GL_FUNC_SUBTRACT);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-
-    if (mRenderingMode == SUBMIT_HALF_FRAMES) {
-        QCOM_tiled_rendering::EndTilingQCOM();
-        eglSwapBuffers(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW));
-    }
-    //FenceSync fenceSync;
-    //fenceSync.wait(1000*1000*10);
-    //MLOGD<<"Rendering layer took "<<MyTimeHelper::R(fenceSync.getDeltaCreationSatisfied());
-    ATrace_endSection();
-}*/
 
 void GLRStereoNormal::updatePosition(const float positionZ, const float width, const float height) {
     vrCompositorRenderer.removeLayers();
@@ -187,10 +156,10 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
 
     //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
     const auto vid1=VideoModesHelper::createMeshForMode(videoMode, positionZ, width, height);
-    vrCompositorRenderer.addLayer(vid1,mSurfaceTextureUpdate.getTextureId(), true,headTrackingMode);
+    vrCompositorRenderer.addLayer(vid1,&mSurfaceTextureUpdate,headTrackingMode);
 
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    vrCompositorRenderer.addLayer(osd, osdRenderbuffer.getLatestRenderedTexture(), false,headTrackingMode);
+    vrCompositorRenderer.addLayer(osd, &osdRenderbuffer,headTrackingMode);
 }
 
 
@@ -229,32 +198,7 @@ void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
 }
 
 
-/*void GLRStereoNormal::drawHalfFrames() {
-    ATrace_beginSection("GLRStereoNormal::onDrawFrame");
-#ifdef CHANGE_SWAP_COLOR
-    GLHelper::updateSetClearColor(swapColor);
-#endif
-    glClearColor(0,0,0,0);
-    if(checkAndResetVideoFormatChanged()){
-        placeGLElements();
-    }
-    mFPSCalculator.tick();
-    MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
-    mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
-    vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
-    drawEye(GVR_LEFT_EYE);
-    drawEye(GVR_RIGHT_EYE);
-    //calculateFrameTimes();
-    //ANDROID_presentation_time::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
-    ATrace_endSection();
-    //QCOM_tiled_rendering::EndTilingQCOM();
-    if(std::chrono::steady_clock::now()-lastLog>std::chrono::seconds(2)){
-        lastLog=std::chrono::steady_clock::now();
-        MLOGD<<"\nOSD CPU "<<osdCPUTime.getAvgReadable()<<"\n"<<"OSD GPU "<<osdGPUTIme.getAvgReadable()<<"\n";
-        osdCPUTime.reset();
-        osdGPUTIme.reset();
-    }
-}*/
+
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
