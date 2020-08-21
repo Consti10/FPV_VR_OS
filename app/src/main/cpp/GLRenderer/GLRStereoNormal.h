@@ -84,6 +84,7 @@ private:
     std::chrono::steady_clock::time_point lastLog=std::chrono::steady_clock::now();
     Chronometer osdCPUTime;
     AvgCalculator osdGPUTIme;
+    AvgCalculator videoLatency;
 };
 
 

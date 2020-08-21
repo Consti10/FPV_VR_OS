@@ -85,7 +85,7 @@ void GLRStereoNormal::calculateFrameTimes() {
         const auto& submittedFrame=mPendingFrames.front();
         auto stats=FrameTimestamps::getFrameTimestamps(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW), submittedFrame.frameId);
         if(stats){
-            //Extensions2::logStats(submittedFrame.creationTime,*stats);
+            FrameTimestamps:logStats(submittedFrame.creationTime,*stats);
             MLOGD<<"To present "<<MyTimeHelper::R(std::chrono::nanoseconds(stats->DISPLAY_PRESENT_TIME_ANDROID-submittedFrame.creationTime.time_since_epoch().count()));
             mPendingFrames.pop();
         }else{
@@ -100,7 +100,7 @@ void GLRStereoNormal::calculateFrameTimes() {
         mPendingFrames.push(FrameTimestamps::SubmittedFrame{std::chrono::steady_clock::now(), *thisFrame});
     }
     //MLOGD<<"Frames in queue "<<mPendingFrames.size();
-    //Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
+    //Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));3
 }
 
 
@@ -136,8 +136,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     for(int eye=0;eye<2;eye++){
         vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     }
-    //calculateFrameTimes();
-    //ANDROID_presentation_time::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    calculateFrameTimes();
     ATrace_endSection();
     //QCOM_tiled_rendering::EndTilingQCOM();
     if(std::chrono::steady_clock::now()-lastLog>std::chrono::seconds(2)){
