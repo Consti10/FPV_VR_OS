@@ -26,7 +26,6 @@ import constantin.fpv_vr.play_mono.AMonoVideoOSD;
 import constantin.fpv_vr.play_stereo.AStereoNormal;
 import constantin.fpv_vr.settings.AGroundRecordingSettings;
 import constantin.fpv_vr.settings.ASettingsOSD;
-import constantin.fpv_vr.settings.ASettingsVR;
 import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.settings.UpdateHelper;
 import constantin.fpv_vr.xexperimental.AStereoDaydream;
@@ -158,7 +157,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 startActivity(new Intent().setClass(this, AConnect.class));
                 break;
             case R.id.b_VRSettings:
-                startActivity(new Intent().setClass(this, ASettingsVR.class));
+                //startActivity(new Intent().setClass(this, ASettingsVR.class));
                 break;
             case R.id.b_Exp:
                 startActivity(new Intent().setClass(this, ATestlayout.class));
