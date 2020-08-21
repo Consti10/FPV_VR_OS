@@ -94,9 +94,6 @@
         <activity
             android:name=".settings.ASettingsOSD"
             android:screenOrientation="behind" />
-        <activity
-            android:name=".settings.ASettingsVR"
-            android:screenOrientation="behind" />
 
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
