@@ -30,7 +30,7 @@ class GLRMono: public IVideoFormatChanged{
 public:
     GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context* gvr_context, VideoModesHelper::VIDEO_RENDERING_MODE videoMode, bool enableOSD);
 public:
-    void onSurfaceCreated(JNIEnv * env,jobject obj,jint optionalVideoTexture=0);
+    void onSurfaceCreated(JNIEnv * env,jobject obj,jobject optionalSurfaceTextureHolder);
     void onSurfaceChanged(int width, int height,float optionalVideo360FOV=0);
     //Draw the transparent OSD scene.
     void onDrawFrame();
@@ -48,9 +48,9 @@ private:
     struct OptionalVideoRenderer{
         std::unique_ptr<GLProgramTextureExt> glProgramTextureExt;
         TexturedGLMeshBuffer videoMesh;
-        GLuint videoTexture;
         glm::mat4 monoForward360=glm::mat4(1.0f);
         glm::mat4 projectionMatrix=glm::mat4(1.0f);
+        std::unique_ptr<SurfaceTextureUpdate> surfaceTextureUpdate;
     };
     OptionalVideoRenderer mOptionalVideoRender;
 public:

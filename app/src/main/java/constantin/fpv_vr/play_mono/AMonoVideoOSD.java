@@ -1,9 +1,11 @@
 package constantin.fpv_vr.play_mono;
 
 import android.graphics.PixelFormat;
+import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -20,14 +22,17 @@ import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
-import constantin.renderingx.core.old.LifecycleGLSurfaceView;
-import constantin.renderingx.core.old.MyEGLConfigChooser;
+import constantin.renderingx.core.xglview.XGLSurfaceView;
+import constantin.renderingx.core.xglview.XSurfaceParams;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.test.UVCPlayer;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.gl.ISurfaceTextureAvailable;
 import constantin.video.core.video_player.VideoPlayer;
 import constantin.video.core.video_player.VideoSettings;
+
+import static constantin.video.core.video_player.VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
 
 /*****************************************************************
  *  * OSD can be fully disabled
@@ -54,7 +59,7 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         final boolean ENABLE_OSD = getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD, true);
         // Use android surface if 'normal' video in monoscopic view
         final int VIDEO_MODE=VideoSettings.videoMode(this);
-        final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VIDEO_MODE==VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
+        final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VIDEO_MODE== VIDEO_MODE_2D_MONOSCOPIC;
         //System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
         // The video player can be configured both for android surface and opengl surface
         final UVCPlayer uvcPlayer;
@@ -75,21 +80,33 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         }
         // if needed, create and initialize the GLSurfaceView
-        LifecycleGLSurfaceView mGLSurfaceView;
+        XGLSurfaceView mGLSurfaceView;
         if(!USE_ANDROID_SURFACE_FOR_VIDEO || ENABLE_OSD){
-            mGLSurfaceView=new LifecycleGLSurfaceView(this);
+            mGLSurfaceView=new XGLSurfaceView(this);
             mGLSurfaceView.setVisibility(View.VISIBLE);
-            mGLSurfaceView.setEGLContextClientVersion(2);
             //Do not use MSAA in mono mode
-            mGLSurfaceView.setEGLConfigChooser(new MyEGLConfigChooser(false,0,true));
-            mGLSurfaceView.setPreserveEGLContextOnPause(true);
+            mGLSurfaceView.setEGLConfigPrams(XSurfaceParams.RGBA(0,false));
             // make transparent when using android surface for video
             if(USE_ANDROID_SURFACE_FOR_VIDEO){
                 mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
                 mGLSurfaceView.setZOrderMediaOverlay(true);
             }
             mGLRenderer = new GLRMono(this,  telemetryReceiver, binding.myVRLayout.getGvrApi(),VIDEO_MODE, ENABLE_OSD, false);
-            mGLSurfaceView.setRenderer(mGLRenderer);
+            if(VIDEO_MODE== VIDEO_MODE_2D_MONOSCOPIC){
+                mGLSurfaceView.setRenderer((XGLSurfaceView.FullscreenRenderer)mGLRenderer);
+            }else{
+                mGLSurfaceView.setRenderer((XGLSurfaceView.FullscreenRendererWithSurfaceTexture) mGLRenderer, new ISurfaceTextureAvailable() {
+                    @Override
+                    public void surfaceTextureCreated(SurfaceTexture surfaceTexture, Surface surface) {
+
+                    }
+
+                    @Override
+                    public void surfaceTextureDestroyed() {
+
+                    }
+                });
+            }
             binding.myVRLayout.setPresentationView(mGLSurfaceView);
         }
         if(USE_ANDROID_SURFACE_FOR_VIDEO){

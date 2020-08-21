@@ -14,7 +14,7 @@
 #include <vector>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
-#include <SettingsVR.h>
+#include <VRSettings.h>
 #include <SurfaceTextureUpdate.hpp>
 #include <TimeHelper.hpp>
 #include <EGL/egl.h>
@@ -53,7 +53,7 @@ protected:
     TelemetryReceiver& mTelemetryReceiver;
     FPSCalculator mFPSCalculator;
     FPSCalculator mOSDFPSCalculator;
-    const SettingsVR mSettingsVR;
+    const VRSettings mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     int swapColor=0;

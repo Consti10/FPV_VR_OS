@@ -121,6 +121,8 @@ void OSDRenderer::updateAndDrawElementsGL(){
     mTelemetryReceiver.setFlightTime(flightTimeS);
     IUpdateable::updateAll(mUpdateables);
     mBatchingManager.updateGL();
+    //sleep really shortly to allow a thread with higher priority to run if there is any
+    std::this_thread::sleep_for(std::chrono::microseconds(1));
     mBatchingManager.drawGL(IDENTITY_M,mOSDProjectionM);
     IDrawable::drawAll(mDrawables,IDENTITY_M,mOSDProjectionM);
     GLHelper::checkGlError("OSDRenderer::updateAndDrawElementsGL");

@@ -22,7 +22,7 @@ GLRMono::GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemet
     }
 }
 
-void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalVideoTexture) {
+void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jobject optionalSurfaceTextureHolder) {
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
@@ -31,8 +31,10 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jint optionalV
     }
     //RM_2D_MONOSCOPIC is handled by the android hw composer in monoscopic 2d rendering
     if(ENABLE_VIDEO){
+        assert(optionalSurfaceTextureHolder!=nullptr);
+        mOptionalVideoRender.surfaceTextureUpdate=std::make_unique<SurfaceTextureUpdate>(env);
+        mOptionalVideoRender.surfaceTextureUpdate->updateFromSurfaceTextureHolder(env,optionalSurfaceTextureHolder);
         mOptionalVideoRender.glProgramTextureExt=std::make_unique<GLProgramTextureExt>();
-        mOptionalVideoRender.videoTexture=optionalVideoTexture;
         mOptionalVideoRender.videoMesh.setData(VideoModesHelper::createMeshForMode(VIDEO_MODE,0,1,1));
     }
 }
@@ -58,7 +60,7 @@ void GLRMono::onDrawFrame() {
         const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
         glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
         tmpHeadPoseGLM= tmpHeadPoseGLM*mOptionalVideoRender.monoForward360;
-        mOptionalVideoRender.glProgramTextureExt->drawX(mOptionalVideoRender.videoTexture,tmpHeadPoseGLM,mOptionalVideoRender.projectionMatrix,mOptionalVideoRender.videoMesh);
+        mOptionalVideoRender.glProgramTextureExt->drawX(mOptionalVideoRender.surfaceTextureUpdate->getTextureId(),tmpHeadPoseGLM,mOptionalVideoRender.projectionMatrix,mOptionalVideoRender.videoMesh);
     }
     if(ENABLE_OSD){
         mOSDRenderer->updateAndDrawElementsGL();
@@ -103,8 +105,8 @@ JNI_METHOD(void, nativeDelete)
     delete native(glRendererMono);
 }
 JNI_METHOD(void, nativeOnSurfaceCreated)
-(JNIEnv *env, jobject obj,jlong glRendererMono,jobject androidContext,jint optionalVideoTexture) {
-    native(glRendererMono)->onSurfaceCreated(env,androidContext,optionalVideoTexture);
+(JNIEnv *env, jobject obj,jlong glRendererMono,jobject androidContext,jobject optionalSurfaceTextureHolder) {
+    native(glRendererMono)->onSurfaceCreated(env,androidContext,optionalSurfaceTextureHolder);
 }
 JNI_METHOD(void, nativeOnSurfaceChanged)
 (JNIEnv *env, jobject obj, jlong glRendererMono,jint w,jint h,jfloat optionalVideo360FOV) {

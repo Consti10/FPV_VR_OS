@@ -39,7 +39,7 @@ void GLRStereoNormal::placeGLElements(){
     float videoY=-videoH/2.0f;
     //The video width defaults to 10(cm). Calculate tze z value such that the video fills a FOV
     //of exactly DEFAULT_FOV_FILLED_BY_SCENE
-    float videoZ=-videoW/2.0f/glm::tan(glm::radians(SettingsVR::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
+    float videoZ=-videoW/2.0f/glm::tan(glm::radians(VRSettings::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
     updatePosition(videoZ,videoW,videoH);
 }
@@ -165,8 +165,8 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
 
 void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidContext) {
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
-    osdRenderbuffer.createRenderTextures(RENDER_TEX_W,RENDER_TEX_H);
-    osdRenderbuffer.createFrameBuffers();
+    osdRenderbuffer.initializeGL();
+    osdRenderbuffer.setSize(RENDER_TEX_W,RENDER_TEX_H);
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
     //placeGLElements();

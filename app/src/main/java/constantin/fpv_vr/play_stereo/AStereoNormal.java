@@ -5,20 +5,14 @@ package constantin.fpv_vr.play_stereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
-import android.graphics.Canvas;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.view.View;
-import android.widget.TextView;
-
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
 import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
 import constantin.fpv_vr.settings.SJ;
-import constantin.renderingx.core.VrActivity;
+import constantin.renderingx.core.views.VrActivity;
 import constantin.renderingx.core.views.VrView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.test.UVCPlayer;

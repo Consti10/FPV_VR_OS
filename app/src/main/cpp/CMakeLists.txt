@@ -40,11 +40,11 @@ include_directories(${SCENE_PATH}/OSD/Settings)
 ##########################################################################################################
 # Renderer Mono/Stereo (called from GLSurfaceView.Renderer)
 ##########################################################################################################
-set(VR_SETTINGS_PATH VRSettings)
-include_directories(${VR_SETTINGS_PATH})
-add_library(VRSettings SHARED
-        ${VR_SETTINGS_PATH}/SettingsVR.cpp)
-target_link_libraries(VRSettings android log GLPrograms)
+#set(VR_SETTINGS_PATH VRSettings)
+#include_directories(${VR_SETTINGS_PATH})
+#add_library(VRSettings SHARED
+#        ${VR_SETTINGS_PATH}/SettingsVR.cpp)
+#target_link_libraries(VRSettings android log GLPrograms)
 
 set(GLR_SOME_DEPENDENCIES VRSettings GLPrograms Scene TelemetryReceiver Time)
 
