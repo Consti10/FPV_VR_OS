@@ -52,9 +52,6 @@ void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) 
 
 void GLRMono::onDrawFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    //if(checkAndResetVideoFormatChanged()){
-    //    if(ENABLE_VIDEO){}
-    //}
     cpuFrameTime.start();
     if(ENABLE_VIDEO){
         const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
