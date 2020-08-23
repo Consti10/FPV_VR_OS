@@ -20,7 +20,7 @@ public class UpdateHelper {
     private static void setAllDefaultValues(final Context c, final boolean readAgain){
         PreferenceManager.setDefaultValues(c,"pref_developer",MODE_PRIVATE, R.xml.pref_developer,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_connect",MODE_PRIVATE,R.xml.pref_connect,readAgain);
-        PreferenceManager.setDefaultValues(c,"pref_vr_rendering",MODE_PRIVATE,R.xml.pref_vr_rendering,readAgain);
+        //TODO PreferenceManager.setDefaultValues(c,"pref_vr_rendering",MODE_PRIVATE,R.xml.pref_vr_rendering,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_elements,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_style,readAgain);
         TelemetrySettings.initializePreferences(c,readAgain);

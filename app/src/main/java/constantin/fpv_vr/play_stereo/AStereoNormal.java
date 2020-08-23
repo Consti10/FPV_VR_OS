@@ -26,6 +26,7 @@ public class AStereoNormal extends VrActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         VrView vrView=new VrView(this);
+        //vrView.enableSuperSync();
 
         final GLRStereoNormal mGLRStereoNormal;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){

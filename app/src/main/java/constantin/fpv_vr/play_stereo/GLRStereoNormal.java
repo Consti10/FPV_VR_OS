@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import constantin.fpv_vr.settings.SJ;
+import constantin.renderingx.core.VSYNC;
 import constantin.renderingx.core.xglview.GLContextSurfaceLess;
 import constantin.renderingx.core.xglview.SurfaceTextureHolder;
 import constantin.renderingx.core.xglview.XGLSurfaceView;
@@ -24,7 +25,7 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRendererWithSur
     static {
         System.loadLibrary("GLRStereoNormal");
     }
-    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode);
+    private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode,long vsyncP);
     private native void nativeDelete(long glRendererStereoP);
     private native void nativeOnContextCreated(long glRendererStereoP,Context androidContext,int width,int height,SurfaceTextureHolder surfaceTextureHolder);
     private native void nativeOnDrawFrame(long glRendererStereoP);
@@ -41,8 +42,9 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRendererWithSur
     public GLRStereoNormal(final AppCompatActivity context, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
+        final VSYNC vsync=new VSYNC(context);
         nativeGLRendererStereo=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
-                gvrApiNativeContext, VideoSettings.videoMode(mContext));
+                gvrApiNativeContext, VideoSettings.videoMode(mContext),vsync.getNativeInstance());
     }
 
     @Override
@@ -52,9 +54,6 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRendererWithSur
 
     @Override
     public void onDrawFrame() {
-        if(SJ.Disable60FPSLock(mContext)){
-            EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
-        }
         if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
         }

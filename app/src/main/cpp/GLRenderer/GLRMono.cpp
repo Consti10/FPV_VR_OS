@@ -23,6 +23,7 @@ GLRMono::GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemet
 }
 
 void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jobject optionalSurfaceTextureHolder) {
+    Extensions::initializeGL();
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
@@ -66,6 +67,10 @@ void GLRMono::onDrawFrame() {
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     cpuFrameTime.stop();
     //cpuFrameTime.printAvg(5000);
+    if(ENABLE_VIDEO){
+        //Reduce latency by rendering >60fps
+        Extensions::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    }
 }
 
 void GLRMono::setHomeOrientation360() {

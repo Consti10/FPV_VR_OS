@@ -55,7 +55,7 @@ target_link_libraries( GLRMono ${GLR_SOME_DEPENDENCIES} )
 add_library( GLRStereoNormal SHARED
         GLRenderer/GLRStereoNormal.cpp
         )
-target_link_libraries( GLRStereoNormal ${GLR_SOME_DEPENDENCIES} )
+target_link_libraries( GLRStereoNormal ${GLR_SOME_DEPENDENCIES} SuperSync)
 
 #add_library( GLRStereoSuperSync SHARED
 #        GLRenderer/GLRStereoSuperSync.cpp

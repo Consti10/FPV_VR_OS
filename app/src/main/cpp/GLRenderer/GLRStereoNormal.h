@@ -25,6 +25,8 @@
 #include <Video/VideoModesHelper.hpp>
 #include <VrRenderBuffer.hpp>
 #include <VrRenderBuffer2.hpp>
+#include <VSYNC.h>
+#include <FBRManager.h>
 
 class GLRStereoNormal :  public IVideoFormatChanged {
 public:
@@ -35,7 +37,7 @@ public:
      * @param gvr_api The (non-owned) gvr_context.
      * @param videoMode The selected video mode, see @class VideoRenderer.cpp
      */
-    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoMode);
+    explicit GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context* gvr_context,int videoMode,jlong vsyncP);
 public:
     //not protected because unused by GLRStereoSuperSync
     void onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject surfaceTextureHolder);
@@ -85,6 +87,7 @@ private:
     Chronometer osdCPUTime;
     AvgCalculator osdGPUTIme;
     AvgCalculator videoLatency;
+    std::unique_ptr<FBRManager> mFBRManager;
 };
 
 

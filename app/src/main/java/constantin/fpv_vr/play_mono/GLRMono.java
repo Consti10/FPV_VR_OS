@@ -18,7 +18,7 @@ import constantin.telemetry.core.TelemetryReceiver;
  * Renders OSD and/or video in monoscopic view
  */
 @SuppressWarnings("WeakerAccess")
-public class GLRMono implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture,XGLSurfaceView.FullscreenRenderer {
+public class GLRMono implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture {
     static {
         System.loadLibrary("GLRMono");
     }
@@ -32,14 +32,9 @@ public class GLRMono implements XGLSurfaceView.FullscreenRendererWithSurfaceText
 
     private final long nativeGLRendererMono;
     private final Context mContext;
-    //Optional, only when playing video that cannot be displayed by a 'normal' android surface
-    //(e.g. 360° video)
-    private final boolean disableVSYNC;
 
-    public GLRMono(final AppCompatActivity context,final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD,
-                   final boolean disableVSYNC){
+    public GLRMono(final AppCompatActivity context,final TelemetryReceiver telemetryReceiver, GvrApi gvrApi, final int videoMode, final boolean renderOSD){
         mContext=context;
-        this.disableVSYNC=disableVSYNC;
         nativeGLRendererMono=nativeConstruct(context,telemetryReceiver.getNativeInstance(),gvrApi.getNativeGvrContext(),videoMode,renderOSD);
     }
 
@@ -52,15 +47,8 @@ public class GLRMono implements XGLSurfaceView.FullscreenRendererWithSurfaceText
     }
 
     @Override
-    public void onContextCreated(int screenWidth, int screenHeight) {
-        nativeOnSurfaceCreated(nativeGLRendererMono,mContext,null);
-        final float video360FOV=mContext.getSharedPreferences("pref_video",Context.MODE_PRIVATE).getFloat(mContext.getString(R.string.VS_360_VIDEO_FOV),50);
-        nativeOnSurfaceChanged(nativeGLRendererMono,screenWidth,screenHeight,video360FOV);
-    }
-
-    @Override
-    public void onContextCreated(int screenWidth, int screenHeight, SurfaceTextureHolder surfaceTextureHolder) {
-        nativeOnSurfaceCreated(nativeGLRendererMono,mContext,surfaceTextureHolder);
+    public void onContextCreated(int screenWidth, int screenHeight, SurfaceTextureHolder optionalSurfaceTextureHolder) {
+        nativeOnSurfaceCreated(nativeGLRendererMono,mContext,optionalSurfaceTextureHolder);
         final float video360FOV=mContext.getSharedPreferences("pref_video",Context.MODE_PRIVATE).getFloat(mContext.getString(R.string.VS_360_VIDEO_FOV),50);
         nativeOnSurfaceChanged(nativeGLRendererMono,screenWidth,screenHeight,video360FOV);
     }

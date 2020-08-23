@@ -91,21 +91,11 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                 mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
                 mGLSurfaceView.setZOrderMediaOverlay(true);
             }
-            mGLRenderer = new GLRMono(this,  telemetryReceiver, binding.myVRLayout.getGvrApi(),VIDEO_MODE, ENABLE_OSD, false);
+            mGLRenderer = new GLRMono(this,  telemetryReceiver, binding.myVRLayout.getGvrApi(),VIDEO_MODE, ENABLE_OSD);
             if(VIDEO_MODE== VIDEO_MODE_2D_MONOSCOPIC){
-                mGLSurfaceView.setRenderer((XGLSurfaceView.FullscreenRenderer)mGLRenderer);
+                mGLSurfaceView.setRenderer(mGLRenderer,null);
             }else{
-                mGLSurfaceView.setRenderer((XGLSurfaceView.FullscreenRendererWithSurfaceTexture) mGLRenderer, new ISurfaceTextureAvailable() {
-                    @Override
-                    public void surfaceTextureCreated(SurfaceTexture surfaceTexture, Surface surface) {
-
-                    }
-
-                    @Override
-                    public void surfaceTextureDestroyed() {
-
-                    }
-                });
+                mGLSurfaceView.setRenderer(mGLRenderer,videoPlayer.configure2());
             }
             binding.myVRLayout.setPresentationView(mGLSurfaceView);
         }

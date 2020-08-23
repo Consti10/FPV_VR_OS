@@ -23,13 +23,17 @@ constexpr auto TAG= "GLRendererStereo";
 #include <TexturedGeometry.hpp>
 
 
-GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode):
+GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode,jlong vsyncP):
         mSurfaceTextureUpdate(env),
         gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
         videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
         mTelemetryReceiver(telemetryReceiver),
         mFPSCalculator("OpenGL FPS",std::chrono::seconds(2)),
-        vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0,false){
+        vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0,false)
+        {
+    if(vsyncP!=0){
+        mFBRManager=std::make_unique<FBRManager>(VSYNC::native(vsyncP));
+    }
 }
 
 void GLRStereoNormal::placeGLElements(){
@@ -85,7 +89,7 @@ void GLRStereoNormal::calculateFrameTimes() {
         const auto& submittedFrame=mPendingFrames.front();
         auto stats=FrameTimestamps::getFrameTimestamps(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW), submittedFrame.frameId);
         if(stats){
-            FrameTimestamps:logStats(submittedFrame.creationTime,*stats);
+            //FrameTimestamps:logStats(submittedFrame.creationTime,*stats);
             MLOGD<<"To present "<<MyTimeHelper::R(std::chrono::nanoseconds(stats->DISPLAY_PRESENT_TIME_ANDROID-submittedFrame.creationTime.time_since_epoch().count()));
             mPendingFrames.pop();
         }else{
@@ -105,6 +109,9 @@ void GLRStereoNormal::calculateFrameTimes() {
 
 
 void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
+    //if(true){
+    //    mFBRManager->enterWarping(env,vrCompositorRenderer);
+    //}
     ATrace_beginSection("GLRStereoNormal::onDrawFrame");
     GLHelper::updateSetClearColor(swapColor);
     glClearColor(0,0,0,0);
@@ -118,8 +125,9 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 
     ATrace_beginSection("My updateVideoFrame");
     if(true){
-        const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(33);
-        waitUntilVideoFrameAvailable(currEnv,timeWhenWaitingExpires);
+        //const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(33);
+        //waitUntilVideoFrameAvailable(currEnv,timeWhenWaitingExpires);
+        mSurfaceTextureUpdate.updateAndCheck(env);
     }else{
         if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(currEnv)){
             surfaceTextureDelay.add(*delay);
@@ -136,15 +144,9 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
     for(int eye=0;eye<2;eye++){
         vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
     }
-    calculateFrameTimes();
+    //calculateFrameTimes();
     ATrace_endSection();
-    //QCOM_tiled_rendering::EndTilingQCOM();
-    if(std::chrono::steady_clock::now()-lastLog>std::chrono::seconds(2)){
-        lastLog=std::chrono::steady_clock::now();
-        MLOGD<<"\nOSD CPU "<<osdCPUTime.getAvgReadable()<<"\n"<<"OSD GPU "<<osdGPUTIme.getAvgReadable()<<"\n";
-        osdCPUTime.reset();
-        osdGPUTIme.reset();
-    }
+    //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
 }
 
 
@@ -175,9 +177,9 @@ void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidConte
 
 void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
     mOSDFPSCalculator.tick();
-    //MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
+    MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
     ATrace_beginSection("GLRStereoNormal::onSecondaryContextDoWork");
-    osdRenderbuffer.bind1();
+    osdRenderbuffer.bind();
     TimerQuery timerQuery;
     timerQuery.begin();
 
@@ -191,6 +193,7 @@ void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
     osdRenderbuffer.unbindAndSwap();
     timerQuery.end();
     //timerQuery.print();
+    std::this_thread::sleep_for(std::chrono::milliseconds(2));
 
     ATrace_endSection();
     ATrace_endSection();
@@ -213,9 +216,9 @@ inline GLRStereoNormal *native(jlong ptr) {
 extern "C" {
 
 JNI_METHOD(jlong, nativeConstruct)
-(JNIEnv *env, jobject instance,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jint videoMode) {
+(JNIEnv *env, jobject instance,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jint videoMode,jlong vsync) {
         return jptr(
-            new GLRStereoNormal(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),videoMode));
+            new GLRStereoNormal(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),videoMode,vsync));
 }
 
 JNI_METHOD(void, nativeDelete)
