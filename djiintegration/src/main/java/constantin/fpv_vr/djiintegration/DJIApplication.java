@@ -105,6 +105,11 @@ public class DJIApplication extends Application {
                             }
 
                             @Override
+                            public void onProductChanged(BaseProduct baseProduct) {
+
+                            }
+
+                            @Override
                             public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent baseComponent, BaseComponent baseComponent1) {
                                 debug("onComponentChange");
                             }
