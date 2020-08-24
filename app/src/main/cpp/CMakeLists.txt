@@ -34,7 +34,7 @@ add_library( Scene
         ${SCENE_PATH}/OSD/Settings/SettingsOSDElements.cpp
         ${SCENE_PATH}/OSD/Settings/SettingsOSDStyle.cpp
         )
-target_link_libraries( Scene GLPrograms TelemetryReceiver ${log-lib} android EGL GLESv2 GLESv3 Time)
+target_link_libraries( Scene GLPrograms TelemetryReceiver ${log-lib} android EGL GLESv2 GLESv3)
 include_directories(${SCENE_PATH}/OSD/Settings)
 
 ##########################################################################################################
@@ -46,7 +46,7 @@ include_directories(${SCENE_PATH}/OSD/Settings)
 #        ${VR_SETTINGS_PATH}/SettingsVR.cpp)
 #target_link_libraries(VRSettings android log GLPrograms)
 
-set(GLR_SOME_DEPENDENCIES VRSettings GLPrograms Scene TelemetryReceiver Time)
+set(GLR_SOME_DEPENDENCIES VRSettings GLPrograms Scene TelemetryReceiver)
 
 add_library( GLRMono SHARED
         GLRenderer/GLRMono.cpp)
