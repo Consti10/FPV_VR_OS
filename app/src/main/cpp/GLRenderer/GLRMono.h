@@ -19,7 +19,7 @@
 #include <vector>
 #include <GLProgramVC.h>
 #include <GLProgramText.h>
-#include <FPSCalculator.h>
+#include <FPSCalculator.hpp>
 #include <OSD/OSDRenderer.h>
 #include "IVideoFormatChanged.hpp"
 #include <VrCompositorRenderer.h>

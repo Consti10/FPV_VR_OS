@@ -9,7 +9,7 @@
 #include <glm/mat4x4.hpp>
 #include <TelemetryReceiver.h>
 #include <vr/gvr/capi/include/gvr_types.h>
-#include "../Time/FPSCalculator.h"
+#include "../Time/FPSCalculator.hpp"
 #include <vr/gvr/capi/include/gvr.h>
 #include <vector>
 #include <OSD/OSDRenderer.h>
