@@ -119,7 +119,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
         placeGLElements();
     }
     mFPSCalculator.tick();
-    MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
+    //MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
 
@@ -177,7 +177,7 @@ void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidConte
 
 void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
     mOSDFPSCalculator.tick();
-    MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
+    //MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
     ATrace_beginSection("GLRStereoNormal::onSecondaryContextDoWork");
     osdRenderbuffer.bind();
     TimerQuery timerQuery;
