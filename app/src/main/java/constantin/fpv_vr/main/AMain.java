@@ -21,6 +21,7 @@ import constantin.fpv_vr.R;
 import constantin.fpv_vr.OSD2.ATestlayout;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.connect.AConnect;
+import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.play_mono.AMonoVideoOSD;
 import constantin.fpv_vr.play_stereo.AStereoNormal;
@@ -42,6 +43,8 @@ import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_StorageFile;
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_TestFile;
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_UVC;
 
+import constantin.fpv_vr.databinding.ActivityMainBinding;
+
 public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
     private static final String TAG="AMain";
     private TestReceiverVideo mTestReceiverVideo=null;
@@ -56,11 +59,13 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     //If this Intent != null the permission to record screen was already granted
     Intent mRecordScreenPermissionI=null;
     int mRecordScreenResultCode;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         /*
          * Check ( and do the appropriate actions ) on a fresh install or update
          */
@@ -87,16 +92,15 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //If a screen recording is running it means we came back to AMain from a playing activity
         stopRecordingScreenIfNeeded();
         //Set the connectB to the right color
-        Button connectB=findViewById(R.id.b_Connect);
         switch (SJ.getConnectionType(this)){
             case CONNECTION_TYPE_TestFile:
-                connectB.setTextColor(Color.GREEN);
+                binding.bConnect.setTextColor(Color.GREEN);
                 break;
             case CONNECTION_TYPE_StorageFile:
                 if(VideoSettings.PLAYBACK_FLE_EXISTS(this)){
-                    connectB.setTextColor(Color.GREEN);
+                    binding.bConnect.setTextColor(Color.GREEN);
                 }else{
-                    connectB.setTextColor(Color.RED);
+                    binding.bConnect.setTextColor(Color.RED);
                 }
                 break;
             case CONNECTION_TYPE_Manually:
@@ -104,10 +108,10 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 if(mTestReceiverVideo==null){
                     mTestReceiverVideo=new TestReceiverVideo(this);
                 }
-                mTestReceiverVideo.setViews(null,connectB);
+                mTestReceiverVideo.setViews(null,binding.bConnect);
                 break;
             case CONNECTION_TYPE_RTSP:
-                connectB.setTextColor(Color.DKGRAY);
+                binding.bConnect.setTextColor(Color.DKGRAY);
                 break;
             default:
                 break;
@@ -119,46 +123,38 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         /*
          * Each button starts its own activity or service
          */
-        switch (v.getId()) {
-            case R.id.b_startMonoVideoOnly:
-            case R.id.b_startMonoVideoOSD:{
-                if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
-                    Toaster.makeToast(this,"No connected product",false);
-                    return;
-                }
-                final Intent intent=new Intent().setClass(this, AMonoVideoOSD.class);
-                intent.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,v.getId()==R.id.b_startMonoVideoOSD);
-                startActivity(intent);
-                startRecordingScreenIfEnabled();
-            }break;
-            case R.id.b_startStereo:{
-                if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
-                    Toaster.makeToast(this,"No connected product",false);
-                    return;
-                }
-                final Intent intent = new Intent();
-                //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
-                //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
-                if (SJ.DEV_USE_GVR_VIDEO_TEXTURE(this)) {
-                    intent.setClass(this, AStereoDaydream.class);
-                } else if (SJ.SuperSync(this)) {
-                    //intent.setClass(this, AStereoSuperSYNC.class);
-                } else {
-                    intent.setClass(this, AStereoNormal.class);
-                }
-                startActivity(intent);
-                startRecordingScreenIfEnabled();
-                break;
+        if(v==binding.bStartMonoVideoOnly || v==binding.bStartMonoVideoOSD){
+            if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
+                Toaster.makeToast(this,"No connected product",false);
+                return;
             }
-            case R.id.b_OSDSettings:
-                startActivity(new Intent().setClass(this, ASettingsOSD.class));
-                break;
-            case R.id.b_Connect:
-                startActivity(new Intent().setClass(this, AConnect.class));
-                break;
-            case R.id.b_Exp:
-                startActivity(new Intent().setClass(this, ATestlayout.class));
-                break;
+            final Intent intent=new Intent().setClass(this, AMonoVideoOSD.class);
+            intent.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,v.getId()==R.id.b_startMonoVideoOSD);
+            startActivity(intent);
+            startRecordingScreenIfEnabled();
+        }else if(v==binding.bStartStereo){
+            if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
+                Toaster.makeToast(this,"No connected product",false);
+                return;
+            }
+            final Intent intent = new Intent();
+            //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
+            //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
+            if (SJ.DEV_USE_GVR_VIDEO_TEXTURE(this)) {
+                intent.setClass(this, AStereoDaydream.class);
+            } else if (SJ.SuperSync(this)) {
+                //intent.setClass(this, AStereoSuperSYNC.class);
+            } else {
+                intent.setClass(this, AStereoNormal.class);
+            }
+            startActivity(intent);
+            startRecordingScreenIfEnabled();
+        }else if(v==binding.bOSDSettings){
+            startActivity(new Intent().setClass(this, ASettingsOSD.class));
+        }else if(v==binding.bConnect){
+            startActivity(new Intent().setClass(this, AConnect.class));
+        }else if(v==binding.bExp){
+            startActivity(new Intent().setClass(this, ATestlayout.class));
         }
     }
 
