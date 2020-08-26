@@ -35,12 +35,14 @@ public class ASettingsOSD extends AppCompatActivity {
 
     public static class FSettingsOSD extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
 
-
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.pref_lol, rootKey);
+            //setPreferencesFromResource(R.xml.pref_lol, rootKey);
+            PreferenceManager preferenceManager=getPreferenceManager();
+            preferenceManager.setSharedPreferencesName("pref_osd");
+            addPreferencesFromResource(R.xml.pref_osd_style);
+            addPreferencesFromResource(R.xml.pref_osd_elements);
         }
-
 
         @Override
         public void onActivityCreated(Bundle savedInstanceState){

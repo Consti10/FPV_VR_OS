@@ -14,7 +14,7 @@
 
                 <PreferenceCategory
                     android:title="General">
-                    <com.mapzen.prefsplus.EditIntPreference
+                    <com.mapzen.prefsplusx.EditIntPreference
                         android:key="@string/TE1_SCALE"
                         android:title="@string/TE1_SCALE"
                         android:summary="Scale in %. Default 100."
@@ -123,7 +123,7 @@
                 android:summary="All sub-elements have a fixed position">
                 <PreferenceCategory
                     android:title="General">
-                    <com.mapzen.prefsplus.EditIntPreference
+                    <com.mapzen.prefsplusx.EditIntPreference
                         android:key="@string/TE2_SCALE"
                         android:title="@string/TE2_SCALE"
                         android:summary="Scale in %. Default 100."
@@ -221,14 +221,14 @@
                 android:title="Artificial horizon">
                 <PreferenceCategory
                     android:title="General">
-                    <com.mapzen.prefsplus.IntListPreference
+                    <com.mapzen.prefsplusx.IntListPreference
                         android:key="@string/AH_mode"
                         android:title="@string/AH_mode"
                         android:summary="Select your favourite artificial horizon"
                         android:entries="@array/entriesArtificialHorizon"
                         android:entryValues="@array/valuesArtificialHorizon"
                         android:defaultValue="2"/>
-                    <com.mapzen.prefsplus.EditIntPreference
+                    <com.mapzen.prefsplusx.EditIntPreference
                         android:key="@string/AH_scale"
                         android:title="@string/AH_scale"
                         android:summary="Scale of artificial horizon, in %. Default 100"
@@ -269,7 +269,7 @@
                     android:title="@string/CL_enable"
                     android:summary="Enable 2D Compas Ladder showing Yaw/Direction and Home Arrow"
                     android:defaultValue="true" />
-                <com.mapzen.prefsplus.EditIntPreference
+                <com.mapzen.prefsplusx.EditIntPreference
                     android:key="@string/CL_scale"
                     android:title="@string/CL_scale"
                     android:summary="Scale in %. Default 100"
@@ -304,7 +304,7 @@
                     android:title="@string/AL_enable"
                     android:summary="Enable 2D Altitude Ladder showing current Altitude"
                     android:defaultValue="true" />
-                <com.mapzen.prefsplus.EditIntPreference
+                <com.mapzen.prefsplusx.EditIntPreference
                     android:key="@string/AL_scale"
                     android:title="@string/AL_scale"
                     android:summary="Scale in %. Default 100"
@@ -312,7 +312,7 @@
             </PreferenceCategory>
             <PreferenceCategory
                 android:title="Specific">
-                <com.mapzen.prefsplus.IntListPreference
+                <com.mapzen.prefsplusx.IntListPreference
                     android:title="@string/AL_sourceValue"
                     android:key="@string/AL_sourceValue"
                     android:summary="Select which telemetry value the height ladder should use (different protocols use different sensor fusions- not every value works with every protocol)"
@@ -331,7 +331,7 @@
                     android:title="@string/SL_enable"
                     android:summary="Enable 2D speed ladder"
                     android:defaultValue="true" />
-                <com.mapzen.prefsplus.EditIntPreference
+                <com.mapzen.prefsplusx.EditIntPreference
                     android:key="@string/SL_scale"
                     android:title="@string/SL_scale"
                     android:summary="Scale in %. Default 100"

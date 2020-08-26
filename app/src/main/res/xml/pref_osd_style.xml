@@ -8,11 +8,11 @@
 
         <PreferenceCategory
             android:title="OSD lines">
-            <com.mapzen.prefsplus.EditIntPreference
+            <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_MONO_LINE_WIDTH"
                 android:title="@string/OSD_MONO_LINE_WIDTH"
                 android:defaultValue="50" />
-            <com.mapzen.prefsplus.EditIntPreference
+            <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_STEREO_LINE_WIDTH"
                 android:title="@string/OSD_STEREO_LINE_WIDTH"
                 android:defaultValue="50" />
@@ -31,7 +31,7 @@
         </PreferenceCategory>
         <PreferenceCategory
             android:title="OSD text">
-            <com.mapzen.prefsplus.IntListPreference
+            <com.mapzen.prefsplusx.IntListPreference
                 android:key="@string/OSD_TEXT_FONT_TYPE"
                 android:title="@string/OSD_TEXT_FONT_TYPE"
                 android:entries="@array/entriesTypefaces"
@@ -65,17 +65,17 @@
                 android:defaultValue="@color/DEFAULT_OSD_TEXT_OUTLINE_COLOR"
                 app:colorChoices="@array/color_choices"
                 app:colorShape="circle" />
-            <com.mapzen.prefsplus.EditFloatPreference
+            <com.mapzen.prefsplusx.EditFloatPreference
                 android:key="@string/OSD_MONO_TEXT_OUTLINE_STRENGTH"
                 android:title="@string/OSD_MONO_TEXT_OUTLINE_STRENGTH"
                 android:summary="Select values between 0.0 (no outline) and 0.3 (maximum outline)."
                 android:defaultValue="0.2"/>
-            <com.mapzen.prefsplus.EditFloatPreference
+            <com.mapzen.prefsplusx.EditFloatPreference
                 android:key="@string/OSD_STEREO_TEXT_OUTLINE_STRENGTH"
                 android:title="@string/OSD_STEREO_TEXT_OUTLINE_STRENGTH"
                 android:summary="Select values between 0.0 (no outline) and 0.3 (maximum outline)."
                 android:defaultValue="0.2"/>
-            <com.mapzen.prefsplus.EditIntPreference
+            <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
                 android:title="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
                 android:summary="Alpha value,in %. Default 15 (0=no effect,100=fully opaque black). Set to 0 for maximum performance."
@@ -85,21 +85,21 @@
 
         <PreferenceCategory
             android:title="OSD scale">
-            <com.mapzen.prefsplus.EditIntPreference
+            <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_MONO_GLOBAL_SCALE"
                 android:title="@string/OSD_MONO_GLOBAL_SCALE"
                 android:summary="Multiplied with scale of each sub-element"
                 android:defaultValue="100"/>
-            <com.mapzen.prefsplus.EditIntPreference
+            <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_STEREO_GLOBAL_SCALE"
                 android:title="@string/OSD_STEREO_GLOBAL_SCALE"
                 android:summary="Multiplied with scale of each sub-element"
                 android:defaultValue="100"/>
-            <com.mapzen.prefsplus.EditIntPreference
+            <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_STEREO_FOVX_SCALE"
                 android:title="@string/OSD_STEREO_FOVX_SCALE"
                 android:defaultValue="80"/>
-            <com.mapzen.prefsplus.EditIntPreference
+            <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_STEREO_FOVY_SCALE"
                 android:title="@string/OSD_STEREO_FOVY_SCALE"
                 android:defaultValue="100"/>
