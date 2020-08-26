@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -21,10 +20,9 @@ import constantin.fpv_vr.R;
 import constantin.fpv_vr.OSD2.ATestlayout;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.connect.AConnect;
-import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.play_mono.AMonoVideoOSD;
-import constantin.fpv_vr.play_stereo.AStereoNormal;
+import constantin.fpv_vr.play_stereo.AStereoVR;
 import constantin.fpv_vr.settings.AGroundRecordingSettings;
 import constantin.fpv_vr.settingsOSD.ASettingsOSD;
 import constantin.fpv_vr.settings.SJ;
@@ -145,7 +143,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             } else if (SJ.SuperSync(this)) {
                 //intent.setClass(this, AStereoSuperSYNC.class);
             } else {
-                intent.setClass(this, AStereoNormal.class);
+                intent.setClass(this, AStereoVR.class);
             }
             startActivity(intent);
             startRecordingScreenIfEnabled();

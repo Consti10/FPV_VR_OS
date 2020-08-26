@@ -52,10 +52,10 @@ add_library( GLRMono SHARED
         GLRenderer/GLRMono.cpp)
 target_link_libraries( GLRMono ${GLR_SOME_DEPENDENCIES} )
 
-add_library( GLRStereoNormal SHARED
-        GLRenderer/GLRStereoNormal.cpp
+add_library( GLRStereoVR SHARED
+        GLRenderer/GLRStereoVR.cpp
         )
-target_link_libraries( GLRStereoNormal ${GLR_SOME_DEPENDENCIES} SuperSync)
+target_link_libraries( GLRStereoVR ${GLR_SOME_DEPENDENCIES} SuperSync)
 
 
 #add_library( GLRStereoDaydream SHARED

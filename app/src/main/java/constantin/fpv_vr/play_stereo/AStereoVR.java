@@ -18,7 +18,7 @@ import constantin.telemetry.core.TelemetryReceiver;
 import constantin.test.UVCPlayer;
 import constantin.video.core.video_player.VideoPlayer;
 
-public class AStereoNormal extends VrActivity {
+public class AStereoVR extends VrActivity {
     //Components use the android LifecycleObserver. Since they don't need forwarding of
     //onPause / onResume it looks so empty here
 
@@ -28,14 +28,14 @@ public class AStereoNormal extends VrActivity {
         VrView vrView=new VrView(this);
         //vrView.enableSuperSync();
 
-        final GLRStereoNormal mGLRStereoNormal;
+        final GLRStereoVR mGLRStereoVR;
         if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
             final UVCPlayer uvcPlayer=new UVCPlayer(this);
             final TelemetryReceiver telemetryReceiver=new TelemetryReceiver(this,0,0);
-            mGLRStereoNormal = new GLRStereoNormal(this, telemetryReceiver,vrView.getGvrApi().getNativeGvrContext());
-            uvcPlayer.setIVideoParamsChanged(mGLRStereoNormal);
-            vrView.getPresentationView().setRenderer(mGLRStereoNormal,uvcPlayer.configure2());
-            vrView.getPresentationView().setmISecondaryContext(mGLRStereoNormal);
+            mGLRStereoVR = new GLRStereoVR(this, telemetryReceiver,vrView.getGvrApi().getNativeGvrContext());
+            uvcPlayer.setIVideoParamsChanged(mGLRStereoVR);
+            vrView.getPresentationView().setRenderer(mGLRStereoVR,uvcPlayer.configure2());
+            vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
         }else{
             final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
                     new DJIVideoPlayer(this):
@@ -43,10 +43,10 @@ public class AStereoNormal extends VrActivity {
             final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
                     new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
-            mGLRStereoNormal = new GLRStereoNormal(this, telemetryReceiver, vrView.getGvrApi().getNativeGvrContext());
-            videoPlayer.setIVideoParamsChanged(mGLRStereoNormal);
-            vrView.getPresentationView().setRenderer(mGLRStereoNormal,videoPlayer.configure2());
-            vrView.getPresentationView().setmISecondaryContext(mGLRStereoNormal);
+            mGLRStereoVR = new GLRStereoVR(this, telemetryReceiver, vrView.getGvrApi().getNativeGvrContext());
+            videoPlayer.setIVideoParamsChanged(mGLRStereoVR);
+            vrView.getPresentationView().setRenderer(mGLRStereoVR,videoPlayer.configure2());
+            vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
         }
         setContentView(vrView);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this,vrView.getGvrApi());

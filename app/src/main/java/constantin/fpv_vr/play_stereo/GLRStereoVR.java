@@ -20,10 +20,10 @@ import constantin.video.core.video_player.VideoSettings;
 
 
 
-public class GLRStereoNormal implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture, IVideoParamsChanged, GLContextSurfaceLess.SecondarySharedContext {
-    static final String TAG="GLRStereoNormal";
+public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture, IVideoParamsChanged, GLContextSurfaceLess.SecondarySharedContext {
+    static final String TAG="GLRStereoVR";
     static {
-        System.loadLibrary("GLRStereoNormal");
+        System.loadLibrary("GLRStereoVR");
     }
     private native long nativeConstruct(Context context,long telemetryReceiver,long nativeGvrContext,int videoMode,long vsyncP);
     private native void nativeDelete(long glRendererStereoP);
@@ -35,11 +35,11 @@ public class GLRStereoNormal implements XGLSurfaceView.FullscreenRendererWithSur
     private native void nativeOnSecondaryContextDoWork(long nativePointer);
 
     private final Context mContext;
-    // Opaque native pointer to the native GLRStereoNormal instance.
+    // Opaque native pointer to the native GLRStereoVR instance.
     private final long nativeGLRendererStereo;
     private final TelemetryReceiver telemetryReceiver;
 
-    public GLRStereoNormal(final AppCompatActivity context, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
+    public GLRStereoVR(final AppCompatActivity context, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
         final VSYNC vsync=new VSYNC(context);

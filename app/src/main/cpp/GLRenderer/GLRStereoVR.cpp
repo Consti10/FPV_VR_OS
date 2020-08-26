@@ -1,5 +1,5 @@
 
-#include "GLRStereoNormal.h"
+#include "GLRStereoVR.h"
 #include "jni.h"
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
@@ -23,7 +23,7 @@ constexpr auto TAG= "GLRendererStereo";
 #include <TexturedGeometry.hpp>
 
 
-GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,gvr_context *gvr_context,const int videoMode,jlong vsyncP):
+GLRStereoVR::GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context *gvr_context, const int videoMode, jlong vsyncP):
         mSurfaceTextureUpdate(env),
         gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
         videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
@@ -36,7 +36,7 @@ GLRStereoNormal::GLRStereoNormal(JNIEnv* env,jobject androidContext,TelemetryRec
     }
 }
 
-void GLRStereoNormal::placeGLElements(){
+void GLRStereoVR::placeGLElements(){
     float videoW=10;
     float videoH=videoW*1.0f/lastVideoFormat;
     float videoX=-videoW/2.0f;
@@ -48,7 +48,7 @@ void GLRStereoNormal::placeGLElements(){
     updatePosition(videoZ,videoW,videoH);
 }
 
-void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject surfaceTextureHolder) {
+void GLRStereoVR::onContextCreated(JNIEnv * env, jobject androidContext, int screenW, int screenH, jobject surfaceTextureHolder) {
     Extensions::initializeGL();
     SCREEN_WIDTH=screenW;
     SCREEN_HEIGHT=screenH;
@@ -71,7 +71,7 @@ void GLRStereoNormal::onContextCreated(JNIEnv * env,jobject androidContext,int s
 // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
 // As soon as a new video frame is available, I render the OpenGL frame immediately
 // This is not as efficient as using a condition variable but since the callback is invoked in java it might be hard to implement that
-void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint) {
+void GLRStereoVR::waitUntilVideoFrameAvailable(JNIEnv* env, const std::chrono::steady_clock::time_point& maxWaitTimePoint) {
     if(const auto delay=mSurfaceTextureUpdate.waitUntilFrameAvailable(env,maxWaitTimePoint)){
         surfaceTextureDelay.add(*delay);
         //MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
@@ -83,7 +83,7 @@ void GLRStereoNormal::waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono
     MLOGD<<"Delay of SurfaceTexture"<<surfaceTextureDelay.getAvgReadable();
 }
 
-void GLRStereoNormal::calculateFrameTimes() {
+void GLRStereoVR::calculateFrameTimes() {
     // remove frames we are done with
     while(!mPendingFrames.empty()){
         const auto& submittedFrame=mPendingFrames.front();
@@ -108,11 +108,11 @@ void GLRStereoNormal::calculateFrameTimes() {
 }
 
 
-void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
+void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     //if(true){
     //    mFBRManager->enterWarping(env,vrCompositorRenderer);
     //}
-    ATrace_beginSection("GLRStereoNormal::onDrawFrame");
+    ATrace_beginSection("GLRStereoVR::onDrawFrame");
     GLHelper::updateSetClearColor(swapColor);
     glClearColor(0,0,0,0);
     if(checkAndResetVideoFormatChanged()){
@@ -150,7 +150,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 }
 
 
-void GLRStereoNormal::updatePosition(const float positionZ, const float width, const float height) {
+void GLRStereoVR::updatePosition(const float positionZ, const float width, const float height) {
     vrCompositorRenderer.removeLayers();
     const unsigned int TESSELATION_FACTOR=10;
     const auto headTrackingMode=mSettingsVR.isHeadTrackingEnabled() ? VrCompositorRenderer::FULL:VrCompositorRenderer::NONE;
@@ -164,7 +164,7 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
 }
 
 
-void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidContext) {
+void GLRStereoVR::onSecondaryContextCreated(JNIEnv* env, jobject androidContext) {
     mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver,true);
     osdRenderbuffer.initializeGL();
     osdRenderbuffer.setSize(RENDER_TEX_W,RENDER_TEX_H);
@@ -175,10 +175,10 @@ void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidConte
 }
 
 
-void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
+void GLRStereoVR::onSecondaryContextDoWork(JNIEnv* env) {
     mOSDFPSCalculator.tick();
     //MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
-    ATrace_beginSection("GLRStereoNormal::onSecondaryContextDoWork");
+    ATrace_beginSection("GLRStereoVR::onSecondaryContextDoWork");
     osdRenderbuffer.bind();
     TimerQuery timerQuery;
     timerQuery.begin();
@@ -189,7 +189,7 @@ void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
     mOSDRenderer->updateAndDrawElementsGL();
-    ATrace_beginSection("GLRStereoNormal::onSecondaryContextDoWork-GPU");
+    ATrace_beginSection("GLRStereoVR::onSecondaryContextDoWork-GPU");
     osdRenderbuffer.unbindAndSwap();
     timerQuery.end();
     //timerQuery.print();
@@ -204,13 +204,13 @@ void GLRStereoNormal::onSecondaryContextDoWork(JNIEnv* env) {
 //----------------------------------------------------JAVA bindings---------------------------------------------------------------
 #define JNI_METHOD(return_type, method_name) \
   JNIEXPORT return_type JNICALL              \
-      Java_constantin_fpv_1vr_play_1stereo_GLRStereoNormal_##method_name
+      Java_constantin_fpv_1vr_play_1stereo_GLRStereoVR_##method_name
 
-inline jlong jptr(GLRStereoNormal *glRendererStereo) {
+inline jlong jptr(GLRStereoVR *glRendererStereo) {
     return reinterpret_cast<intptr_t>(glRendererStereo);
 }
-inline GLRStereoNormal *native(jlong ptr) {
-    return reinterpret_cast<GLRStereoNormal *>(ptr);
+inline GLRStereoVR *native(jlong ptr) {
+    return reinterpret_cast<GLRStereoVR *>(ptr);
 }
 
 extern "C" {
@@ -218,7 +218,7 @@ extern "C" {
 JNI_METHOD(jlong, nativeConstruct)
 (JNIEnv *env, jobject instance,jobject androidContext,jlong telemetryReceiver, jlong native_gvr_api,jint videoMode,jlong vsync) {
         return jptr(
-            new GLRStereoNormal(env,androidContext,*reinterpret_cast<TelemetryReceiver*>(telemetryReceiver),reinterpret_cast<gvr_context *>(native_gvr_api),videoMode,vsync));
+            new GLRStereoVR(env, androidContext, *reinterpret_cast<TelemetryReceiver*>(telemetryReceiver), reinterpret_cast<gvr_context *>(native_gvr_api), videoMode, vsync));
 }
 
 JNI_METHOD(void, nativeDelete)

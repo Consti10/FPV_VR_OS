@@ -34,7 +34,7 @@ public class GLRStereoDaydream implements GLSurfaceView.Renderer{
                                                   float[] radial_distortion_params,
                                                   int screenWidthP,int screenHeightP);
 
-    // Opaque native pointer to the native GLRStereoNormal instance.
+    // Opaque native pointer to the native GLRStereoVR instance.
     private final long nativeGLRendererDaydream;
     private final Context mContext;
 
