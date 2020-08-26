@@ -46,7 +46,7 @@ import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_UVC;
 import constantin.fpv_vr.databinding.ActivityMainBinding;
 
 public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
-    private static final String TAG="AMain";
+    private static final String TAG=AMain.class.getSimpleName();
     private TestReceiverVideo mTestReceiverVideo=null;
     private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
