@@ -35,7 +35,7 @@ allprojects {
         constraintlayoutVersion='2.0.0'
         androidxpreferenceVersion='1.1.0'
         mGvrVersion = '1.180.0'
-        //ndkVersion = '21.1.6363665'
+        myPrefsPlusVersion = '3.0.1'
     }
 }
 

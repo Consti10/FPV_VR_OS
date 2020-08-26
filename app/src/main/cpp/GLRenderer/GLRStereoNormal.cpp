@@ -153,7 +153,7 @@ void GLRStereoNormal::onDrawFrame(JNIEnv* env) {
 void GLRStereoNormal::updatePosition(const float positionZ, const float width, const float height) {
     vrCompositorRenderer.removeLayers();
     const unsigned int TESSELATION_FACTOR=10;
-    const auto headTrackingMode=mSettingsVR.GHT_MODE==0 ? VrCompositorRenderer::NONE:VrCompositorRenderer::FULL;
+    const auto headTrackingMode=mSettingsVR.isHeadTrackingEnabled() ? VrCompositorRenderer::FULL:VrCompositorRenderer::NONE;
 
     //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
     const auto vid1=VideoModesHelper::createMeshForMode(videoMode, positionZ, width, height);
