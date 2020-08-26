@@ -55,17 +55,6 @@
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/b_VRSettings"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="VR&#10;Settings"
-            android:onClick="onClick"
-            tools:ignore="HardcodedText" />
-
-
-        <Button
             android:id="@+id/b_Connect"
             android:layout_width="0dp"
             android:layout_weight="1"

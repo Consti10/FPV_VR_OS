@@ -92,7 +92,7 @@
             android:screenOrientation="behind"
             android:theme="@style/MyStyleNoActionBar" />
         <activity
-            android:name=".settings.ASettingsOSD"
+            android:name=".settingsOSD.ASettingsOSD"
             android:screenOrientation="behind" />
 
         <meta-data

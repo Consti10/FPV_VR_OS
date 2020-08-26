@@ -1,4 +1,4 @@
-package constantin.fpv_vr.settings;
+package constantin.fpv_vr.settingsOSD;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
