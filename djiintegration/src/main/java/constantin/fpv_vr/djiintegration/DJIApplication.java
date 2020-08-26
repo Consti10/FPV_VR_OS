@@ -32,12 +32,14 @@ public class DJIApplication extends Application {
     @Override
     protected void attachBaseContext(Context paramContext) {
         super.attachBaseContext(paramContext);
+        Log.d(TAG,"DJI install start");
         try{
             Helper.install(DJIApplication.this);
             initializeDJIIfNeeded();
         }catch (NoClassDefFoundError e){
             e.printStackTrace();
         }
+        Log.d(TAG,"DJI install stop()");
     }
 
     private static int getConnectionType(final Context context){
@@ -68,6 +70,9 @@ public class DJIApplication extends Application {
     }
 
     public synchronized void initializeDJIIfNeeded(){
+        if(true){
+            return;
+        }
         try{
             final Context context=getBaseContext();
             if(!isDJIEnabled(context)){
@@ -77,6 +82,7 @@ public class DJIApplication extends Application {
                 return;
             }
             if (isRegistrationInProgress.compareAndSet(false, true)) {
+                Log.d(TAG,"Start DJI registration");
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
