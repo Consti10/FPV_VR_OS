@@ -4,7 +4,8 @@
 #include <TimeHelper.hpp>
 
 
-OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver):
+OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo1):
+        stereo(stereo1),
         settingsOSDStyle(env,androidContext),
         settingsOSDElements(env,androidContext),
         mBasicGLPrograms(),
@@ -64,8 +65,10 @@ void OSDRenderer::onSurfaceSizeChanged(const int widthPx, const int heightPx) {
     const float videoX=-videoW/2.0f;
     const float videoY=-videoH/2.0f;
 
-    const float textHeightMono=videoH*0.045f*(settingsOSDStyle.OSD_MONO_GLOBAL_SCALE*0.01f)*
-                               (settingsOSDElements.oTextElement1.scale*0.01f);
+    const auto OSD_GLOBAL_SCALE=(float)(stereo ? settingsOSDStyle.OSD_STEREO_GLOBAL_SCALE : settingsOSDStyle.OSD_MONO_GLOBAL_SCALE);
+
+    const float textHeightMono=videoH*0.045f*(OSD_GLOBAL_SCALE*0.01f)*
+                               ((float)settingsOSDElements.oTextElement1.scale*0.01f);
     float te1HeightTop=0;
     float te1HeightBottom=0;
     if(mTextElements1){
@@ -99,7 +102,7 @@ void OSDRenderer::onSurfaceSizeChanged(const int widthPx, const int heightPx) {
         mSpeedLadder->setWorldPosition(mSpeedLadder->calculatePosition(rectOSDOverlay,false));
     }
     if(mAHorizon){
-        mAHorizon->setWorldPosition(mAHorizon->calculatePosition(rectOSDOverlay,settingsOSDStyle.OSD_MONO_GLOBAL_SCALE));
+        mAHorizon->setWorldPosition(mAHorizon->calculatePosition(rectOSDOverlay,OSD_GLOBAL_SCALE));
     }
     mBatchingManager.initGL();
     mBatchingManager.setTextColor(settingsOSDStyle.OSD_TEXT_OUTLINE_COLOR,settingsOSDStyle.OSD_MONO_TEXT_OUTLINE_STRENGTH);

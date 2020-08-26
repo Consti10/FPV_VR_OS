@@ -3,14 +3,19 @@ package constantin.fpv_vr.settings;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.preference.CheckBoxPreference;
+//import android.preference.PreferenceFragment;
+//import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Toaster;
 
+import androidx.preference.EditTextPreference;
+import androidx.preference.PreferenceFragment;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 public class ASettingsOSD extends AppCompatActivity {
 
@@ -18,7 +23,7 @@ public class ASettingsOSD extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Display the fragment as the main content.
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new FSettingsOSD())
                 .commit();
     }
@@ -28,16 +33,14 @@ public class ASettingsOSD extends AppCompatActivity {
         super.onPause();
     }
 
-    public static class FSettingsOSD extends PreferenceFragment  implements SharedPreferences.OnSharedPreferenceChangeListener{
+    public static class FSettingsOSD extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
+
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            PreferenceManager preferenceManager=getPreferenceManager();
-            preferenceManager.setSharedPreferencesName("pref_osd");
-            addPreferencesFromResource(R.xml.pref_osd_style);
-            addPreferencesFromResource(R.xml.pref_osd_elements);
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.pref_lol, rootKey);
         }
+
 
         @Override
         public void onActivityCreated(Bundle savedInstanceState){

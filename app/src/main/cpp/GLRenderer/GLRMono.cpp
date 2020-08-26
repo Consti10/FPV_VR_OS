@@ -28,7 +28,7 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jobject option
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     if(ENABLE_OSD){
-        mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
+        mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver,false);
     }
     //RM_2D_MONOSCOPIC is handled by the android hw composer in monoscopic 2d rendering
     if(ENABLE_VIDEO){

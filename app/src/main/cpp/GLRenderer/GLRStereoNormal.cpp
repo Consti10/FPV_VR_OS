@@ -165,7 +165,7 @@ void GLRStereoNormal::updatePosition(const float positionZ, const float width, c
 
 
 void GLRStereoNormal::onSecondaryContextCreated(JNIEnv* env,jobject androidContext) {
-    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver);
+    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver,true);
     osdRenderbuffer.initializeGL();
     osdRenderbuffer.setSize(RENDER_TEX_W,RENDER_TEX_H);
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();

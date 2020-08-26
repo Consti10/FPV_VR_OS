@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
         android:title="OSD Elements"
@@ -21,6 +22,11 @@
                 </PreferenceCategory>
                 <PreferenceCategory
                     android:title="Sub-elements">
+
+                    <!--<androidx.preference.SwitchPreference
+                        app:key="notifications"
+                        app:title="Enable message notifications"/>-->
+
                     <CheckBoxPreference
                         android:key="@string/TE1_GLFPS"
                         android:title="@string/TE1_GLFPS"

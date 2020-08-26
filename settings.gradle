@@ -1,4 +1,4 @@
-include ':app', ':preferences', ':colorpreference'
+include ':app'
 include ':djiintegration'
 
 include ':VideoCore'

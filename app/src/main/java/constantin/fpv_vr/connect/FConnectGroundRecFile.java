@@ -14,8 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-
-import java.io.File;
 import java.util.ArrayList;
 
 import constantin.fpv_vr.databinding.ConnectGrfileFragmentBinding;

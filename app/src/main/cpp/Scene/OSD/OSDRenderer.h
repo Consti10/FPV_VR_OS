@@ -27,7 +27,7 @@
 
 class OSDRenderer{
 public:
-    OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver);
+    OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo);
     void onSurfaceSizeChanged(const int widthPx, const int heightPx);
 public:
     void updateAndDrawElementsGL();
@@ -38,8 +38,9 @@ public:
     static constexpr const float MAX_Z_DISTANCE=100.0f;
     const glm::mat4 IDENTITY_M=glm::mat4(1.0f);
     // orthographic,setup in place()
-    glm::mat4 mOSDProjectionM;
+    glm::mat4 mOSDProjectionM{};
 private:
+    const bool stereo;
     BasicGLPrograms mBasicGLPrograms;
     BatchingManager mBatchingManager;
     TelemetryReceiver& mTelemetryReceiver;
