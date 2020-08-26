@@ -6,10 +6,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import constantin.fpv_vr.R;
 import constantin.telemetry.core.TelemetrySettings;
@@ -21,7 +21,7 @@ public class AGroundRecordingSettings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final MSettingsFragment fragment=new MSettingsFragment();
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, fragment)
                 .commit();
     }
@@ -42,11 +42,10 @@ public class AGroundRecordingSettings extends AppCompatActivity {
         return pref_ground_recording.getInt(context.getString(R.string.GROUND_RECORDING_VIDEO_BITRATE),40000000);
     }
 
-    public static class MSettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+    public static class MSettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             PreferenceManager preferenceManager=getPreferenceManager();
             preferenceManager.setSharedPreferencesName(PREF_GROUND_RECORDING);
             addPreferencesFromResource(R.xml.pref_ground_recording);

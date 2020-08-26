@@ -1,112 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <PreferenceScreen
-        android:title="OSD style and global scale"
-        android:summary="customize the appearance of your OSD" >
-
-        <PreferenceCategory
-            android:title="OSD lines">
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_MONO_LINE_WIDTH"
-                android:title="@string/OSD_MONO_LINE_WIDTH"
-                android:defaultValue="50" />
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_STEREO_LINE_WIDTH"
-                android:title="@string/OSD_STEREO_LINE_WIDTH"
-                android:defaultValue="50" />
-            <com.kizitonwose.colorpreference.ColorPreference
-                android:key="@string/OSD_LINE_FILL_COLOR"
-                android:title="@string/OSD_LINE_FILL_COLOR"
-                android:defaultValue="@color/DEFAULT_OSD_LINE_FILL_COLOR"
-                app:colorChoices="@array/color_choices"
-                app:colorShape="circle" />
-            <com.kizitonwose.colorpreference.ColorPreference
-                android:key="@string/OSD_LINE_OUTLINE_COLOR"
-                android:title="@string/OSD_LINE_OUTLINE_COLOR"
-                android:defaultValue="@color/DEFAULT_OSD_LINE_OUTLINE_COLOR"
-                app:colorChoices="@array/color_choices"
-                app:colorShape="circle" />
-        </PreferenceCategory>
-        <PreferenceCategory
-            android:title="OSD text">
-            <com.mapzen.prefsplusx.IntListPreference
-                android:key="@string/OSD_TEXT_FONT_TYPE"
-                android:title="@string/OSD_TEXT_FONT_TYPE"
-                android:entries="@array/entriesTypefaces"
-                android:entryValues="@array/valuesTypefaces"
-                android:defaultValue="5"/> //MONOSPACE BOLD
-            <com.kizitonwose.colorpreference.ColorPreference
-                android:key="@string/OSD_TEXT_FILL_COLOR1"
-                android:title="@string/OSD_TEXT_FILL_COLOR1"
-                android:summary="Prefixes,e.g. Dec:,Lat"
-                android:defaultValue="@color/DEFAULT_OSD_TEXT_FILL_COLOR1"
-                app:colorChoices="@array/color_choices"
-                app:colorShape="circle" />
-            <com.kizitonwose.colorpreference.ColorPreference
-                android:key="@string/OSD_TEXT_FILL_COLOR2"
-                android:title="@string/OSD_TEXT_FILL_COLOR2"
-                android:summary="Telemetry readouts,e.g 60,-26"
-                android:defaultValue="@color/DEFAULT_OSD_TEXT_FILL_COLOR2"
-                app:colorChoices="@array/color_choices"
-                app:colorShape="circle" />
-            <com.kizitonwose.colorpreference.ColorPreference
-                android:key="@string/OSD_TEXT_FILL_COLOR3"
-                android:title="@string/OSD_TEXT_FILL_COLOR3"
-                android:summary="Metrics,e.g. fps,dBm"
-                android:defaultValue="@color/DEFAULT_OSD_TEXT_FILL_COLOR3"
-                app:colorChoices="@array/color_choices"
-                app:colorShape="circle" />
-            <com.kizitonwose.colorpreference.ColorPreference
-                android:key="@string/OSD_TEXT_OUTLINE_COLOR"
-                android:title="@string/OSD_TEXT_OUTLINE_COLOR"
-                android:summary="Outline"
-                android:defaultValue="@color/DEFAULT_OSD_TEXT_OUTLINE_COLOR"
-                app:colorChoices="@array/color_choices"
-                app:colorShape="circle" />
-            <com.mapzen.prefsplusx.EditFloatPreference
-                android:key="@string/OSD_MONO_TEXT_OUTLINE_STRENGTH"
-                android:title="@string/OSD_MONO_TEXT_OUTLINE_STRENGTH"
-                android:summary="Select values between 0.0 (no outline) and 0.3 (maximum outline)."
-                android:defaultValue="0.2"
-                app:minFloatValue="0.0"/>
-            <com.mapzen.prefsplusx.EditFloatPreference
-                android:key="@string/OSD_STEREO_TEXT_OUTLINE_STRENGTH"
-                android:title="@string/OSD_STEREO_TEXT_OUTLINE_STRENGTH"
-                android:summary="Select values between 0.0 (no outline) and 0.3 (maximum outline)."
-                android:defaultValue="0.2"
-                app:minFloatValue="0.0"/>
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
-                android:title="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
-                android:summary="Alpha value,in %. Default 15 (0=no effect,100=fully opaque black). Set to 0 for maximum performance."
-                android:defaultValue="15"/>
-        </PreferenceCategory>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="OSD style and global scale"
+    android:summary="customize the appearance of your OSD">
 
 
-        <PreferenceCategory
-            android:title="OSD scale">
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_MONO_GLOBAL_SCALE"
-                android:title="@string/OSD_MONO_GLOBAL_SCALE"
-                android:summary="Multiplied with scale of each sub-element"
-                android:defaultValue="100"/>
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_STEREO_GLOBAL_SCALE"
-                android:title="@string/OSD_STEREO_GLOBAL_SCALE"
-                android:summary="Multiplied with scale of each sub-element"
-                android:defaultValue="100"/>
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_STEREO_FOVX_SCALE"
-                android:title="@string/OSD_STEREO_FOVX_SCALE"
-                android:defaultValue="80"/>
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_STEREO_FOVY_SCALE"
-                android:title="@string/OSD_STEREO_FOVY_SCALE"
-                android:defaultValue="100"/>
-        </PreferenceCategory>
 
-    </PreferenceScreen>
+    <PreferenceCategory
+        android:title="OSD lines">
+        <com.mapzen.prefsplusx.EditIntPreference
+            android:key="@string/OSD_MONO_LINE_WIDTH"
+            android:title="@string/OSD_MONO_LINE_WIDTH"
+            android:defaultValue="50" />
+        <com.mapzen.prefsplusx.EditIntPreference
+            android:key="@string/OSD_STEREO_LINE_WIDTH"
+            android:title="@string/OSD_STEREO_LINE_WIDTH"
+            android:defaultValue="50" />
+        <com.kizitonwose.colorpreference.ColorPreference
+            android:key="@string/OSD_LINE_FILL_COLOR"
+            android:title="@string/OSD_LINE_FILL_COLOR"
+            android:defaultValue="@color/DEFAULT_OSD_LINE_FILL_COLOR"
+            app:colorChoices="@array/color_choices"
+            app:colorShape="circle" />
+        <com.kizitonwose.colorpreference.ColorPreference
+            android:key="@string/OSD_LINE_OUTLINE_COLOR"
+            android:title="@string/OSD_LINE_OUTLINE_COLOR"
+            android:defaultValue="@color/DEFAULT_OSD_LINE_OUTLINE_COLOR"
+            app:colorChoices="@array/color_choices"
+            app:colorShape="circle" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="OSD text">
+        <com.mapzen.prefsplusx.IntListPreference
+            android:key="@string/OSD_TEXT_FONT_TYPE"
+            android:title="@string/OSD_TEXT_FONT_TYPE"
+            android:entries="@array/entriesTypefaces"
+            android:entryValues="@array/valuesTypefaces"
+            android:defaultValue="5"/> //MONOSPACE BOLD
+        <com.kizitonwose.colorpreference.ColorPreference
+            android:key="@string/OSD_TEXT_FILL_COLOR1"
+            android:title="@string/OSD_TEXT_FILL_COLOR1"
+            android:summary="Prefixes,e.g. Dec:,Lat"
+            android:defaultValue="@color/DEFAULT_OSD_TEXT_FILL_COLOR1"
+            app:colorChoices="@array/color_choices"
+            app:colorShape="circle" />
+        <com.kizitonwose.colorpreference.ColorPreference
+            android:key="@string/OSD_TEXT_FILL_COLOR2"
+            android:title="@string/OSD_TEXT_FILL_COLOR2"
+            android:summary="Telemetry readouts,e.g 60,-26"
+            android:defaultValue="@color/DEFAULT_OSD_TEXT_FILL_COLOR2"
+            app:colorChoices="@array/color_choices"
+            app:colorShape="circle" />
+        <com.kizitonwose.colorpreference.ColorPreference
+            android:key="@string/OSD_TEXT_FILL_COLOR3"
+            android:title="@string/OSD_TEXT_FILL_COLOR3"
+            android:summary="Metrics,e.g. fps,dBm"
+            android:defaultValue="@color/DEFAULT_OSD_TEXT_FILL_COLOR3"
+            app:colorChoices="@array/color_choices"
+            app:colorShape="circle" />
+        <com.kizitonwose.colorpreference.ColorPreference
+            android:key="@string/OSD_TEXT_OUTLINE_COLOR"
+            android:title="@string/OSD_TEXT_OUTLINE_COLOR"
+            android:summary="Outline"
+            android:defaultValue="@color/DEFAULT_OSD_TEXT_OUTLINE_COLOR"
+            app:colorChoices="@array/color_choices"
+            app:colorShape="circle" />
+        <com.mapzen.prefsplusx.EditFloatPreference
+            android:key="@string/OSD_MONO_TEXT_OUTLINE_STRENGTH"
+            android:title="@string/OSD_MONO_TEXT_OUTLINE_STRENGTH"
+            android:summary="Select values between 0.0 (no outline) and 0.3 (maximum outline)."
+            android:defaultValue="0.2"
+            app:minFloatValue="0.0"/>
+        <com.mapzen.prefsplusx.EditFloatPreference
+            android:key="@string/OSD_STEREO_TEXT_OUTLINE_STRENGTH"
+            android:title="@string/OSD_STEREO_TEXT_OUTLINE_STRENGTH"
+            android:summary="Select values between 0.0 (no outline) and 0.3 (maximum outline)."
+            android:defaultValue="0.2"
+            app:minFloatValue="0.0"/>
+        <com.mapzen.prefsplusx.EditIntPreference
+            android:key="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
+            android:title="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
+            android:summary="Alpha value,in %. Default 15 (0=no effect,100=fully opaque black). Set to 0 for maximum performance."
+            android:defaultValue="15"/>
+    </PreferenceCategory>
 
-</PreferenceScreen>
+
+    <PreferenceCategory
+        android:title="OSD scale">
+        <com.mapzen.prefsplusx.EditIntPreference
+            android:key="@string/OSD_MONO_GLOBAL_SCALE"
+            android:title="@string/OSD_MONO_GLOBAL_SCALE"
+            android:summary="Multiplied with scale of each sub-element"
+            android:defaultValue="100"/>
+        <com.mapzen.prefsplusx.EditIntPreference
+            android:key="@string/OSD_STEREO_GLOBAL_SCALE"
+            android:title="@string/OSD_STEREO_GLOBAL_SCALE"
+            android:summary="Multiplied with scale of each sub-element"
+            android:defaultValue="100"/>
+        <com.mapzen.prefsplusx.EditIntPreference
+            android:key="@string/OSD_STEREO_FOVX_SCALE"
+            android:title="@string/OSD_STEREO_FOVX_SCALE"
+            android:defaultValue="80"/>
+        <com.mapzen.prefsplusx.EditIntPreference
+            android:key="@string/OSD_STEREO_FOVY_SCALE"
+            android:title="@string/OSD_STEREO_FOVY_SCALE"
+            android:defaultValue="100"/>
+    </PreferenceCategory>
+
+
+</androidx.preference.PreferenceScreen>

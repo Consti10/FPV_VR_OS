@@ -1,370 +1,368 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="OSD Elements"
+    android:summary="Enable/disable and customize specific OSD Elements">
+
+    <PreferenceCategory
+        android:title="Text elements that don't overlay video in stereo">
+        <PreferenceScreen
+            android:title="Text elements 1."
+            android:summary="All sub-elements are placed on top/bottom of video at runtime. Some values are redundant with TE2">
+
+            <PreferenceCategory
+                android:title="General">
+                <com.mapzen.prefsplusx.EditIntPreference
+                    android:key="@string/TE1_SCALE"
+                    android:title="@string/TE1_SCALE"
+                    android:summary="Scale in %. Default 100."
+                    android:defaultValue="100"/>
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Sub-elements">
+
+                <!--<androidx.preference.SwitchPreference
+                    app:key="notifications"
+                    app:title="Enable message notifications"/>-->
+
+                <CheckBoxPreference
+                    android:key="@string/TE1_GLFPS"
+                    android:title="@string/TE1_GLFPS"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_DEC_FPS"
+                    android:title="@string/TE1_DEC_FPS"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_DEC_DBITRATE"
+                    android:title="@string/TE1_DEC_DBITRATE"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_DEC_LATENCY_DETAILED"
+                    android:title="@string/TE1_DEC_LATENCY_DETAILED"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_DEC_LATENCY_SUM"
+                    android:title="@string/TE1_DEC_LATENCY_SUM"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_TIME"
+                    android:title="@string/TE1_TIME"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_RX_EZWB"
+                    android:title="@string/TE1_RX_EZWB"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_RX1"
+                    android:title="@string/TE1_RX1"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_BATT_P"
+                    android:title="@string/TE1_BATT_P"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_BATT_V"
+                    android:title="@string/TE1_BATT_V"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_BATT_A"
+                    android:title="@string/TE1_BATT_A"
+                    android:defaultValue="false" />
+                //for 2in1
+                <CheckBoxPreference
+                    android:key="@string/TE1_BATT_mAH"
+                    android:title="@string/TE1_BATT_mAH"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_HOME_DISTANCE"
+                    android:title="@string/TE1_HOME_DISTANCE"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_VS"
+                    android:title="@string/TE1_VS"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_HS"
+                    android:title="@string/TE1_HS"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_LAT"
+                    android:title="@string/TE1_LAT"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_LON"
+                    android:title="@string/TE1_LON"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_ALTITUDE_GPS"
+                    android:title="@string/TE1_ALTITUDE_GPS"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_ALTITUDE_BARO"
+                    android:title="@string/TE1_ALTITUDE_BARO"
+                    android:defaultValue="true" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_N_SATS"
+                    android:title="@string/TE1_N_SATS"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
+                    android:key="@string/TE1_XXX"
+                    android:title="@string/TE1_XXX"
+                    android:defaultValue="false" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Elements that overlay video in stereo">
+        <PreferenceScreen
+            android:title="Text elements 2"
+            android:summary="All sub-elements have a fixed position">
+            <PreferenceCategory
+                android:title="General">
+                <com.mapzen.prefsplusx.EditIntPreference
+                    android:key="@string/TE2_SCALE"
+                    android:title="@string/TE2_SCALE"
+                    android:summary="Scale in %. Default 100."
+                    android:defaultValue="100"/>
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Upper right corner">
+                <CheckBoxPreference
+                    android:key="@string/TE2_EZWB_UPLINK_RSSI"
+                    android:title="@string/TE2_EZWB_UPLINK_RSSI"
+                    android:defaultValue="false"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_EZWB_UPLINK_BLOCKS"
+                    android:title="@string/TE2_EZWB_UPLINK_BLOCKS"
+                    android:defaultValue="false"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_STATUS_AIR"
+                    android:title="@string/TE2_STATUS_AIR"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_STATUS_GROUND"
+                    android:title="@string/TE2_STATUS_GROUND"
+                    android:defaultValue="true"/>
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Lower right corner">
+                <CheckBoxPreference
+                    android:key="@string/TE2_VS"
+                    android:title="@string/TE2_VS"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_HS"
+                    android:title="@string/TE2_HS"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_LAT"
+                    android:title="@string/TE2_LAT"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_LON"
+                    android:title="@string/TE2_LON"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_HOME_DISTANCE"
+                    android:title="@string/TE2_HOME_DISTANCE"
+                    android:defaultValue="true"/>
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Lower left corner">
+                <CheckBoxPreference
+                    android:key="@string/TE2_SAT"
+                    android:title="@string/TE2_SAT"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_BATT_A"
+                    android:title="@string/TE2_BATT_A"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_BATT_P"
+                    android:title="@string/TE2_BATT_P"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_BATT_V"
+                    android:title="@string/TE2_BATT_V"
+                    android:defaultValue="true"/>
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Upper left corner">
+                <CheckBoxPreference
+                    android:key="@string/TE2_EZWB_RSSI_WORST"
+                    android:title="@string/TE2_EZWB_RSSI_WORST"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_EZWB_STRENGTH_P"
+                    android:title="@string/TE2_EZWB_STRENGTH_P"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_EZWB_BLOCKS"
+                    android:title="@string/TE2_EZWB_BLOCKS"
+                    android:defaultValue="true"/>
+                <CheckBoxPreference
+                    android:key="@string/TE2_EZWB_RSSI_ADAPTERS_1to6"
+                    android:title="@string/TE2_EZWB_RSSI_ADAPTERS_1to6"
+                    android:defaultValue="true"/>
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Lower middle">
+                <CheckBoxPreference
+                    android:key="@string/TE2_FLIGHT_MODE"
+                    android:title="@string/TE2_FLIGHT_MODE"
+                    android:defaultValue="false"/>
+            </PreferenceCategory>
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:title="Artificial horizon">
+            <PreferenceCategory
+                android:title="General">
+                <com.mapzen.prefsplusx.IntListPreference
+                    android:key="@string/AH_mode"
+                    android:title="@string/AH_mode"
+                    android:summary="Select your favourite artificial horizon"
+                    android:entries="@array/entriesArtificialHorizon"
+                    android:entryValues="@array/valuesArtificialHorizon"
+                    android:defaultValue="2"/>
+                <com.mapzen.prefsplusx.EditIntPreference
+                    android:key="@string/AH_scale"
+                    android:title="@string/AH_scale"
+                    android:summary="Scale of artificial horizon, in %. Default 100"
+                    android:defaultValue="100"/>
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="Specific">
+                <SwitchPreference
+                    android:key="@string/AH_roll"
+                    android:title="@string/AH_roll"
+                    android:summary="Enable roll rotation"
+                    android:defaultValue="true" />
+                <SwitchPreference
+                    android:key="@string/AH_pitch"
+                    android:title="@string/AH_pitch"
+                    android:summary="Enable pitch rotation"
+                    android:defaultValue="true" />
+                <SwitchPreference
+                    android:key="@string/AH_invRoll"
+                    android:title="@string/AH_invRoll"
+                    android:summary="Invert pitch rotation"
+                    android:defaultValue="false" />
+                <SwitchPreference
+                    android:key="@string/AH_invPitch"
+                    android:title="@string/AH_invPitch"
+                    android:summary="Invert pitch rotation"
+                    android:defaultValue="false" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+    <PreferenceScreen
+        android:title="Compass ladder (horizontal)">
+        <PreferenceCategory
+            android:title="General">
+            <SwitchPreference
+                android:key="@string/CL_enable"
+                android:title="@string/CL_enable"
+                android:summary="Enable 2D Compas Ladder showing Yaw/Direction and Home Arrow"
+                android:defaultValue="true" />
+            <com.mapzen.prefsplusx.EditIntPreference
+                android:key="@string/CL_scale"
+                android:title="@string/CL_scale"
+                android:summary="Scale in %. Default 100"
+                android:defaultValue="100"/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="Specific">
+            <CheckBoxPreference
+                android:key="@string/CL_homeArrow"
+                android:title="@string/CL_homeArrow"
+                android:summary="Draw Home Arrow."
+                android:defaultValue="true"/>
+            <SwitchPreference
+                android:key="@string/CL_invHeading"
+                android:title="@string/CL_invHeading"
+                android:summary="Invert heading"
+                android:defaultValue="false" />
+            <SwitchPreference
+                android:key="@string/CL_COGoverMAG"
+                android:title="@string/CL_COGoverMAG"
+                android:summary="Use Course over ground instead of magnetometer"
+                android:defaultValue="false" />
+        </PreferenceCategory>
+    </PreferenceScreen>
 
     <PreferenceScreen
-        android:title="OSD Elements"
-        android:summary="Enable/disable and customize specific OSD Elements" >
-
+        android:title="Altitude ladder (vertical)">
         <PreferenceCategory
-            android:title="Text elements that don't overlay video in stereo">
-            <PreferenceScreen
-                android:title="Text elements 1."
-                android:summary="All sub-elements are placed on top/bottom of video at runtime. Some values are redundant with TE2">
-
-                <PreferenceCategory
-                    android:title="General">
-                    <com.mapzen.prefsplusx.EditIntPreference
-                        android:key="@string/TE1_SCALE"
-                        android:title="@string/TE1_SCALE"
-                        android:summary="Scale in %. Default 100."
-                        android:defaultValue="100"/>
-                </PreferenceCategory>
-                <PreferenceCategory
-                    android:title="Sub-elements">
-
-                    <!--<androidx.preference.SwitchPreference
-                        app:key="notifications"
-                        app:title="Enable message notifications"/>-->
-
-                    <CheckBoxPreference
-                        android:key="@string/TE1_GLFPS"
-                        android:title="@string/TE1_GLFPS"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_DEC_FPS"
-                        android:title="@string/TE1_DEC_FPS"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_DEC_DBITRATE"
-                        android:title="@string/TE1_DEC_DBITRATE"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_DEC_LATENCY_DETAILED"
-                        android:title="@string/TE1_DEC_LATENCY_DETAILED"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_DEC_LATENCY_SUM"
-                        android:title="@string/TE1_DEC_LATENCY_SUM"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_TIME"
-                        android:title="@string/TE1_TIME"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_RX_EZWB"
-                        android:title="@string/TE1_RX_EZWB"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_RX1"
-                        android:title="@string/TE1_RX1"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_BATT_P"
-                        android:title="@string/TE1_BATT_P"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_BATT_V"
-                        android:title="@string/TE1_BATT_V"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_BATT_A"
-                        android:title="@string/TE1_BATT_A"
-                        android:defaultValue="false" />
-                    //for 2in1
-                    <CheckBoxPreference
-                        android:key="@string/TE1_BATT_mAH"
-                        android:title="@string/TE1_BATT_mAH"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_HOME_DISTANCE"
-                        android:title="@string/TE1_HOME_DISTANCE"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_VS"
-                        android:title="@string/TE1_VS"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_HS"
-                        android:title="@string/TE1_HS"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_LAT"
-                        android:title="@string/TE1_LAT"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_LON"
-                        android:title="@string/TE1_LON"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_ALTITUDE_GPS"
-                        android:title="@string/TE1_ALTITUDE_GPS"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_ALTITUDE_BARO"
-                        android:title="@string/TE1_ALTITUDE_BARO"
-                        android:defaultValue="true" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_N_SATS"
-                        android:title="@string/TE1_N_SATS"
-                        android:defaultValue="false" />
-                    <CheckBoxPreference
-                        android:key="@string/TE1_XXX"
-                        android:title="@string/TE1_XXX"
-                        android:defaultValue="false" />
-                </PreferenceCategory>
-            </PreferenceScreen>
-        </PreferenceCategory>
-
-        <PreferenceCategory
-            android:title="Elements that overlay video in stereo">
-            <PreferenceScreen
-                android:title="Text elements 2"
-                android:summary="All sub-elements have a fixed position">
-                <PreferenceCategory
-                    android:title="General">
-                    <com.mapzen.prefsplusx.EditIntPreference
-                        android:key="@string/TE2_SCALE"
-                        android:title="@string/TE2_SCALE"
-                        android:summary="Scale in %. Default 100."
-                        android:defaultValue="100"/>
-                </PreferenceCategory>
-                <PreferenceCategory
-                    android:title="Upper right corner">
-                    <CheckBoxPreference
-                        android:key="@string/TE2_EZWB_UPLINK_RSSI"
-                        android:title="@string/TE2_EZWB_UPLINK_RSSI"
-                        android:defaultValue="false"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_EZWB_UPLINK_BLOCKS"
-                        android:title="@string/TE2_EZWB_UPLINK_BLOCKS"
-                        android:defaultValue="false"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_STATUS_AIR"
-                        android:title="@string/TE2_STATUS_AIR"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_STATUS_GROUND"
-                        android:title="@string/TE2_STATUS_GROUND"
-                        android:defaultValue="true"/>
-                </PreferenceCategory>
-                <PreferenceCategory
-                    android:title="Lower right corner">
-                    <CheckBoxPreference
-                        android:key="@string/TE2_VS"
-                        android:title="@string/TE2_VS"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_HS"
-                        android:title="@string/TE2_HS"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_LAT"
-                        android:title="@string/TE2_LAT"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_LON"
-                        android:title="@string/TE2_LON"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_HOME_DISTANCE"
-                        android:title="@string/TE2_HOME_DISTANCE"
-                        android:defaultValue="true"/>
-                </PreferenceCategory>
-                <PreferenceCategory
-                    android:title="Lower left corner">
-                    <CheckBoxPreference
-                        android:key="@string/TE2_SAT"
-                        android:title="@string/TE2_SAT"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_BATT_A"
-                        android:title="@string/TE2_BATT_A"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_BATT_P"
-                        android:title="@string/TE2_BATT_P"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_BATT_V"
-                        android:title="@string/TE2_BATT_V"
-                        android:defaultValue="true"/>
-                </PreferenceCategory>
-                <PreferenceCategory
-                    android:title="Upper left corner">
-                    <CheckBoxPreference
-                        android:key="@string/TE2_EZWB_RSSI_WORST"
-                        android:title="@string/TE2_EZWB_RSSI_WORST"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_EZWB_STRENGTH_P"
-                        android:title="@string/TE2_EZWB_STRENGTH_P"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_EZWB_BLOCKS"
-                        android:title="@string/TE2_EZWB_BLOCKS"
-                        android:defaultValue="true"/>
-                    <CheckBoxPreference
-                        android:key="@string/TE2_EZWB_RSSI_ADAPTERS_1to6"
-                        android:title="@string/TE2_EZWB_RSSI_ADAPTERS_1to6"
-                        android:defaultValue="true"/>
-                </PreferenceCategory>
-                <PreferenceCategory
-                    android:title="Lower middle">
-                    <CheckBoxPreference
-                        android:key="@string/TE2_FLIGHT_MODE"
-                        android:title="@string/TE2_FLIGHT_MODE"
-                        android:defaultValue="false"/>
-                </PreferenceCategory>
-            </PreferenceScreen>
-            <PreferenceScreen
-                android:title="Artificial horizon">
-                <PreferenceCategory
-                    android:title="General">
-                    <com.mapzen.prefsplusx.IntListPreference
-                        android:key="@string/AH_mode"
-                        android:title="@string/AH_mode"
-                        android:summary="Select your favourite artificial horizon"
-                        android:entries="@array/entriesArtificialHorizon"
-                        android:entryValues="@array/valuesArtificialHorizon"
-                        android:defaultValue="2"/>
-                    <com.mapzen.prefsplusx.EditIntPreference
-                        android:key="@string/AH_scale"
-                        android:title="@string/AH_scale"
-                        android:summary="Scale of artificial horizon, in %. Default 100"
-                        android:defaultValue="100"/>
-                </PreferenceCategory>
-                <PreferenceCategory
-                    android:title="Specific">
-                    <SwitchPreference
-                        android:key="@string/AH_roll"
-                        android:title="@string/AH_roll"
-                        android:summary="Enable roll rotation"
-                        android:defaultValue="true" />
-                    <SwitchPreference
-                        android:key="@string/AH_pitch"
-                        android:title="@string/AH_pitch"
-                        android:summary="Enable pitch rotation"
-                        android:defaultValue="true" />
-                    <SwitchPreference
-                        android:key="@string/AH_invRoll"
-                        android:title="@string/AH_invRoll"
-                        android:summary="Invert pitch rotation"
-                        android:defaultValue="false" />
-                    <SwitchPreference
-                        android:key="@string/AH_invPitch"
-                        android:title="@string/AH_invPitch"
-                        android:summary="Invert pitch rotation"
-                        android:defaultValue="false" />
-                </PreferenceCategory>
-            </PreferenceScreen>
-
-        </PreferenceCategory>
-        <PreferenceScreen
-            android:title="Compass ladder (horizontal)">
-            <PreferenceCategory
-                android:title="General">
-                <SwitchPreference
-                    android:key="@string/CL_enable"
-                    android:title="@string/CL_enable"
-                    android:summary="Enable 2D Compas Ladder showing Yaw/Direction and Home Arrow"
-                    android:defaultValue="true" />
-                <com.mapzen.prefsplusx.EditIntPreference
-                    android:key="@string/CL_scale"
-                    android:title="@string/CL_scale"
-                    android:summary="Scale in %. Default 100"
-                    android:defaultValue="100"/>
-            </PreferenceCategory>
-            <PreferenceCategory
-                android:title="Specific">
-                <CheckBoxPreference
-                    android:key="@string/CL_homeArrow"
-                    android:title="@string/CL_homeArrow"
-                    android:summary="Draw Home Arrow."
-                    android:defaultValue="true"/>
-                <SwitchPreference
-                    android:key="@string/CL_invHeading"
-                    android:title="@string/CL_invHeading"
-                    android:summary="Invert heading"
-                    android:defaultValue="false" />
-                <SwitchPreference
-                    android:key="@string/CL_COGoverMAG"
-                    android:title="@string/CL_COGoverMAG"
-                    android:summary="Use Course over ground instead of magnetometer"
-                    android:defaultValue="false" />
-            </PreferenceCategory>
-        </PreferenceScreen>
-
-        <PreferenceScreen
-            android:title="Altitude ladder (vertical)">
-            <PreferenceCategory
-                android:title="General">
-                <SwitchPreference
-                    android:key="@string/AL_enable"
-                    android:title="@string/AL_enable"
-                    android:summary="Enable 2D Altitude Ladder showing current Altitude"
-                    android:defaultValue="true" />
-                <com.mapzen.prefsplusx.EditIntPreference
-                    android:key="@string/AL_scale"
-                    android:title="@string/AL_scale"
-                    android:summary="Scale in %. Default 100"
-                    android:defaultValue="100"/>
-            </PreferenceCategory>
-            <PreferenceCategory
-                android:title="Specific">
-                <com.mapzen.prefsplusx.IntListPreference
-                    android:title="@string/AL_sourceValue"
-                    android:key="@string/AL_sourceValue"
-                    android:summary="Select which telemetry value the height ladder should use (different protocols use different sensor fusions- not every value works with every protocol)"
-                    android:entries="@array/entriesHLSelectSourceValue"
-                    android:entryValues="@array/valuesHLSelectSourceValue"
-                    android:defaultValue="0"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
-
-        <PreferenceScreen
-            android:title="Horizontal Speed ladder (vertical)">
-            <PreferenceCategory
-                android:title="General">
-                <SwitchPreference
-                    android:key="@string/SL_enable"
-                    android:title="@string/SL_enable"
-                    android:summary="Enable 2D speed ladder"
-                    android:defaultValue="true" />
-                <com.mapzen.prefsplusx.EditIntPreference
-                    android:key="@string/SL_scale"
-                    android:title="@string/SL_scale"
-                    android:summary="Scale in %. Default 100"
-                    android:defaultValue="100"/>
-            </PreferenceCategory>
-        </PreferenceScreen>
-
-        <PreferenceScreen
-            android:title="TE warning">
+            android:title="General">
             <SwitchPreference
-                android:key="@string/TW_BATT_P"
-                android:title="@string/TW_BATT_P"
-                android:summary="Display a warning if battery % falls below threshold of 10%"
+                android:key="@string/AL_enable"
+                android:title="@string/AL_enable"
+                android:summary="Enable 2D Altitude Ladder showing current Altitude"
                 android:defaultValue="true" />
-            <SwitchPreference
-                android:key="@string/TW_BATT_V"
-                android:title="@string/TW_BATT_V"
-                android:summary="Display a warning if battery V falls below threshold of (N cells*V warning Red)"
-                android:defaultValue="false" />
-            <SwitchPreference
-                android:key="@string/TW_BATT_MAH_USED"
-                android:title="@string/TW_BATT_MAH_USED"
-                android:summary="Display a warning if used capacity falls below BATT_CAPACITY_MAH_USED_WARNING"
-                android:defaultValue="false" />
-        </PreferenceScreen>
-
-        <PreferenceScreen
-            android:title="Advanced">
-            <SwitchPreference
-                android:key="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
-                android:title="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
-                android:summary="Do not enable any overlay elements (if you are using en axternal OSD)"
-                android:defaultValue="false" />
-        </PreferenceScreen>
+            <com.mapzen.prefsplusx.EditIntPreference
+                android:key="@string/AL_scale"
+                android:title="@string/AL_scale"
+                android:summary="Scale in %. Default 100"
+                android:defaultValue="100"/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="Specific">
+            <com.mapzen.prefsplusx.IntListPreference
+                android:title="@string/AL_sourceValue"
+                android:key="@string/AL_sourceValue"
+                android:summary="Select which telemetry value the height ladder should use (different protocols use different sensor fusions- not every value works with every protocol)"
+                android:entries="@array/entriesHLSelectSourceValue"
+                android:entryValues="@array/valuesHLSelectSourceValue"
+                android:defaultValue="0"/>
+        </PreferenceCategory>
     </PreferenceScreen>
-</PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="Horizontal Speed ladder (vertical)">
+        <PreferenceCategory
+            android:title="General">
+            <SwitchPreference
+                android:key="@string/SL_enable"
+                android:title="@string/SL_enable"
+                android:summary="Enable 2D speed ladder"
+                android:defaultValue="true" />
+            <com.mapzen.prefsplusx.EditIntPreference
+                android:key="@string/SL_scale"
+                android:title="@string/SL_scale"
+                android:summary="Scale in %. Default 100"
+                android:defaultValue="100"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="TE warning">
+        <SwitchPreference
+            android:key="@string/TW_BATT_P"
+            android:title="@string/TW_BATT_P"
+            android:summary="Display a warning if battery % falls below threshold of 10%"
+            android:defaultValue="true" />
+        <SwitchPreference
+            android:key="@string/TW_BATT_V"
+            android:title="@string/TW_BATT_V"
+            android:summary="Display a warning if battery V falls below threshold of (N cells*V warning Red)"
+            android:defaultValue="false" />
+        <SwitchPreference
+            android:key="@string/TW_BATT_MAH_USED"
+            android:title="@string/TW_BATT_MAH_USED"
+            android:summary="Display a warning if used capacity falls below BATT_CAPACITY_MAH_USED_WARNING"
+            android:defaultValue="false" />
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="Advanced">
+        <SwitchPreference
+            android:key="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
+            android:title="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
+            android:summary="Do not enable any overlay elements (if you are using en axternal OSD)"
+            android:defaultValue="false" />
+    </PreferenceScreen>
+
+</androidx.preference.PreferenceScreen>

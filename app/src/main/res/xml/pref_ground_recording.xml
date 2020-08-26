@@ -3,7 +3,7 @@
 
     <PreferenceCategory
         android:title="Select .fpv for performance or .mp4 for exporting" >
-        <com.mapzen.prefsplus.IntListPreference
+        <com.mapzen.prefsplusx.IntListPreference
             android:key="@string/GROUND_RECORDING_TYPE"
             android:title="@string/GROUND_RECORDING_TYPE"
             android:entries="@array/entriesGROUND_RECORDING_TYPE"
@@ -14,13 +14,13 @@
 
     <PreferenceCategory
         android:title="Settings if ground recording .mp4">
-        <com.mapzen.prefsplus.IntListPreference
+        <com.mapzen.prefsplusx.IntListPreference
             android:key="@string/GROUND_RECORDING_VIDEO_FPS"
             android:title="@string/GROUND_RECORDING_VIDEO_FPS"
             android:entries="@array/entriesGROUND_RECORDING_VIDEO_FPS"
             android:entryValues="@array/valuesGROUND_RECORDING_VIDEO_FPS"
             android:defaultValue="30"/>
-        <com.mapzen.prefsplus.IntListPreference
+        <com.mapzen.prefsplusx.IntListPreference
             android:key="@string/GROUND_RECORDING_VIDEO_BITRATE"
             android:title="@string/GROUND_RECORDING_VIDEO_BITRATE"
             android:entries="@array/entriesGROUND_RECORDING_VIDEO_BITRATE"

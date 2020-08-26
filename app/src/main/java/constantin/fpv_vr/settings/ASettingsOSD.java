@@ -47,25 +47,4 @@ public class ASettingsOSD extends AppCompatActivity {
             super.onActivityCreated(savedInstanceState);
         }
     }
-
-    public static class FSettingsOSDStyle extends PreferenceFragmentCompat{
-
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            PreferenceManager preferenceManager=getPreferenceManager();
-            preferenceManager.setSharedPreferencesName("pref_osd");
-            addPreferencesFromResource(R.xml.pref_osd_style);
-        }
-    }
-
-    public static class FSettingsOSDElements extends PreferenceFragmentCompat {
-
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            PreferenceManager preferenceManager=getPreferenceManager();
-            preferenceManager.setSharedPreferencesName("pref_osd");
-            addPreferencesFromResource(R.xml.pref_osd_elements);
-        }
-
-    }
 }

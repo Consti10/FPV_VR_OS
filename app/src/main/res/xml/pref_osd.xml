@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
-        android:title="OSD Style"
+        android:title="OSD style and global scale"
+        android:summary="customize the appearance of your OSD"
         app:fragment="constantin.fpv_vr.settings.FSettingsOSDStyle"
     />
 
     <Preference
         android:title="OSD Elements"
+        android:summary="Enable/disable and customize specific OSD Elements"
         app:fragment="constantin.fpv_vr.settings.FSettingsOSDElements"
         />
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>
