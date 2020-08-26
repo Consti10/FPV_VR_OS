@@ -28,7 +28,6 @@
     </string-array>
 
 
-
     <string-array name="entriesConnectionType" >
         <item>EZ-Wifibroadcast/OpenHD (Stream)</item>
         <item>Manually (Stream)</item>
@@ -103,8 +102,6 @@
         <item>1</item>
     </string-array>
 
-
-
     <string-array name="entriesArtificialHorizon" >
         <item>3D Quadcopter</item>
         <item>2D Ladders (Traditional)</item>
@@ -118,7 +115,6 @@
         <item>3</item>
     </string-array>
 
-
     <string-array name="entriesDEV_3D_VIDEO" >
         <item>disable</item>
         <item>left eye only</item>
@@ -130,34 +126,6 @@
         <item>2</item>
     </string-array>
 
-    <string-array name="entriesMSAADefault" >
-        <item>0xMSAA</item>
-        <item>2xMSAA</item>
-        <item>4xMSAA</item>
-        <item>6xMSAA</item>
-        <item>8xMSAA</item>
-        <item>16xMSAA</item>
-    </string-array>
-    <string-array name="valuesMSAADefault" >
-        <item>0</item>
-        <item>2</item>
-        <item>4</item>
-        <item>6</item>
-        <item>8</item>
-        <item>16</item>
-    </string-array>
-
-
-    <string-array name="entriesDistortionCorrection" >
-        <item>Disable</item>
-        <item>Enable (Default)</item>
-    </string-array>
-    <string-array name="valuesDistortionCorrection" >
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-
-
     <string-array name="entriesGROUND_RECORDING_TYPE" >
         <item>Disable</item>
         <item>.FPV (playback in FPV_VR) </item>
@@ -168,7 +136,6 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-
 
     <string-array name="entriesGROUND_RECORDING_VIDEO_FPS">
         <item>30 FPS</item>

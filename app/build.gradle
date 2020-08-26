@@ -110,9 +110,6 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.crashlytics.sdk.android:crashlytics-ndk:2.1.1'
 
-    //Dafuq ?
-    //implementation "com.google.vr:sdk-base:$mGvrVersion"
-
     //Screen recording
     implementation 'com.github.HBiSoft:HBRecorder:0.1.6'
 
