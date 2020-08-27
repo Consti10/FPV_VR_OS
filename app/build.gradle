@@ -43,11 +43,11 @@ android {
             path "src/main/cpp/CMakeLists.txt"
         }
     }
-    //sourceSets {
-    //    main {
-    //       jniLibs.srcDirs = ['libs/google/gvr']
-    //    }
-    //}
+    sourceSets {
+        main {
+           //jniLibs.srcDirs = ['libs/google/gvr']
+        }
+    }
     crashlytics {
         enableNdk true
     }
