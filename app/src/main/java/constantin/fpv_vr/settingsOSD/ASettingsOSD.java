@@ -81,6 +81,8 @@ public class ASettingsOSD extends AppCompatActivity implements PreferenceFragmen
     public static @XmlRes int getPreferenceFileForString(final String s){
         switch (s){
             case "pref_osd_elements":return R.xml.pref_osd_elements;
+            case "pref_osd_elements1":return R.xml.pref_osd_elements1;
+
             case "pref_osd_style":return R.xml.pref_osd_style;
             case "pref_osd":return R.xml.pref_osd;
         }
