@@ -5,13 +5,13 @@
     <Preference
         android:title="OSD style and global scale"
         android:summary="customize the appearance of your OSD"
-        app:fragment="pref_osd_style"
+        app:key="pref_osd_style"
     />
 
     <Preference
         android:title="OSD Elements"
         android:summary="Enable/disable and customize specific OSD Elements"
-        app:fragment="pref_osd_elements"
+        app:key="pref_osd_elements"
         />
 
 </androidx.preference.PreferenceScreen>

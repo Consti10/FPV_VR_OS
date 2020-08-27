@@ -73,11 +73,11 @@ public class AGroundRecordingSettings extends AppCompatActivity {
             if(key.contentEquals(getString(R.string.GROUND_RECORDING_TYPE))){
                 final int value=pref_ground_recording.getInt(key,0);
                 if(value==1){
-                    VideoSettings.setVS_GROUND_RECORDING(getActivity(),true);
-                    TelemetrySettings.setT_GROUND_RECORDING(getActivity(),true);
+                    VideoSettings.setVS_GROUND_RECORDING(requireActivity(),true);
+                    TelemetrySettings.setT_GROUND_RECORDING(requireActivity(),true);
                 }else{
-                    VideoSettings.setVS_GROUND_RECORDING(getActivity(),false);
-                    TelemetrySettings.setT_GROUND_RECORDING(getActivity(),false);
+                    VideoSettings.setVS_GROUND_RECORDING(requireActivity(),false);
+                    TelemetrySettings.setT_GROUND_RECORDING(requireActivity(),false);
                 }
             }
         }

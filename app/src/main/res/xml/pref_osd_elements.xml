@@ -10,7 +10,7 @@
         <Preference
             android:title="Text Elements 1"
             android:summary="Text elements that don't overlay video in stereo"
-            app:fragment="pref_osd_elements1"
+            app:key="pref_osd_elements1"
             />
     </PreferenceCategory>
 

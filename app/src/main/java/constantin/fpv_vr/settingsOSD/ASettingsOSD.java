@@ -42,7 +42,7 @@ public class ASettingsOSD extends AppCompatActivity implements PreferenceFragmen
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
         final Bundle args = pref.getExtras();
         //Log.d("LOL","onPreferenceStartFragment"+args.toString()+" "+pref.getFragment());
-        final FSettingsOSD fragment=new FSettingsOSD(getPreferenceFileForString(pref.getFragment()));
+        final FSettingsOSD fragment=new FSettingsOSD(getPreferenceFileForString(pref.getKey()));
         fragment.setArguments(args);
         fragment.setTargetFragment(caller, 0);
         // Replace the existing Fragment with the new Fragment
