@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:title="Select .fpv for performance or .mp4 for exporting" >
@@ -30,4 +30,4 @@
 
 
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

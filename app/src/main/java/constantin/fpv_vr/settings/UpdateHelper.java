@@ -3,7 +3,8 @@ package constantin.fpv_vr.settings;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.connect.AConnect;

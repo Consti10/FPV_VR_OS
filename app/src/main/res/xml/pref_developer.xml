@@ -14,7 +14,7 @@
             android:title="@string/DEV_USE_GVR_VIDEO_TEXTURE"
             android:defaultValue="false"/>
 
-        <com.mapzen.prefsplus.IntListPreference
+        <com.mapzen.prefsplusx.IntListPreference
             android:key="@string/DEV_3D_VIDEO"
             android:title="@string/DEV_3D_VIDEO"
             android:entries="@array/entriesDEV_3D_VIDEO"
