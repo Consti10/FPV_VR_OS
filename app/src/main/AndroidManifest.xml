@@ -61,28 +61,7 @@
             android:name=".play_stereo.AStereoVR"
             android:screenOrientation="landscape"
             android:theme="@style/MyStyleFullscreen" />
-        <activity
-            android:name=".play_stereo.AStereoSuperSYNC"
-            android:screenOrientation="landscape"
-            android:theme="@style/MyStyleFullscreen" />
-        <activity
-            android:name=".xexperimental.AStereoDaydream"
-            android:enableVrMode="@string/gvr_vr_mode_component"
-            android:screenOrientation="landscape"
-            android:theme="@style/MyStyleFullscreen"
-            tools:targetApi="n">
 
-            <!--
-           <intent-filter>
-               <action android:name="android.intent.action.MAIN" />
-               <category
-                   android:name="com.google.intent.category.DAYDREAM"
-                   android:exported="false" />
-               <category android:name="com.google.intent.category.CARDBOARD"
-                   android:exported="false" />
-           </intent-filter>
-            -->
-        </activity>
         <activity
             android:name=".connect.AConnect"
             android:screenOrientation="behind"

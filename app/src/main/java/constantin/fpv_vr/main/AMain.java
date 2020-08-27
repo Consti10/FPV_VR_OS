@@ -27,7 +27,6 @@ import constantin.fpv_vr.settings.AGroundRecordingSettings;
 import constantin.fpv_vr.settingsOSD.ASettingsOSD;
 import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.settings.UpdateHelper;
-import constantin.fpv_vr.xexperimental.AStereoDaydream;
 import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.test.UVCHelper;
 import constantin.video.core.RequestPermissionHelper;
@@ -136,15 +135,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 return;
             }
             final Intent intent = new Intent();
-            //mStereoI.addCategory("com.google.intent.category.DAYDREAM");
-            //mStereoI.addCategory("com.google.intent.category.CARDBOARD");
-            if (SJ.DEV_USE_GVR_VIDEO_TEXTURE(this)) {
-                intent.setClass(this, AStereoDaydream.class);
-            } else if (SJ.SuperSync(this)) {
-                //intent.setClass(this, AStereoSuperSYNC.class);
-            } else {
-                intent.setClass(this, AStereoVR.class);
-            }
+            intent.setClass(this, AStereoVR.class);
             startActivity(intent);
             startRecordingScreenIfEnabled();
         }else if(v==binding.bOSDSettings){
