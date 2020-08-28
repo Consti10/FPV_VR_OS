@@ -46,8 +46,6 @@ public:
     void onSecondaryContextCreated(JNIEnv* env,jobject androidContext);
     void onSecondaryContextDoWork(JNIEnv* env);
 protected:
-    //All OpenGL calls required to draw one eye (video and osd)
-    // void drawEye(gvr::Eye eye);
     //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,
     //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
@@ -62,11 +60,10 @@ protected:
     const VideoModesHelper::VIDEO_RENDERING_MODE videoMode;
 public:
     VrCompositorRenderer vrCompositorRenderer;
-    JNIEnv* currEnv;
+    JNIEnv* currEnv=nullptr;
 protected:
     SurfaceTextureUpdate mSurfaceTextureUpdate;
     AvgCalculator surfaceTextureDelay;
-    int SCREEN_WIDTH,SCREEN_HEIGHT;
 private:
     std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
     // sleep until either video frame is available or timeout is reached

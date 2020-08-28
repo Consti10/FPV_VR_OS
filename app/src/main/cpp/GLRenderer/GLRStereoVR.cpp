@@ -22,7 +22,6 @@ constexpr auto TAG= "GLRendererStereo";
 #include <android/trace.h>
 #include <TexturedGeometry.hpp>
 
-
 GLRStereoVR::GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context *gvr_context, const int videoMode, jlong vsyncP):
         mSurfaceTextureUpdate(env),
         gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
@@ -50,12 +49,9 @@ void GLRStereoVR::placeGLElements(){
 
 void GLRStereoVR::onContextCreated(JNIEnv * env, jobject androidContext, int screenW, int screenH, jobject surfaceTextureHolder) {
     Extensions::initializeGL();
-    SCREEN_WIDTH=screenW;
-    SCREEN_HEIGHT=screenH;
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,TAG);
     vrCompositorRenderer.initializeGL();
-    //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
-    //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
+    //Once we have an OpenGL context, we can create our OpenGL world object instances.
     mSurfaceTextureUpdate.updateFromSurfaceTextureHolder(env,surfaceTextureHolder);
     //
     glEnable(GL_BLEND);
@@ -170,7 +166,6 @@ void GLRStereoVR::onSecondaryContextCreated(JNIEnv* env, jobject androidContext)
     osdRenderbuffer.setSize(RENDER_TEX_W,RENDER_TEX_H);
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
-    //placeGLElements();
     mOSDRenderer->onSurfaceSizeChanged(RENDER_TEX_W, RENDER_TEX_H);
 }
 
