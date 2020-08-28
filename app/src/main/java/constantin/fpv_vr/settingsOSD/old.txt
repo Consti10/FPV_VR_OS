@@ -1,0 +1,69 @@
+// The resource file containing the preferences is set in the custom constructor
+    public static class FSettingsOSDOld extends PreferenceFragmentCompat {
+
+        public FSettingsOSDOld(@XmlRes int preferencesResId){
+            this.preferencesResId=preferencesResId;
+        }
+
+        private final @XmlRes int preferencesResId;
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            Log.d(TAG,"Root key"+rootKey);
+            //setPreferencesFromResource(R.xml.pref_lol, rootKey);
+            PreferenceManager preferenceManager=getPreferenceManager();
+            Log.d(TAG,"Pref name is "+preferenceManager.getSharedPreferencesName());
+            preferenceManager.setSharedPreferencesName("pref_osd");
+            addPreferencesFromResource(preferencesResId);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState){
+            super.onActivityCreated(savedInstanceState);
+        }
+    }
+
+    public static @XmlRes int getPreferenceFileForString(final String s){
+        switch (s){
+            case "pref_osd_elements":return R.xml.pref_osd_elements;
+            case "pref_osd_elements1":return R.xml.pref_osd_elements1;
+
+            case "pref_osd_style":return R.xml.pref_osd_style;
+            case "pref_osd":return R.xml.pref_osd;
+        }
+        return 0;
+    }
+
+/////
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:title="OSD style and global scale"
+        android:summary="customize the appearance of your OSD"
+        app:fragment="pref_osd_style"
+    />
+
+    <Preference
+        android:title="OSD Elements"
+        android:summary="Enable/disable and customize specific OSD Elements"
+        app:fragment="pref_osd_elements"
+        />
+
+</androidx.preference.PreferenceScreen>
+//
+ @Override
+    public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
+        final Bundle args = pref.getExtras();
+        //Log.d("LOL","onPreferenceStartFragment"+args.toString()+" "+pref.getFragment());
+        final FSettingsOSDOld fragment=new FSettingsOSDOld(getPreferenceFileForString(pref.getFragment()));
+        fragment.setArguments(args);
+        fragment.setTargetFragment(caller, 0);
+        // Replace the existing Fragment with the new Fragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(android.R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
+        return true;
+    }
