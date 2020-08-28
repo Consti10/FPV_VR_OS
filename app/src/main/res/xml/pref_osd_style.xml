@@ -2,8 +2,8 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.preference.PreferenceScreen
+        android:key="preferenceScreen1"
         android:title="OSD style and global scale"
         android:summary="customize the appearance of your OSD">
 

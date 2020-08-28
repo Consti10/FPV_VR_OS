@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.preference.PreferenceScreen
+        android:key="preferenceScreen2"
         android:title="OSD Elements"
         android:summary="Enable/disable and customize specific OSD Elements">
 
         <PreferenceScreen android:title="Text elements 1."
-            android:summary="All sub-elements are placed on top/bottom of video at runtime. Some values are redundant with TE2">
+            android:summary="All sub-elements are placed on top/bottom of video at runtime. Some values are redundant with TE2"
+            android:key="preferenceScreen3">
 
             <PreferenceCategory
                 android:title="General">
@@ -114,6 +115,7 @@
         <PreferenceCategory
             android:title="Elements that overlay video in stereo">
             <PreferenceScreen
+                android:key="preferenceScreen4"
                 android:title="Text elements 2"
                 android:summary="All sub-elements have a fixed position">
                 <PreferenceCategory
@@ -213,8 +215,8 @@
                 </PreferenceCategory>
             </PreferenceScreen>
             <PreferenceScreen
-                android:title="Artificial horizon"
-                android:key="key_artificial_horizon">
+                android:key="preferenceScreen5"
+                android:title="Artificial horizon">
                 <PreferenceCategory
                     android:title="General">
                     <com.mapzen.prefsplusx.IntListPreference
@@ -257,8 +259,8 @@
 
         </PreferenceCategory>
         <PreferenceScreen
-            android:title="Compass ladder (horizontal)"
-            android:key="key_compass_ladder">
+            android:key="preferenceScreen6"
+            android:title="Compass ladder (horizontal)">
             <PreferenceCategory
                 android:title="General">
                 <SwitchPreference
@@ -293,8 +295,8 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:title="Altitude ladder (vertical)"
-            android:key="key_altitude_ladder">
+            android:key="preferenceScreen7"
+            android:title="Altitude ladder (vertical)">
             <PreferenceCategory
                 android:title="General">
                 <SwitchPreference
@@ -321,6 +323,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
+            android:key="preferenceScreen8"
             android:title="Horizontal Speed ladder (vertical)">
             <PreferenceCategory
                 android:title="General">
@@ -338,6 +341,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
+            android:key="preferenceScreen9"
             android:title="TE warning">
             <SwitchPreference
                 android:key="@string/TW_BATT_P"
@@ -357,6 +361,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
+            android:key="preferenceScreen10"
             android:title="Advanced">
             <SwitchPreference
                 android:key="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
