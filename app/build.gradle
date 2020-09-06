@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -109,8 +109,7 @@ dependencies {
 
     //firebase stuff
     implementation 'com.google.firebase:firebase-core:17.5.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.crashlytics.sdk.android:crashlytics-ndk:2.1.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
 
     //Screen recording
     implementation 'com.github.HBiSoft:HBRecorder:0.1.12'
