@@ -48,9 +48,9 @@ android {
            //jniLibs.srcDirs = ['libs/google/gvr']
         }
     }
-    crashlytics {
-        enableNdk true
-    }
+    //crashlytics {
+    //    enableNdk true
+    //}
     buildFeatures{
         viewBinding=true
     }
