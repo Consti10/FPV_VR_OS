@@ -97,18 +97,18 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings_telemetry:
-                startActivity(new Intent().setClass(this, ASettingsTelemetry.class));
-                return true;
-            case R.id.action_settings_video:
-                startActivity(new Intent().setClass(this, AVideoSettings.class));
-                return true;
-            case R.id.action_ground_recording:
-                startActivity(new Intent().setClass(this, AGroundRecordingSettings.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        final int id=item.getItemId();
+        if(id==R.id.action_settings_telemetry){
+            startActivity(new Intent().setClass(this, ASettingsTelemetry.class));
+            return true;
+        }else if(id==R.id.action_settings_video){
+            startActivity(new Intent().setClass(this, AVideoSettings.class));
+            return true;
+        }else if(id==R.id.action_ground_recording){
+            startActivity(new Intent().setClass(this, AGroundRecordingSettings.class));
+            return true;
+        }else{
+            return super.onOptionsItemSelected(item);
         }
     }
 

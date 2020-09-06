@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -36,6 +38,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.databinding.ConnectGrfileFragmentBinding;
 import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.video_player.VideoSettings;
@@ -45,6 +48,7 @@ public class FConnectGroundRecFile extends Fragment{
     private static final String TAG=FConnectGroundRecFile.class.getSimpleName();
     private Context mContext;
     private ConnectGrfileFragmentBinding binding;
+    private static final int REQUEST_CODE_PICK_FILE=55;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -73,73 +77,18 @@ public class FConnectGroundRecFile extends Fragment{
         binding.bEasySelectFileFPV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*final String directory= VideoSettings.getDirectoryToSaveDataTo();
-                final ArrayList<String> filenames=FileHelper.getAllFilenamesInDirectory(directory,null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Pick a ground recording file");
-                builder.setItems(filenames.toArray(new String[0]), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final String selectedFilename=filenames.get(which);
-                        binding.editTextFileNameFPV.setText(selectedFilename);
-                        VideoSettings.setVS_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
-                        TelemetrySettings.setT_PLAYBACK_FILENAME(mContext,directory+selectedFilename);
-                    }
-                });
-                builder.show();*/
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                intent.setType("*/*");
-                startActivityForResult(intent,99);
+                intent.setType("video/*");
+                Toaster.makeToast(mContext,"Select .fpv ground recording file");
+                startActivityForResult(intent,REQUEST_CODE_PICK_FILE);
             }
         });
-        binding.bDoSomething.setOnClickListener(new View.OnClickListener() {
+        binding.bMigrateFiles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final String directory= VideoSettings.getDirectoryToSaveDataTo();
-                final ArrayList<String> filenames=FileHelper.getAllFilenamesInDirectory(directory,null);
-                for(int i=0;i<filenames.size();i++){
-                    //final String filename="TestFilename"+i;
-                    final String filename=filenames.get(i);
-                    final String filePath=directory+filename;
-
-                    ContentResolver resolver = mContext.getContentResolver();
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "FPV_VR");
-                    contentValues.put(MediaStore.Video.Media.TITLE, filename);
-                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
-                    contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/fpv");
-                    Uri mUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
-
-                    try {
-                        File sourceFile=new File(filePath);
-
-                        FileInputStream inputStream=new FileInputStream(sourceFile);
-                        FileDescriptor outputFD = resolver.openFileDescriptor(mUri, "rw").getFileDescriptor();
-                        FileOutputStream outputStream=new FileOutputStream(outputFD);
-                        copy(inputStream,outputStream);
-                        Log.d(TAG,"Copied file "+inputStream.getFD().toString()+" to "+outputStream.getFD().toString());
-
-                        //sourceFile.delete();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //File outputFile=new File(mUri.getPath());
-                    //copy(inputFile,outputFile);
-                }
-            }
-        });
-        binding.bDoSomething2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String directory= VideoSettings.getDirectoryToSaveDataTo();
-                final ArrayList<String> filenames=FileHelper.getAllFilenamesInDirectory(directory,null);
-                for(int i=0;i<filenames.size();i++) {
-                    //final String filename="TestFilename"+i;
-                    final String filename = filenames.get(i);
-                    final String filePath = directory + filename;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    copyFilesToNewDirectory();
                 }
             }
         });
@@ -148,11 +97,12 @@ public class FConnectGroundRecFile extends Fragment{
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void copyFilesToNewDirectory(){
-        final String directory= VideoSettings.getDirectoryToSaveDataTo();
+        final String directory= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/FPV_VR/";
         final ArrayList<String> filenames=FileHelper.getAllFilenamesInDirectory(directory,null);
         for(int i=0;i<filenames.size();i++) {
             //final String filename="TestFilename"+i;
             final String filename = filenames.get(i);
+            final String filePath = directory + filename;
             ContentResolver resolver = mContext.getContentResolver();
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "FPV_VR");
@@ -160,17 +110,19 @@ public class FConnectGroundRecFile extends Fragment{
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/fpv");
             Uri mUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
-
             try {
-                //File inputFile=new File(directory+filename);
-                FileInputStream inputStream = new FileInputStream(directory + filename);
+                File sourceFile = new File(filePath);
+                FileInputStream inputStream = new FileInputStream(sourceFile);
                 FileDescriptor outputFD = resolver.openFileDescriptor(mUri, "rw").getFileDescriptor();
                 FileOutputStream outputStream = new FileOutputStream(outputFD);
                 copy(inputStream, outputStream);
                 Log.d(TAG, "Copied file " + inputStream.getFD().toString() + " to " + outputStream.getFD().toString());
+                //sourceFile.delete();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            //File outputFile=new File(mUri.getPath());
+            //copy(inputFile,outputFile);
         }
     }
 
@@ -210,14 +162,11 @@ public class FConnectGroundRecFile extends Fragment{
 
 
     private void makeInfoDialog(final String message){
-        ((Activity) mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
-                builder.setMessage(message);
-                androidx.appcompat.app.AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+        ((Activity) mContext).runOnUiThread(() -> {
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+            builder.setMessage(message);
+            androidx.appcompat.app.AlertDialog dialog = builder.create();
+            dialog.show();
         });
     }
 
@@ -225,24 +174,20 @@ public class FConnectGroundRecFile extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
        super.onActivityResult(requestCode,resultCode,data);
-       Log.d(TAG,"onActivityResult"+requestCode);
-       if(data!=null){
+       //Log.d(TAG,"onActivityResult"+requestCode);
+       if(requestCode==REQUEST_CODE_PICK_FILE && data!=null){
            Uri selectedImageUri = data.getData();
            Log.d(TAG,"Got "+selectedImageUri.getPath()+" "+selectedImageUri.toString());
-           File tmp=new File(selectedImageUri.getPath());
-           Log.d(TAG,"from file "+tmp.getAbsoluteFile().getAbsolutePath());
-
            final String actualFilePath=FileHelper2.getRealPathFromURI_API19(mContext,selectedImageUri);
-           Log.d(TAG,""+actualFilePath);
-           VideoSettings.setVS_PLAYBACK_FILENAME(mContext,actualFilePath);
-           /*try {
-               ParcelFileDescriptor d = mContext.getContentResolver().openFileDescriptor(selectedImageUri,"r");
-               //Log.d(TAG,""+d.get);
-           } catch (IOException e) {
-               e.printStackTrace();
-           }*/
-
-           //VideoSettings.setVS_PLAYBACK_FILENAME(mContext,tmp.g);
+           if(actualFilePath!=null){
+               //Log.d(TAG,"Got real path"+actualFilePath);
+               if(actualFilePath.endsWith(".fpv")){
+                   Log.d(TAG,"Got real path and file is fpv "+actualFilePath);
+                   VideoSettings.setVS_PLAYBACK_FILENAME(mContext,actualFilePath);
+                   TelemetrySettings.setT_PLAYBACK_FILENAME(mContext,actualFilePath);
+                   Toaster.makeToast(mContext,"Selected .fpv ground recording file");
+               }
+           }
        }
     }
 

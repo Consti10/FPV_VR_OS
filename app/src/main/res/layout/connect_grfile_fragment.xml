@@ -49,16 +49,10 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/bDoSomething"
+        android:id="@+id/bMigrateFiles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DO SM"
-        tools:ignore="HardcodedText"/>
-    <Button
-        android:id="@+id/bDoSomething2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DO SM2"
+        android:text="Migrate Files"
         tools:ignore="HardcodedText"/>
 
 </LinearLayout>

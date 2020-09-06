@@ -19,14 +19,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
-        <service
-            android:name=".MigrateFilesService"
-            android:enabled="true"
-            android:exported="true"></service>
 
         <activity
             android:name=".OSD2.ATestlayout"
-            android:theme="@style/MyStyleFullscreen"></activity>
+            android:theme="@style/MyStyleFullscreen" />
         <activity
             android:name=".main.AMain"
             android:directBootAware="true"
@@ -56,7 +52,6 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
             </intent-filter>
-
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter_rotg02" />
@@ -71,7 +66,13 @@
         <activity
             android:name=".connect.AConnect"
             android:screenOrientation="behind"
-            android:theme="@style/MyStyleNoActionBar" />
+            android:theme="@style/MyStyleNoActionBar">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/pdf" />
+            </intent-filter>-->
+        </activity>
         <activity
             android:name=".settings.AGroundRecordingSettings"
             android:screenOrientation="behind"
