@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="constantin.fpv_vr">
+
     <!-- Info about networks (EZ-WB connect via WIFI) -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -13,13 +14,19 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
-        <activity android:name=".OSD2.ATestlayout"
-            android:theme="@style/MyStyleFullscreen">
-        </activity>
+        <service
+            android:name=".MigrateFilesService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".OSD2.ATestlayout"
+            android:theme="@style/MyStyleFullscreen"></activity>
         <activity
             android:name=".main.AMain"
             android:directBootAware="true"
@@ -61,7 +68,6 @@
             android:name=".play_stereo.AStereoVR"
             android:screenOrientation="landscape"
             android:theme="@style/MyStyleFullscreen" />
-
         <activity
             android:name=".connect.AConnect"
             android:screenOrientation="behind"

@@ -48,7 +48,17 @@
             tools:ignore="HardcodedText"/>
     </LinearLayout>
 
-
-
+    <Button
+        android:id="@+id/bDoSomething"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DO SM"
+        tools:ignore="HardcodedText"/>
+    <Button
+        android:id="@+id/bDoSomething2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DO SM2"
+        tools:ignore="HardcodedText"/>
 
 </LinearLayout>
