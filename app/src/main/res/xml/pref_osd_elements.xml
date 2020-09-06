@@ -224,7 +224,6 @@
                         android:title="@string/AH_mode"
                         android:summary="Select your favourite artificial horizon"
                         android:entries="@array/entriesArtificialHorizon"
-                        android:entryValues="@array/valuesArtificialHorizon"
                         android:defaultValue="2"/>
                     <com.mapzen.prefsplusx.EditIntPreference
                         android:key="@string/AH_scale"
@@ -317,7 +316,6 @@
                     android:key="@string/AL_sourceValue"
                     android:summary="Select which telemetry value the height ladder should use (different protocols use different sensor fusions- not every value works with every protocol)"
                     android:entries="@array/entriesHLSelectSourceValue"
-                    android:entryValues="@array/valuesHLSelectSourceValue"
                     android:defaultValue="0"/>
             </PreferenceCategory>
         </PreferenceScreen>

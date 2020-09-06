@@ -22,7 +22,6 @@
         <item>#795548</item>
         <item>#9e9e9e</item>
         <item>#607d8b</item>
-
         <item>#FFFFFF</item>
         <item>#000000</item>
     </string-array>
@@ -43,11 +42,7 @@
         <item>BARO</item>
         <item>GPS</item>
     </string-array>
-    <string-array name="valuesHLSelectSourceValue" >
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
+
 
     <string-array name="entriesTypefaces" >
         <item>ARIAL PLAIN</item>
@@ -57,26 +52,7 @@
         <item>MONOSPACE PLAIN</item>
         <item>MONOSPACE BOLD</item>
     </string-array>
-    <string-array name="valuesTypefaces" >
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-    </string-array>
 
-
-    <string-array name="entriesGroundHeadTrackingMode" >
-        <item>disable</item>
-        <item>1st person perspective</item>
-        <item>3rd person perspective for gimbal</item>
-    </string-array>
-    <string-array name="valuesGroundHeadTrackingMode" >
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
     <string-array name="entriesAirHeadTrackingMode" >
         <item>disable</item>
         <item>enable</item>
@@ -109,33 +85,17 @@
         <item>Both</item>
         <item>NONE</item>
     </string-array>
-    <string-array name="valuesArtificialHorizon" >
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
 
     <string-array name="entriesDEV_3D_VIDEO" >
         <item>disable</item>
         <item>left eye only</item>
         <item>left and right eye</item>
     </string-array>
-    <string-array name="valuesDEV_3D_VIDEO" >
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
 
     <string-array name="entriesGROUND_RECORDING_TYPE" >
         <item>Disable</item>
         <item>.FPV (playback in FPV_VR) </item>
         <item>.MP4 (export to youtube) </item>
-    </string-array>
-    <string-array name="valuesGROUND_RECORDING_TYPE" >
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
     </string-array>
 
     <string-array name="entriesGROUND_RECORDING_VIDEO_FPS">

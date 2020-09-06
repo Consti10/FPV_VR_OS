@@ -36,7 +36,6 @@
                 android:key="@string/OSD_TEXT_FONT_TYPE"
                 android:title="@string/OSD_TEXT_FONT_TYPE"
                 android:entries="@array/entriesTypefaces"
-                android:entryValues="@array/valuesTypefaces"
                 android:defaultValue="5"/> //MONOSPACE BOLD
             <com.kizitonwose.colorpreference.ColorPreference
                 android:key="@string/OSD_TEXT_FILL_COLOR1"

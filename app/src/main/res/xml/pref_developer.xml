@@ -18,7 +18,6 @@
             android:key="@string/DEV_3D_VIDEO"
             android:title="@string/DEV_3D_VIDEO"
             android:entries="@array/entriesDEV_3D_VIDEO"
-            android:entryValues="@array/valuesDEV_3D_VIDEO"
             android:defaultValue="0"/>
 
     </PreferenceScreen>
