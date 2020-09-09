@@ -98,6 +98,9 @@ dependencies {
     implementation project(':uvcintegration')
     implementation project(':TelemetryCore')
     implementation project(':RenderingXCore')
+    //implementation "com.github.Consti10.LiveVideo10ms:uvcintegration:25f87dc9"
+    //implementation "com.github.Consti10.LiveVideo10ms:VideoCore:25f87dc9"
+    //implementation "com.github.Consti10.LiveVideo10ms:TelemetryCore:25f87dc9"
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
