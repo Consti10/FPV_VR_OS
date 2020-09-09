@@ -20,7 +20,7 @@ import constantin.video.core.video_player.VideoSettings;
 
 
 
-public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture, IVideoParamsChanged, GLContextSurfaceLess.SecondarySharedContext {
+public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture, IVideoParamsChanged, GLContextSurfaceLess.ISecondarySharedContext {
     static final String TAG="GLRStereoVR";
     static {
         System.loadLibrary("GLRStereoVR");

@@ -13,6 +13,8 @@ include(${T_CORE_DIR}/TelemetryCore.cmake)
 include(${RX_CORE_DIR}/RenderingXCore.cmake)
 # VideoCore is not needed
 
+#find_package(TelemetryReceiver REQUIRED CONFIG)
+
 ##########################################################################################################
 # Scene (Engine) Stuff (OSD and video rendering)
 ##########################################################################################################

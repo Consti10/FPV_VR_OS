@@ -57,6 +57,8 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     // dji sdk end
     //implementation project(path: ':app')
-    implementation project(':VideoCore')
-    implementation project(':TelemetryCore')
+    //implementation project(':VideoCore')
+    //implementation project(':TelemetryCore')
+    implementation "com.github.Consti10.LiveVideo10ms:VideoCore:25f87dc9"
+    implementation "com.github.Consti10.LiveVideo10ms:TelemetryCore:25f87dc9"
 }
