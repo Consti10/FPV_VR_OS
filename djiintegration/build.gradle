@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures{
+        viewBinding=true
+        //prefab = true
+    }
     // dji sdk begin
     packagingOptions {
         doNotStrip "*/*/libdjivideo.so"
@@ -57,8 +61,9 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     // dji sdk end
     //implementation project(path: ':app')
-    implementation project(':VideoCore')
-    implementation project(':TelemetryCore')
+    api project(':VideoCore')
+    api project(':TelemetryCore')
+    api project(':uvcintegration')
     //implementation "com.github.Consti10.LiveVideo10ms:VideoCore:25f87dc9"
     //implementation "com.github.Consti10.LiveVideo10ms:TelemetryCore:25f87dc9"
 }

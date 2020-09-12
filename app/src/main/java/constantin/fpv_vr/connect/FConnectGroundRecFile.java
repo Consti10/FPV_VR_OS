@@ -25,9 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.hbisoft.pickit.PickiT;
-import com.hbisoft.pickit.PickiTCallbacks;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -79,7 +76,7 @@ public class FConnectGroundRecFile extends Fragment{
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                intent.setType("video/*");
+                intent.setType("video/fpv");
                 Toaster.makeToast(mContext,"Select .fpv ground recording file");
                 startActivityForResult(intent,REQUEST_CODE_PICK_FILE);
             }

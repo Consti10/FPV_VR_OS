@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
-import com.hbisoft.pickit.SDUtil;
 
 import java.io.File;
 
