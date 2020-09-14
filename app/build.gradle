@@ -45,7 +45,7 @@ android {
     }
     buildFeatures{
         viewBinding=true
-        prefab = true
+        //prefab = true
     }
     // dji sdk begin
     packagingOptions {
