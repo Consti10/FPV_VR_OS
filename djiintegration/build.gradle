@@ -18,7 +18,7 @@ android {
     }
     buildFeatures{
         viewBinding=true
-        prefab = true
+        //prefab = true
     }
     // dji sdk begin
     packagingOptions {
@@ -61,10 +61,10 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     // dji sdk end
     //implementation project(path: ':app')
-    //api project(':VideoCore')
-    //api project(':TelemetryCore')
-    //api project(':uvcintegration')
-    api "com.github.Consti10.LiveVideo10ms:VideoCore:72b4e6a0"
-    api "com.github.Consti10.LiveVideo10ms:TelemetryCore:72b4e6a0"
-    api "com.github.Consti10.LiveVideo10ms:uvcintegration:72b4e6a0"
+    api project(':VideoCore')
+    api project(':TelemetryCore')
+    api project(':uvcintegration')
+    //api "com.github.Consti10.LiveVideo10ms:VideoCore:72b4e6a0"
+    //api "com.github.Consti10.LiveVideo10ms:TelemetryCore:72b4e6a0"
+    //api "com.github.Consti10.LiveVideo10ms:uvcintegration:72b4e6a0"
 }

@@ -81,7 +81,7 @@ void TextElements1::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
 
 void TextElements1::updateSubElement(unsigned long whichSubStr,OSDTextObj* obj)const{
 
-    TelemetryReceiver::MTelemetryValue tmp=mTelemetryR.getTelemetryValue(mOptions.enableXX.at(whichSubStr));
+    MTelemetryValue tmp=mTelemetryR.getTelemetryValue(mOptions.enableXX.at(whichSubStr));
     if(tmp.hasIcon()){
         tmp.prefixIcon+=L" ";
     }else{

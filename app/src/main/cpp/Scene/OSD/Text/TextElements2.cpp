@@ -180,7 +180,7 @@ void TextElements2::updateSubElement(unsigned long id,OSDTextObj* obj)const {
     const auto iconColor=prefixColor;
 
     const auto ID=mOptions.enableXX.at(id);
-    TelemetryReceiver::MTelemetryValue tmp=mTelemetryReceiver.getTelemetryValue(ID);
+    MTelemetryValue tmp=mTelemetryReceiver.getTelemetryValue(ID);
     if(tmp.prefix.empty()){
     }else{
         tmp.prefix+=L" ";
