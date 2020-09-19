@@ -5,7 +5,7 @@ import android.graphics.SurfaceTexture;
 import android.util.Log;
 import android.view.Surface;
 
-import constantin.video.core.video_player.VideoPlayer;
+import constantin.video.core.player.VideoPlayer;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.products.Aircraft;
@@ -13,14 +13,14 @@ import dji.sdk.products.Aircraft;
 // Use either one of the Interfaces to start() / stop the video player
 // e.g use either SurfaceView.getHolder().addCallback(videoPlayer); or
 // use new VideoSurfaceHolder(context,videoPlayer);
-
-public class DJIVideoPlayer extends VideoPlayer {
+// If enabled, receive video from a DJI drone. Else,behave same as VideoPlayer
+public class VideoPlayerDJI extends VideoPlayer {
     private final boolean DJI_ENABLED;
     private DJICodecManager mCodecManager;
     private final Context context;
     private boolean prioSet=false;
 
-    public DJIVideoPlayer(Context context) {
+    public VideoPlayerDJI(Context context) {
         super(context);
         this.context=context;
         DJI_ENABLED=DJIApplication.isDJIEnabled(context);

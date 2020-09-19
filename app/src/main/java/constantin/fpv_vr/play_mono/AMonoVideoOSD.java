@@ -1,11 +1,9 @@
 package constantin.fpv_vr.play_mono;
 
 import android.graphics.PixelFormat;
-import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -18,21 +16,20 @@ import constantin.fpv_vr.R;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
-import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
-import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
+import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
+import constantin.fpv_vr.djiintegration.VideoPlayerDJI;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.renderingx.core.xglview.XSurfaceParams;
 import constantin.telemetry.core.TelemetryReceiver;
-import constantin.test.UVCPlayer;
+import constantin.uvcintegration.UVCPlayer;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.gl.ISurfaceTextureAvailable;
-import constantin.video.core.video_player.VideoPlayer;
-import constantin.video.core.video_player.VideoSettings;
+import constantin.video.core.player.VideoPlayer;
+import constantin.video.core.player.VideoSettings;
 
-import static constantin.video.core.video_player.VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
+import static constantin.video.core.player.VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
 
 /*****************************************************************
  *  * OSD can be fully disabled
@@ -72,11 +69,11 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         }else{
             uvcPlayer=null;
             videoPlayer= DJIApplication.isDJIEnabled(this) ?
-                    new DJIVideoPlayer(this):
+                    new VideoPlayerDJI(this):
                     new VideoPlayer(this);
             videoPlayer.setIVideoParamsChanged(this);
             telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
-                    new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
+                    new TelemetryReceiverDJI(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         }
         // if needed, create and initialize the GLSurfaceView

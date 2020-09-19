@@ -1,7 +1,9 @@
 package constantin.fpv_vr.connect;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,7 +35,6 @@ public class FConnectWB extends Fragment implements View.OnClickListener , OpenH
     private TestReceiverTelemetry mTestReceiverTelemetry;
     private TestReceiverVideo mTestReceiverVideo;
     private ConnectEzwbFragmentBinding binding;
-
 
     private OpenHDConnectionListener mOpenHDConnectionListener;
 
@@ -111,17 +112,20 @@ public class FConnectWB extends Fragment implements View.OnClickListener , OpenH
     }
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Mode1InfoB:
-                Toast.makeText(mContext,mContext.getString(R.string.EZWBMode1Info),Toast.LENGTH_LONG).show();
+                Toaster.makeHelperAlertDialog(mContext,mContext.getString(R.string.EZWBMode1Info));
                 break;
             case R.id.Mode2InfoB:
-                Toast.makeText(mContext,mContext.getString(R.string.EZWBMode2Info),Toast.LENGTH_LONG).show();
+                Toaster.makeHelperAlertDialog(mContext,mContext.getString(R.string.EZWBMode2Info));
                 break;
             case R.id.Mode1ConnectB:
-                Toaster.makeToast(mContext, "Connect to EZ-WifiBroadcast with PW=wifibraodcast or\nOpenHD with PW=wifiopenhd", true);
+                new AlertDialog.Builder(mContext).setMessage(mContext.getString(R.string.Info_ConnectEZWBOPNEHD))
+                        .setPositiveButton("Okay", (dialog, which) ->
+                                startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))).show();
                 startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.Mode2ConnectB:
@@ -129,7 +133,7 @@ public class FConnectWB extends Fragment implements View.OnClickListener , OpenH
                     Toast.makeText(mContext,"Please check your usb connection",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                IsConnected.openUSBTetherSettings(mContext);
+                IsConnected.makeAlertDialogOpenTetherSettings(mContext);
                 break;
             default:
                 break;

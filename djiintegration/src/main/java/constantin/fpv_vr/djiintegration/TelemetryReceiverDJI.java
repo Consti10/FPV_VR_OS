@@ -19,12 +19,12 @@ import dji.common.util.CommonCallbacks;
 import dji.sdk.airlink.WiFiLink;
 import dji.sdk.products.Aircraft;
 
-public class DJITelemetryReceiver extends TelemetryReceiver {
+public class TelemetryReceiverDJI extends TelemetryReceiver {
     private static final float MPS_TO_KPH=3.6f;
     private int qualityUpPercentage;
     private int qualityDownPercentage;
 
-    public <T extends Activity & LifecycleOwner> DJITelemetryReceiver(T parent, long externalGroundRecorder, long externalFileReader) {
+    public <T extends Activity & LifecycleOwner> TelemetryReceiverDJI(T parent, long externalGroundRecorder, long externalFileReader) {
         super((T)parent, externalGroundRecorder,externalFileReader);
         if(DJIApplication.isDJIEnabled(context)){
             TelemetrySettings.setT_SOURCE(parent,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);

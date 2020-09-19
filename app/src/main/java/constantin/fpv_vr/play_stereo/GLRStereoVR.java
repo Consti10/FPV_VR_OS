@@ -16,7 +16,7 @@ import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
-import constantin.video.core.video_player.VideoSettings;
+import constantin.video.core.player.VideoSettings;
 
 
 

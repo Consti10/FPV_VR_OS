@@ -26,7 +26,7 @@ import constantin.fpv_vr.settings.SJ;
 import constantin.telemetry.core.ASettingsTelemetry;
 import constantin.telemetry.core.TelemetrySettings;
 import constantin.video.core.AVideoSettings;
-import constantin.video.core.video_player.VideoSettings;
+import constantin.video.core.player.VideoSettings;
 
 /************************************
  * This activity only writes values in pref_connect.xml .

@@ -60,6 +60,10 @@
             \n2)On your receiver, forward rtp h264 video stream via UDP to Port 5600 and Telemetry to the equivalent Ports (5001,5001 usw)
             \n or raw h264 video stream via UDP to Port 5600 when disabling parseRTP
     </string>
+    <string name="Info_ConnectEZWBOPNEHD">
+        Connect to EZ-WifiBroadcast with PW=wifibraodcast or OpenHD with PW=wifiopenhd
+    </string>
+
 
 
     <string name="PerformanceHacksDescription">PLEASE READ CAREFULLY BEFORE CHANGING VALUES !

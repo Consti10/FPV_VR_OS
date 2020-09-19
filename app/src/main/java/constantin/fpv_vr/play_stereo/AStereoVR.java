@@ -9,14 +9,14 @@ import android.os.Bundle;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;
-import constantin.fpv_vr.djiintegration.DJITelemetryReceiver;
-import constantin.fpv_vr.djiintegration.DJIVideoPlayer;
+import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
+import constantin.fpv_vr.djiintegration.VideoPlayerDJI;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.views.VrActivity;
 import constantin.renderingx.core.views.VrView;
 import constantin.telemetry.core.TelemetryReceiver;
-import constantin.test.UVCPlayer;
-import constantin.video.core.video_player.VideoPlayer;
+import constantin.uvcintegration.UVCPlayer;
+import constantin.video.core.player.VideoPlayer;
 
 public class AStereoVR extends VrActivity {
     //Components use the android LifecycleObserver. Since they don't need forwarding of
@@ -38,10 +38,10 @@ public class AStereoVR extends VrActivity {
             vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
         }else{
             final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
-                    new DJIVideoPlayer(this):
+                    new VideoPlayerDJI(this):
                     new VideoPlayer(this);
             final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
-                    new DJITelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
+                    new TelemetryReceiverDJI(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
                     new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
             mGLRStereoVR = new GLRStereoVR(this, telemetryReceiver, vrView.getGvrApi().getNativeGvrContext());
             videoPlayer.setIVideoParamsChanged(mGLRStereoVR);

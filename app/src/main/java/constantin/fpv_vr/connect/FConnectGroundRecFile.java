@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.databinding.ConnectGrfileFragmentBinding;
 import constantin.telemetry.core.TelemetrySettings;
-import constantin.video.core.video_player.VideoSettings;
+import constantin.video.core.player.VideoSettings;
 
 
 public class FConnectGroundRecFile extends Fragment{

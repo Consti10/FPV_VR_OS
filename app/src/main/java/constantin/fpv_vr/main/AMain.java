@@ -44,7 +44,7 @@ import constantin.renderingx.core.gles_info.AWriteGLESInfo;
 import constantin.test.UVCHelper;
 import constantin.video.core.RequestPermissionHelper;
 import constantin.video.core.TestReceiverVideo;
-import constantin.video.core.video_player.VideoSettings;
+import constantin.video.core.player.VideoSettings;
 
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_EZWB;
 import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_Manually;

@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 import constantin.fpv_vr.databinding.ConnectUvcFragmentBinding;
 import constantin.fpv_vr.settings.SJ;
-import constantin.test.TranscodeService;
-import constantin.test.UVCReceiverDecoder;
+import constantin.uvcintegration.TranscodeService;
+import constantin.uvcintegration.UVCReceiverDecoder;
 
 public class FConnectUVC extends Fragment implements View.OnClickListener{
     private ConnectUvcFragmentBinding binding;
