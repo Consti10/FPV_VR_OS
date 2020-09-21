@@ -13,6 +13,7 @@ import com.google.vr.ndk.base.GvrApi;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
+import constantin.fpv_vr.VideoTelemetryComponent;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
@@ -44,8 +45,8 @@ import static constantin.video.core.player.VideoSettings.VIDEO_MODE_2D_MONOSCOPI
 public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChanged {
     private ActivityMonoVidOsdBinding binding;
     public static final String EXTRA_KEY_ENABLE_OSD="EXTRA_KEY_ENABLE_OSD";
-    private TelemetryReceiver telemetryReceiver;
     private GLRMono mGLRenderer;
+    private VideoTelemetryComponent videoTelemetryComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,23 +60,9 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         final boolean USE_ANDROID_SURFACE_FOR_VIDEO=VIDEO_MODE== VIDEO_MODE_2D_MONOSCOPIC;
         //System.out.println("USE_ANDROID_SURFACE_FOR_VIDEO"+USE_ANDROID_SURFACE_FOR_VIDEO);
         // The video player can be configured both for android surface and opengl surface
-        final UVCPlayer uvcPlayer;
-        final VideoPlayer videoPlayer;
-        if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
-            uvcPlayer=new UVCPlayer(this);
-            uvcPlayer.setIVideoParamsChanged(this);
-            videoPlayer=null;
-            telemetryReceiver=new TelemetryReceiver(this,0,0);
-        }else{
-            uvcPlayer=null;
-            videoPlayer= DJIApplication.isDJIEnabled(this) ?
-                    new VideoPlayerDJI(this):
-                    new VideoPlayer(this);
-            videoPlayer.setIVideoParamsChanged(this);
-            telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
-                    new TelemetryReceiverDJI(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
-                    new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
-        }
+        videoTelemetryComponent=new VideoTelemetryComponent(this);
+        videoTelemetryComponent.setIVideoParamsChanged(this);
+
         // if needed, create and initialize the GLSurfaceView
         XGLSurfaceView mGLSurfaceView;
         if(!USE_ANDROID_SURFACE_FOR_VIDEO || ENABLE_OSD){
@@ -88,17 +75,17 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                 mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
                 mGLSurfaceView.setZOrderMediaOverlay(true);
             }
-            mGLRenderer = new GLRMono(this,  telemetryReceiver, binding.myVRLayout.getGvrApi(),VIDEO_MODE, ENABLE_OSD);
+            mGLRenderer = new GLRMono(this,videoTelemetryComponent.getTelemetryReceiver(), binding.myVRLayout.getGvrApi(),VIDEO_MODE, ENABLE_OSD);
             if(VIDEO_MODE== VIDEO_MODE_2D_MONOSCOPIC){
                 mGLSurfaceView.setRenderer(mGLRenderer,null);
             }else{
-                mGLSurfaceView.setRenderer(mGLRenderer,videoPlayer.configure2());
+                mGLSurfaceView.setRenderer(mGLRenderer,videoTelemetryComponent.configure2());
             }
             binding.myVRLayout.setPresentationView(mGLSurfaceView);
         }
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding.SurfaceViewMonoscopicVideo.setVisibility(View.VISIBLE);
-            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(uvcPlayer==null ? videoPlayer.configure1() : uvcPlayer.configure1());
+            binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoTelemetryComponent.configure1());
             //binding.SurfaceViewMonoscopicVideo.getHolder().setFormat();
         }else{
             //mGLRenderer.getVideoSurfaceHolder().setCallBack(uvcPlayer==null ? videoPlayer.configure2() : uvcPlayer.configure2());
@@ -137,10 +124,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
 
     @Override
     public void onDecodingInfoChanged(DecodingInfo decodingInfo) {
-        if(telemetryReceiver!=null){
-            telemetryReceiver.setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
-                    decodingInfo.avgHWDecodingTime_ms);
-        }
+        videoTelemetryComponent.getTelemetryReceiver().setDecodingInfo(decodingInfo.currentFPS,decodingInfo.currentKiloBitsPerSecond,decodingInfo.avgParsingTime_ms,decodingInfo.avgWaitForInputBTime_ms,
+                decodingInfo.avgHWDecodingTime_ms);
     }
 
     @Override

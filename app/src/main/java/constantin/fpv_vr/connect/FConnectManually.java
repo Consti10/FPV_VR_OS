@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -36,7 +37,7 @@ public class FConnectManually extends Fragment implements View.OnClickListener{
         binding=ConnectManuallyFragmentBinding.inflate(inflater);
         binding.ipAdressesTV.setText(IsConnected.getActiveInetAddresses());
         mContext=getActivity();
-        FragmentActivity activity=requireActivity();
+        AppCompatActivity activity=(AppCompatActivity)requireActivity();
         mTestReceiverTelemetry=new TestReceiverTelemetry(activity);
         mTestReceiverTelemetry.setViews(binding.FMReceivedTelemetryDataTV,null,null);
         mTestReceiverVideo=new TestReceiverVideo(activity);

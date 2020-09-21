@@ -2,6 +2,7 @@ package constantin.fpv_vr.djiintegration;
 
 import android.app.Activity;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 
 import constantin.telemetry.core.TelemetryReceiver;
@@ -24,8 +25,8 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
     private int qualityUpPercentage;
     private int qualityDownPercentage;
 
-    public <T extends Activity & LifecycleOwner> TelemetryReceiverDJI(T parent, long externalGroundRecorder, long externalFileReader) {
-        super((T)parent, externalGroundRecorder,externalFileReader);
+    public TelemetryReceiverDJI(AppCompatActivity parent, long externalGroundRecorder, long externalFileReader) {
+        super(parent, externalGroundRecorder,externalFileReader);
         if(DJIApplication.isDJIEnabled(context)){
             TelemetrySettings.setT_SOURCE(parent,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
             setupDJICallbacks();

@@ -5,6 +5,8 @@ import android.graphics.SurfaceTexture;
 import android.util.Log;
 import android.view.Surface;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import constantin.video.core.player.VideoPlayer;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
@@ -20,9 +22,9 @@ public class VideoPlayerDJI extends VideoPlayer {
     private final Context context;
     private boolean prioSet=false;
 
-    public VideoPlayerDJI(Context context) {
-        super(context);
-        this.context=context;
+    public VideoPlayerDJI(AppCompatActivity parent) {
+        super(parent);
+        this.context=parent;
         DJI_ENABLED=DJIApplication.isDJIEnabled(context);
         if(DJI_ENABLED){
             final Aircraft aircraft=DJIApplication.getConnectedAircraft();

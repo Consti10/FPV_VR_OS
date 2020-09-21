@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -47,7 +48,7 @@ public class FConnectWB extends Fragment implements View.OnClickListener , OpenH
         binding.Mode2ConnectB.setOnClickListener(this);
         binding.Mode1InfoB.setOnClickListener(this);
         binding.Mode2InfoB.setOnClickListener(this);
-        final FragmentActivity activity=requireActivity();
+        final AppCompatActivity activity=(AppCompatActivity)requireActivity();
         mOpenHDConnectionListener=new OpenHDConnectionListener(activity,this);
         mTestReceiverTelemetry =new TestReceiverTelemetry(activity);
         mTestReceiverVideo=new TestReceiverVideo(activity);

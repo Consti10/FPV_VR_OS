@@ -7,6 +7,7 @@ package constantin.fpv_vr.play_stereo;
 
 import android.os.Bundle;
 import constantin.fpv_vr.AirHeadTrackingSender;
+import constantin.fpv_vr.VideoTelemetryComponent;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
@@ -27,27 +28,13 @@ public class AStereoVR extends VrActivity {
         super.onCreate(savedInstanceState);
         VrView vrView=new VrView(this);
         //vrView.enableSuperSync();
+        final VideoTelemetryComponent videoTelemetryComponent=new VideoTelemetryComponent(this);
+        final GLRStereoVR mGLRStereoVR = new GLRStereoVR(this,videoTelemetryComponent.getTelemetryReceiver(),vrView.getGvrApi().getNativeGvrContext());
+        videoTelemetryComponent.setIVideoParamsChanged(mGLRStereoVR);
 
-        final GLRStereoVR mGLRStereoVR;
-        if(SJ.getConnectionType(this)== AConnect.CONNECTION_TYPE_UVC){
-            final UVCPlayer uvcPlayer=new UVCPlayer(this);
-            final TelemetryReceiver telemetryReceiver=new TelemetryReceiver(this,0,0);
-            mGLRStereoVR = new GLRStereoVR(this, telemetryReceiver,vrView.getGvrApi().getNativeGvrContext());
-            uvcPlayer.setIVideoParamsChanged(mGLRStereoVR);
-            vrView.getPresentationView().setRenderer(mGLRStereoVR,uvcPlayer.configure2());
-            vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
-        }else{
-            final VideoPlayer videoPlayer= DJIApplication.isDJIEnabled(this) ?
-                    new VideoPlayerDJI(this):
-                    new VideoPlayer(this);
-            final TelemetryReceiver telemetryReceiver= DJIApplication.isDJIEnabled(this) ?
-                    new TelemetryReceiverDJI(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer()):
-                    new TelemetryReceiver(this,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
-            mGLRStereoVR = new GLRStereoVR(this, telemetryReceiver, vrView.getGvrApi().getNativeGvrContext());
-            videoPlayer.setIVideoParamsChanged(mGLRStereoVR);
-            vrView.getPresentationView().setRenderer(mGLRStereoVR,videoPlayer.configure2());
-            vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
-        }
+        vrView.getPresentationView().setRenderer(mGLRStereoVR,videoTelemetryComponent.configure2());
+        vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
+
         setContentView(vrView);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this,vrView.getGvrApi());
     }
