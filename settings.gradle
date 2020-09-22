@@ -1,5 +1,5 @@
 include ':app'
-include ':djiintegration'
+//include ':djiintegration'
 
 include ':VideoCore'
 project(':VideoCore').projectDir=new File('..\\LiveVideo10ms\\VideoCore')
