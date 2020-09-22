@@ -29,7 +29,6 @@ public class VideoTelemetryComponent {
     private TelemetryReceiver telemetryReceiver;
     private TelemetryReceiverDJI telemetryReceiverDJI;
 
-
     public VideoTelemetryComponent(final AppCompatActivity parent){
         connectionType=SJ.getConnectionType(parent);
         if(connectionType== AConnect.CONNECTION_TYPE_UVC){
@@ -37,7 +36,7 @@ public class VideoTelemetryComponent {
             telemetryReceiver=new TelemetryReceiver(parent,0,0);
         }else if(connectionType==AConnect.CONNECTION_TYPE_DJI){
             videoPlayerDJI=new VideoPlayerDJI(parent);
-            telemetryReceiverDJI=new TelemetryReceiverDJI(parent,videoPlayerDJI.getExternalGroundRecorder(),videoPlayerDJI.getExternalFilePlayer());
+            telemetryReceiverDJI=new TelemetryReceiverDJI(parent,0,0);
         }else{
             videoPlayer=new VideoPlayer(parent);
             telemetryReceiver=new TelemetryReceiver(parent,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());

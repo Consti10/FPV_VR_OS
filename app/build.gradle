@@ -84,7 +84,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // dji sdk begin
+    // ******************************************* DJI SDK begin *******************************************
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'com.squareup:otto:1.3.8'
     implementation('com.dji:dji-sdk:4.13.1', {
@@ -98,7 +98,7 @@ dependencies {
         exclude module: 'fly-safe-database'
     })
     compileOnly 'com.dji:dji-sdk-provided:4.13.1'
-    // dji sdk end
+    // ******************************************* DJI SDK end *******************************************
 
     implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutVersion"
