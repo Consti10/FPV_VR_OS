@@ -37,8 +37,8 @@ import dji.sdk.sdkmanager.DJISDKManager;
          super.attachBaseContext(paramContext);
          Log.d(TAG,"DJI install start");
          try{
-             MultiDex.install(this);
-             com.secneo.sdk.Helper.install(this);
+             //MultiDex.install(this);
+             //com.secneo.sdk.Helper.install(this);
              //initializeDJIIfNeeded();
          }catch (NoClassDefFoundError e){
              e.printStackTrace();
