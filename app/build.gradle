@@ -109,6 +109,9 @@ dependencies {
     implementation "com.github.Consti10:prefs-plus:$rootProject.myPrefsPlusVersion"
 
     //implementation project(path: ':djiintegration')
+    implementation project(':VideoCore')
+    implementation project(':TelemetryCore')
+    implementation project(':uvcintegration')
 
     implementation project(':RenderingXCore')
     //implementation project(':uvcintegration')

@@ -7,6 +7,7 @@ import android.view.Surface;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import constantin.fpv_vr.Toaster;
 import constantin.video.core.player.VideoPlayer;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;

@@ -1,6 +1,8 @@
 package constantin.fpv_vr.djiintegration;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import constantin.fpv_vr.Toaster;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.telemetry.core.TelemetrySettings;
 import dji.common.airlink.SignalQualityCallback;
