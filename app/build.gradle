@@ -38,7 +38,7 @@ android {
         }
         debug {
             debuggable true
-            minifyEnabled true
+            minifyEnabled false // without this set to false jni calls might not work
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
