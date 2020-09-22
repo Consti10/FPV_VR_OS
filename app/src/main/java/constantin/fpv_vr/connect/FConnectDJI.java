@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
@@ -20,10 +21,19 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     private ConnectDjiFragmentBinding binding;
     private Context mContext;
     private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            // Needed for DJI registering the SDK (alongside with WRITE_EXTERNAL_STORAGE)
-            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.VIBRATE, // Gimbal rotation
+            Manifest.permission.INTERNET, // API requests
+            Manifest.permission.ACCESS_WIFI_STATE, // WIFI connected products
+            Manifest.permission.ACCESS_COARSE_LOCATION, // Maps
+            Manifest.permission.ACCESS_NETWORK_STATE, // WIFI connected products
+            Manifest.permission.ACCESS_FINE_LOCATION, // Maps
+            Manifest.permission.CHANGE_WIFI_STATE, // Changing between WIFI and USB connection
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, // Log files
+            Manifest.permission.BLUETOOTH, // Bluetooth connected products
+            Manifest.permission.BLUETOOTH_ADMIN, // Bluetooth connected products
+            Manifest.permission.READ_EXTERNAL_STORAGE, // Log files
+            Manifest.permission.READ_PHONE_STATE, // Device UUID accessed upon registration
+            Manifest.permission.RECORD_AUDIO // Speaker accessory
     },this);
 
     @Override
@@ -32,17 +42,18 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                              Bundle savedInstanceState) {
         mContext=getActivity();
         binding=ConnectDjiFragmentBinding.inflate(inflater);
-        requestPermissionHelper.checkAndRequestPermissions(requireActivity());
+        //requestPermissionHelper.checkAndRequestPermissions(requireActivity());
         return binding.getRoot();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(requestPermissionHelper.allPermissionsGranted(requireActivity())){
-            final Application application=requireActivity().getApplication();
-            ((DJIApplication)application).initializeDJIIfNeeded();
-        }
+        requestPermissionHelper.checkAndRequestPermissions(requireActivity());
+        //if(requestPermissionHelper.allPermissionsGranted(requireActivity())){
+        //    final Application application=requireActivity().getApplication();
+        //    ((DJIApplication)application).initializeDJIIfNeeded();
+        //}
     }
 
     @Override
@@ -71,6 +82,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     @Override
     public void onPermissionsGranted() {
         final Application application=requireActivity().getApplication();
-        ((DJIApplication)application).initializeDJIIfNeeded();
+        ((DJIApplication)application).initializeDJIIfNeeded((AppCompatActivity)requireActivity());
     }
 }

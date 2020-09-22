@@ -1,4 +1,4 @@
-package constantin.fpv_vr.djiintegration;
+ package constantin.fpv_vr.djiintegration;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.multidex.MultiDex;
 
 import com.secneo.sdk.Helper;
 
@@ -34,8 +37,9 @@ public class DJIApplication extends Application {
         super.attachBaseContext(paramContext);
         Log.d(TAG,"DJI install start");
         try{
-            Helper.install(DJIApplication.this);
-            initializeDJIIfNeeded();
+            MultiDex.install(this);
+            com.secneo.sdk.Helper.install(this);
+            //initializeDJIIfNeeded();
         }catch (NoClassDefFoundError e){
             e.printStackTrace();
         }
@@ -69,9 +73,9 @@ public class DJIApplication extends Application {
         return getConnectedAircraft()!=null;
     }
 
-    public synchronized void initializeDJIIfNeeded(){
+    public synchronized void initializeDJIIfNeeded(final AppCompatActivity parent){
         if(true){
-            return;
+            //return;
         }
         try{
             final Context context=getBaseContext();
@@ -81,6 +85,9 @@ public class DJIApplication extends Application {
             if(DJISDKManager.getInstance().hasSDKRegistered()){
                 return;
             }
+            if(true){
+                //return;
+            }
             if (isRegistrationInProgress.compareAndSet(false, true)) {
                 Log.d(TAG,"Start DJI registration");
                 AsyncTask.execute(new Runnable() {
@@ -88,12 +95,12 @@ public class DJIApplication extends Application {
                     public void run() {
                         showToast("registering, pls wait...");
                         // We mustn't override the callback directly because of the DJI install libraries process
-                        DJISDKManager.getInstance().registerApp(DJIApplication.this.getBaseContext(), new DJISDKManager.SDKManagerCallback() {
+                        DJISDKManager.getInstance().registerApp(parent, new DJISDKManager.SDKManagerCallback() {
                             @Override
                             public void onRegister(DJIError djiError) {
                                 if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
                                     showToast("Register Success");
-                                    DJISDKManager.getInstance().startConnectionToProduct();
+                                    //DJISDKManager.getInstance().startConnectionToProduct();
                                 } else {
                                     showToast("Register sdk fails, please check your network connection!");
                                     isRegistrationInProgress.set(false);
@@ -139,7 +146,7 @@ public class DJIApplication extends Application {
                     }
                 });
             }
-        }catch (NoClassDefFoundError e){
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

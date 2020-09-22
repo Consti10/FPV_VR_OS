@@ -65,7 +65,12 @@ android {
         doNotStrip "*/*/libDJICSDKCommon.so"
         doNotStrip "*/*/libDJIUpgradeCore.so"
         doNotStrip "*/*/libDJIUpgradeJNI.so"
+        doNotStrip "*/*/libDJIWaypointV2Core.so"
+        doNotStrip "*/*/libAMapSDK_MAP_v6_9_2.so"
+        doNotStrip "*/*/libDJIMOP.so"
         exclude 'META-INF/rxjava.properties'
+        exclude 'assets/location_map_gps_locked.png'
+        exclude 'assets/location_map_gps_3d.png'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

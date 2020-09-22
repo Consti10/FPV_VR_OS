@@ -1,10 +1,6 @@
 package constantin.fpv_vr.djiintegration;
 
-import android.app.Activity;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
-
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.telemetry.core.TelemetrySettings;
 import dji.common.airlink.SignalQualityCallback;
