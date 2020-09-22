@@ -80,7 +80,7 @@ import dji.sdk.sdkmanager.DJISDKManager;
          try{
              final Context context=getBaseContext();
              if(!isDJIEnabled(context)){
-                 return;
+                 //return;
              }
              if(DJISDKManager.getInstance().hasSDKRegistered()){
                  return;
