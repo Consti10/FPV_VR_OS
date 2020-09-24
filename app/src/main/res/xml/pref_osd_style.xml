@@ -76,7 +76,8 @@
                 android:title="@string/OSD_STEREO_TEXT_OUTLINE_STRENGTH"
                 android:summary="Select values between 0.0 (no outline) and 0.3 (maximum outline)."
                 android:defaultValue="0.2"
-                app:minFloatValue="0.0"/>
+                app:minFloatValue="0.0"
+                app:maxFloatValue="0.3"/>
             <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
                 android:title="@string/OSD_TRANSPARENT_BACKGROUND_STRENGTH"
