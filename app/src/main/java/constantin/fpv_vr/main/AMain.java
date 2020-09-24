@@ -88,7 +88,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //if(!DJISDKManager.getInstance().hasSDKRegistered()){
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
-        notifyUserStartedForUVC();
+        notifyUserIfAppStartedForUVC();
         //((DJIApplication)getApplication()).initializeDJIIfNeeded(this);
     }
 
@@ -272,7 +272,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         System.out.println("HBRecorderOnError "+errorCode+" "+reason);
     }
     // Notify user if mode is probably UVC
-    private void notifyUserStartedForUVC(){
+    private void notifyUserIfAppStartedForUVC(){
         if (UVCHelper.startedViaIntentFilterActionUSB(this)) {
             if(SJ.getConnectionType(this)!=CONNECTION_TYPE_UVC){
                 final String message="Select UVC as connection type";

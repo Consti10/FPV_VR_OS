@@ -82,6 +82,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     @Override
     public void onPermissionsGranted() {
         final Application application=requireActivity().getApplication();
-        ((DJIApplication)application).initializeDJIIfNeeded((AppCompatActivity)requireActivity());
+        ((DJIApplication)application).initializeDJIIfNeeded();
     }
 }

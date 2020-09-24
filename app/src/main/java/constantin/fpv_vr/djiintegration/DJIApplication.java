@@ -28,7 +28,7 @@ import dji.sdk.sdkmanager.DJISDKManager;
   * If not enabled (connection type != DJI ) behaviour is like a default Android Application
   */
  public class DJIApplication extends Application {
-     private static final String TAG="DJIApplication";
+     private static final String TAG=DJIApplication.class.getSimpleName();
      private final AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
      private long lastTimeToastDownloadDatabase=0;
 
@@ -74,20 +74,23 @@ import dji.sdk.sdkmanager.DJISDKManager;
          return getConnectedAircraft()!=null;
      }
 
-     public synchronized void initializeDJIIfNeeded(final AppCompatActivity parent){
+     /**
+      * If DJI is enabled, this method registers the app with DJI such that it can connect do DJI products
+      * This has to be called after all the required permissions have been granted. However, since DJI can only be enabled
+      * Via the 'connect' fragments, if dji is enabled, all permissions are most likely granted
+      */
+     public synchronized void initializeDJIIfNeeded(){
          if(true){
              //return;
          }
          try{
-             final Context context=getBaseContext();
+             final Context context=getApplicationContext();
              if(!isDJIEnabled(context)){
                  return;
              }
              if(DJISDKManager.getInstance().hasSDKRegistered()){
+                 Log.d(TAG,"Already registered sdk");
                  return;
-             }
-             if(true){
-                 //return;
              }
              if (isRegistrationInProgress.compareAndSet(false, true)) {
                  Log.d(TAG,"Start DJI registration");
@@ -96,12 +99,12 @@ import dji.sdk.sdkmanager.DJISDKManager;
                      public void run() {
                          showToast("registering, pls wait...");
                          // We mustn't override the callback directly because of the DJI install libraries process
-                         DJISDKManager.getInstance().registerApp(parent, new DJISDKManager.SDKManagerCallback() {
+                         DJISDKManager.getInstance().registerApp(context, new DJISDKManager.SDKManagerCallback() {
                              @Override
                              public void onRegister(DJIError djiError) {
                                  if (djiError == DJISDKError.REGISTRATION_SUCCESS) {
                                      showToast("Register Success");
-                                     //DJISDKManager.getInstance().startConnectionToProduct();
+                                     DJISDKManager.getInstance().startConnectionToProduct();
                                  } else {
                                      showToast("Register sdk fails, please check your network connection!");
                                      isRegistrationInProgress.set(false);
