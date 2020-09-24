@@ -18,6 +18,7 @@ import dji.sdk.products.Aircraft;
 // use new VideoSurfaceHolder(context,videoPlayer);
 // If enabled, receive video from a DJI drone. Else,behave same as VideoPlayer
 public class VideoPlayerDJI extends VideoPlayer {
+    private static final String TAG=VideoPlayerDJI.class.getSimpleName();
     private final boolean DJI_ENABLED;
     private DJICodecManager mCodecManager;
     private final Context context;
@@ -67,6 +68,7 @@ public class VideoPlayerDJI extends VideoPlayer {
             android.os.Process.setThreadPriority(Thread.MAX_PRIORITY);
             prioSet=true;
         }
+        Log.d(TAG,"Video data");
         //if (mCodecManager != null) {
         //    System.out.println("Data");
         //    mCodecManager.sendDataToDecoder(videoBuffer, size);
