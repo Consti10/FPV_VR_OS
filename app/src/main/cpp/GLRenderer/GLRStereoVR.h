@@ -51,8 +51,8 @@ protected:
     void placeGLElements();
 protected:
     TelemetryReceiver& mTelemetryReceiver;
-    FPSCalculator mFPSCalculator;
-    FPSCalculator mOSDFPSCalculator;
+    FPSCalculator mFPSCalculator{"VR",std::chrono::seconds(1)};
+    FPSCalculator mOSDFPSCalculator{"OSD",std::chrono::seconds(1)};
     const VRSettings mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
