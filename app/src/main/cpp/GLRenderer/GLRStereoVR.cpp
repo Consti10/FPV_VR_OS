@@ -27,7 +27,6 @@ GLRStereoVR::GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver&
         gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
         videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
         mTelemetryReceiver(telemetryReceiver),
-        mFPSCalculator("OpenGL FPS",std::chrono::seconds(2)),
         vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0,false)
         {
     if(vsyncP!=0){
@@ -115,6 +114,8 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
         placeGLElements();
     }
     mFPSCalculator.tick();
+    mFTCalculator.tick();
+
     //MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
@@ -172,6 +173,8 @@ void GLRStereoVR::onSecondaryContextCreated(JNIEnv* env, jobject androidContext)
 
 void GLRStereoVR::onSecondaryContextDoWork(JNIEnv* env) {
     mOSDFPSCalculator.tick();
+    mOSDFTCalculator.tick();
+
     //MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
     ATrace_beginSection("GLRStereoVR::onSecondaryContextDoWork");
     osdRenderbuffer.bind();
