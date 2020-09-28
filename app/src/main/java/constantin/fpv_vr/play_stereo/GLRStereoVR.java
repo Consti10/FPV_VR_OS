@@ -54,9 +54,9 @@ public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurface
 
     @Override
     public void onDrawFrame() {
-        if(SJ.Disable60FPSLock(mContext)){
+        //if(SJ.Disable60FPSLock(mContext)){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
-        }
+        //}
         nativeOnDrawFrame(nativeGLRendererStereo);
         //EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
     }

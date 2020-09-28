@@ -53,8 +53,9 @@ protected:
     TelemetryReceiver& mTelemetryReceiver;
     FPSCalculator mFPSCalculator{"VR",std::chrono::seconds(1)};
     FPSCalculator mOSDFPSCalculator{"OSD",std::chrono::seconds(1)};
-    FPSCalculator mFTCalculator{"VRFT",std::chrono::seconds(1)};
-    FPSCalculator mOSDFTCalculator{"OSDFT",std::chrono::seconds(1)};
+    FrameTimeCalculator mFTCalculator{"VRFT",std::chrono::seconds(1)};
+    FrameTimeCalculator mOSDFTCalculator{"OSDFT",std::chrono::seconds(1)};
+    FrameTimeLimiter mOSDFTLimiter{FrameTimeLimiter::FRAME_TIME_60_FPS};
 
     const VRSettings mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;

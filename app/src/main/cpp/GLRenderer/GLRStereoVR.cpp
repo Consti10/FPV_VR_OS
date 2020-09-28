@@ -174,6 +174,7 @@ void GLRStereoVR::onSecondaryContextCreated(JNIEnv* env, jobject androidContext)
 void GLRStereoVR::onSecondaryContextDoWork(JNIEnv* env) {
     mOSDFPSCalculator.tick();
     mOSDFTCalculator.tick();
+    mOSDFTLimiter.tick();
 
     //MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
     ATrace_beginSection("GLRStereoVR::onSecondaryContextDoWork");
