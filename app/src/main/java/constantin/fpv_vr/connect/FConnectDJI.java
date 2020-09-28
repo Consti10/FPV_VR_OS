@@ -154,8 +154,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         };
     }
 
-
-
+    
     private void setTextDebug(){
         StringBuilder content= new StringBuilder();
         for(final String s:debugList){
