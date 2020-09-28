@@ -10,9 +10,6 @@
 #include "vr/gvr/capi/include/gvr.h"
 #include "vr/gvr/capi/include/gvr_types.h"
 
-//#define CHANGE_SWAP_COLOR
-constexpr auto TAG= "GLRendererStereo";
-
 #include <android/choreographer.h>
 #include <MatrixHelper.h>
 #include <CardboardViewportOcclusion.hpp>
@@ -48,7 +45,7 @@ void GLRStereoVR::placeGLElements(){
 
 void GLRStereoVR::onContextCreated(JNIEnv * env, jobject androidContext, int screenW, int screenH, jobject surfaceTextureHolder) {
     Extensions::initializeGL();
-    NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,TAG);
+    NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_STEREO,__CLASS_NAME__.c_str());
     vrCompositorRenderer.initializeGL();
     //Once we have an OpenGL context, we can create our OpenGL world object instances.
     mSurfaceTextureUpdate.updateFromSurfaceTextureHolder(env,surfaceTextureHolder);

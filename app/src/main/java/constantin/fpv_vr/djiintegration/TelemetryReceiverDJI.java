@@ -121,7 +121,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             wiFiLink.getFrequencyBand(new CommonCallbacks.CompletionCallbackWith<WiFiFrequencyBand>() {
                 @Override
                 public void onSuccess(WiFiFrequencyBand wiFiFrequencyBand) {
-                    Toaster.makeToast(context,"Frequency is "+frequencyBandToString(wiFiFrequencyBand));
+                    Toaster.makeToast(context,"Frequency is "+DJIHelper.frequencyBandToString(wiFiFrequencyBand));
                 }
                 @Override
                 public void onFailure(DJIError djiError) {
@@ -131,15 +131,6 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
         }
     }
 
-    private static String frequencyBandToString(final WiFiFrequencyBand wiFiFrequencyBand){
-        switch (wiFiFrequencyBand){
-            case FREQUENCY_BAND_2_DOT_4_GHZ: return "2.4g";
-            case FREQUENCY_BAND_5_GHZ: return "5g";
-            case FREQUENCY_BAND_DUAL:return "dual";
-            case FREQUENCY_BAND_ONLY_2_DOT_4: return "only 2.4";
-        }
-        return "unknown";
-    }
 
     private static void debugDJIError(final String s,final DJIError djiError){
         if(djiError!=null){
@@ -148,5 +139,6 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             System.out.println(s+"Success");
         }
     }
+
 
 }
