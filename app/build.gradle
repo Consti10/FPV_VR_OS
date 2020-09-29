@@ -116,17 +116,17 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutVersion"
     implementation "com.google.android.material:material:$rootProject.materialVersion"
-    implementation('com.google.android.gms:play-services-location:17.0.0')
+    implementation('com.google.android.gms:play-services-location:17.1.0')
 
     implementation "androidx.preference:preference:$rootProject.androidxpreferenceVersion"
     implementation "com.github.Consti10:prefs-plus:$rootProject.myPrefsPlusVersion"
 
-    //implementation project(path: ':djiintegration')
+    implementation project(':RenderingXCore')
+    //
     implementation project(':VideoCore')
     implementation project(':TelemetryCore')
     implementation project(':uvcintegration')
 
-    implementation project(':RenderingXCore')
     //implementation project(':uvcintegration')
     // TelemetryCore and VideoCore comes from djiintegration (aka api instead of implementation)
     //implementation project(':TelemetryCore')
