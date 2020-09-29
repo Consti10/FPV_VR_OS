@@ -88,6 +88,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //if(!DJISDKManager.getInstance().hasSDKRegistered()){
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
+        ((DJIApplication)getApplication()).initializeDJIIfNeeded();
         notifyUserIfAppStartedForUVC();
     }
 

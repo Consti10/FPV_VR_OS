@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.common.util.ArrayUtils;
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,13 +26,16 @@ import constantin.fpv_vr.djiintegration.DJIHelper;
 import constantin.video.core.RequestPermissionHelper;
 import dji.common.airlink.SignalQualityCallback;
 import dji.common.airlink.WiFiFrequencyBand;
+import dji.common.airlink.WiFiSelectionMode;
 import dji.common.error.DJIError;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.airlink.AirLink;
 import dji.sdk.airlink.WiFiLink;
+import dji.sdk.camera.VideoFeeder;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.products.Aircraft;
 import dji.sdk.remotecontroller.RemoteController;
+import dji.sdk.sdkmanager.DJISDKManager;
 
 public class FConnectDJI extends Fragment implements View.OnClickListener, RequestPermissionHelper.IOnPermissionsGranted{
     private static final String TAG=FConnectDJI.class.getSimpleName();
@@ -63,16 +68,8 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         mContext=getActivity();
         binding=ConnectDjiFragmentBinding.inflate(inflater);
         //requestPermissionHelper.checkAndRequestPermissions(requireActivity());
-        for(int i=0;i<15;i++){
-            debugList.add("X");
-        }
-
-        final Aircraft aircraft=DJIApplication.getConnectedAircraft();
-        if(aircraft!=null) {
-            Toaster.makeToast(requireContext(),"Has aircraft");
-            populateDebugList(aircraft);
-        }else{
-            Toaster.makeToast(requireContext(),"Has no aircraft");
+        for(int i=0;i<20;i++){
+            debugList.add("");
         }
         setTextDebug();
         return binding.getRoot();
@@ -92,15 +89,41 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         debugList.set(6,"isLightbridgeLinkSupported "+airLink.isLightbridgeLinkSupported());
         debugList.set(7,"isOcuSyncLinkSupported "+airLink.isOcuSyncLinkSupported());
         debugList.set(8,"isUpdateCountryCodeRequired() "+airLink.isUpdateCountryCodeRequired());
+        airLink.setCountryCodeCallback(new AirLink.CountryCodeCallback() {
+            @Override
+            public void onRequireUpdateCountryCode() {
+                
+            }
+        });
 
         airLink.setDownlinkSignalQualityCallback(callbackSignal(9,"DownlinkSignalQuality"));
         airLink.setUplinkSignalQualityCallback(callbackSignal(10,"UplinkSignalQuality"));
         final WiFiLink wiFiLink=airLink.getWiFiLink();
         wiFiLink.getFrequencyBand(callbackWifi(11,"Wifi frequency band"));
         wiFiLink.getChannelNumber(callbackInt(12,"Channel number"));
+        wiFiLink.getAvailableChannelNumbers(new CommonCallbacks.CompletionCallbackWith<Integer[]>() {
+            @Override
+            public void onSuccess(Integer[] integers) {
+                StringBuilder s= new StringBuilder();
+                for(final int i:integers){
+                    s.append(i);
+                    s.append(" ");
+                }
+                debugList.set(13,"Channels are "+s);
+                final boolean isCEMode=ArrayUtils.contains(integers,13);
+                debugList.set(14,"Is CE Mode "+isCEMode);
+            }
+
+            @Override
+            public void onFailure(DJIError djiError) {
+                debugList.set(13,"Cannot get channels");
+                debugList.set(14,"Is CE Mode unknown");
+            }
+        });
 
         final RemoteController remoteController=aircraft.getRemoteController();
-        remoteController.getName(callbackString(13,"Remote controller name"));
+        remoteController.getName(callbackString(15,"Remote controller name"));
+        debugList.set(16,"LOG "+DJISDKManager.getInstance().getLogPath());
     }
 
     private CommonCallbacks.CompletionCallbackWith<String> callbackString(int idx, String message){
@@ -154,7 +177,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         };
     }
 
-    
+
     private void setTextDebug(){
         StringBuilder content= new StringBuilder();
         for(final String s:debugList){
@@ -180,11 +203,22 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                     @Override
                     public void run() {
                         Log.d(TAG,"update ui");
+                        final boolean hasProduct=DJIApplication.getConnecteBaseProduct()!=null;
+                        final boolean hasAircraft=DJIApplication.getConnectedAircraft()!=null;
+                        binding.djiInfo.setText("DJI in development. Product "+hasProduct+" Aircraft "+hasAircraft);
+
+                        final Aircraft aircraft=DJIApplication.getConnectedAircraft();
+                        if(aircraft!=null) {
+                            //Toaster.makeToast(requireContext(),"Has aircraft");
+                            populateDebugList(aircraft);
+                        }else{
+                            //Toaster.makeToast(requireContext(),"Has no aircraft");
+                        }
                         setTextDebug();
                     }
                 });
             }
-        }, 0, 500);
+        }, 0, 1000);
     }
 
     @Override

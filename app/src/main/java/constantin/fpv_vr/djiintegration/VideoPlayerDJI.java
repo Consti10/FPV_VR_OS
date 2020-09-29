@@ -68,7 +68,7 @@ public class VideoPlayerDJI extends VideoPlayer {
             android.os.Process.setThreadPriority(Thread.MAX_PRIORITY);
             prioSet=true;
         }
-        Log.d(TAG,"Video data");
+        //Log.d(TAG,"Video data");
         //if (mCodecManager != null) {
         //    System.out.println("Data");
         //    mCodecManager.sendDataToDecoder(videoBuffer, size);

@@ -16,9 +16,10 @@
 
 
         <TextView
+            android:id="@+id/dji_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/DJIDescription"/>
+            android:text="@string/DJIDescription" />
 
         <TextView
             android:id="@+id/dji_debug"

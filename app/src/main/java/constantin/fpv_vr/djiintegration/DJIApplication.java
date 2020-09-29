@@ -21,6 +21,7 @@ import dji.common.error.DJISDKError;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.products.Aircraft;
+import dji.sdk.remotecontroller.RemoteController;
 import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 
@@ -39,6 +40,8 @@ import dji.sdk.sdkmanager.DJISDKManager;
          try{
              MultiDex.install(this);
              com.secneo.sdk.Helper.install(this);
+             // We cannot initialize dji here since we need the application context
+             // Do it in AMain instead
              //initializeDJIIfNeeded();
          }catch (NoClassDefFoundError e){
              e.printStackTrace();
@@ -72,6 +75,11 @@ import dji.sdk.sdkmanager.DJISDKManager;
 
      public static synchronized boolean isAircraftConnected(){
          return getConnectedAircraft()!=null;
+     }
+
+     public static synchronized BaseProduct getConnecteBaseProduct(){
+         final BaseProduct product=DJISDKManager.getInstance().getProduct();
+         return product;
      }
 
      /**
