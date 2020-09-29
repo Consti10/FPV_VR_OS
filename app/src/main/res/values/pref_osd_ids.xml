@@ -25,6 +25,8 @@
     <string name="OSD_STEREO_FOVX_SCALE">(Stereo only) FOV X SCALE, in %. Default 80</string>
     <string name="OSD_STEREO_FOVY_SCALE">(Stereo only) FOV Y SCALE, in %. Default 100</string>
 
+    <string name="OSD_STEREO_RATIO">OSD_STEREO_RATIO</string>
+
 
     //OSD Elements
     //Artificial Horizon

@@ -98,6 +98,9 @@
                 android:title="@string/OSD_STEREO_GLOBAL_SCALE"
                 android:summary="Multiplied with scale of each sub-element"
                 android:defaultValue="100"/>
+
+
+
             <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_STEREO_FOVX_SCALE"
                 android:title="@string/OSD_STEREO_FOVX_SCALE"

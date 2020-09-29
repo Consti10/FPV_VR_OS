@@ -67,7 +67,7 @@
             android:name=".play_mono.AMonoVideoOSD"
             android:screenOrientation="landscape"
             android:theme="@style/MyStyleFullscreen">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
             </intent-filter>
@@ -76,7 +76,7 @@
                 android:resource="@xml/device_filter_rotg02" />
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
-                android:resource="@xml/device_filter_rotg02" />
+                android:resource="@xml/device_filter_rotg02" /> -->
         </activity>
         <activity
             android:name=".play_stereo.AStereoVR"
