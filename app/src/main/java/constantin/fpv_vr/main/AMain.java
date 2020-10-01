@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import constantin.fpv_vr.Permissions;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.OSD2.ATestlayout;
 import constantin.fpv_vr.Toaster;
@@ -58,12 +59,7 @@ import constantin.fpv_vr.databinding.ActivityMainBinding;
 public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
     private static final String TAG=AMain.class.getSimpleName();
     private TestReceiverVideo mTestReceiverVideo=null;
-    private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.CAMERA
-            }
-    );
+    private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(Permissions.BASIC_PERMISSIONS);
     private HBRecorder hbRecorder;
     private static final int SCREEN_RECORD_REQUEST_CODE = 777;
     //If this Intent != null the permission to record screen was already granted

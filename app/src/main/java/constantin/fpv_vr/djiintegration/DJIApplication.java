@@ -9,9 +9,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.multidex.MultiDex;
-
 import com.secneo.sdk.Helper;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,14 +35,15 @@ import dji.sdk.sdkmanager.DJISDKManager;
          super.attachBaseContext(paramContext);
          Log.d(TAG,"DJI install start");
          try{
-             MultiDex.install(this);
+             // Since we only build for minapi 21 multidex is enabled automatically
+             //MultiDex.install(this);
              com.secneo.sdk.Helper.install(this);
              // We cannot initialize dji here since we need the application context
              // Do it in AMain instead
              //initializeDJIIfNeeded();
          }catch (NoClassDefFoundError e){
              e.printStackTrace();
-             Log.e(TAG,"Error on dji install");
+             throw new RuntimeException("Error on DJI install");
          }
          Log.d(TAG,"DJI install stop()");
      }
@@ -160,6 +158,7 @@ import dji.sdk.sdkmanager.DJISDKManager;
              }
          }catch (Exception e){
              e.printStackTrace();
+             throw new RuntimeException("Error on DJI register");
          }
      }
 

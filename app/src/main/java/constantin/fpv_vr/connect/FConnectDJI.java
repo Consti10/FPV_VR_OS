@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import constantin.fpv_vr.Permissions;
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.DJIHelper;
@@ -40,22 +41,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     private static final String TAG=FConnectDJI.class.getSimpleName();
     private ConnectDjiFragmentBinding binding;
     private Context mContext;
-    private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(new String[]{
-            Manifest.permission.VIBRATE, // Gimbal rotation
-            Manifest.permission.INTERNET, // API requests
-            Manifest.permission.ACCESS_WIFI_STATE, // WIFI connected products
-            Manifest.permission.ACCESS_COARSE_LOCATION, // Maps
-            Manifest.permission.ACCESS_NETWORK_STATE, // WIFI connected products
-            Manifest.permission.ACCESS_FINE_LOCATION, // Maps
-            Manifest.permission.CHANGE_WIFI_STATE, // Changing between WIFI and USB connection
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, // Log files
-            Manifest.permission.BLUETOOTH, // Bluetooth connected products
-            Manifest.permission.BLUETOOTH_ADMIN, // Bluetooth connected products
-            Manifest.permission.READ_EXTERNAL_STORAGE, // Log files
-            Manifest.permission.READ_PHONE_STATE, // Device UUID accessed upon registration
-            Manifest.permission.RECORD_AUDIO // Speaker accessory
-    },this);
-
+    private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(Permissions.DJI_PERMISSIONS,this);
     private final ArrayList<String> debugList=new ArrayList<>();
 
     private Timer updateTimer;
