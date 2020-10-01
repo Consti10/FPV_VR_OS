@@ -19,19 +19,18 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.DJIHelper;
 import constantin.video.core.RequestPermissionHelper;
 import dji.common.airlink.SignalQualityCallback;
 import dji.common.airlink.WiFiFrequencyBand;
-import dji.common.airlink.WiFiSelectionMode;
+import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.airlink.AirLink;
 import dji.sdk.airlink.WiFiLink;
-import dji.sdk.camera.VideoFeeder;
+import dji.sdk.camera.Camera;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.products.Aircraft;
 import dji.sdk.remotecontroller.RemoteController;
@@ -68,7 +67,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         mContext=getActivity();
         binding=ConnectDjiFragmentBinding.inflate(inflater);
         //requestPermissionHelper.checkAndRequestPermissions(requireActivity());
-        for(int i=0;i<20;i++){
+        for(int i=0;i<25;i++){
             debugList.add("");
         }
         setTextDebug();
@@ -76,12 +75,12 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     }
 
     private void populateDebugList(final @NonNull Aircraft aircraft){
-        aircraft.getName(callbackString(0,"Aircraft name"));
+        aircraft.getName(callbackGeneric(0,"Aircraft name"));
 
         debugList.set(1,"DisplayName "+aircraft.getModel().getDisplayName());
         debugList.set(2,"FirmwarePackageVersion "+aircraft.getFirmwarePackageVersion());
         final FlightController flightController=aircraft.getFlightController();
-        flightController.getMaxFlightHeight(callbackInt(3,"Max flight height"));
+        flightController.getMaxFlightHeight(callbackGeneric(3,"Max flight height"));
 
         final AirLink airLink=aircraft.getAirLink();
         debugList.set(4,"airLink.isConnected "+airLink.isConnected());
@@ -99,8 +98,8 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         airLink.setDownlinkSignalQualityCallback(callbackSignal(9,"DownlinkSignalQuality"));
         airLink.setUplinkSignalQualityCallback(callbackSignal(10,"UplinkSignalQuality"));
         final WiFiLink wiFiLink=airLink.getWiFiLink();
-        wiFiLink.getFrequencyBand(callbackWifi(11,"Wifi frequency band"));
-        wiFiLink.getChannelNumber(callbackInt(12,"Channel number"));
+        wiFiLink.getFrequencyBand(callbackGeneric(11,"Wifi frequency band"));
+        wiFiLink.getChannelNumber(callbackGeneric(12,"Channel number"));
         wiFiLink.getAvailableChannelNumbers(new CommonCallbacks.CompletionCallbackWith<Integer[]>() {
             @Override
             public void onSuccess(Integer[] integers) {
@@ -120,47 +119,27 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                 debugList.set(14,"Is CE Mode unknown");
             }
         });
+        wiFiLink.getDataRate(callbackGeneric(15,"Wifi data rate"));
+        wiFiLink.getSelectionMode(callbackGeneric(17,"Wifi selection mode"));
 
         final RemoteController remoteController=aircraft.getRemoteController();
-        remoteController.getName(callbackString(15,"Remote controller name"));
-        debugList.set(16,"LOG "+DJISDKManager.getInstance().getLogPath());
+        remoteController.getName(callbackGeneric(17,"Remote controller name"));
+        //debugList.set(16,"LOG "+DJISDKManager.getInstance().getLogPath());
+        remoteController.getPairingState(callbackGeneric(18,"CTRL pairing"));
+
+        final Camera camera=aircraft.getCamera();
+        debugList.set(19,DJIHelper.asString(camera.getCapabilities().videoResolutionAndFrameRateRange()));
+        camera.getMode(callbackGeneric(20,"Camera mode"));
+        camera.getExposureMode(callbackGeneric(21,"Camera exposure mode"));
+        //
     }
 
-    private CommonCallbacks.CompletionCallbackWith<String> callbackString(int idx, String message){
-        return new CommonCallbacks.CompletionCallbackWith<String>() {
+    private <T> CommonCallbacks.CompletionCallbackWith<T> callbackGeneric(int idx, String message){
+        return new CommonCallbacks.CompletionCallbackWith<T>() {
             @Override
-            public void onSuccess(String s) {
-                debugList.set(idx,message+" "+s);
+            public void onSuccess(T t) {
+                debugList.set(idx,message+" "+t.toString());
             }
-
-            @Override
-            public void onFailure(DJIError djiError) {
-                debugList.set(idx,message+" "+DJIHelper.asString(djiError));
-            }
-        };
-    }
-
-    private CommonCallbacks.CompletionCallbackWith<Integer> callbackInt(int idx, String message){
-        return new CommonCallbacks.CompletionCallbackWith<Integer>() {
-            @Override
-            public void onSuccess(Integer integer) {
-                debugList.set(idx,message+" "+integer.toString());
-            }
-
-            @Override
-            public void onFailure(DJIError djiError) {
-                debugList.set(idx,message+" "+DJIHelper.asString(djiError));
-            }
-        };
-    }
-
-    private CommonCallbacks.CompletionCallbackWith<WiFiFrequencyBand> callbackWifi(int idx,String message){
-        return new CommonCallbacks.CompletionCallbackWith<WiFiFrequencyBand>() {
-            @Override
-            public void onSuccess(WiFiFrequencyBand wiFiFrequencyBand) {
-                debugList.set(idx,message+" "+DJIHelper.frequencyBandToString(wiFiFrequencyBand));
-            }
-
             @Override
             public void onFailure(DJIError djiError) {
                 debugList.set(idx,message+" "+DJIHelper.asString(djiError));

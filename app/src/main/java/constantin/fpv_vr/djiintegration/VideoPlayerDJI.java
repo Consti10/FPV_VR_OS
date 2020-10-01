@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.Toaster;
 import constantin.video.core.player.VideoPlayer;
+import dji.common.airlink.VideoFeedPriority;
+import dji.common.error.DJIError;
+import dji.common.util.CommonCallbacks;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.products.Aircraft;
@@ -34,8 +37,16 @@ public class VideoPlayerDJI extends VideoPlayer {
                 Toaster.makeToast(context, "Cannot start video",true);
                 return;
             }
-            VideoFeeder.getInstance().getPrimaryVideoFeed().addVideoDataListener(this::onReceiveDjiData);
-            Toaster.makeToast(context, "Start feeder",true);
+            final VideoFeeder videoFeeder=VideoFeeder.getInstance();
+            final VideoFeeder.VideoFeed primaryVideoFeed=videoFeeder.getPrimaryVideoFeed();
+            primaryVideoFeed.addVideoDataListener(this::onReceiveDjiData);
+            /*primaryVideoFeed.setPriority(VideoFeedPriority.HIGH, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+                    Toaster.makeToast(context,"Set video feed priority to high "+DJIHelper.asString(djiError));
+                }
+            });*/
+            //Toaster.makeToast(context, "Start feeder",true);
         }
     }
 

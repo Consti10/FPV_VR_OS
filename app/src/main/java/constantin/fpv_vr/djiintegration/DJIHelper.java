@@ -1,6 +1,7 @@
 package constantin.fpv_vr.djiintegration;
 
 import dji.common.airlink.WiFiFrequencyBand;
+import dji.common.camera.ResolutionAndFrameRate;
 import dji.common.error.DJIError;
 
 public class DJIHelper {
@@ -20,6 +21,14 @@ public class DJIHelper {
             return djiError.getDescription();
         }
         return "Unknown error";
+    }
+
+    public static String asString(final ResolutionAndFrameRate[] resolutionAndFrameRate){
+        String ret="";
+        for(final ResolutionAndFrameRate f:resolutionAndFrameRate){
+            ret+=""+f.toString()+" |";
+        };
+        return ret;
     }
 
 }

@@ -37,7 +37,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             Toaster.makeToast(context,"Cannot start telemetry",true);
             return;
         }
-        Toaster.makeToast(context, "starting dji telemetry", true);
+        //Toaster.makeToast(context, "starting dji telemetry", true);
         aircraft.getGimbal().setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError djiError) {
