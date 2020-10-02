@@ -38,7 +38,7 @@ void GLRStereoVR::placeGLElements(){
     float videoH=videoW*1.0f/lastVideoFormat;
     float videoX=-videoW/2.0f;
     float videoY=-videoH/2.0f;
-    //The video width defaults to 10(cm). Calculate tze z value such that the video fills a FOV
+    //The video width defaults to 10(cm). Calculate the z value such that the video fills a FOV
     //of exactly DEFAULT_FOV_FILLED_BY_SCENE
     float videoZ=-videoW/2.0f/glm::tan(glm::radians(VRSettings::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
@@ -104,20 +104,14 @@ void GLRStereoVR::calculateFrameTimes() {
 
 void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     this->currEnv=env;
-    //if(true){
-    //    mFBRManager->enterWarping(env,vrCompositorRenderer);
-    //}
     ATrace_beginSection("GLRStereoVR::onDrawFrame");
-    GLHelper::updateSetClearColor(swapColor);
-    glClearColor(0,0,0,0);
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
-    mFPSCalculator.tick();
-    mFTCalculator.tick();
+    mVrFTCalculator.tick();
 
     //MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
-    mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
+    mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
 
     ATrace_beginSection("My updateVideoFrame");
@@ -134,28 +128,21 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     lastRenderedFrame=std::chrono::steady_clock::now();
     ATrace_endSection();
     //
-    if(mSettingsVR.VR_RENDERING_MODE>=2){
-        SurfaceTextureUpdate* surfaceTextureUpdate=std::get<SurfaceTextureUpdate*>(vrCompositorRenderer.getLayers().at(0).contentProvider);
-        for(int eye=0;eye<2;eye++){
-            surfaceTextureUpdate->updateAndCheck(env);
-            const bool isLeftEye=eye==0;
-            DirectRender::begin(vrCompositorRenderer.getViewportForEye(isLeftEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE));
-            vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
-            DirectRender::end();
-            std::unique_ptr<FenceSync> fenceSync=std::make_unique<FenceSync>();
-            glFlush();
-            // Make sure that I do not submit eyes faster than the GPU is able to render them
-            fenceSync->wait(std::chrono::milliseconds(100));
-        }
-    }else{
+    if(mSettingsVR.VR_RENDERING_MODE==1){
         ATrace_beginSection("MglClear");
-        //QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
+        GLHelper::updateSetClearColor(swapColor);
+        glClearColor(0,0,0,0);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
         ATrace_endSection();
         for(int eye=0;eye<2;eye++){
             vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
         }
         //calculateFrameTimes();
+    }
+    if(mSettingsVR.VR_RENDERING_MODE==2){
+        mFBRManager->drawEyesToFrontBufferUnsynchronized(env,vrCompositorRenderer);
+    }else if(mSettingsVR.VR_RENDERING_MODE==3){
+
     }
     ATrace_endSection();
     //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
@@ -187,16 +174,13 @@ void GLRStereoVR::onSecondaryContextCreated(JNIEnv* env, jobject androidContext)
 
 
 void GLRStereoVR::onSecondaryContextDoWork(JNIEnv* env) {
-    mOSDFPSCalculator.tick();
     mOSDFTCalculator.tick();
     mOSDFTLimiter.tick();
-
     //MLOGD<<"OSD fps"<<mOSDFPSCalculator.getCurrentFPS();
     ATrace_beginSection("GLRStereoVR::onSecondaryContextDoWork");
     osdRenderbuffer.bind();
-    TimerQuery timerQuery;
-    timerQuery.begin();
-
+    //TimerQuery timerQuery;
+    //timerQuery.begin();
     glClearColor(1,0,0,0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_BLEND);
@@ -205,10 +189,8 @@ void GLRStereoVR::onSecondaryContextDoWork(JNIEnv* env) {
     mOSDRenderer->updateAndDrawElementsGL();
     ATrace_beginSection("GLRStereoVR::onSecondaryContextDoWork-GPU");
     osdRenderbuffer.unbindAndSwap();
-    timerQuery.end();
+    //timerQuery.end();
     //timerQuery.print();
-    std::this_thread::sleep_for(std::chrono::milliseconds(2));
-
     ATrace_endSection();
     ATrace_endSection();
 }

@@ -49,9 +49,7 @@ private:
     //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
     TelemetryReceiver& mTelemetryReceiver;
-    FPSCalculator mFPSCalculator{"VR",std::chrono::seconds(1)};
-    FPSCalculator mOSDFPSCalculator{"OSD",std::chrono::seconds(1)};
-    FrameTimeCalculator mFTCalculator{"VRFT",std::chrono::seconds(1)};
+    FrameTimeCalculator mVrFTCalculator{"VRFT", std::chrono::seconds(1)};
     FrameTimeCalculator mOSDFTCalculator{"OSDFT",std::chrono::seconds(1)};
     FrameTimeLimiter mOSDFTLimiter{FrameTimeLimiter::FRAME_TIME_60_FPS};
     const VRSettings mSettingsVR;
