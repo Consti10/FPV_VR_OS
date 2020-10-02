@@ -168,7 +168,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                         final boolean hasProduct=DJIApplication.getConnecteBaseProduct()!=null;
                         final boolean hasAircraft=DJIApplication.getConnectedAircraft()!=null;
                         binding.djiInfo.setText("DJI in development. Product "+hasProduct+" Aircraft "+hasAircraft);
-
                         final Aircraft aircraft=DJIApplication.getConnectedAircraft();
                         if(aircraft!=null) {
                             //Toaster.makeToast(requireContext(),"Has aircraft");
