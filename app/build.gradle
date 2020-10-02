@@ -137,18 +137,17 @@ dependencies {
     //implementation "com.github.Consti10.LiveVideo10ms:VideoCore:25f87dc9"
     //implementation "com.github.Consti10.LiveVideo10ms:TelemetryCore:25f87dc9"
 
-    implementation("com.google.guava:guava:29.0-android")
     //THIS IS IT ! implementation "androidx.activity:activity:1.2.0-alpha08"
 
     //firebase stuff
     implementation 'com.google.firebase:firebase-core:17.5.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
 
-    //Screen recording
+    //Screen recording and more
     implementation 'com.github.HBiSoft:HBRecorder:0.1.12'
-
     implementation 'com.github.santaevpavel:OutlineSpan:0.1.0'
-
+    implementation("com.google.guava:guava:29.0-android")
+    
     // Testing
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.3.0')
