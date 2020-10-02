@@ -15,6 +15,7 @@ import constantin.fpv_vr.djiintegration.VideoPlayerDJI;
 import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.views.VrActivity;
 import constantin.renderingx.core.views.VrView;
+import constantin.renderingx.core.vrsettings.ASettingsVR;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.uvcintegration.UVCPlayer;
 import constantin.video.core.player.VideoPlayer;
@@ -27,7 +28,9 @@ public class AStereoVR extends VrActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         VrView vrView=new VrView(this);
-        //vrView.enableSuperSync();
+        if(ASettingsVR.getVR_RENDERING_MODE(this)>=2){
+            vrView.enableSuperSync();
+        }
         final VideoTelemetryComponent videoTelemetryComponent=new VideoTelemetryComponent(this);
         final GLRStereoVR mGLRStereoVR = new GLRStereoVR(this,videoTelemetryComponent.getTelemetryReceiver(),vrView.getGvrApi().getNativeGvrContext());
         videoTelemetryComponent.setIVideoParamsChanged(mGLRStereoVR);

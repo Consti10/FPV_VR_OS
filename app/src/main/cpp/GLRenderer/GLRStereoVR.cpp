@@ -28,6 +28,8 @@ GLRStereoVR::GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver&
         {
     if(vsyncP!=0){
         mFBRManager=std::make_unique<FBRManager>(VSYNC::native(vsyncP));
+    }else{
+        mFBRManager=std::make_unique<FBRManager>(new VSYNC());
     }
 }
 
@@ -101,6 +103,7 @@ void GLRStereoVR::calculateFrameTimes() {
 
 
 void GLRStereoVR::onDrawFrame(JNIEnv* env) {
+    this->currEnv=env;
     //if(true){
     //    mFBRManager->enterWarping(env,vrCompositorRenderer);
     //}
@@ -131,14 +134,29 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     lastRenderedFrame=std::chrono::steady_clock::now();
     ATrace_endSection();
     //
-    ATrace_beginSection("MglClear");
-    //QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-    ATrace_endSection();
-    for(int eye=0;eye<2;eye++){
-        vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
+    if(mSettingsVR.VR_RENDERING_MODE>=2){
+        SurfaceTextureUpdate* surfaceTextureUpdate=std::get<SurfaceTextureUpdate*>(vrCompositorRenderer.getLayers().at(0).contentProvider);
+        for(int eye=0;eye<2;eye++){
+            surfaceTextureUpdate->updateAndCheck(env);
+            const bool isLeftEye=eye==0;
+            DirectRender::begin(vrCompositorRenderer.getViewportForEye(isLeftEye ? GVR_LEFT_EYE : GVR_RIGHT_EYE));
+            vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
+            DirectRender::end();
+            std::unique_ptr<FenceSync> fenceSync=std::make_unique<FenceSync>();
+            glFlush();
+            // Make sure that I do not submit eyes faster than the GPU is able to render them
+            fenceSync->wait(std::chrono::milliseconds(100));
+        }
+    }else{
+        ATrace_beginSection("MglClear");
+        //QCOM_tiled_rendering::glStartTilingQCOM(0,0,WIDTH,HEIGHT,0);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+        ATrace_endSection();
+        for(int eye=0;eye<2;eye++){
+            vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
+        }
+        //calculateFrameTimes();
     }
-    //calculateFrameTimes();
     ATrace_endSection();
     //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
 }
@@ -229,7 +247,6 @@ JNI_METHOD(void, nativeOnContextCreated)
 
 JNI_METHOD(void, nativeOnDrawFrame)
 (JNIEnv *env, jobject obj, jlong glRendererStereo) {
-    native(glRendererStereo)->currEnv=env;
     native(glRendererStereo)->onDrawFrame(env);
 }
 

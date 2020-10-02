@@ -17,7 +17,7 @@ import constantin.telemetry.core.TelemetryReceiver;
 import constantin.video.core.DecodingInfo;
 import constantin.video.core.IVideoParamsChanged;
 import constantin.video.core.player.VideoSettings;
-
+import constantin.renderingx.core.vrsettings.ASettingsVR;
 
 
 public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurfaceTexture, IVideoParamsChanged, GLContextSurfaceLess.ISecondarySharedContext {
@@ -38,6 +38,7 @@ public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurface
     // Opaque native pointer to the native GLRStereoVR instance.
     private final long nativeGLRendererStereo;
     private final TelemetryReceiver telemetryReceiver;
+    private final boolean USE_PRESENTATION_TIME;
 
     public GLRStereoVR(final AppCompatActivity context, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=context;
@@ -45,6 +46,7 @@ public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurface
         //final VSYNC vsync=new VSYNC(context);
         nativeGLRendererStereo=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
                 gvrApiNativeContext, VideoSettings.videoMode(mContext),0);
+        USE_PRESENTATION_TIME=ASettingsVR.getVR_RENDERING_MODE(context)==1;
     }
 
     @Override
@@ -54,11 +56,13 @@ public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurface
 
     @Override
     public void onDrawFrame() {
-        //if(SJ.Disable60FPSLock(mContext)){
+        if(USE_PRESENTATION_TIME){
             EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
-        //}
+        }
         nativeOnDrawFrame(nativeGLRendererStereo);
-        //EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
+        if(USE_PRESENTATION_TIME){
+            EGLExt.eglPresentationTimeANDROID(EGL14.eglGetCurrentDisplay(),EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),System.nanoTime());
+        }
     }
 
     @Override

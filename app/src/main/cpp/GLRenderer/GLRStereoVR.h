@@ -38,25 +38,22 @@ public:
      * @param videoMode The selected video mode, see @class VideoRenderer.cpp
      */
     explicit GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context* gvr_context, int videoMode, jlong vsyncP);
-public:
-    //not protected because unused by GLRStereoSuperSync
+    //
     void onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject surfaceTextureHolder);
     void onDrawFrame(JNIEnv* env);
     //
     void onSecondaryContextCreated(JNIEnv* env,jobject androidContext);
     void onSecondaryContextDoWork(JNIEnv* env);
-protected:
+private:
     //Place the video and osd in 3D Space. Since the video ratio might change while the application is running,
     //This might be called multiple times (every time IVideoFormatChanged::videoFormatChanged==true)
     void placeGLElements();
-protected:
     TelemetryReceiver& mTelemetryReceiver;
     FPSCalculator mFPSCalculator{"VR",std::chrono::seconds(1)};
     FPSCalculator mOSDFPSCalculator{"OSD",std::chrono::seconds(1)};
     FrameTimeCalculator mFTCalculator{"VRFT",std::chrono::seconds(1)};
     FrameTimeCalculator mOSDFTCalculator{"OSDFT",std::chrono::seconds(1)};
     FrameTimeLimiter mOSDFTLimiter{FrameTimeLimiter::FRAME_TIME_60_FPS};
-
     const VRSettings mSettingsVR;
     std::unique_ptr<OSDRenderer> mOSDRenderer= nullptr;
     std::unique_ptr<gvr::GvrApi> gvr_api_;
@@ -64,11 +61,10 @@ protected:
     const VideoModesHelper::VIDEO_RENDERING_MODE videoMode;
 public:
     VrCompositorRenderer vrCompositorRenderer;
+private:
     JNIEnv* currEnv=nullptr;
-protected:
     SurfaceTextureUpdate mSurfaceTextureUpdate;
     AvgCalculator surfaceTextureDelay;
-private:
     std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
     // sleep until either video frame is available or timeout is reached
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
