@@ -61,19 +61,20 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     }
 
     private void populateDebugList(final @NonNull Aircraft aircraft){
-        aircraft.getName(callbackGeneric(0,"Aircraft name"));
+        int idx=0;
+        aircraft.getName(callbackGeneric(idx++,"Aircraft name"));
 
-        debugList.set(1,"DisplayName "+aircraft.getModel().getDisplayName());
-        debugList.set(2,"FirmwarePackageVersion "+aircraft.getFirmwarePackageVersion());
+        debugList.set(idx++,"DisplayName "+aircraft.getModel().getDisplayName());
+        debugList.set(idx++,"FirmwarePackageVersion "+aircraft.getFirmwarePackageVersion());
         final FlightController flightController=aircraft.getFlightController();
-        flightController.getMaxFlightHeight(callbackGeneric(3,"Max flight height"));
+        flightController.getMaxFlightHeight(callbackGeneric(idx++,"Max flight height"));
 
         final AirLink airLink=aircraft.getAirLink();
-        debugList.set(4,"airLink.isConnected "+airLink.isConnected());
-        debugList.set(5,"isWiFiLinkSupported "+airLink.isWiFiLinkSupported());
-        debugList.set(6,"isLightbridgeLinkSupported "+airLink.isLightbridgeLinkSupported());
-        debugList.set(7,"isOcuSyncLinkSupported "+airLink.isOcuSyncLinkSupported());
-        debugList.set(8,"isUpdateCountryCodeRequired() "+airLink.isUpdateCountryCodeRequired());
+        debugList.set(idx++,"airLink.isConnected "+airLink.isConnected());
+        debugList.set(idx++,"isWiFiLinkSupported "+airLink.isWiFiLinkSupported());
+        debugList.set(idx++,"isLightbridgeLinkSupported "+airLink.isLightbridgeLinkSupported());
+        debugList.set(idx++,"isOcuSyncLinkSupported "+airLink.isOcuSyncLinkSupported());
+        debugList.set(idx++,"isUpdateCountryCodeRequired() "+airLink.isUpdateCountryCodeRequired());
         airLink.setCountryCodeCallback(new AirLink.CountryCodeCallback() {
             @Override
             public void onRequireUpdateCountryCode() {
@@ -81,11 +82,11 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             }
         });
 
-        airLink.setDownlinkSignalQualityCallback(callbackSignal(9,"DownlinkSignalQuality"));
-        airLink.setUplinkSignalQualityCallback(callbackSignal(10,"UplinkSignalQuality"));
+        airLink.setDownlinkSignalQualityCallback(callbackSignal(idx++,"DownlinkSignalQuality"));
+        airLink.setUplinkSignalQualityCallback(callbackSignal(idx++,"UplinkSignalQuality"));
         final WiFiLink wiFiLink=airLink.getWiFiLink();
-        wiFiLink.getFrequencyBand(callbackGeneric(11,"Wifi frequency band"));
-        wiFiLink.getChannelNumber(callbackGeneric(12,"Channel number"));
+        wiFiLink.getFrequencyBand(callbackGeneric(idx++,"Wifi frequency band"));
+        wiFiLink.getChannelNumber(callbackGeneric(idx++,"Channel number"));
         wiFiLink.getAvailableChannelNumbers(new CommonCallbacks.CompletionCallbackWith<Integer[]>() {
             @Override
             public void onSuccess(Integer[] integers) {
@@ -105,18 +106,18 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                 debugList.set(14,"Is CE Mode unknown");
             }
         });
-        wiFiLink.getDataRate(callbackGeneric(15,"Wifi data rate"));
-        wiFiLink.getSelectionMode(callbackGeneric(17,"Wifi selection mode"));
+        wiFiLink.getDataRate(callbackGeneric(idx++,"Wifi data rate"));
+        wiFiLink.getSelectionMode(callbackGeneric(idx++,"Wifi selection mode"));
 
         final RemoteController remoteController=aircraft.getRemoteController();
-        remoteController.getName(callbackGeneric(17,"Remote controller name"));
+        remoteController.getName(callbackGeneric(idx++,"Remote controller name"));
         //debugList.set(16,"LOG "+DJISDKManager.getInstance().getLogPath());
-        remoteController.getPairingState(callbackGeneric(18,"CTRL pairing"));
+        remoteController.getPairingState(callbackGeneric(idx++,"CTRL pairing"));
 
         final Camera camera=aircraft.getCamera();
-        debugList.set(19,DJIHelper.asString(camera.getCapabilities().videoResolutionAndFrameRateRange()));
-        camera.getMode(callbackGeneric(20,"Camera mode"));
-        camera.getExposureMode(callbackGeneric(21,"Camera exposure mode"));
+        debugList.set(idx++,DJIHelper.asString(camera.getCapabilities().videoResolutionAndFrameRateRange()));
+        camera.getMode(callbackGeneric(idx++,"Camera mode"));
+        camera.getExposureMode(callbackGeneric(idx++,"Camera exposure mode"));
         //
     }
 
@@ -156,10 +157,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
     public void onResume() {
         super.onResume();
         requestPermissionHelper.checkAndRequestPermissions(requireActivity());
-        //if(requestPermissionHelper.allPermissionsGranted(requireActivity())){
-        //    final Application application=requireActivity().getApplication();
-        //    ((DJIApplication)application).initializeDJIIfNeeded();
-        //}
         updateTimer=new Timer();
         updateTimer.schedule(new TimerTask() {
             @Override
