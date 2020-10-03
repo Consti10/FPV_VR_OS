@@ -114,21 +114,13 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
 
-    ATrace_beginSection("My updateVideoFrame");
-    if(true){
-        //const std::chrono::steady_clock::time_point timeWhenWaitingExpires=lastRenderedFrame+std::chrono::milliseconds(33);
-        //waitUntilVideoFrameAvailable(currEnv,timeWhenWaitingExpires);
-        mSurfaceTextureUpdate.updateAndCheck(env);
-    }else{
-        if(const auto delay=mSurfaceTextureUpdate.updateAndCheck(currEnv)){
-            surfaceTextureDelay.add(*delay);
-            //MLOGD<<"avg Latency until opengl is "<<surfaceTextureDelay.getAvg_ms();
-        }
-    }
-    lastRenderedFrame=std::chrono::steady_clock::now();
-    ATrace_endSection();
     //
     if(mSettingsVR.VR_RENDERING_MODE==0 || mSettingsVR.VR_RENDERING_MODE==1){
+        //
+        ATrace_beginSection("My updateVideoFrame");
+        mSurfaceTextureUpdate.updateAndCheck(env);
+        ATrace_endSection();
+        //
         ATrace_beginSection("MglClear");
         GLHelper::updateSetClearColor(swapColor);
         glClearColor(0,0,0,0);
@@ -145,7 +137,7 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     if(mSettingsVR.VR_RENDERING_MODE==2){
         mFBRManager->drawEyesToFrontBufferUnsynchronized(env,vrCompositorRenderer);
     }else if(mSettingsVR.VR_RENDERING_MODE==3){
-
+        // TODO FBR
     }
     ATrace_endSection();
     //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));

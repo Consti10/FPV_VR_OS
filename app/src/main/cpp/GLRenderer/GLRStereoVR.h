@@ -57,13 +57,13 @@ private:
     std::unique_ptr<gvr::GvrApi> gvr_api_;
     int swapColor=0;
     const VideoModesHelper::VIDEO_RENDERING_MODE videoMode;
+    AvgCalculator avgSurfaceTextureDelay;
 public:
     VrCompositorRenderer vrCompositorRenderer;
 private:
     JNIEnv* currEnv=nullptr;
     SurfaceTextureUpdate mSurfaceTextureUpdate;
     AvgCalculator surfaceTextureDelay;
-    std::chrono::steady_clock::time_point lastRenderedFrame=std::chrono::steady_clock::now();
     // sleep until either video frame is available or timeout is reached
     void waitUntilVideoFrameAvailable(JNIEnv* env,const std::chrono::steady_clock::time_point& maxWaitTimePoint);
     void calculateFrameTimes();
