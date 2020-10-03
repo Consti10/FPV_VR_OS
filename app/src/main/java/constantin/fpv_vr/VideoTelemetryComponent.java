@@ -12,7 +12,7 @@ import constantin.fpv_vr.djiintegration.VideoPlayerDJI;
 import constantin.fpv_vr.settings.SJ;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.uvcintegration.UVCPlayer;
-import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.player.IVideoParamsChanged;
 import constantin.video.core.gl.ISurfaceTextureAvailable;
 import constantin.video.core.player.VideoPlayer;
 

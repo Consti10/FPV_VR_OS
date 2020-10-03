@@ -128,7 +128,7 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     lastRenderedFrame=std::chrono::steady_clock::now();
     ATrace_endSection();
     //
-    if(mSettingsVR.VR_RENDERING_MODE==1){
+    if(mSettingsVR.VR_RENDERING_MODE==0 || mSettingsVR.VR_RENDERING_MODE==1){
         ATrace_beginSection("MglClear");
         GLHelper::updateSetClearColor(swapColor);
         glClearColor(0,0,0,0);
@@ -138,6 +138,9 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
             vrCompositorRenderer.drawLayers(eye==0 ? GVR_LEFT_EYE : GVR_RIGHT_EYE);
         }
         //calculateFrameTimes();
+        //EGLint rects[]={0,0,1080,1080};
+        //Extensions::eglSwapBuffersWithDamageKHR(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),rects,1);
+        //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
     }
     if(mSettingsVR.VR_RENDERING_MODE==2){
         mFBRManager->drawEyesToFrontBufferUnsynchronized(env,vrCompositorRenderer);

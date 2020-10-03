@@ -14,8 +14,8 @@ import constantin.renderingx.core.xglview.GLContextSurfaceLess;
 import constantin.renderingx.core.xglview.SurfaceTextureHolder;
 import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.telemetry.core.TelemetryReceiver;
-import constantin.video.core.DecodingInfo;
-import constantin.video.core.IVideoParamsChanged;
+import constantin.video.core.player.DecodingInfo;
+import constantin.video.core.player.IVideoParamsChanged;
 import constantin.video.core.player.VideoSettings;
 import constantin.renderingx.core.vrsettings.ASettingsVR;
 
