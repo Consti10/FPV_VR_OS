@@ -22,13 +22,13 @@ GLRMono::GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemet
     }
 }
 
-void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jobject optionalSurfaceTextureHolder) {
+void GLRMono::onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject optionalSurfaceTextureHolder,float optionalVideo360FOV){
     Extensions::initializeGL();
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
     if(ENABLE_OSD){
-        mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver,false);
+        mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver,false,screenW,screenH);
     }
     //RM_2D_MONOSCOPIC is handled by the android hw composer in monoscopic 2d rendering
     if(ENABLE_VIDEO){
@@ -38,16 +38,13 @@ void GLRMono::onSurfaceCreated(JNIEnv* env,jobject androidContext,jobject option
         mOptionalVideoRender.glProgramTextureExt=std::make_unique<GLProgramTextureExt>();
         mOptionalVideoRender.videoMesh.setData(VideoModesHelper::createMeshForMode(VIDEO_MODE,0,1,1));
     }
-}
-
-void GLRMono::onSurfaceChanged(int width, int height,float optionalVideo360FOV) {
-    float displayRatio=(float) width/(float)height;
+    //---
+    float displayRatio=(float)screenW/(float)screenH;
     mOptionalVideoRender.projectionMatrix=glm::perspective(glm::radians(optionalVideo360FOV), displayRatio, MIN_Z_DISTANCE, MAX_Z_DISTANCE);
     cpuFrameTime.reset();
-    mOSDRenderer->onSurfaceSizeChanged(width, height);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    glViewport(0,0,width,height);
+    glViewport(0,0,screenW,screenH);
     glClearColor(0.0f,0,0,0.0f);
 }
 
@@ -106,14 +103,12 @@ JNI_METHOD(void, nativeDelete)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {
     delete native(glRendererMono);
 }
-JNI_METHOD(void, nativeOnSurfaceCreated)
-(JNIEnv *env, jobject obj,jlong glRendererMono,jobject androidContext,jobject optionalSurfaceTextureHolder) {
-    native(glRendererMono)->onSurfaceCreated(env,androidContext,optionalSurfaceTextureHolder);
+
+JNI_METHOD(void, nativeOnContextCreated)
+(JNIEnv *env, jobject obj, jlong glRendererMono,jobject androidContext,int screenW,int screenH,jobject optionalSurfaceTextureHolder,float optionalVideo360FOV=0) {
+    native(glRendererMono)->onContextCreated(env,androidContext,screenW,screenH,optionalSurfaceTextureHolder,optionalVideo360FOV);
 }
-JNI_METHOD(void, nativeOnSurfaceChanged)
-(JNIEnv *env, jobject obj, jlong glRendererMono,jint w,jint h,jfloat optionalVideo360FOV) {
-    native(glRendererMono)->onSurfaceChanged(w, h,optionalVideo360FOV);
-}
+
 JNI_METHOD(void, nativeOnDrawFrame)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {
     native(glRendererMono)->onDrawFrame();

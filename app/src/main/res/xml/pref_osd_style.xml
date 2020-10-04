@@ -100,7 +100,6 @@
                 android:defaultValue="100"/>
 
 
-
             <com.mapzen.prefsplusx.EditIntPreference
                 android:key="@string/OSD_STEREO_FOVX_SCALE"
                 android:title="@string/OSD_STEREO_FOVX_SCALE"
@@ -109,6 +108,12 @@
                 android:key="@string/OSD_STEREO_FOVY_SCALE"
                 android:title="@string/OSD_STEREO_FOVY_SCALE"
                 android:defaultValue="100"/>
+
+            <com.mapzen.prefsplusx.EditFloatPreference
+                android:key="@string/OSD_STEREO_RATIO"
+                android:defaultValue="1.333"
+                android:title="@string/OSD_STEREO_RATIO"
+                />
         </PreferenceCategory>
 
 

@@ -158,12 +158,11 @@ void GLRStereoVR::updatePosition(const float positionZ, const float width, const
 
 
 void GLRStereoVR::onSecondaryContextCreated(JNIEnv* env, jobject androidContext) {
-    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver,true);
+    mOSDRenderer=std::make_unique<OSDRenderer>(env,androidContext,mTelemetryReceiver,true,RENDER_TEX_W,RENDER_TEX_H);
     osdRenderbuffer.initializeGL();
     osdRenderbuffer.setSize(RENDER_TEX_W,RENDER_TEX_H);
     //auto framebuffer_size = gvr_api_->GetMaximumEffectiveRenderTargetSize();
     //MLOGD<<"W "<<framebuffer_size.width<<"H "<<framebuffer_size.height;
-    mOSDRenderer->onSurfaceSizeChanged(RENDER_TEX_W, RENDER_TEX_H);
 }
 
 

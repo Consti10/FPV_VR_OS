@@ -27,8 +27,9 @@
 
 class OSDRenderer{
 public:
-    OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo);
-    void onSurfaceSizeChanged(const int widthPx, const int heightPx);
+    OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo,int WIDTH_PX,int HEIGHT_PX);
+private:
+    void onSurfaceSizeChanged();
 public:
     void updateAndDrawElementsGL();
     const SettingsOSDStyle settingsOSDStyle;
@@ -56,6 +57,7 @@ private:
     std::vector<IUpdateable*> mUpdateables={};
     std::chrono::steady_clock::time_point mFLightStart;
     //
+    const int WIDTH_PX,HEIGHT_PX;
 };
 
 #endif

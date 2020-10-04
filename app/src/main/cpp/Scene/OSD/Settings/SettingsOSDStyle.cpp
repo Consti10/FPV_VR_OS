@@ -43,5 +43,5 @@ SettingsOSDStyle::SettingsOSDStyle(JNIEnv *env, jobject androidContext) {
     /*OSD_TEXT_FILL_COLOR1=Color::fromRGBA(0,0,0,1);
     const auto tmp=Color::toRGBA(OSD_TEXT_FILL_COLOR1);
     OSD_TEXT_FILL_COLOR1=Color::fromRGBA(tmp.x,tmp.y,tmp.z,tmp.w);*/
-
+    OSD_STEREO_RATIO=prefOSDStyle.getFloat("OSD_STEREO_RATIO",1.333f);
 }

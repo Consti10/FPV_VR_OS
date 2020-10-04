@@ -4,13 +4,15 @@
 #include <TimeHelper.hpp>
 
 
-OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo1):
+OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo1,int WIDTH_PX,int HEIGHT_PX):
         stereo(stereo1),
         settingsOSDStyle(env,androidContext),
         settingsOSDElements(env,androidContext),
         mBasicGLPrograms(),
         mBatchingManager(mBasicGLPrograms),
-        mTelemetryReceiver(telemetryReceiver){
+        mTelemetryReceiver(telemetryReceiver),
+        WIDTH_PX(WIDTH_PX),HEIGHT_PX(HEIGHT_PX)
+        {
     //
     mBasicGLPrograms.text.loadTextRenderingData(env, androidContext,settingsOSDStyle.OSD_TEXT_FONT_TYPE);
 
@@ -52,13 +54,15 @@ OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& t
         }
     }
     mFLightStart=std::chrono::steady_clock::now();
+    //
+    onSurfaceSizeChanged();
 }
 
-void OSDRenderer::onSurfaceSizeChanged(const int widthPx, const int heightPx) {
-    const float ratio=(float)heightPx/(float)widthPx;
+void OSDRenderer::onSurfaceSizeChanged() {
+    const float ratio=(float)HEIGHT_PX/(float)WIDTH_PX;
     const float videoZ=0;
-    const float videoW=widthPx;//
-    const float videoH=heightPx; //videoW*ratio
+    const float videoW=WIDTH_PX;//
+    const float videoH=HEIGHT_PX; //videoW*ratio
     //glm::tan(glm::radians(45.0f)*0.5f)*1*2;
     //MLOGD<<"W H "<<widthPx<<" "<<heightPx<<"ratio "<<ratio;
    // float videoH=1;

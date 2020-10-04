@@ -24,8 +24,8 @@ public class GLRMono implements XGLSurfaceView.FullscreenRendererWithSurfaceText
     }
     native long nativeConstruct(Context context,long nativeTelemetryReceiver,long nativeGvrContext,int videoMode,boolean enableOSD);
     native void nativeDelete(long glRendererMonoP);
-    native void nativeOnSurfaceCreated(long glRendererMonoP,Context androidContext,SurfaceTextureHolder surfaceTextureHolder);
-    native void nativeOnSurfaceChanged(long glRendererMonoP,int width,int height,float optionalVideo360FOV);
+    native void nativeOnContextCreated(long glRendererMonoP,Context androidContext,int screenW,int screenH,
+                                        SurfaceTextureHolder optionalSurfaceTextureHolder,float optionalVideo360FOV);
     native void nativeOnDrawFrame(long glRendererMonoP);
     native void nativeSetHomeOrientation360(long glRendererMonoP);
     private native void nativeOnVideoRatioChanged(long glRenderer,int videoW,int videoH);
@@ -48,9 +48,8 @@ public class GLRMono implements XGLSurfaceView.FullscreenRendererWithSurfaceText
 
     @Override
     public void onContextCreated(int screenWidth, int screenHeight, SurfaceTextureHolder optionalSurfaceTextureHolder) {
-        nativeOnSurfaceCreated(nativeGLRendererMono,mContext,optionalSurfaceTextureHolder);
         final float video360FOV=mContext.getSharedPreferences("pref_video",Context.MODE_PRIVATE).getFloat(mContext.getString(R.string.VS_360_VIDEO_FOV),50);
-        nativeOnSurfaceChanged(nativeGLRendererMono,screenWidth,screenHeight,video360FOV);
+        nativeOnContextCreated(nativeGLRendererMono,mContext,screenWidth,screenHeight,optionalSurfaceTextureHolder,video360FOV);
     }
 
     @Override

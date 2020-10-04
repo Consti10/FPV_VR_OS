@@ -80,7 +80,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
         aircraft.getBattery().setStateCallback(new BatteryState.Callback() {
             @Override
             public void onUpdate(BatteryState state) {
-                setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(), state.getCurrent() * 1000);
+                setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(), state.getCurrent() * 1000,state.getVoltage());
             }
         });
         aircraft.getFlightController().setStateCallback(new FlightControllerState.Callback() {
@@ -97,7 +97,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                 setHomeLocation(nativeInstance, home.getLatitude(), home.getLongitude(), 0);
             }
         });
-        aircraft.getFlightController().setMaxFlightHeight(500, new CommonCallbacks.CompletionCallback() {
+        aircraft.getFlightController().setMaxFlightHeight(1000, new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError djiError) {
                 debugDJIError("Set max flight height",djiError);

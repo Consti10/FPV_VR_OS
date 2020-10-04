@@ -8,11 +8,9 @@
 #ifndef FPV_VR_GLRENDERERMONO_H
 #define FPV_VR_GLRENDERERMONO_H
 
-
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 #include <jni.h>
-
 #include <memory>
 #include <string>
 #include <thread>
@@ -25,13 +23,11 @@
 #include <VrCompositorRenderer.h>
 #include <Video/VideoModesHelper.hpp>
 
-
 class GLRMono: public IVideoFormatChanged{
 public:
     GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemetryReceiver, gvr_context* gvr_context, VideoModesHelper::VIDEO_RENDERING_MODE videoMode, bool enableOSD);
 public:
-    void onSurfaceCreated(JNIEnv * env,jobject obj,jobject optionalSurfaceTextureHolder);
-    void onSurfaceChanged(int width, int height,float optionalVideo360FOV=0);
+    void onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject optionalSurfaceTextureHolder,float optionalVideo360FOV=0);
     //Draw the transparent OSD scene.
     void onDrawFrame();
     //Only in 360 degree mode

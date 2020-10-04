@@ -44,6 +44,8 @@ public:
     int OSD_STEREO_GLOBAL_SCALE;
     int OSD_STEREO_FOVX_SCALE;
     int OSD_STEREO_FOVY_SCALE;
+public:
+    float OSD_STEREO_RATIO;
 };
 
 
