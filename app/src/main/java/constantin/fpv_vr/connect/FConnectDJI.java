@@ -28,6 +28,7 @@ import dji.common.airlink.SignalQualityCallback;
 import dji.common.airlink.WiFiFrequencyBand;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
+import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.airlink.AirLink;
 import dji.sdk.airlink.WiFiLink;
@@ -119,6 +120,15 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         camera.getMode(callbackGeneric(idx++,"Camera mode"));
         camera.getExposureMode(callbackGeneric(idx++,"Camera exposure mode"));
         //
+        remoteController.setHardwareStateCallback(new HardwareState.HardwareStateCallback() {
+            @Override
+            public void onUpdate(HardwareState hardwareState) {
+                final HardwareState.Button functionButton=hardwareState.getFunctionButton();
+                if(functionButton!=null && functionButton.isClicked()){
+                    Log.d(TAG,"Clicked function button");
+                }
+            }
+        });
     }
 
     private <T> CommonCallbacks.CompletionCallbackWith<T> callbackGeneric(int idx, String message){
