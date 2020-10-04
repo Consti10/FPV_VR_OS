@@ -110,7 +110,6 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     }
     mVrFTCalculator.tick();
 
-    //MLOGD<<"FPS"<<mFPSCalculator.getCurrentFPS();
     mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
 
@@ -137,7 +136,7 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     if(mSettingsVR.VR_RENDERING_MODE==2){
         mFBRManager->drawEyesToFrontBufferUnsynchronized(env,vrCompositorRenderer);
     }else if(mSettingsVR.VR_RENDERING_MODE==3){
-        // TODO FBR
+
     }
     ATrace_endSection();
     //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
