@@ -24,7 +24,7 @@ GLRStereoVR::GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver&
         gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
         videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
         mTelemetryReceiver(telemetryReceiver),
-        vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.VR_DISTORTION_CORRECTION_MODE != 0,false)
+        vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.isVR_DISTORTION_CORRECTION_ENABLED(),false)
         {
     if(vsyncP!=0){
         mFBRManager=std::make_unique<FBRManager>(VSYNC::native(vsyncP));
