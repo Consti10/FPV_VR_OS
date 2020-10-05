@@ -127,7 +127,6 @@ public class FConnectWB extends Fragment implements View.OnClickListener , OpenH
                 new AlertDialog.Builder(mContext).setMessage(mContext.getString(R.string.Info_ConnectEZWBOPNEHD))
                         .setPositiveButton("Okay", (dialog, which) ->
                                 startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))).show();
-                startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
                 break;
             case R.id.Mode2ConnectB:
                 if (IsConnected.getUSBStatus(mContext)== IsConnected.USB_CONNECTION.NOTHING) {
