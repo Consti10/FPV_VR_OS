@@ -1,5 +1,7 @@
 package constantin.fpv_vr.djiintegration;
 
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.Toaster;
@@ -14,9 +16,11 @@ import dji.common.flightcontroller.FlightControllerState;
 import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.gimbal.GimbalMode;
 import dji.common.model.LocationCoordinate2D;
+import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.airlink.WiFiLink;
 import dji.sdk.products.Aircraft;
+import dji.sdk.remotecontroller.RemoteController;
 
 public class TelemetryReceiverDJI extends TelemetryReceiver {
     private static final float MPS_TO_KPH=3.6f;
@@ -37,6 +41,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             Toaster.makeToast(context,"Cannot start telemetry",true);
             return;
         }
+        final RemoteController remoteController=aircraft.getRemoteController();
         //Toaster.makeToast(context, "starting dji telemetry", true);
         aircraft.getGimbal().setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
             @Override
@@ -126,6 +131,17 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                 @Override
                 public void onFailure(DJIError djiError) {
                     Toaster.makeToast(context,"cannot get frequency");
+                }
+            });
+        }
+        if(remoteController!=null){
+            remoteController.setHardwareStateCallback(new HardwareState.HardwareStateCallback() {
+                @Override
+                public void onUpdate(HardwareState hardwareState) {
+                    final HardwareState.Button functionButton=hardwareState.getFunctionButton();
+                    if(functionButton!=null && functionButton.isClicked()){
+                       setDJIFunctionButtonClicked(nativeInstance);
+                    }
                 }
             });
         }

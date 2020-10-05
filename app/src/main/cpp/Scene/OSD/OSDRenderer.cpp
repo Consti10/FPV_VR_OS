@@ -122,6 +122,11 @@ void OSDRenderer::onSurfaceSizeChanged() {
 }
 
 void OSDRenderer::updateAndDrawElementsGL(){
+    if(mTelemetryReceiver.OSD_DISPLAY_MODE==1){
+        return;
+    }else if(mTelemetryReceiver.OSD_DISPLAY_MODE==2){
+        return;
+    }
     //MEASURE_FUNCTION_EXECUTION_TIME
     const auto now=std::chrono::steady_clock::now();
     const float flightTimeS=((float)std::chrono::duration_cast<std::chrono::milliseconds>(now-mFLightStart).count())/1000.0f;

@@ -24,25 +24,34 @@ GLRStereoVR::GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver&
         gvr_api_(gvr::GvrApi::WrapNonOwned(gvr_context)),
         videoMode(static_cast<VideoModesHelper::VIDEO_RENDERING_MODE>(videoMode)), mSettingsVR(env, androidContext),
         mTelemetryReceiver(telemetryReceiver),
-        vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.isVR_DISTORTION_CORRECTION_ENABLED(),false)
+        vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.isVR_DISTORTION_CORRECTION_ENABLED(),false),
+        OSD_RATIO(SettingsOSDStyle(env,androidContext).OSD_STEREO_RATIO)
         {
     if(vsyncP!=0){
         mFBRManager=std::make_unique<FBRManager>(VSYNC::native(vsyncP));
     }else{
         mFBRManager=std::make_unique<FBRManager>(new VSYNC());
     }
+    MLOGD<<"OSD_RATIO "<<OSD_RATIO;
 }
 
 void GLRStereoVR::placeGLElements(){
     float videoW=10;
     float videoH=videoW*1.0f/lastVideoFormat;
-    float videoX=-videoW/2.0f;
-    float videoY=-videoH/2.0f;
     //The video width defaults to 10(cm). Calculate the z value such that the video fills a FOV
     //of exactly DEFAULT_FOV_FILLED_BY_SCENE
     float videoZ=-videoW/2.0f/glm::tan(glm::radians(VRSettings::DEFAULT_FOV_FILLED_BY_SCENE/2.0f));
     videoZ*=1/(mSettingsVR.VR_SCENE_SCALE_PERCENTAGE/100.0f);
-    updatePosition(videoZ,videoW,videoH);
+    //
+    vrCompositorRenderer.removeLayers();
+    const unsigned int TESSELATION_FACTOR=10;
+    const auto headTrackingMode=mSettingsVR.isHeadTrackingEnabled() ? VrCompositorRenderer::FULL:VrCompositorRenderer::NONE;
+
+    const auto vid1=VideoModesHelper::createMeshForMode(videoMode,videoZ,videoW,videoH);
+    vrCompositorRenderer.addLayer(vid1,&mSurfaceTextureUpdate,headTrackingMode);
+
+    const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
+    vrCompositorRenderer.addLayer(osd, &osdRenderbuffer,headTrackingMode);
 }
 
 void GLRStereoVR::onContextCreated(JNIEnv * env, jobject androidContext, int screenW, int screenH, jobject surfaceTextureHolder) {
@@ -140,20 +149,6 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     }
     ATrace_endSection();
     //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
-}
-
-
-void GLRStereoVR::updatePosition(const float positionZ, const float width, const float height) {
-    vrCompositorRenderer.removeLayers();
-    const unsigned int TESSELATION_FACTOR=10;
-    const auto headTrackingMode=mSettingsVR.isHeadTrackingEnabled() ? VrCompositorRenderer::FULL:VrCompositorRenderer::NONE;
-
-    //const auto vid0=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
-    const auto vid1=VideoModesHelper::createMeshForMode(videoMode, positionZ, width, height);
-    vrCompositorRenderer.addLayer(vid1,&mSurfaceTextureUpdate,headTrackingMode);
-
-    const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,width*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    vrCompositorRenderer.addLayer(osd, &osdRenderbuffer,headTrackingMode);
 }
 
 
