@@ -1,12 +1,13 @@
 package constantin.fpv_vr.play_mono;
 
+import android.annotation.SuppressLint;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,20 +16,12 @@ import com.google.vr.ndk.base.GvrApi;
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.VideoTelemetryComponent;
-import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.databinding.ActivityMonoVidOsdBinding;
-import constantin.fpv_vr.djiintegration.DJIApplication;
-import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
-import constantin.fpv_vr.djiintegration.VideoPlayerDJI;
-import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.FullscreenHelper;
 import constantin.renderingx.core.xglview.XGLSurfaceView;
 import constantin.renderingx.core.xglview.XSurfaceParams;
-import constantin.telemetry.core.TelemetryReceiver;
-import constantin.uvcintegration.UVCPlayer;
 import constantin.video.core.player.DecodingInfo;
 import constantin.video.core.player.IVideoParamsChanged;
-import constantin.video.core.player.VideoPlayer;
 import constantin.video.core.player.VideoSettings;
 
 import static constantin.video.core.player.VideoSettings.VIDEO_MODE_2D_MONOSCOPIC;
@@ -49,12 +42,12 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     private GLRMono mGLRenderer;
     private VideoTelemetryComponent videoTelemetryComponent;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
         binding.myVRLayout.setVrOverlayEnabled(false);
-        //View v=(View)binding.myVRLayout;
 
         // OSD is optional (e.g. 'only video' )
         final boolean ENABLE_OSD = getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD, true);
@@ -89,11 +82,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         if(USE_ANDROID_SURFACE_FOR_VIDEO){
             binding.SurfaceViewMonoscopicVideo.setVisibility(View.VISIBLE);
             binding.SurfaceViewMonoscopicVideo.getHolder().addCallback(videoTelemetryComponent.configure1());
-            //binding.SurfaceViewMonoscopicVideo.getHolder().setFormat();
-        }else{
-            //mGLRenderer.getVideoSurfaceHolder().setCallBack(uvcPlayer==null ? videoPlayer.configure2() : uvcPlayer.configure2());
-            registerForContextMenu(binding.myVRLayout);
         }
+        registerForContextMenu(binding.myVRLayout);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this, binding.myVRLayout.getGvrApi());
         setContentView(binding.getRoot());
     }
@@ -135,7 +125,11 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Options");
-        getMenuInflater().inflate(R.menu.video360_context_menu, menu);
+        if(VideoSettings.videoMode(this)==0){
+            getMenuInflater().inflate(R.menu.mono_without_360_video, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.mono_with_360_video, menu);
+        }
     }
 
     @Override
@@ -149,6 +143,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
                 GvrApi api= binding.myVRLayout.getGvrApi();
                 api.recenterTracking();
                 return true;
+            case R.id.option_change_osd_view_mode:
+                videoTelemetryComponent.getTelemetryReceiver().incrementOsdViewMode();
             default:
                 return super.onContextItemSelected(item);
         }

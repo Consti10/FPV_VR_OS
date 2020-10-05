@@ -1,10 +1,17 @@
 package constantin.fpv_vr;
 
+import android.annotation.SuppressLint;
 import android.graphics.SurfaceTexture;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
@@ -21,13 +28,16 @@ import constantin.video.core.player.VideoPlayer;
  * Instantiates the proper video and telemetry receiver while also providing a convenient
  * abstraction for configuring all the different player(s)
  */
-public class VideoTelemetryComponent {
+public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureListener {
+    private static final String TAG=VideoTelemetryComponent.class.getSimpleName();
     private final int connectionType;
     private VideoPlayer videoPlayer;
     private VideoPlayerDJI videoPlayerDJI;
     private UVCPlayer uvcPlayer;
     private TelemetryReceiver telemetryReceiver;
     private TelemetryReceiverDJI telemetryReceiverDJI;
+
+    private final GestureDetectorCompat mDetector;
 
     public VideoTelemetryComponent(final AppCompatActivity parent){
         connectionType=SJ.getConnectionType(parent);
@@ -41,6 +51,7 @@ public class VideoTelemetryComponent {
             videoPlayer=new VideoPlayer(parent);
             telemetryReceiver=new TelemetryReceiver(parent,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         }
+        mDetector=new GestureDetectorCompat(parent,this);
     }
 
     public TelemetryReceiver getTelemetryReceiver(){
@@ -79,4 +90,29 @@ public class VideoTelemetryComponent {
             videoPlayer.setIVideoParamsChanged(iVideoParamsChanged);
         }
     }
+
+    // Blind people cannot use this app anyway !
+    /*@SuppressLint("ClickableViewAccessibility")
+    public View.OnTouchListener getOnTouchListenerForOsdViewMode(){
+        return new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG,"onTouch");
+                return mDetector.onTouchEvent(event);
+            }
+        };
+    }
+    // For some reason we have to return true here for the double tap listener
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        Log.d(TAG,"onDoubleTap");
+        getTelemetryReceiver().incrementOsdViewMode();
+        return false;
+    }*/
+
 }

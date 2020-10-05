@@ -3,11 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="HardcodedText">
   <item
-      android:id="@+id/option_set_home"
-      android:title="Set Home Orientation"
+      android:id="@+id/option_change_osd_view_mode"
+      android:title="Change OSD view mode"
       />
-  <item
-      android:id="@+id/option_goto_home"
-      android:title="Go To Home Orientation" />
 
 </menu>

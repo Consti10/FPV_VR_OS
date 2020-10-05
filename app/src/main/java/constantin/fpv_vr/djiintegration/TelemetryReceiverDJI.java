@@ -1,7 +1,5 @@
 package constantin.fpv_vr.djiintegration;
 
-import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.Toaster;
@@ -140,7 +138,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                 public void onUpdate(HardwareState hardwareState) {
                     final HardwareState.Button functionButton=hardwareState.getFunctionButton();
                     if(functionButton!=null && functionButton.isClicked()){
-                       setDJIFunctionButtonClicked(nativeInstance);
+                        incrementOsdViewMode();
                     }
                 }
             });
