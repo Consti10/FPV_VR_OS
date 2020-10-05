@@ -3,6 +3,7 @@ package constantin.fpv_vr.play_mono;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -53,6 +54,8 @@ public class AMonoVideoOSD extends AppCompatActivity implements IVideoParamsChan
         super.onCreate(savedInstanceState);
         binding = ActivityMonoVidOsdBinding.inflate(getLayoutInflater());
         binding.myVRLayout.setVrOverlayEnabled(false);
+        //View v=(View)binding.myVRLayout;
+
         // OSD is optional (e.g. 'only video' )
         final boolean ENABLE_OSD = getIntent().getBooleanExtra(EXTRA_KEY_ENABLE_OSD, true);
         // Use android surface if 'normal' video in monoscopic view
