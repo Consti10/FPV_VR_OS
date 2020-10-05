@@ -37,8 +37,6 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
     private TelemetryReceiver telemetryReceiver;
     private TelemetryReceiverDJI telemetryReceiverDJI;
 
-    private final GestureDetectorCompat mDetector;
-
     public VideoTelemetryComponent(final AppCompatActivity parent){
         connectionType=SJ.getConnectionType(parent);
         if(connectionType== AConnect.CONNECTION_TYPE_UVC){
@@ -51,7 +49,6 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
             videoPlayer=new VideoPlayer(parent);
             telemetryReceiver=new TelemetryReceiver(parent,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
         }
-        mDetector=new GestureDetectorCompat(parent,this);
     }
 
     public TelemetryReceiver getTelemetryReceiver(){
@@ -91,28 +88,5 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
         }
     }
 
-    // Blind people cannot use this app anyway !
-    /*@SuppressLint("ClickableViewAccessibility")
-    public View.OnTouchListener getOnTouchListenerForOsdViewMode(){
-        return new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d(TAG,"onTouch");
-                return mDetector.onTouchEvent(event);
-            }
-        };
-    }
-    // For some reason we have to return true here for the double tap listener
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {
-        Log.d(TAG,"onDoubleTap");
-        getTelemetryReceiver().incrementOsdViewMode();
-        return false;
-    }*/
 
 }
