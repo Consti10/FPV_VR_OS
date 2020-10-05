@@ -123,6 +123,10 @@ void OSDRenderer::onSurfaceSizeChanged() {
 
 void OSDRenderer::updateAndDrawElementsGL(){
     if(mTelemetryReceiver.OSD_DISPLAY_MODE==1){
+        if(mAHorizon!=nullptr){
+            mAHorizon->updateGLBase();
+            mAHorizon->drawGLBase(IDENTITY_M,mOSDProjectionM);
+        }
         return;
     }else if(mTelemetryReceiver.OSD_DISPLAY_MODE==2){
         return;
