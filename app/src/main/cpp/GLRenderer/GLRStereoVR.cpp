@@ -27,11 +27,7 @@ GLRStereoVR::GLRStereoVR(JNIEnv* env, jobject androidContext, TelemetryReceiver&
         vrCompositorRenderer(env,androidContext,gvr_api_.get(),mSettingsVR.isVR_DISTORTION_CORRECTION_ENABLED(),false),
         OSD_RATIO(SettingsOSDStyle(env,androidContext).OSD_STEREO_RATIO)
         {
-    if(vsyncP!=0){
-        mFBRManager=std::make_unique<FBRManager>(VSYNC::native(vsyncP));
-    }else{
-        mFBRManager=std::make_unique<FBRManager>(new VSYNC());
-    }
+    mFBRManager=std::make_unique<FBRManager>(VSYNC::createFrom(vsyncP));
     MLOGD<<"OSD_RATIO "<<OSD_RATIO;
 }
 
