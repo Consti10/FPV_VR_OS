@@ -43,9 +43,14 @@ public class GLRStereoVR implements XGLSurfaceView.FullscreenRendererWithSurface
     public GLRStereoVR(final AppCompatActivity context, final TelemetryReceiver telemetryReceiver, long gvrApiNativeContext){
         mContext=context;
         this.telemetryReceiver=telemetryReceiver;
-        //final VSYNC vsync=new VSYNC(context);
+        final VSYNC vsync;
+        if(ASettingsVR.getVR_RENDERING_MODE(context)==3){
+            vsync=new VSYNC(context);
+        }else{
+            vsync=null;
+        }
         nativeGLRendererStereo=nativeConstruct(context,telemetryReceiver.getNativeInstance(),
-                gvrApiNativeContext, VideoSettings.videoMode(mContext),0);
+                gvrApiNativeContext, VideoSettings.videoMode(mContext),vsync==null ? 0 : vsync.getNativeInstance());
         USE_PRESENTATION_TIME=ASettingsVR.getVR_RENDERING_MODE(context)==1;
     }
 

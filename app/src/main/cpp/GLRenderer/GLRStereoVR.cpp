@@ -110,18 +110,23 @@ void GLRStereoVR::calculateFrameTimes() {
     //Extensions2::GetCompositorTimingANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));3
 }
 
-
-void GLRStereoVR::onDrawFrame(JNIEnv* env) {
-    this->currEnv=env;
-    ATrace_beginSection("GLRStereoVR::onDrawFrame");
-
+void GLRStereoVR::beforeDrawFrame(JNIEnv *env) {
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
     mVrFTCalculator.tick();
-    mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
+    if(mSettingsVR.VR_RENDERING_MODE==3){
+        mTelemetryReceiver.setOpenGLFPS(-1);
+    }else{
+        mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
+    }
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
+}
 
+void GLRStereoVR::onDrawFrame(JNIEnv* env) {
+    this->currEnv=env;
+    ATrace_beginSection("GLRStereoVR::onDrawFrame");
+    beforeDrawFrame(env);
     //
     if(mSettingsVR.VR_RENDERING_MODE==0 || mSettingsVR.VR_RENDERING_MODE==1){
         //
@@ -146,12 +151,7 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
         mFBRManager->drawEyesToFrontBufferUnsynchronized(env,vrCompositorRenderer);
     }else if(mSettingsVR.VR_RENDERING_MODE==3){
         mFBRManager->enterWarping(env,vrCompositorRenderer,[this](JNIEnv* env) {
-            if(checkAndResetVideoFormatChanged()){
-                placeGLElements();
-            }
-            mVrFTCalculator.tick();
-            mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
-            vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
+            beforeDrawFrame(env);
         });
     }
     ATrace_endSection();
