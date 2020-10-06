@@ -102,7 +102,8 @@ public:
                 //bytesSaved+=modArray->sizeBytes()-bytesToUpdate;
             }
             offsetB+=modArray->sizeBytes();
-        }glBindBuffer(GL_ARRAY_BUFFER,0);
+        }
+        glBindBuffer(GL_ARRAY_BUFFER,0);
         // __android_log_print(ANDROID_LOG_DEBUG,"T","bytes saved %d %d",bytesSaved,nOfBytesUpdated);
         //LOGD("%s: N of glBufferSubData calls: %d | Kbyte: %f",name.c_str(),nOfUpdates,nOfBytesUpdated/1024.0);
     }

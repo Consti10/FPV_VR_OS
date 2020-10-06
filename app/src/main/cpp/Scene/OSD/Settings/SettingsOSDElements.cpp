@@ -40,7 +40,7 @@ SettingsOSDElements::SettingsOSDElements(JNIEnv *env, jobject androidContext) {
         oTextElement1.enableXX.push_back(TelemetryReceiver::OPENGL_FPS);
     }
     if(prefOSDElements.getBoolean(IDOSD::TE1_DEC_FPS)){
-        oTextElement1.enableXX.push_back( TelemetryReceiver::DECODER_FPS);
+        oTextElement1.enableXX.push_back(TelemetryReceiver::DECODER_FPS);
     }
     if(prefOSDElements.getBoolean(IDOSD::TE1_DEC_DBITRATE)){
         oTextElement1.enableXX.push_back(TelemetryReceiver::DECODER_BITRATE);

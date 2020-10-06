@@ -150,7 +150,6 @@ public:
         }
     }
 
-
     static float getStringLength(const std::vector<StylizedString>& text,float height){
         float width=0;
         for(const StylizedString& ss: text){
