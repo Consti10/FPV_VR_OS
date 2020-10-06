@@ -2,6 +2,7 @@ package constantin.fpv_vr.djiintegration;
 
 import dji.common.airlink.WiFiFrequencyBand;
 import dji.common.camera.ResolutionAndFrameRate;
+import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
 
 public class DJIHelper {
@@ -28,6 +29,14 @@ public class DJIHelper {
         for(final ResolutionAndFrameRate f:resolutionAndFrameRate){
             ret+=""+f.toString()+" |";
         };
+        return ret;
+    }
+
+    public static String asString(final WhiteBalance whiteBalance){
+        String ret="";
+        ret+=whiteBalance.getWhiteBalancePreset().name();
+        ret+=" CT";
+        ret+=whiteBalance.getColorTemperature();
         return ret;
     }
 

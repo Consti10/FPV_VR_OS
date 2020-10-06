@@ -28,6 +28,7 @@ import dji.common.airlink.SignalQualityCallback;
 import dji.common.airlink.WiFiFrequencyBand;
 import dji.common.airlink.WifiChannelInterference;
 import dji.common.camera.SettingsDefinitions;
+import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
 import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
@@ -60,6 +61,16 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             debugList.add("");
         }
         setTextDebug();
+        binding.bChangeExposureMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Aircraft aircraft = DJIApplication.getConnectedAircraft();
+                if (aircraft != null) {
+                    aircraft.getCamera().setWhiteBalance(new WhiteBalance(SettingsDefinitions.WhiteBalancePreset.INDOOR_INCANDESCENT),
+                            callbackPrintWhenError("DJI WhiteBalance"));
+                }
+            }
+        });
         return binding.getRoot();
     }
 
@@ -106,6 +117,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         debugList.set(idx++,DJIHelper.asString(camera.getCapabilities().videoResolutionAndFrameRateRange()));
         camera.getMode(callbackGeneric(idx++,"Camera mode"));
         camera.getExposureMode(callbackGeneric(idx++,"Camera exposure mode"));
+        camera.getWhiteBalance(callbackWhiteBalance(idx++,"Camera whiteBalance"));
         //
     }
 
@@ -148,6 +160,28 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             @Override
             public void onUpdate(int i) {
                 debugList.set(idx,message+" "+i);
+            }
+        };
+    }
+
+    private CommonCallbacks.CompletionCallback callbackPrintWhenError(final String message){
+        return new CommonCallbacks.CompletionCallback() {
+            @Override
+            public void onResult(DJIError djiError) {
+                Log.d(TAG,message+DJIHelper.asString(djiError));
+            }
+        };
+    }
+
+    private CommonCallbacks.CompletionCallbackWith<WhiteBalance> callbackWhiteBalance(final int idx,final String message){
+        return new CommonCallbacks.CompletionCallbackWith<WhiteBalance>() {
+            @Override
+            public void onSuccess(WhiteBalance whiteBalance) {
+                debugList.set(idx,message+" "+DJIHelper.asString(whiteBalance));
+            }
+            @Override
+            public void onFailure(DJIError djiError) {
+                debugList.set(idx,message+" "+djiError.toString());
             }
         };
     }
