@@ -114,11 +114,11 @@ void GLRStereoVR::calculateFrameTimes() {
 void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     this->currEnv=env;
     ATrace_beginSection("GLRStereoVR::onDrawFrame");
+
     if(checkAndResetVideoFormatChanged()){
         placeGLElements();
     }
     mVrFTCalculator.tick();
-
     mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
     vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
 
@@ -145,7 +145,14 @@ void GLRStereoVR::onDrawFrame(JNIEnv* env) {
     if(mSettingsVR.VR_RENDERING_MODE==2){
         mFBRManager->drawEyesToFrontBufferUnsynchronized(env,vrCompositorRenderer);
     }else if(mSettingsVR.VR_RENDERING_MODE==3){
-
+        mFBRManager->enterWarping(env,vrCompositorRenderer,[this](JNIEnv* env) {
+            if(checkAndResetVideoFormatChanged()){
+                placeGLElements();
+            }
+            mVrFTCalculator.tick();
+            mTelemetryReceiver.setOpenGLFPS(mVrFTCalculator.getCurrentFPS());
+            vrCompositorRenderer.updateLatestHeadSpaceFromStartSpaceRotation();
+        });
     }
     ATrace_endSection();
     //eglSwapBuffers(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW));
