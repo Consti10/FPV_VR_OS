@@ -25,11 +25,11 @@ public class DJIHelper {
     }
 
     public static String asString(final ResolutionAndFrameRate[] resolutionAndFrameRate){
-        String ret="";
+        StringBuilder ret= new StringBuilder();
         for(final ResolutionAndFrameRate f:resolutionAndFrameRate){
-            ret+=""+f.toString()+" |";
+            ret.append("").append(f.toString()).append(" |");
         };
-        return ret;
+        return ret.toString();
     }
 
     public static String asString(final WhiteBalance whiteBalance){
