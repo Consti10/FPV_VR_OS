@@ -31,6 +31,7 @@ import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
+import dji.midware.data.model.P3.C;
 import dji.sdk.airlink.AirLink;
 import dji.sdk.airlink.WiFiLink;
 import dji.sdk.camera.Camera;
@@ -70,6 +71,8 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         debugList.set(idx++,"FirmwarePackageVersion "+aircraft.getFirmwarePackageVersion());
         final FlightController flightController=aircraft.getFlightController();
         flightController.getMaxFlightHeight(callbackGeneric(idx++,"Max flight height"));
+        flightController.getGoHomeHeightInMeters(callbackGeneric(idx++,"Go home height"));
+        flightController.getConnectionFailSafeBehavior(callbackGeneric(idx++,"FailSafeBehaviour"));
 
         final AirLink airLink=aircraft.getAirLink();
         debugList.set(idx++,"airLink.isConnected "+airLink.isConnected());
@@ -77,43 +80,20 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         debugList.set(idx++,"isLightbridgeLinkSupported "+airLink.isLightbridgeLinkSupported());
         debugList.set(idx++,"isOcuSyncLinkSupported "+airLink.isOcuSyncLinkSupported());
         debugList.set(idx++,"isUpdateCountryCodeRequired() "+airLink.isUpdateCountryCodeRequired());
-        airLink.setCountryCodeCallback(new AirLink.CountryCodeCallback() {
-            @Override
-            public void onRequireUpdateCountryCode() {
-                
-            }
-        });
+
 
         airLink.setDownlinkSignalQualityCallback(callbackSignal(idx++,"DownlinkSignalQuality"));
         airLink.setUplinkSignalQualityCallback(callbackSignal(idx++,"UplinkSignalQuality"));
         final WiFiLink wiFiLink=airLink.getWiFiLink();
         wiFiLink.getFrequencyBand(callbackGeneric(idx++,"Wifi frequency band"));
         wiFiLink.getChannelNumber(callbackGeneric(idx++,"Channel number"));
-        wiFiLink.getAvailableChannelNumbers(new CommonCallbacks.CompletionCallbackWith<Integer[]>() {
-            @Override
-            public void onSuccess(Integer[] integers) {
-                StringBuilder s= new StringBuilder();
-                for(final int i:integers){
-                    s.append(i);
-                    s.append(" ");
-                }
-                debugList.set(13,"Channels are "+s);
-                final boolean isCEMode=ArrayUtils.contains(integers,13);
-                debugList.set(14,"Is CE Mode "+isCEMode);
-            }
-
-            @Override
-            public void onFailure(DJIError djiError) {
-                debugList.set(13,"Cannot get channels");
-                debugList.set(14,"Is CE Mode unknown");
-            }
-        });
+        wiFiLink.getAvailableChannelNumbers(callbackWifiChannels(idx++,idx++));
         wiFiLink.getDataRate(callbackGeneric(idx++,"Wifi data rate"));
         wiFiLink.getSelectionMode(callbackGeneric(idx++,"Wifi selection mode"));
         wiFiLink.setChannelInterferenceCallback(new WiFiLink.ChannelInterferenceCallback() {
             @Override
             public void onUpdate(WifiChannelInterference[] wifiChannelInterferences) {
-                debugList.set(14,"Is CE Mode unknown");
+
             }
         });
 
@@ -127,15 +107,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         camera.getMode(callbackGeneric(idx++,"Camera mode"));
         camera.getExposureMode(callbackGeneric(idx++,"Camera exposure mode"));
         //
-        remoteController.setHardwareStateCallback(new HardwareState.HardwareStateCallback() {
-            @Override
-            public void onUpdate(HardwareState hardwareState) {
-                final HardwareState.Button functionButton=hardwareState.getFunctionButton();
-                if(functionButton!=null && functionButton.isClicked()){
-                    Log.d(TAG,"Clicked function button");
-                }
-            }
-        });
     }
 
     private <T> CommonCallbacks.CompletionCallbackWith<T> callbackGeneric(int idx, String message){
@@ -147,6 +118,27 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             @Override
             public void onFailure(DJIError djiError) {
                 debugList.set(idx,message+" "+DJIHelper.asString(djiError));
+            }
+        };
+    }
+    private CommonCallbacks.CompletionCallbackWith<Integer[]> callbackWifiChannels(final int idx1,final int idx2){
+        return new CommonCallbacks.CompletionCallbackWith<Integer[]>() {
+            @Override
+            public void onSuccess(Integer[] integers) {
+                StringBuilder s= new StringBuilder();
+                for(final int i:integers){
+                    s.append(i);
+                    s.append(" ");
+                }
+                debugList.set(idx1,"Channels are "+s);
+                final boolean isCEMode=ArrayUtils.contains(integers,13);
+                debugList.set(idx2,"Is CE Mode "+isCEMode);
+            }
+
+            @Override
+            public void onFailure(DJIError djiError) {
+                debugList.set(idx1,"Cannot get channels");
+                debugList.set(idx2,"Is CE Mode unknown");
             }
         };
     }

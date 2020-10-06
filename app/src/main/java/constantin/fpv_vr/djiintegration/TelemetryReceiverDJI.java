@@ -100,7 +100,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                 setHomeLocation(nativeInstance, home.getLatitude(), home.getLongitude(), 0);
             }
         });
-        aircraft.getFlightController().setMaxFlightHeight(1000, new CommonCallbacks.CompletionCallback() {
+        aircraft.getFlightController().setMaxFlightHeight(500, new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError djiError) {
                 debugDJIError("Set max flight height",djiError);
