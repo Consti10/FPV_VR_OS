@@ -107,7 +107,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
 
             }
         });
-
         final RemoteController remoteController=aircraft.getRemoteController();
         remoteController.getName(callbackGeneric(idx++,"Remote controller name"));
         //debugList.set(16,"LOG "+DJISDKManager.getInstance().getLogPath());
