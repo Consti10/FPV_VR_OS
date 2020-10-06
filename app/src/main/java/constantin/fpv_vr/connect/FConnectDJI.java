@@ -26,6 +26,7 @@ import constantin.fpv_vr.djiintegration.DJIHelper;
 import constantin.video.core.RequestPermissionHelper;
 import dji.common.airlink.SignalQualityCallback;
 import dji.common.airlink.WiFiFrequencyBand;
+import dji.common.airlink.WifiChannelInterference;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.remotecontroller.HardwareState;
@@ -109,6 +110,12 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         });
         wiFiLink.getDataRate(callbackGeneric(idx++,"Wifi data rate"));
         wiFiLink.getSelectionMode(callbackGeneric(idx++,"Wifi selection mode"));
+        wiFiLink.setChannelInterferenceCallback(new WiFiLink.ChannelInterferenceCallback() {
+            @Override
+            public void onUpdate(WifiChannelInterference[] wifiChannelInterferences) {
+                debugList.set(14,"Is CE Mode unknown");
+            }
+        });
 
         final RemoteController remoteController=aircraft.getRemoteController();
         remoteController.getName(callbackGeneric(idx++,"Remote controller name"));
