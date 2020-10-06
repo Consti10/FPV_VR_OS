@@ -15,7 +15,8 @@ public:
     //Render left frame into a rectangle with u->{0,0,5} and right frame int a rectangle with u->{0.5,1.0}
     //Degree360: 360 degree video, rendered onto a sphere instead of a quad
     enum VIDEO_RENDERING_MODE{
-        RM_2D_MONOSCOPIC,RM_2D_STEREO,
+        RM_2D_MONOSCOPIC,
+        RM_2D_STEREO,
         //2 different modes - mapping in shader or before uploading
         RM_360_DUAL_FISHEYE_INSTA360_1,
         RM_360_DUAL_FISHEYE_INSTA360_2,
@@ -30,7 +31,7 @@ public:
                 break;
             case RM_2D_STEREO:
                 return TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
-                break;
+                //break;
             case RM_360_DUAL_FISHEYE_INSTA360_1:
                 return GLProgramTexture::convert(SphereBuilder::createSphereEquirectangularMonoscopic(),true);
                 break;

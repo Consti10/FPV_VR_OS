@@ -29,7 +29,7 @@ public:
 public:
     void onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject optionalSurfaceTextureHolder,float optionalVideo360FOV=0);
     //Draw the transparent OSD scene.
-    void onDrawFrame();
+    void onDrawFrame(JNIEnv* env);
     //Only in 360 degree mode
     void setHomeOrientation360();
 private:

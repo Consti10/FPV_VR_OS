@@ -48,10 +48,11 @@ void GLRMono::onContextCreated(JNIEnv * env,jobject androidContext,int screenW,i
     glClearColor(0.0f,0,0,0.0f);
 }
 
-void GLRMono::onDrawFrame() {
+void GLRMono::onDrawFrame(JNIEnv* env) {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     cpuFrameTime.start();
     if(ENABLE_VIDEO){
+        mOptionalVideoRender.surfaceTextureUpdate->updateTexImageJAVA(env);
         const gvr::Mat4f tmpHeadPose = gvr_api_->GetHeadSpaceFromStartSpaceRotation(gvr::GvrApi::GetTimePointNow());
         glm::mat4 tmpHeadPoseGLM=toGLM(tmpHeadPose);
         tmpHeadPoseGLM= tmpHeadPoseGLM*mOptionalVideoRender.monoForward360;
@@ -111,7 +112,7 @@ JNI_METHOD(void, nativeOnContextCreated)
 
 JNI_METHOD(void, nativeOnDrawFrame)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {
-    native(glRendererMono)->onDrawFrame();
+    native(glRendererMono)->onDrawFrame(env);
 }
 JNI_METHOD(void, nativeSetHomeOrientation360)
 (JNIEnv *env, jobject obj, jlong glRendererMono) {
