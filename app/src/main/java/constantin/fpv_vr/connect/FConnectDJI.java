@@ -64,7 +64,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
                     aircraft.getCamera().setWhiteBalance(new WhiteBalance(SettingsDefinitions.WhiteBalancePreset.INDOOR_INCANDESCENT),
-                            callbackToastWhenError("Set WhiteBalance"));
+                            DJIHelper.callbackToastWhenError(mContext,"Set WhiteBalance"));
                 }
             }
         });
@@ -73,7 +73,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             public void onClick(View v) {
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
-                    aircraft.getGimbal().setMode(GimbalMode.FPV,callbackToastWhenError("Set Gimbal FPV"));
+                    aircraft.getGimbal().setMode(GimbalMode.FPV,DJIHelper.callbackToastWhenError(mContext,"Set Gimbal FPV"));
                 }
             }
         });
@@ -165,25 +165,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             @Override
             public void onUpdate(int i) {
                 debugList.set(idx,message+" "+i);
-            }
-        };
-    }
-
-    private CommonCallbacks.CompletionCallback callbackLogWhenError(final String message){
-        return new CommonCallbacks.CompletionCallback() {
-            @Override
-            public void onResult(DJIError djiError) {
-                Log.d(TAG,message+DJIHelper.asString(djiError));
-            }
-        };
-    }
-
-    private CommonCallbacks.CompletionCallback callbackToastWhenError(final String message){
-        return new CommonCallbacks.CompletionCallback() {
-            @Override
-            public void onResult(DJIError djiError) {
-                Log.d(TAG,message+DJIHelper.asString(djiError));
-                Toaster.makeToast(mContext,message+DJIHelper.asString(djiError));
             }
         };
     }

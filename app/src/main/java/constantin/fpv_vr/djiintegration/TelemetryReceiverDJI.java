@@ -65,7 +65,6 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             public void onUpdate(int i) {
                 qualityDownPercentage=i;
                 setDJISignalQuality(nativeInstance,qualityUpPercentage,qualityDownPercentage);
-                Log.d(TAG,"Got "+i);
             }
         });
         aircraft.getAirLink().setUplinkSignalQualityCallback(new SignalQualityCallback() {
@@ -73,14 +72,12 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             public void onUpdate(int i) {
                 qualityUpPercentage=i;
                 setDJISignalQuality(nativeInstance,qualityUpPercentage,qualityDownPercentage);
-                Log.d(TAG,"Got2 "+i);
             }
         });
         aircraft.getBattery().setStateCallback(new BatteryState.Callback() {
             @Override
             public void onUpdate(BatteryState state) {
-                setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(), state.getCurrent() * 1000,state.getVoltage());
-                //state.getChargeRemaining()
+                setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(), state.getCurrent() *1.0f/1000.0f,state.getVoltage());
             }
         });
         aircraft.getFlightController().setStateCallback(new FlightControllerState.Callback() {
