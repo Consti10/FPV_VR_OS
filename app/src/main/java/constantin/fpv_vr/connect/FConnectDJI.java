@@ -64,7 +64,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
                     aircraft.getCamera().setWhiteBalance(new WhiteBalance(SettingsDefinitions.WhiteBalancePreset.INDOOR_INCANDESCENT),
-                            callbackLogWhenError("DJI WhiteBalance"));
+                            callbackToastWhenError("Set WhiteBalance"));
                 }
             }
         });
@@ -73,7 +73,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             public void onClick(View v) {
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
-                    aircraft.getGimbal().setMode(GimbalMode.FPV,callbackToastWhenError("Gimbal FPV"));
+                    aircraft.getGimbal().setMode(GimbalMode.FPV,callbackToastWhenError("Set Gimbal FPV"));
                 }
             }
         });
