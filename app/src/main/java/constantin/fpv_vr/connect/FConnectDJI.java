@@ -101,7 +101,6 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         debugList.set(idx++,"isOcuSyncLinkSupported "+airLink.isOcuSyncLinkSupported());
         debugList.set(idx++,"isUpdateCountryCodeRequired() "+airLink.isUpdateCountryCodeRequired());
 
-
         airLink.setDownlinkSignalQualityCallback(callbackSignal(idx++,"DownlinkSignalQuality"));
         airLink.setUplinkSignalQualityCallback(callbackSignal(idx++,"UplinkSignalQuality"));
         final WiFiLink wiFiLink=airLink.getWiFiLink();

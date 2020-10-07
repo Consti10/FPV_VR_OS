@@ -15,6 +15,7 @@ import dji.common.flightcontroller.Attitude;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.gimbal.GimbalMode;
+import dji.common.gimbal.GimbalState;
 import dji.common.model.LocationCoordinate2D;
 import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
@@ -92,6 +93,12 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                         -state.getVelocityZ() * MPS_TO_KPH,
                         state.getSatelliteCount(), (float) aircraftAttitude.yaw);
                 setHomeLocation(nativeInstance, home.getLatitude(), home.getLongitude(), 0);
+            }
+        });
+        aircraft.getGimbal().setStateCallback(new GimbalState.Callback() {
+            @Override
+            public void onUpdate(GimbalState gimbalState) {
+                Log.d(TAG,"Gimbal"+gimbalState.getAttitudeInDegrees().getYaw());
             }
         });
         /*aircraft.getAirLink().getWiFiLink().setDataRate(WifiDataRate.RATE_1_MBPS, new CommonCallbacks.CompletionCallback() {
