@@ -20,12 +20,12 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/b_change_white_balance"
-                android:text="Change WB"
+                android:text="Change WhiteB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
                 android:id="@+id/b_change_gimbal_mode"
-                android:text="Change GM"
+                android:text="Change GimbalM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
