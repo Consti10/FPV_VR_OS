@@ -1,8 +1,6 @@
 package constantin.fpv_vr.connect;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
@@ -27,22 +25,18 @@ import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.DJIHelper;
 import constantin.video.core.RequestPermissionHelper;
 import dji.common.airlink.SignalQualityCallback;
-import dji.common.airlink.WiFiFrequencyBand;
 import dji.common.airlink.WifiChannelInterference;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
 import dji.common.gimbal.GimbalMode;
-import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
-import dji.midware.data.model.P3.C;
 import dji.sdk.airlink.AirLink;
 import dji.sdk.airlink.WiFiLink;
 import dji.sdk.camera.Camera;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.products.Aircraft;
 import dji.sdk.remotecontroller.RemoteController;
-import dji.sdk.sdkmanager.DJISDKManager;
 
 public class FConnectDJI extends Fragment implements View.OnClickListener, RequestPermissionHelper.IOnPermissionsGranted{
     private static final String TAG=FConnectDJI.class.getSimpleName();
@@ -70,7 +64,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
                     aircraft.getCamera().setWhiteBalance(new WhiteBalance(SettingsDefinitions.WhiteBalancePreset.INDOOR_INCANDESCENT),
-                            callbackPrintWhenError("DJI WhiteBalance"));
+                            callbackLogWhenError("DJI WhiteBalance"));
                 }
             }
         });
@@ -175,7 +169,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         };
     }
 
-    private CommonCallbacks.CompletionCallback callbackPrintWhenError(final String message){
+    private CommonCallbacks.CompletionCallback callbackLogWhenError(final String message){
         return new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError djiError) {
