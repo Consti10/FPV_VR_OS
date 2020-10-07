@@ -2,6 +2,7 @@ package constantin.fpv_vr.connect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import constantin.fpv_vr.Permissions;
+import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.DJIHelper;
@@ -30,6 +32,7 @@ import dji.common.airlink.WifiChannelInterference;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
+import dji.common.gimbal.GimbalMode;
 import dji.common.remotecontroller.HardwareState;
 import dji.common.util.CommonCallbacks;
 import dji.midware.data.model.P3.C;
@@ -61,13 +64,22 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             debugList.add("");
         }
         setTextDebug();
-        binding.bChangeExposureMode.setOnClickListener(new View.OnClickListener() {
+        binding.bChangeWhiteBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
                     aircraft.getCamera().setWhiteBalance(new WhiteBalance(SettingsDefinitions.WhiteBalancePreset.INDOOR_INCANDESCENT),
                             callbackPrintWhenError("DJI WhiteBalance"));
+                }
+            }
+        });
+        binding.bChangeGimbalMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Aircraft aircraft = DJIApplication.getConnectedAircraft();
+                if (aircraft != null) {
+                    aircraft.getGimbal().setMode(GimbalMode.FPV,callbackToastWhenError("Gimbal FPV"));
                 }
             }
         });
@@ -168,6 +180,16 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             @Override
             public void onResult(DJIError djiError) {
                 Log.d(TAG,message+DJIHelper.asString(djiError));
+            }
+        };
+    }
+
+    private CommonCallbacks.CompletionCallback callbackToastWhenError(final String message){
+        return new CommonCallbacks.CompletionCallback() {
+            @Override
+            public void onResult(DJIError djiError) {
+                Log.d(TAG,message+DJIHelper.asString(djiError));
+                Toaster.makeToast(mContext,message+DJIHelper.asString(djiError));
             }
         };
     }

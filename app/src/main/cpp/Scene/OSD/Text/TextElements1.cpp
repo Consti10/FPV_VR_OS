@@ -40,7 +40,7 @@ void TextElements1::setupPosition() {
     int idxVect=0;
 
     const auto size=mOptions.enableXX.size();
-    for(unsigned int i=0;i<size;i++){
+    for(size_t i=0;i<size;i++){
         column=idxVect/nRowsPerColumn;
         row=idxVect%nRowsPerColumn;
         //first,fill the upper rectangle with text
@@ -80,7 +80,6 @@ void TextElements1::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
 }
 
 void TextElements1::updateSubElement(unsigned long whichSubStr,OSDTextObj* obj)const{
-
     MTelemetryValue tmp=mTelemetryR.getTelemetryValue(mOptions.enableXX.at(whichSubStr));
     if(tmp.hasIcon()){
         tmp.prefixIcon+=L" ";

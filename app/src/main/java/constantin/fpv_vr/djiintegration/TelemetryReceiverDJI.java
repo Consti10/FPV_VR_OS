@@ -1,5 +1,7 @@
 package constantin.fpv_vr.djiintegration;
 
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.Toaster;
@@ -21,12 +23,13 @@ import dji.sdk.products.Aircraft;
 import dji.sdk.remotecontroller.RemoteController;
 
 public class TelemetryReceiverDJI extends TelemetryReceiver {
+    private static final String TAG=TelemetryReceiverDJI.class.getSimpleName();
     private static final float MPS_TO_KPH=3.6f;
     private int qualityUpPercentage;
     private int qualityDownPercentage;
 
     public TelemetryReceiverDJI(AppCompatActivity parent, long externalGroundRecorder, long externalFileReader) {
-        super(parent, externalGroundRecorder,externalFileReader);
+        super(parent, externalGroundRecorder,externalFileReader,1);
         if(DJIApplication.isDJIEnabled(context)){
             TelemetrySettings.setT_SOURCE(parent,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
             setupDJICallbacks();
@@ -40,17 +43,8 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             return;
         }
         final RemoteController remoteController=aircraft.getRemoteController();
+        final WiFiLink wiFiLink=aircraft.getAirLink().getWiFiLink();
         //Toaster.makeToast(context, "starting dji telemetry", true);
-        aircraft.getGimbal().setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
-            @Override
-            public void onResult(DJIError djiError) {
-                if (djiError == null) {
-                    System.out.println("Set gimbal to X");
-                } else {
-                    System.out.println("Cannot set gimbal to X" + djiError.getDescription());
-                }
-            }
-        });
         /*Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.RELATIVE_ANGLE);
         builder.time(1);
         builder.pitch(0);
@@ -71,6 +65,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             public void onUpdate(int i) {
                 qualityDownPercentage=i;
                 setDJISignalQuality(nativeInstance,qualityUpPercentage,qualityDownPercentage);
+                Log.d(TAG,"Got "+i);
             }
         });
         aircraft.getAirLink().setUplinkSignalQualityCallback(new SignalQualityCallback() {
@@ -78,12 +73,14 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
             public void onUpdate(int i) {
                 qualityUpPercentage=i;
                 setDJISignalQuality(nativeInstance,qualityUpPercentage,qualityDownPercentage);
+                Log.d(TAG,"Got2 "+i);
             }
         });
         aircraft.getBattery().setStateCallback(new BatteryState.Callback() {
             @Override
             public void onUpdate(BatteryState state) {
                 setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(), state.getCurrent() * 1000,state.getVoltage());
+                //state.getChargeRemaining()
             }
         });
         aircraft.getFlightController().setStateCallback(new FlightControllerState.Callback() {
@@ -100,12 +97,6 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                 setHomeLocation(nativeInstance, home.getLatitude(), home.getLongitude(), 0);
             }
         });
-        aircraft.getFlightController().setMaxFlightHeight(500, new CommonCallbacks.CompletionCallback() {
-            @Override
-            public void onResult(DJIError djiError) {
-                debugDJIError("Set max flight height",djiError);
-            }
-        });
         /*aircraft.getAirLink().getWiFiLink().setDataRate(WifiDataRate.RATE_1_MBPS, new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError djiError) {
@@ -119,7 +110,6 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                     debugDJIError("video resolution",djiError);
             }
         });*/
-        final WiFiLink wiFiLink=aircraft.getAirLink().getWiFiLink();
         if(wiFiLink!=null){
             wiFiLink.getFrequencyBand(new CommonCallbacks.CompletionCallbackWith<WiFiFrequencyBand>() {
                 @Override

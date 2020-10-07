@@ -41,13 +41,13 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
         connectionType=SJ.getConnectionType(parent);
         if(connectionType== AConnect.CONNECTION_TYPE_UVC){
             uvcPlayer=new UVCPlayer(parent);
-            telemetryReceiver=new TelemetryReceiver(parent,0,0);
+            telemetryReceiver=new TelemetryReceiver(parent,0,0,0);
         }else if(connectionType==AConnect.CONNECTION_TYPE_DJI){
             videoPlayerDJI=new VideoPlayerDJI(parent);
             telemetryReceiverDJI=new TelemetryReceiverDJI(parent,0,0);
         }else{
             videoPlayer=new VideoPlayer(parent);
-            telemetryReceiver=new TelemetryReceiver(parent,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer());
+            telemetryReceiver=new TelemetryReceiver(parent,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer(),0);
         }
     }
 
