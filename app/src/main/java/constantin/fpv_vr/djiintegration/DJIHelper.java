@@ -31,7 +31,7 @@ public class DJIHelper {
         if(djiError!=null){
             return djiError.getDescription();
         }
-        return "Unknown error";
+        return "No DJIError";
     }
 
     public static String asString(final ResolutionAndFrameRate[] resolutionAndFrameRate){
