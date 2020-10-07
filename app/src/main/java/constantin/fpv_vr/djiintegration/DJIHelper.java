@@ -1,14 +1,19 @@
 package constantin.fpv_vr.djiintegration;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+
+import androidx.appcompat.app.AlertDialog;
 
 import constantin.fpv_vr.Toaster;
 import dji.common.airlink.WiFiFrequencyBand;
 import dji.common.camera.ResolutionAndFrameRate;
+import dji.common.camera.SettingsDefinitions;
 import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
 import dji.common.util.CommonCallbacks;
+import dji.sdk.products.Aircraft;
 
 public class DJIHelper {
     private static final String TAG=DJIHelper.class.getSimpleName();
@@ -71,6 +76,56 @@ public class DJIHelper {
                 }
             }
         };
+    }
+
+    public static CharSequence[] getAllWhiteBalanceModes(){
+        /*final CharSequence[] items = new CharSequence[7];
+        for(int i=0;i<items.length;i++){
+            items[i]=new SettingsDefinitions.WhiteBalancePreset(i).name();
+        }*/
+        return new CharSequence[]{
+                "AUTO",
+                "SUNNY",
+                "CLOUDY",
+                "WATER_SURFACE",
+                "INDOOR_INCANDESCENT",
+                "INDOOR_FLUORESCENT",
+                "CUSTOM",
+                "PRESET_NEUTRAL",
+        };
+    }
+
+    public static WhiteBalance from(final int i){
+        final SettingsDefinitions.WhiteBalancePreset preset;
+        switch (i){
+            case 0:preset= SettingsDefinitions.WhiteBalancePreset.AUTO;break;
+            case 1:preset= SettingsDefinitions.WhiteBalancePreset.SUNNY;break;
+            case 2:preset= SettingsDefinitions.WhiteBalancePreset.CLOUDY;break;
+            case 3:preset= SettingsDefinitions.WhiteBalancePreset.WATER_SURFACE;break;
+            case 4:preset= SettingsDefinitions.WhiteBalancePreset.INDOOR_INCANDESCENT;break;
+            case 5:preset= SettingsDefinitions.WhiteBalancePreset.INDOOR_FLUORESCENT;break;
+            case 6:preset= SettingsDefinitions.WhiteBalancePreset.CUSTOM;break;
+            case 7:preset= SettingsDefinitions.WhiteBalancePreset.PRESET_NEUTRAL;break;
+            default:
+                preset=  SettingsDefinitions.WhiteBalancePreset.AUTO;
+        }
+        return new WhiteBalance(preset);
+    }
+
+    public static AlertDialog makeAlertDialogChangeWhiteBalancePreset(final Context c){
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Select WhiteBalance Mode")
+                .setItems(DJIHelper.getAllWhiteBalanceModes(), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        final Aircraft aircraft = DJIApplication.getConnectedAircraft();
+                        if (aircraft != null) {
+                            aircraft.getCamera().setWhiteBalance(DJIHelper.from(which),
+                                    DJIHelper.callbackToastWhenError(c,"Set WhiteBalance"));
+                        }
+                    }
+                });
+        builder.setNegativeButton("Cancel",null);
+        return builder.show();
     }
 
 }

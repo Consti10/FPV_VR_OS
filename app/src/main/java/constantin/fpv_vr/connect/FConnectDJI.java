@@ -3,6 +3,7 @@ package constantin.fpv_vr.connect;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,15 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.util.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import constantin.fpv_vr.Permissions;
+import constantin.fpv_vr.R;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
@@ -63,8 +67,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             public void onClick(View v) {
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
-                    aircraft.getCamera().setWhiteBalance(new WhiteBalance(SettingsDefinitions.WhiteBalancePreset.INDOOR_INCANDESCENT),
-                            DJIHelper.callbackToastWhenError(mContext,"Set WhiteBalance"));
+                    DJIHelper.makeAlertDialogChangeWhiteBalancePreset(mContext);
                 }
             }
         });
