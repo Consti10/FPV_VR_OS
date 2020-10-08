@@ -71,14 +71,6 @@ public class SJ {
         final SharedPreferences pref_vr = context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
         return pref_vr.getBoolean(context.getString(R.string.ENABLE_LOW_PERSISTENCE),false);
     }
-    //Developer
-    public static boolean DEV_OVERRIDE_RENDERING_MODE_CHECK(final Context context,final SharedPreferences pref_default){
-        return pref_default.getBoolean(context.getString(R.string.DEV_OVERRIDE_RENDERING_MODE_CHECK),false);
-    }
-    public static boolean DEV_USE_GVR_VIDEO_TEXTURE(final Context context){
-        final SharedPreferences pref_developer=context.getSharedPreferences("pref_developer",MODE_PRIVATE);
-        return pref_developer.getBoolean(context.getString(R.string.DEV_USE_GVR_VIDEO_TEXTURE),false);
-    }
     //******************************** pref_default **************************************
 
     // OSD
