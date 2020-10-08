@@ -36,7 +36,7 @@ private:
     const TelemetryReceiver& mTelemetryReceiver;
     const Options& mOptions;
     PositionDebug mPositionDebug;
-    static constexpr const wchar_t* MAX_TEXT_LENGTH_REFERENCE=L"W BATT VOLTAGE";
+    static constexpr const wchar_t* MAX_TEXT_LENGTH_REFERENCE=L"BAT XXX YYY";
     static constexpr const int MAX_N_TEXT_OBJ=3; //Max. 3 warnings supported
     const std::vector<std::unique_ptr<OSDTextObj>> mGLTextObjIndices;
     static constexpr const int N_CHARS_PER_TEXT_OBJ=15;

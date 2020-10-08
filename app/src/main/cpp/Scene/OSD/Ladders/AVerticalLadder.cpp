@@ -138,7 +138,7 @@ void AVerticalLadder::updateMainString(float value) {
         StringHelper::doubleToString(beforeCome,afterCome,value,5,1);
         ss={{beforeCome,0.8f,textColor},{afterCome,0.5f,textColor}};
     }else{
-        auto s=StringHelper::intToString((int)value,8);
+        auto s= StringHelper::intToWString((int) value, 8);
         float scale=OSDTextObj::calculateBiggestFittingScale(s,outlineQuadHeight,outlineQuadWidth);
         scale*=0.95f; //because the outline needs some pixels too
         ss={{s,scale,textColor}};

@@ -87,9 +87,9 @@ void TextElements2::setupPosition() {
             }break;
             //lower middle
             case TelemetryReceiver::FLIGHT_STATUS_MAV_ONLY:{
-                float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_FLIGHT_MODE,bigRowHeight);
+                float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_FLIGHT_MODE,mTextHeight);
                 tmp->setPosition(mX + mWidth/2.0f - maxLength/2.0f,
-                                 mY + mTextHeight, mZ, maxLength, bigRowHeight);
+                                 mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::MIDDLE);
             }break;
             //lower left corner
@@ -164,7 +164,7 @@ void TextElements2::updateGL() {
     const unsigned int currStringToUpdate=getCyclicIndex(mOptions.enableXX.size()-1);
     auto tmpTextObj= mGLTextObjIndices.at(currStringToUpdate).get();
     updateSubElement((int) currStringToUpdate,tmpTextObj);
-    MLOGD<<"Batt "<<mTelemetryReceiver.uav_td.BatteryPack_V<<" "<<mTelemetryReceiver.uav_td.BatteryPack_A<<" "<<mTelemetryReceiver.uav_td.BatteryPack_mAh;
+    //MLOGD<<"Batt "<<mTelemetryReceiver.uav_td.BatteryPack_V<<" "<<mTelemetryReceiver.uav_td.BatteryPack_A<<" "<<mTelemetryReceiver.uav_td.BatteryPack_mAh;
 }
 
 void TextElements2::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {

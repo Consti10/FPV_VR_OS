@@ -27,8 +27,16 @@ void TEWarning::setupPosition() {
     }
 }
 
+static TrueColor getColorForWarning(int warningLevel){
+    if(warningLevel==1){
+        return TrueColor2::ORANGE;
+    }else{
+        return TrueColor2::RED;
+    }
+}
+
 void TEWarning::updateGL() {
-    //every x ms, disable all elements
+    //every x ms, disable all elements for blinking
     int64_t timeMS=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     bool blinkCounter=std::sin(timeMS/100)>0.5f;
     if(blinkCounter){
@@ -40,9 +48,12 @@ void TEWarning::updateGL() {
     }
     //Batt %
     auto obj=mGLTextObjIndices.at(0).get();
+    const auto batteryPercentage=mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_PERCENTAGE);
+    const auto batteryVoltage=mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_VOLTAGE);
+    const auto batteryUsedCapacity=mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_USED_CAPACITY);
     if(mOptions.batteryPercentage &&
-       mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_PERCENTAGE).warning>0){
-        obj->setTextSafe(L"BATT %", TrueColor2::RED);
+       batteryPercentage.warning>0){
+        obj->setTextSafe(L"BATT "+batteryPercentage.value+L"%",getColorForWarning(batteryPercentage.warning));
     }else{
         obj->setTextSafe(L"");
     }
@@ -50,8 +61,8 @@ void TEWarning::updateGL() {
     //Batt V
     obj=mGLTextObjIndices.at(1).get();
     if(mOptions.batteryVoltage &&
-       mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_VOLTAGE).warning>0){
-        obj->setTextSafe(L"BATT V", TrueColor2::RED);
+        batteryVoltage.warning>0){
+        obj->setTextSafe(L"BATT V",getColorForWarning(batteryVoltage.warning));
     }else{
         obj->setTextSafe(L"");
     }
@@ -59,8 +70,8 @@ void TEWarning::updateGL() {
     //Batt mAh used
     obj=mGLTextObjIndices.at(2).get();
     if(mOptions.batteryMAHUsed &&
-       mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::BATT_USED_CAPACITY).warning>0){
-        obj->setTextSafe(L"BATT mAh", TrueColor2::RED);
+       batteryUsedCapacity.warning>0){
+        obj->setTextSafe(L"BATT mAh",getColorForWarning(batteryUsedCapacity.warning));
     }else{
         obj->setTextSafe(L"");
     }
