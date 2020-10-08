@@ -2,8 +2,8 @@
 // Created by Constantin on 6/10/2018.
 //
 
-#ifndef FPV_VR_OSD_TEXT_ELEMENTS_1
-#define FPV_VR_OSD_TEXT_ELEMENTS_1
+#ifndef FPV_VR_OSD_TEXT_ELEMENTS_1_H
+#define FPV_VR_OSD_TEXT_ELEMENTS_1_H
 
 #include <vector>
 #include <GLES2/gl2.h>
@@ -47,4 +47,4 @@ private:
     static std::vector<std::unique_ptr<OSDTextObj>> allocateAllElements(const SettingsOSDStyle& settingsOSDStyle,const Options& options,BatchingManager &batchingManager);
 };
 
-#endif //FPV_VR_OSD_TEXT_ELEMENTS_1
+#endif //FPV_VR_OSD_TEXT_ELEMENTS_1_H

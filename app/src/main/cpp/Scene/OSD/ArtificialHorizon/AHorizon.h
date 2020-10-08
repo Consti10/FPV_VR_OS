@@ -2,8 +2,8 @@
 // Created by Constantin on 7/21/2018.
 //
 
-#ifndef FPV_VR_ARTIFICIALHORIZON_H
-#define FPV_VR_ARTIFICIALHORIZON_H
+#ifndef FPV_VR_OSD_ARTIFICIALHORIZON_H
+#define FPV_VR_OSD_ARTIFICIALHORIZON_H
 
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
@@ -66,4 +66,4 @@ private:
     glm::mat4 mModelM3DModel;
 };
 
-#endif //FPV_VR_ARTIFICIALHORIZON_H
+#endif //FPV_VR_OSD_ARTIFICIALHORIZON_H

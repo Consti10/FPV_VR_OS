@@ -3,8 +3,8 @@
 //
 
 
-#ifndef FPV_VR_OSD_TEXT_ELEMENTS_2
-#define FPV_VR_OSD_TEXT_ELEMENTS_2
+#ifndef FPV_VR_OSD_TEXT_ELEMENTS_2_H
+#define FPV_VR_OSD_TEXT_ELEMENTS_2_H
 
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
@@ -57,4 +57,4 @@ private:
 };
 
 
-#endif //FPV_VR_OSD_TEXT_ELEMENTS_2
+#endif //FPV_VR_OSD_TEXT_ELEMENTS_2_H
