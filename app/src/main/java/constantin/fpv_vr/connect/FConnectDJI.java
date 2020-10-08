@@ -76,7 +76,7 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
             public void onClick(View v) {
                 final Aircraft aircraft = DJIApplication.getConnectedAircraft();
                 if (aircraft != null) {
-                    aircraft.getGimbal().setMode(GimbalMode.FPV,DJIHelper.callbackToastWhenError(mContext,"Set Gimbal FPV"));
+                    DJIHelper.makeAlertDialogChangeGimbalMode(mContext);
                 }
             }
         });

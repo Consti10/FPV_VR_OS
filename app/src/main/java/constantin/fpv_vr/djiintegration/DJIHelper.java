@@ -12,6 +12,7 @@ import dji.common.camera.ResolutionAndFrameRate;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
+import dji.common.gimbal.GimbalMode;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.products.Aircraft;
 
@@ -94,6 +95,23 @@ public class DJIHelper {
                 "PRESET_NEUTRAL",
         };
     }
+    public static CharSequence[] getAllGimbalModes(){
+        return new CharSequence[]{
+                "FREE",
+                "FPV",
+                "YAW_FOLLOW",
+                "UNKNOWN",
+
+        };
+    }
+    public static GimbalMode gimbalModeFrom(final int i){
+        switch (i){
+            case 0:return GimbalMode.FREE;
+            case 1:return GimbalMode.FPV;
+            case 2:return GimbalMode.YAW_FOLLOW;
+            default:return GimbalMode.UNKNOWN;
+        }
+    }
 
     public static WhiteBalance from(final int i){
         final SettingsDefinitions.WhiteBalancePreset preset;
@@ -121,6 +139,22 @@ public class DJIHelper {
                         if (aircraft != null) {
                             aircraft.getCamera().setWhiteBalance(DJIHelper.from(which),
                                     DJIHelper.callbackToastWhenError(c,"Set WhiteBalance"));
+                        }
+                    }
+                });
+        builder.setNegativeButton("Cancel",null);
+        return builder.show();
+    }
+
+    public static AlertDialog makeAlertDialogChangeGimbalMode(final Context c){
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Select Gimbal Mode")
+                .setItems(DJIHelper.getAllGimbalModes(), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        final Aircraft aircraft = DJIApplication.getConnectedAircraft();
+                        if (aircraft != null) {
+                            aircraft.getGimbal().setMode(DJIHelper.gimbalModeFrom(which),
+                                    DJIHelper.callbackToastWhenError(c,"Set Gimbal FPV"));
                         }
                     }
                 });
