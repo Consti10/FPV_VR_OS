@@ -26,6 +26,7 @@ import dji.sdk.remotecontroller.RemoteController;
 public class TelemetryReceiverDJI extends TelemetryReceiver {
     private static final String TAG=TelemetryReceiverDJI.class.getSimpleName();
     private static final float MPS_TO_KPH=3.6f;
+    private static final float MILLI_TO_FULL=1.0f/1000.0f;
     private int qualityUpPercentage;
     private int qualityDownPercentage;
 
@@ -78,7 +79,8 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
         aircraft.getBattery().setStateCallback(new BatteryState.Callback() {
             @Override
             public void onUpdate(BatteryState state) {
-                setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(), state.getCurrent() *1.0f/1000.0f,state.getVoltage());
+                setDJIBatteryValues(nativeInstance, state.getChargeRemainingInPercent(),
+                        state.getCurrent() *MILLI_TO_FULL,state.getVoltage()*MILLI_TO_FULL);
             }
         });
         aircraft.getFlightController().setStateCallback(new FlightControllerState.Callback() {
