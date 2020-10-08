@@ -29,18 +29,6 @@ public class FConnectUVC extends Fragment implements View.OnClickListener{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mContext=requireActivity();
-        if(!SJ.OSD_DISABLE_ALL_OVERLAY_ELEMENTS(mContext)){
-            final String message="Do you want to disable digital OSD elements that overlay the video ?" +
-                    "You can always do that later manually via OSD Settings->OSD Elements->Other";
-
-            /*new AlertDialog.Builder(mContext).setMessage(message)
-                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    SJ.OSD_DISABLE_ALL_OVERLAY_ELEMENTS(mContext,true);
-                }
-            }).setNegativeButton("No",null).show();*/
-        }
         binding=ConnectUvcFragmentBinding.inflate(inflater);
         binding.bStartT.setOnClickListener(v -> {
             TranscodeService.startTranscoding(mContext,"");

@@ -36,7 +36,6 @@ public:
     TEWarning::Options oTextWarning;
     TextElements1::Options oTextElement1;
     TextElements2::Options oTextElement2;
-    bool OSD_DISABLE_ALL_OVERLAY_ELEMENTS;
 };
 
 

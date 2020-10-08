@@ -358,15 +358,5 @@
                 android:defaultValue="false" />
         </PreferenceScreen>
 
-        <PreferenceScreen
-            android:key="preferenceScreen10"
-            android:title="Advanced">
-            <SwitchPreference
-                android:key="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
-                android:title="@string/OSD_DISABLE_ALL_OVERLAY_ELEMENTS"
-                android:summary="Do not enable any overlay elements (if you are using en axternal OSD)"
-                android:defaultValue="false" />
-        </PreferenceScreen>
-
     </androidx.preference.PreferenceScreen>
 </androidx.preference.PreferenceScreen>

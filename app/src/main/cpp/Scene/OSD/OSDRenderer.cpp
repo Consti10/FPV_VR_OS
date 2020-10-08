@@ -21,38 +21,37 @@ OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& t
         mDrawables.push_back(mTextElements1);
         mUpdateables.push_back(mTextElements1);
     }
-    if(!settingsOSDElements.OSD_DISABLE_ALL_OVERLAY_ELEMENTS){
-        if(settingsOSDElements.oArtificialHorizon.isEnabled()){
-            mAHorizon=new AHorizon(settingsOSDElements.oArtificialHorizon,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
-            mDrawables.push_back(mAHorizon);
-            mUpdateables.push_back(mAHorizon);
-        }
-        if(settingsOSDElements.oCompassL.enable){
-            mCompassLadder=new CompassLadder(settingsOSDElements.oCompassL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
-            mDrawables.push_back(mCompassLadder);
-            mUpdateables.push_back(mCompassLadder);
-        }
-        if(settingsOSDElements.oAltitudeL.enable){
-            mAltitudeLadder=new VLAltitude(settingsOSDElements.oAltitudeL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
-            mDrawables.push_back(mAltitudeLadder);
-            mUpdateables.push_back(mAltitudeLadder);
-        }
-        if(settingsOSDElements.oSpeedL.enable){
-            mSpeedLadder=new VLSpeed(settingsOSDElements.oSpeedL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
-            mDrawables.push_back(mSpeedLadder);
-            mUpdateables.push_back(mSpeedLadder);
-        }
-        if(settingsOSDElements.oTextElement2.isEnabled()){
-            mTextElements2=new TextElements2(settingsOSDElements.oTextElement2,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
-            mDrawables.push_back(mTextElements2);
-            mUpdateables.push_back(mTextElements2);
-        }
-        if(settingsOSDElements.oTextWarning.isEnabled()){
-            mTEWarning=new TEWarning(settingsOSDElements.oTextWarning,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
-            mDrawables.push_back(mTEWarning);
-            mUpdateables.push_back(mTEWarning);
-        }
+    if(settingsOSDElements.oArtificialHorizon.isEnabled()){
+        mAHorizon=new AHorizon(settingsOSDElements.oArtificialHorizon,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
+        mDrawables.push_back(mAHorizon);
+        mUpdateables.push_back(mAHorizon);
     }
+    if(settingsOSDElements.oCompassL.enable){
+        mCompassLadder=new CompassLadder(settingsOSDElements.oCompassL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
+        mDrawables.push_back(mCompassLadder);
+        mUpdateables.push_back(mCompassLadder);
+    }
+    if(settingsOSDElements.oAltitudeL.enable){
+        mAltitudeLadder=new VLAltitude(settingsOSDElements.oAltitudeL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
+        mDrawables.push_back(mAltitudeLadder);
+        mUpdateables.push_back(mAltitudeLadder);
+    }
+    if(settingsOSDElements.oSpeedL.enable){
+        mSpeedLadder=new VLSpeed(settingsOSDElements.oSpeedL,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
+        mDrawables.push_back(mSpeedLadder);
+        mUpdateables.push_back(mSpeedLadder);
+    }
+    if(settingsOSDElements.oTextElement2.isEnabled()){
+        mTextElements2=new TextElements2(settingsOSDElements.oTextElement2,settingsOSDStyle,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
+        mDrawables.push_back(mTextElements2);
+        mUpdateables.push_back(mTextElements2);
+    }
+    if(settingsOSDElements.oTextWarning.isEnabled()){
+        mTEWarning=new TEWarning(settingsOSDElements.oTextWarning,mBasicGLPrograms,mBatchingManager,telemetryReceiver);
+        mDrawables.push_back(mTEWarning);
+        mUpdateables.push_back(mTEWarning);
+    }
+
     mFLightStart=std::chrono::steady_clock::now();
     //
     onSurfaceSizeChanged();
