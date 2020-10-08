@@ -164,6 +164,7 @@ void TextElements2::updateGL() {
     const unsigned int currStringToUpdate=getCyclicIndex(mOptions.enableXX.size()-1);
     auto tmpTextObj= mGLTextObjIndices.at(currStringToUpdate).get();
     updateSubElement((int) currStringToUpdate,tmpTextObj);
+    MLOGD<<"Batt "<<mTelemetryReceiver.uav_td.BatteryPack_V<<" "<<mTelemetryReceiver.uav_td.BatteryPack_A<<" "<<mTelemetryReceiver.uav_td.BatteryPack_mAh;
 }
 
 void TextElements2::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
