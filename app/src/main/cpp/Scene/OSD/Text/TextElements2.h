@@ -1,14 +1,10 @@
 //
 // Created by Constantin on 6/10/2018.
 //
-/**
- * N satelites | BattV
- * Battery %   | BattA
- */
 
 
-#ifndef FPV_VR_ELEMENT1_H
-#define FPV_VR_ELEMENT1_H
+#ifndef FPV_VR_OSD_TEXT_ELEMENTS_2
+#define FPV_VR_OSD_TEXT_ELEMENTS_2
 
 #include <GLES2/gl2.h>
 #include <glm/glm.hpp>
@@ -25,7 +21,7 @@
 #include "../../General/PositionDebug.hpp"
 #include "General/IUpdateable.hpp"
 
-
+// All Sub-elements have fixed positions (upper right, lower right, lower middle usw)
 class TextElements2 : public IDrawable,public IPositionable,public IUpdateable, public ITextHeight {
 public:
     struct Options {
@@ -61,4 +57,4 @@ private:
 };
 
 
-#endif //FPV_VR_ELEMENT1_H
+#endif //FPV_VR_OSD_TEXT_ELEMENTS_2

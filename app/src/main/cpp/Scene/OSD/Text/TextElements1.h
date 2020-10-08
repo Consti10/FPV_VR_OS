@@ -1,6 +1,9 @@
+//
+// Created by Constantin on 6/10/2018.
+//
 
-#ifndef TEXTELEMENTS
-#define TEXTELEMENTS
+#ifndef FPV_VR_OSD_TEXT_ELEMENTS_1
+#define FPV_VR_OSD_TEXT_ELEMENTS_1
 
 #include <vector>
 #include <GLES2/gl2.h>
@@ -17,6 +20,7 @@
 #include "../../General/PositionDebug.hpp"
 #include "General/IUpdateable.hpp"
 
+// All sub-elements are ordered in row/column fashion
 class TextElements1: public IDrawable,public IPositionable,public IUpdateable, public ITextHeight{
 public:
     struct Options{ // Options for the custom text element
@@ -43,4 +47,4 @@ private:
     static std::vector<std::unique_ptr<OSDTextObj>> allocateAllElements(const SettingsOSDStyle& settingsOSDStyle,const Options& options,BatchingManager &batchingManager);
 };
 
-#endif
+#endif //FPV_VR_OSD_TEXT_ELEMENTS_1

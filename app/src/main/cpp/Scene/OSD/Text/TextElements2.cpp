@@ -5,7 +5,7 @@
 #include "TextElements2.h"
 #include <GLHelper.hpp>
 
-#define TAG "TextElements2"
+constexpr auto TAG="TextElements2";
 
 TextElements2::TextElements2(const TextElements2::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,TelemetryReceiver& telemetryReceiver):
         IUpdateable(TAG),IDrawable(TAG),
