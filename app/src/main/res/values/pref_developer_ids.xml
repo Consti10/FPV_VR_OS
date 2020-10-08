@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="DEV_OVERRIDE_RENDERING_MODE_CHECK">DEV_OVERRIDE_RENDERING_MODE_CHECK</string>
-    <string name="DEV_USE_GVR_VIDEO_TEXTURE">DEV_USE_GVR_VIDEO_TEXTURE</string>
-    <string name="DEV_3D_VIDEO">DEV_3D_VIDEO</string>
-</resources>

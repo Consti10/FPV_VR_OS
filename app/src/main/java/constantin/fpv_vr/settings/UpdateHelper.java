@@ -19,7 +19,6 @@ public class UpdateHelper {
 
     //set default values for all preference files of the fpv-vr library/module
     private static void setAllDefaultValues(final Context c, final boolean readAgain){
-        PreferenceManager.setDefaultValues(c,"pref_developer",MODE_PRIVATE, R.xml.pref_developer,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_connect",MODE_PRIVATE,R.xml.pref_connect,readAgain);
         //TODO PreferenceManager.setDefaultValues(c,"pref_vr_rendering",MODE_PRIVATE,R.xml.pref_vr_rendering,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_elements,readAgain);
