@@ -105,9 +105,9 @@ public class FConnectWB extends Fragment implements View.OnClickListener , OpenH
         }else{
             mTestReceiverTelemetry.setViews(null,null,null);
             mTestReceiverVideo.setViews(null,null);
-            binding.FEZWBReceivedVideoDataTV.setText("No receiver detected.\nRX:0");
+            binding.FEZWBReceivedVideoDataTV.setText("No video detected.\nRX:0");
             binding.FEZWBReceivedVideoDataTV.setTextColor(Color.argb(255,255,0,0));
-            binding.FEZWBReceivedTelemetryDataTV.setText("");
+            binding.FEZWBReceivedTelemetryDataTV.setText("No telemetry detected.\nRX:0");
             binding.FEZWBReceivedEZWBForwardDataTV.setText("");
         }
     }

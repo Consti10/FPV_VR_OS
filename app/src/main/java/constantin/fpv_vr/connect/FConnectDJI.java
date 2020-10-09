@@ -33,12 +33,18 @@ import dji.common.airlink.WifiChannelInterference;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
+import dji.common.gimbal.CapabilityKey;
 import dji.common.gimbal.GimbalMode;
+import dji.common.gimbal.Rotation;
+import dji.common.gimbal.RotationMode;
+import dji.common.handheldcontroller.ControllerMode;
 import dji.common.util.CommonCallbacks;
+import dji.common.util.DJIParamMinMaxCapability;
 import dji.sdk.airlink.AirLink;
 import dji.sdk.airlink.WiFiLink;
 import dji.sdk.camera.Camera;
 import dji.sdk.flightcontroller.FlightController;
+import dji.sdk.gimbal.Gimbal;
 import dji.sdk.products.Aircraft;
 import dji.sdk.remotecontroller.RemoteController;
 
@@ -126,6 +132,15 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         camera.getExposureMode(callbackGeneric(idx++,"Camera exposure mode"));
         camera.getWhiteBalance(callbackWhiteBalance(idx++,"Camera whiteBalance"));
         //
+        final Gimbal gimbal=aircraft.getGimbal();
+        //gimbal.setControllerMode(ControllerMode.ONE_AXIS,DJIHelper.callbackToastWhenError(mContext,"Gimbal"));
+        //DJIHelper.isGimbalFeatureSupported(gimbal,CapabilityKey.ADJUST_PITCH);
+        //DJIHelper.isGimbalFeatureSupported(gimbal,CapabilityKey.ADJUST_YAW);
+        //DJIHelper.isGimbalFeatureSupported(gimbal,CapabilityKey.ADJUST_ROLL);
+        /*final Number min=((DJIParamMinMaxCapability)(gimbal.getCapabilities().get(CapabilityKey.ADJUST_PITCH))).getMax();
+        Rotation.Builder builder = new Rotation.Builder().
+                mode(RotationMode.ABSOLUTE_ANGLE).pitch(min.floatValue()).time(1);
+        gimbal.rotate(builder.build(),DJIHelper.callbackToastWhenError(mContext,"Set G"));*/
     }
 
     private <T> CommonCallbacks.CompletionCallbackWith<T> callbackGeneric(int idx, String message){

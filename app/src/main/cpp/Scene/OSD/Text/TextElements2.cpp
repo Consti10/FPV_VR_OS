@@ -86,32 +86,33 @@ void TextElements2::setupPosition() {
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             //lower middle
+            //Use bounds right for the sub elements even though that they are on the left side
             case TelemetryReceiver::FLIGHT_STATUS_MAV_ONLY:{
                 float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_FLIGHT_MODE,mTextHeight);
                 tmp->setPosition(mX + mWidth/2.0f - maxLength/2.0f,
                                  mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
-                tmp->setBounds(OSDTextObj::MIDDLE);
+                tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             //lower left corner
             case TelemetryReceiver::SATS_IN_USE:{
-                float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_3,mTextHeight);
+                float maxLength=GLProgramText::getStringLength(L"100 %",mTextHeight);
                 tmp->setPosition(mX, mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
-                tmp->setBounds(OSDTextObj::LEFT);
+                tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::BATT_PERCENTAGE:{
-                float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_3,mTextHeight);
+                float maxLength=GLProgramText::getStringLength(L"100 %",mTextHeight);
                 tmp->setPosition(mX, mY + mTextHeight * 0, mZ, maxLength, mTextHeight);
-                tmp->setBounds(OSDTextObj::LEFT);
+                tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::BATT_VOLTAGE:{
-                float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_3,mTextHeight);
+                float maxLength=GLProgramText::getStringLength(L"99.99 V",mTextHeight);
                 tmp->setPosition(mX + maxLength, mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
-                tmp->setBounds(OSDTextObj::LEFT);
+                tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::BATT_CURRENT:{
-                float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_3,mTextHeight);
+                float maxLength=GLProgramText::getStringLength(L"99.99 V",mTextHeight);
                 tmp->setPosition(mX + maxLength, mY + mTextHeight * 0, mZ, maxLength, mTextHeight);
-                tmp->setBounds(OSDTextObj::LEFT);
+                tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             //upper left corner
             case TelemetryReceiver::EZWB_DOWNLINK_VIDEO_RSSI:{
