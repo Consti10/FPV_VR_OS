@@ -25,6 +25,7 @@ import dji.sdk.remotecontroller.RemoteController;
 
 public class TelemetryReceiverDJI extends TelemetryReceiver {
     private static final String TAG=TelemetryReceiverDJI.class.getSimpleName();
+    // Meters per second to kilometers per hour
     private static final float MPS_TO_KPH=3.6f;
     private static final float MILLI_TO_FULL=1.0f/1000.0f;
     private int qualityUpPercentage;
@@ -91,8 +92,8 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                 final Attitude aircraftAttitude = state.getAttitude();
                 setDJIValues(nativeInstance, aircraftLocation.getLatitude(), aircraftLocation.getLongitude(), aircraftLocation.getAltitude(),
                         -(float) aircraftAttitude.roll, (float) aircraftAttitude.pitch,
-                        state.getVelocityX() * MPS_TO_KPH,
-                        -state.getVelocityZ() * MPS_TO_KPH,
+                        state.getVelocityZ() * MPS_TO_KPH,
+                        -state.getVelocityX() * MPS_TO_KPH,
                         state.getSatelliteCount(), (float) aircraftAttitude.yaw);
                 setHomeLocation(nativeInstance, home.getLatitude(), home.getLongitude(), 0);
             }

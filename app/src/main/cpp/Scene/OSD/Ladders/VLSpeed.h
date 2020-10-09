@@ -7,6 +7,8 @@
 
 #include "AVerticalLadder.h"
 
+// Shows the horizontal speed of the aircraft if enabled
+// (NOT VS, but HS==Horizontal Speed). Only the orientation of the ladder is vertical
 class VLSpeed : public AVerticalLadder{
 public:
     struct Options {
