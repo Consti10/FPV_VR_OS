@@ -31,6 +31,15 @@
             android:layout_height="wrap_content"
             android:inputType="textUri" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/RTSP_ReceivedVideoDataTV"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:text="Video:0" />
+
+
     </LinearLayout>
 
 
