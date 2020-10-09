@@ -11,16 +11,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.databinding.ConnectRtspFragmentBinding;
+import constantin.video.core.TestReceiverVideo;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class FConnectRTSP extends Fragment implements View.OnClickListener {
     private Context mContext;
     private ConnectRtspFragmentBinding binding;
-
+    private TestReceiverVideo mTestReceiverVideo;
 
     @Override
     @SuppressLint("SetTextI18n")
@@ -40,6 +42,8 @@ public class FConnectRTSP extends Fragment implements View.OnClickListener {
                 return false;
             }
         });
+        mTestReceiverVideo=new TestReceiverVideo((AppCompatActivity)requireActivity());
+        mTestReceiverVideo.setViews(binding.RTSPReceivedVideoDataTV,null);
         return binding.getRoot();
     }
 
