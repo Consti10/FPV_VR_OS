@@ -22,9 +22,6 @@
     //Scale
     <string name="OSD_MONO_GLOBAL_SCALE">Mono global scale, in %. Default 100.</string>
     <string name="OSD_STEREO_GLOBAL_SCALE">Stereo global scale, in %. Default 100.</string>
-    <string name="OSD_STEREO_FOVX_SCALE">(Stereo only) FOV X SCALE, in %. Default 80</string>
-    <string name="OSD_STEREO_FOVY_SCALE">(Stereo only) FOV Y SCALE, in %. Default 100</string>
-
     <string name="OSD_STEREO_RATIO">OSD_STEREO_RATIO</string>
 
 
