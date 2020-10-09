@@ -16,6 +16,7 @@ import dji.common.gimbal.CapabilityKey;
 import dji.common.gimbal.GimbalMode;
 import dji.common.util.CommonCallbacks;
 import dji.common.util.DJIParamCapability;
+import dji.sdk.camera.Camera;
 import dji.sdk.gimbal.Gimbal;
 import dji.sdk.products.Aircraft;
 
@@ -165,7 +166,7 @@ public class DJIHelper {
         return builder.show();
     }
 
-    public static boolean isGimbalFeatureSupported(final Gimbal gimbal,CapabilityKey key) {
+    public static boolean isGimbalFeatureSupported(final Gimbal gimbal,dji.common.gimbal.CapabilityKey key) {
         DJIParamCapability capability = null;
         if (gimbal.getCapabilities() != null) {
             capability = gimbal.getCapabilities().get(key);
@@ -179,5 +180,6 @@ public class DJIHelper {
         Log.d(TAG,"Cannot get");
         return false;
     }
+
 
 }
