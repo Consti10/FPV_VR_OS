@@ -12,8 +12,11 @@ import dji.common.camera.ResolutionAndFrameRate;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.camera.WhiteBalance;
 import dji.common.error.DJIError;
+import dji.common.gimbal.CapabilityKey;
 import dji.common.gimbal.GimbalMode;
 import dji.common.util.CommonCallbacks;
+import dji.common.util.DJIParamCapability;
+import dji.sdk.gimbal.Gimbal;
 import dji.sdk.products.Aircraft;
 
 public class DJIHelper {
@@ -160,6 +163,21 @@ public class DJIHelper {
                 });
         builder.setNegativeButton("Cancel",null);
         return builder.show();
+    }
+
+    public static boolean isGimbalFeatureSupported(final Gimbal gimbal,CapabilityKey key) {
+        DJIParamCapability capability = null;
+        if (gimbal.getCapabilities() != null) {
+            capability = gimbal.getCapabilities().get(key);
+            Log.d(TAG,"Capability "+capability.toString());
+        }
+        if (capability != null) {
+            final boolean supported=capability.isSupported();
+            Log.d(TAG,"Supported "+supported);
+            return supported;
+        }
+        Log.d(TAG,"Cannot get");
+        return false;
     }
 
 }
