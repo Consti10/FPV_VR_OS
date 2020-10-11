@@ -17,6 +17,7 @@ public:
     static constexpr const char* OSD_TRANSPARENT_BACKGROUND_STRENGTH="Transparent background strength";
     static constexpr const char* OSD_MONO_GLOBAL_SCALE="Mono global scale, in %. Default 100.";
     static constexpr const char* OSD_STEREO_GLOBAL_SCALE="Stereo global scale, in %. Default 100.";
+    static constexpr const char* OSD_STEREO_RATIO="OSD_STEREO_RATIO";
     static constexpr const char* AH_mode="AH mode";
     static constexpr const char* AH_scale="AH scale";
     static constexpr const char* AH_roll="AH roll";

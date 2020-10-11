@@ -1,3 +1,5 @@
+//rootProject.name='FPV_VR_OS'
+
 include ':app'
 //include ':djiintegration'
 
