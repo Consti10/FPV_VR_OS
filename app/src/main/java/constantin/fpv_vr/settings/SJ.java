@@ -31,26 +31,8 @@ public class SJ {
     }
     //********************************** pref_connect only **********************************
 
+
     //******************************** pref_vr **************************************
-    public static boolean SuperSync(final Context context){
-        final SharedPreferences pref_vr= context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
-        return pref_vr.getBoolean(context.getString(R.string.SuperSync), false);
-    }
-
-    public static boolean DisableVSYNC(final Context context) {
-        final SharedPreferences pref_vr= context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
-        return pref_vr.getBoolean(context.getString(R.string.DisableVSYNC), false);
-    }
-
-    public static boolean Disable60FPSLock(final Context context) {
-        final SharedPreferences pref_vr= context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
-        return pref_vr.getBoolean(context.getString(R.string.Disable60FPSLock), false);
-    }
-
-    public static int MultiSampleAntiAliasing(final Context context) {
-        final SharedPreferences pref_vr= context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
-        return pref_vr.getInt(context.getString(R.string.MultiSampleAntiAliasing),0);
-    }
 
     public static boolean EnableAHT(final Context context){
         final SharedPreferences pref_vr= context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
@@ -66,24 +48,4 @@ public class SJ {
         final SharedPreferences pref_connect = context.getSharedPreferences("pref_connect", MODE_PRIVATE);
         return pref_connect.getInt(context.getString(R.string.AHTPort),5200);
     }
-
-    public static boolean ENABLE_LOW_PERSISTENCE(final Context context){
-        final SharedPreferences pref_vr = context.getSharedPreferences("pref_vr_rendering",MODE_PRIVATE);
-        return pref_vr.getBoolean(context.getString(R.string.ENABLE_LOW_PERSISTENCE),false);
-    }
-    //******************************** pref_default **************************************
-
-
-
-
-    /*        Set<String> set=new HashSet<>();
-        set.add("");
-
-        pref_connect.edit().putStringSet("KEY",set).apply();
-        Set<String> set1=pref_connect.getStringSet("KEY",null);
-
-        CheckBoxPreference cbp;
-
-*/
-
 }

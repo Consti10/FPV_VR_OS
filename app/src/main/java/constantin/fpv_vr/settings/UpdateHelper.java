@@ -16,24 +16,25 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class UpdateHelper {
 
-    private static final String FIRST_START_30 ="FIRST_START_30";
+    private static final String FIRST_START_30 ="FIRST_START_31";
 
     //set default values for all preference files of the fpv-vr library/module
     private static void setAllDefaultValues(final Context c, final boolean readAgain){
         PreferenceManager.setDefaultValues(c,"pref_connect",MODE_PRIVATE,R.xml.pref_connect,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_elements,readAgain);
         PreferenceManager.setDefaultValues(c,"pref_osd",MODE_PRIVATE,R.xml.pref_osd_style,readAgain);
-        ASettingsVR.initializePreferences(c,readAgain);
         TelemetrySettings.initializePreferences(c,readAgain);
         VideoSettings.initializePreferences(c,readAgain);
+        ASettingsVR.initializePreferences(c,readAgain);
         AConnect.setPreferencesForConnectionType(c,c.getSharedPreferences("pref_connect",MODE_PRIVATE).getInt(c.getString(R.string.CONNECTION_TYPE),2));
     }
 
     @SuppressLint("ApplySharedPref")
     private static void clearPreviousPreferences(final Context c){
         final String[] preferenceNames=new String[]{
-                "pref_connect","pref_vr_rendering","pref_osd",
-                "pref_telemetry","pref_video"
+                "pref_connect","pref_osd",
+                "pref_telemetry","pref_video",
+                "pref_vr_rendering",
         };
         for(final String s:preferenceNames){
             c.getSharedPreferences(s,MODE_PRIVATE).edit().clear().commit();

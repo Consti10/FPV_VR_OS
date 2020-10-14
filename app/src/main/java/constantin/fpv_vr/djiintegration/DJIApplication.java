@@ -54,7 +54,6 @@ import dji.sdk.sdkmanager.DJISDKManager;
      }
 
      public static boolean isDJIEnabled(final Context context){
-         //return SJ.getConnectionType(context)== AConnect.CONNECTION_TYPE_DJI;
          return getConnectionType(context)==5;
      }
 
@@ -86,9 +85,6 @@ import dji.sdk.sdkmanager.DJISDKManager;
       * Via the 'connect' fragments, if dji is enabled, all permissions are most likely granted
       */
      public synchronized void initializeDJIIfNeeded(){
-         if(true){
-             //return;
-         }
          try{
              final Context context=getApplicationContext();
              if(!isDJIEnabled(context)){
