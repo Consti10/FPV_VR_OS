@@ -3,7 +3,6 @@
     //********************************** pref_connect only **********************************
     <string name="CONNECTION_TYPE">CONNECTION_TYPE</string>
     <string name="AHTPort">AHTPort</string>
-    <string name="RTSPString">RTSPString</string>
     //*************************************************************************************
     //********************************** pref ground recording ************************
     <string name="GROUND_RECORDING_TYPE">GROUND_RECORDING_TYPE</string>
