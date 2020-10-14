@@ -47,7 +47,8 @@ void GLRStereoVR::placeGLElements(){
     vrCompositorRenderer.addLayer(vid1,&mSurfaceTextureUpdate,headTrackingMode);
 
     const auto osd=TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,videoZ},{videoW,videoW*1.0f/OSD_RATIO},0.0f,1.0f,false,false);
-    vrCompositorRenderer.addLayer(osd, &osdRenderbuffer,headTrackingMode);
+    const auto headTrackingModeForOSD=mSettingsVR.GHT_OSD_FIXED_TO_HEAD ? VrCompositorRenderer::NONE : headTrackingMode;
+    vrCompositorRenderer.addLayer(osd, &osdRenderbuffer,headTrackingModeForOSD);
 }
 
 void GLRStereoVR::onContextCreated(JNIEnv * env, jobject androidContext, int screenW, int screenH, jobject surfaceTextureHolder) {
