@@ -60,22 +60,19 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Connect&#10;(Settings)"
-            android:onClick="onClick"
-            tools:ignore="HardcodedText" />
-
-
-        <Button
-            android:id="@+id/b_Exp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:text="EXP"
+            android:text="Connect&#10;(V/T Settings)"
             android:onClick="onClick"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/b_Exp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="EXP"
+        android:onClick="onClick"
+        tools:ignore="HardcodedText" />
 
 
 </LinearLayout>
