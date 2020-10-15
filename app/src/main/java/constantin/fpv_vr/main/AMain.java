@@ -217,13 +217,13 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     //This is not necessary - You can still use getExternalStoragePublicDirectory
     //But then you will have to add android:requestLegacyExternalStorage="true" in your Manifest
     //IT IS IMPORTANT TO SET THE FILE NAME THE SAME AS THE NAME YOU USE FOR TITLE AND DISPLAY_NAME
-    ContentResolver resolver;
-    ContentValues contentValues;
-    Uri mUri;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setOutputPath() {
         String filename = generateFileName();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentResolver resolver;
+            ContentValues contentValues;
+            Uri mUri;
             resolver = getContentResolver();
             contentValues = new ContentValues();
             contentValues.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "FPV_VR");
@@ -236,7 +236,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             hbRecorder.setOutputUri(mUri);
         }else{
             createFolder();
-            hbRecorder.setOutputPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) +"/HBRecorder");
+            hbRecorder.setOutputPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) +"/FPV_VR");
         }
     }
     //Generate a timestamp to be used as a file name
@@ -249,7 +249,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     //Only call this on Android 9 and lower (getExternalStoragePublicDirectory is deprecated)
     //This can still be used on Android 10> but you will have to add android:requestLegacyExternalStorage="true" in your Manifest
     private void createFolder() {
-        File f1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "HBRecorder");
+        File f1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "FPV_VR");
         if (!f1.exists()) {
             if (f1.mkdirs()) {
                 Log.i("Folder ", "created");

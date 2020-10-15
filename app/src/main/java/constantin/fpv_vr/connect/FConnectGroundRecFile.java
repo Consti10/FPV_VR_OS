@@ -76,8 +76,9 @@ public class FConnectGroundRecFile extends Fragment{
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                intent.setType("video/fpv");
-                Toaster.makeToast(mContext,"Select .fpv ground recording file");
+                intent.setType("*/*");
+                //intent.setType("video/fpv");
+                //Toaster.makeToast(mContext,"Select .fpv ground recording file");
                 startActivityForResult(intent,REQUEST_CODE_PICK_FILE);
             }
         });
@@ -173,9 +174,9 @@ public class FConnectGroundRecFile extends Fragment{
        super.onActivityResult(requestCode,resultCode,data);
        //Log.d(TAG,"onActivityResult"+requestCode);
        if(requestCode==REQUEST_CODE_PICK_FILE && data!=null){
-           Uri selectedImageUri = data.getData();
-           Log.d(TAG,"Got "+selectedImageUri.getPath()+" "+selectedImageUri.toString());
-           final String actualFilePath=FileHelper2.getRealPathFromURI_API19(mContext,selectedImageUri);
+           Uri selectedFileUri = data.getData();
+           Log.d(TAG,"Got "+selectedFileUri.getPath()+" "+selectedFileUri.toString());
+           final String actualFilePath=FileHelper2.getRealPathFromURI_API19(mContext,selectedFileUri);
            if(actualFilePath!=null){
                //Log.d(TAG,"Got real path"+actualFilePath);
                if(actualFilePath.endsWith(".fpv")){
@@ -183,6 +184,8 @@ public class FConnectGroundRecFile extends Fragment{
                    VideoSettings.setVS_PLAYBACK_FILENAME(mContext,actualFilePath);
                    TelemetrySettings.setT_PLAYBACK_FILENAME(mContext,actualFilePath);
                    Toaster.makeToast(mContext,"Selected .fpv ground recording file");
+               }else{
+                   Toaster.makeToast(mContext,"Please select .fpv ground recording file");
                }
            }
        }

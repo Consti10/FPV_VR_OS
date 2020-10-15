@@ -28,9 +28,11 @@
         android:required="false"/>
     <uses-feature
         android:name="android.hardware.usb.accessory"
-        android:required="true"/>
+        android:required="false"/>
     <!-- ******************************************* DJI SDK end *******************************************-->
 
+    <!--https://developer.android.com/about/versions/11/privacy/storage-->
+    <!-- Set requestLegacyExternalStorage to true -->
     <application
         android:name=".djiintegration.DJIApplication"
         android:allowBackup="false"
@@ -40,7 +42,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity">
+        tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity"
+        android:requestLegacyExternalStorage="true" >
 
         <activity
             android:name=".OSD2.ATestlayout"
