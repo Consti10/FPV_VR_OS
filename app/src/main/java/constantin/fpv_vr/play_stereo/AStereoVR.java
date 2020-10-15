@@ -5,7 +5,10 @@ package constantin.fpv_vr.play_stereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
+import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
+
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.VideoTelemetryComponent;
 import constantin.fpv_vr.connect.AConnect;
@@ -37,6 +40,14 @@ public class AStereoVR extends VrActivity {
 
         vrView.getPresentationView().setRenderer(mGLRStereoVR,videoTelemetryComponent.configure2());
         vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
+
+        vrView.setIOnEmulateTrigger(new VrView.IEmulateTrigger(){
+            @Override
+            public void onEmulateTrigger() {
+                videoTelemetryComponent.getTelemetryReceiver().incrementOsdViewMode();
+            }
+        });
+
 
         setContentView(vrView);
         AirHeadTrackingSender airHeadTrackingSender = AirHeadTrackingSender.createIfEnabled(this,vrView.getGvrApi());
