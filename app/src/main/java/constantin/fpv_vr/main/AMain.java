@@ -208,11 +208,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         }
     }
 
-    @Override
-    public void HBRecorderOnStart() {
-
-    }
-
     //For Android 10> we will pass a Uri to HBRecorder
     //This is not necessary - You can still use getExternalStoragePublicDirectory
     //But then you will have to add android:requestLegacyExternalStorage="true" in your Manifest
@@ -257,6 +252,8 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         }
     }
 
+    @Override
+    public void HBRecorderOnStart() { }
 
     @Override
     public void HBRecorderOnComplete() {
