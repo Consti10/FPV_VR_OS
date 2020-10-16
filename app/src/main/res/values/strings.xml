@@ -29,10 +29,11 @@
     can only check if data arrives at the specified UDP ports. </string>
     <string name="AssetsFileDescription">Play a test video/telemetry file (included in the app) to test your decoder</string>
     <string name="StorageFileDescription1">Play video/telemetry from files in your internal storage (Ground Recording).</string>
-    <string name="StorageFileDescription2">You can find your ground recording files in \"DCIM\\FPV_VR\".
-        \nTo sync files with windows, connect your phone as "camera device".
-        \nEnter your file names (e.g. 11-04-2019 16-33-42 are creation date and time)
-        \nThey have to be in the right format and sit in your FPV_VR folder\n</string>
+    <string name="StorageFileDescription2">
+        To play back .mp4 ground recordings, use any other video player of your choice.
+        \nTo play back .fpv ground recordings, open the file using the picker below
+        \nYou can find your .fpv ground recording files in \"Movies\\FPV_VR\".
+        \nEach file is named by their creation date and time and ends in .fpv</string>
 
     <string name="RTSPDescription">In development. Enter valid RTSP string (or other string that can be played by ffmpeg), then start video playing activity.</string>
 

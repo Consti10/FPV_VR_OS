@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -221,7 +222,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             Uri mUri;
             resolver = getContentResolver();
             contentValues = new ContentValues();
-            contentValues.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "FPV_VR");
+            contentValues.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "FPV_VR2");
             contentValues.put(MediaStore.Video.Media.TITLE, filename);
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
@@ -231,7 +232,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             hbRecorder.setOutputUri(mUri);
         }else{
             createFolder();
-            hbRecorder.setOutputPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) +"/FPV_VR");
+            hbRecorder.setOutputPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) +"/FPV_VR2");
         }
     }
     //Generate a timestamp to be used as a file name
@@ -244,7 +245,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     //Only call this on Android 9 and lower (getExternalStoragePublicDirectory is deprecated)
     //This can still be used on Android 10> but you will have to add android:requestLegacyExternalStorage="true" in your Manifest
     private void createFolder() {
-        File f1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "FPV_VR");
+        File f1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "FPV_VR2");
         if (!f1.exists()) {
             if (f1.mkdirs()) {
                 Log.i("Folder ", "created");
@@ -258,6 +259,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     @Override
     public void HBRecorderOnComplete() {
         System.out.println("HBRecorderOnComplete()");
+        Toast.makeText(getApplicationContext(),"Saved Ground Recording File "+hbRecorder.getFileName(),Toast.LENGTH_SHORT).show();
     }
 
     @Override

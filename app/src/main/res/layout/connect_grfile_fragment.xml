@@ -53,6 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Migrate Files"
-        tools:ignore="HardcodedText"/>
+        tools:ignore="HardcodedText"
+        android:visibility="invisible"/>
 
 </LinearLayout>
