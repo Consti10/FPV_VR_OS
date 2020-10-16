@@ -1,17 +1,8 @@
 package constantin.fpv_vr;
 
-import android.annotation.SuppressLint;
-import android.graphics.SurfaceTexture;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.view.View;
-import android.widget.FrameLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GestureDetectorCompat;
 
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
