@@ -3,6 +3,8 @@
 include ':app'
 //include ':djiintegration'
 
+include ':Shared'
+project(':Shared').projectDir=new File('..\\LiveVideo10ms\\Shared')
 include ':VideoCore'
 project(':VideoCore').projectDir=new File('..\\LiveVideo10ms\\VideoCore')
 include ':uvcintegration'
