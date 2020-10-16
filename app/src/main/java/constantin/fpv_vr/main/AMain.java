@@ -43,7 +43,7 @@ import constantin.fpv_vr.settings.SJ;
 import constantin.fpv_vr.settings.UpdateHelper;
 import constantin.renderingx.core.deviceinfo.AWriteGLESInfo;
 import constantin.uvcintegration.UVCHelper;
-import constantin.video.core.RequestPermissionHelper;
+import constantin.helper.RequestPermissionHelper;
 import constantin.video.core.TestReceiverVideo;
 import constantin.video.core.player.VideoSettings;
 
