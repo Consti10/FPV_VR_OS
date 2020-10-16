@@ -36,6 +36,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //https://developer.android.com/studio/build/shrink-code#native-crash-support
+            //ndk{
+            //    debugSymbolLevel = full
+            //}
         }
         debug {
             debuggable true
