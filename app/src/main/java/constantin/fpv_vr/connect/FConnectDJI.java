@@ -27,7 +27,7 @@ import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.databinding.ConnectDjiFragmentBinding;
 import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.djiintegration.DJIHelper;
-import constantin.video.core.RequestPermissionHelper;
+import constantin.helper.RequestPermissionHelper;
 import dji.common.airlink.SignalQualityCallback;
 import dji.common.airlink.WifiChannelInterference;
 import dji.common.camera.SettingsDefinitions;
