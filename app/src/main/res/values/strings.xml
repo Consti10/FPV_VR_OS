@@ -62,7 +62,7 @@
             \n or raw h264 video stream via UDP to Port 5600 when disabling parseRTP
     </string>
     <string name="Info_ConnectEZWBOPNEHD">
-        Connect to EZ-WifiBroadcast with PW=wifibraodcast or OpenHD with PW=wifiopenhd
+        Connect to EZ-WifiBroadcast with PW=wifibroadcast or OpenHD with PW=wifiopenhd
     </string>
 
 
