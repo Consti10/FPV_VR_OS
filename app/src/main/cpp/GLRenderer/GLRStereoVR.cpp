@@ -71,6 +71,7 @@ void GLRStereoVR::onContextCreated(JNIEnv * env, jobject androidContext, int scr
 // instead of sleeping I poll on the surfaceTexture in small intervalls to see if a new frame is available
 // As soon as a new video frame is available, I render the OpenGL frame immediately
 // This is not as efficient as using a condition variable but since the callback is invoked in java it might be hard to implement that
+// TODO currently depreacted. I cannot account for all the different video fps combined with device GPU performance
 void GLRStereoVR::waitUntilVideoFrameAvailable(JNIEnv* env, const std::chrono::steady_clock::time_point& maxWaitTimePoint) {
     if(const auto delay=mSurfaceTextureUpdate.waitUntilFrameAvailable(env,maxWaitTimePoint)){
         surfaceTextureDelay.add(*delay);

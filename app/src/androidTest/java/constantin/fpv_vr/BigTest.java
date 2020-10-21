@@ -25,6 +25,8 @@ public class BigTest {
 
     private static final int WAIT_TIME_LONG=10000;
     private static final int WAIT_TIME_SHORT=1000;
+    private static final int SECONDS_10_IN_MS=10*1000;
+    private static final int SECONDS_20_IN_MS=10*1000;
 
     // ActivityScenarioRule is a replacement for ActivityTestRule
     @Rule
@@ -91,12 +93,12 @@ public class BigTest {
         openAll3PlayingActivitiesShort();
 
         // Set to DJI and
-        // cannot start because no connected dji
+        // only check if app does not crash with dji enabled
         onView(withId(R.id.b_Connect)).perform(click());
         onView(withId(R.id.spinner_connection_type)).perform(click());
         onData(anything()).atPosition(5).perform(click());
         // Wait for dji registration and so on
-        try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+        try { Thread.sleep(SECONDS_10_IN_MS); } catch (InterruptedException e) { e.printStackTrace(); }
         pressBack();
     }
 

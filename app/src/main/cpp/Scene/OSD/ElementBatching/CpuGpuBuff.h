@@ -51,8 +51,6 @@ public:
 };
 
 
-
-
 template <class T>
 class CpuGpuBuff{
 public:
