@@ -144,8 +144,8 @@ dependencies {
     //THIS IS IT ! implementation "androidx.activity:activity:1.2.0-alpha08"
 
     //firebase stuff
-    implementation 'com.google.firebase:firebase-core:17.5.1'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+    implementation 'com.google.firebase:firebase-core:18.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
 
     //Screen recording and more
     implementation 'com.github.HBiSoft:HBRecorder:0.1.12'
