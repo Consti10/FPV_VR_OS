@@ -9,6 +9,7 @@
 #include <GLBuffer.hpp>
 #include <ColoredGeometry.hpp>
 
+// Used to place the OSD elements in world space.
 class IPositionable{
 public:
     struct Rect2D{

@@ -25,9 +25,6 @@ void TextElements1::setupPosition() {
     IPositionable::Rect2D rectUpperText(mX,mY+heightLower+heightMiddle,mZ,mWidth,heightUpper);
     IPositionable::Rect2D rectMiddleVideo(mX,mY+heightLower,mZ,mWidth,heightMiddle);
     IPositionable::Rect2D rectLowerText(mX,mY,mZ,mWidth,heightLower);
-    //mPositionDebugUpper.setWorldPositionDebug(rectUpperText);
-    //mPositionDebugMiddle.setWorldPositionDebug(rectMiddleVideo);
-    //mPositionDebugLower.setWorldPositionDebug(rectLowerText);
 
     const float textObjW=mWidth/nRowsPerColumn;
     const float textObjH=mTextHeight;
