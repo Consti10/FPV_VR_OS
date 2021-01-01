@@ -79,8 +79,8 @@ void AHorizon::setupPosition() {
 
 void AHorizon::updateGL() {
     float rollDegree= mTelemetryReceiver.getUAVTelemetryData().Roll_Deg;
-    //float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
-    float pitchDegree= lol;
+    float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
+    //float pitchDegree= lol;
     lol+=0.1;
     if(!mOptions.roll){
         rollDegree=0.0f;
