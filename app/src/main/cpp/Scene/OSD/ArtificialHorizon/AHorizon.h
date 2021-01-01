@@ -55,7 +55,7 @@ private:
     ModifiableArray<ColoredVertex>* mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;
-    const float RATIO=1.5f;
+    const float RATIO=2.0f;
     struct LadderLine{
         int vertOffset=0,vertCount=0;
     };
