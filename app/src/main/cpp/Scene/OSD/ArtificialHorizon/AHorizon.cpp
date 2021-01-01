@@ -22,11 +22,6 @@ AHorizon::AHorizon(const AHorizon::Options& options,const SettingsOSDStyle& sett
         mOptions(options){
 }
 
-void AHorizon::addOtherLadderLine(int which,std::vector<ColoredVertex>& tmpBuffOtherLadderLines,
-                                  std::vector<GLProgramText::Character>& tmpBuffOtherLadderLinesText) {
-
-}
-
 //
 void AHorizon::setupPosition() {
     mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
@@ -38,33 +33,11 @@ void AHorizon::setupPosition() {
         mGLBuffLadders.uploadGL(tmp);
         LadderLines[0].vertOffset=0;
         LadderLines[0].vertCount=6;
-
-        /*const float lineH=mWidth*0.015f;
-        const float lineW=mWidth;
-        const float outline=lineH*0.5f;
-        //std::vector<GLProgramLine::Vertex> tmp(6);
-        const glm::vec3 start=glm::vec3(-lineW/2.0f-outline/2.0f,-lineH/2.0f-outline/2.0f,0);
-        const glm::vec3 end=start+glm::vec3(lineW,0,0);
-        //GLProgramLine::convertLineToRenderingData(start,end,lineH,tmp.data(),0,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-        auto tmp=GLProgramLine::makeLine(start,end,lineH,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-        mGLBuffLadders.uploadGL(tmp);
-        LadderLines[0].vertOffset=0;
-        LadderLines[0].vertCount=6;*/
     }
     // the other ladders
     {
         std::vector<ColoredVertex> tmpBuffOtherLadderLines;
         std::vector<GLProgramText::Character> tmpBuffOtherLadderLinesText;
-        /*for(int i=1;i<5;i++){
-            const float deltaBetweenLines=mHeight/180.0f*20.0f;
-            const float y=(float)i*deltaBetweenLines;
-            const float charHeight=mHeight/20.0f;
-            const std::wstring wstring=std::to_wstring(i*20);
-            const float lineWidth=mWidth-GLProgramText::getStringLength(wstring,charHeight)*2.0f;
-            ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/2.0f, y},lineWidth,TrueColor2::GREEN);
-            //
-            GLProgramText::appendString(tmpBuffOtherLadderLinesText,0,y-(charHeight*0.5f),0,charHeight,wstring,TrueColor2::GREEN);
-        }*/
         const float charHeight=mHeight/20.0f;
         const float lineWidth=mWidth-GLProgramText::getStringLength(L"80",charHeight)*2.0f;
         const float deltaBetweenLines=mHeight/180.0f;

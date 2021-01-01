@@ -67,8 +67,6 @@ private:
     // ladders other than the one in the middle
     GLBuffer<ColoredVertex> mGLBuffLadderLinesOther;
     GLBuffer<GLProgramText::Character> mGLBuffLadderLinesOtherText;
-    void addOtherLadderLine(int which,std::vector<ColoredVertex>& tmpBuffOtherLadderLines,
-    std::vector<GLProgramText::Character>& tmpBuffOtherLadderLinesText);
     float lol=0;
 };
 
