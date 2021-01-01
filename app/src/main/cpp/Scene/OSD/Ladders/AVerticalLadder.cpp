@@ -35,7 +35,7 @@ void AVerticalLadder::setupPosition() {
     mBackgroundObj.setPosition(mX,mY,mZ,mWidth,mHeight);
     mBackgroundObj.recalculateData();
     //
-    const float longLinesWidth=mWidth/3.0f;
+    const float longLinesWidth=mWidth*1.0f/4.0f;
     //create the ladder lines
     {
         const float distanceBetweenLines=mHeight/(4.0f*4.0f);
@@ -45,7 +45,7 @@ void AVerticalLadder::setupPosition() {
         for(int i=0;i<N_LADDER_LINES;i++){
             float width=shortLinesWidth;
             if(i%4==0)width=longLinesWidth;
-            const float linesHeight=distanceBetweenLines*0.25f;
+            const float linesHeight=distanceBetweenLines*0.2f;
             const auto FILL_COLOR=settingsOSDStyle.OSD_LINE_FILL_COLOR;
             const auto OUTLINE_COLOR=settingsOSDStyle.OSD_LINE_OUTLINE_COLOR;
             if(LEFT_HANDED){
@@ -61,8 +61,10 @@ void AVerticalLadder::setupPosition() {
         GLBufferHelper::uploadGLBuffer(mLadderLines.glBuffer, tmpLinesB, sizeof(tmpLinesB));
     }
     //place the main value element
-    outlineQuadWidth=mWidth*2.0f/3.0f;
-    outlineQuadHeight=outlineQuadWidth*2.0f/3.0f;
+    //outlineQuadWidth=mWidth*2.0f/3.0f;
+    outlineQuadWidth=mWidth*3.0f/4.0f;
+    //outlineQuadHeight=outlineQuadWidth*2.0f/3.0f;
+    outlineQuadHeight=outlineQuadWidth*7.0f/12.0f;
     mTextObjTelemetryValue.setTextSafe(L"INIT");
     if(LEFT_HANDED){
         mTextObjTelemetryValue.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight/2.0f,mZ,

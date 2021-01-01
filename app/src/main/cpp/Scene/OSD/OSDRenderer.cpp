@@ -138,8 +138,9 @@ void OSDRenderer::updateAndDrawElementsGL(){
     mBatchingManager.updateGL();
     //sleep really shortly to allow a thread with higher priority to run if there is any
     std::this_thread::sleep_for(std::chrono::microseconds(1));
-    mBatchingManager.drawGL(IDENTITY_M,mOSDProjectionM);
     IDrawable::drawAll(mDrawables,IDENTITY_M,mOSDProjectionM);
+    mBatchingManager.drawGL(IDENTITY_M,mOSDProjectionM);
+
     GLHelper::checkGlError("OSDRenderer::updateAndDrawElementsGL");
     //LOGD("Valid %d %d %d %d %d %d",mTextElements1,mTextElements2,mTEWarning,mAHorizon,mAltitudeLadder,mSpeedLadder);
 }

@@ -64,6 +64,12 @@ private:
     //
     ColoredGLMeshBuffer mGLBuff3DModel;
     glm::mat4 mModelM3DModel;
+    // ladders other than the one in the middle
+    GLBuffer<ColoredVertex> mGLBuffLadderLinesOther;
+    GLBuffer<GLProgramText::Character> mGLBuffLadderLinesOtherText;
+    void addOtherLadderLine(int which,std::vector<ColoredVertex>& tmpBuffOtherLadderLines,
+    std::vector<GLProgramText::Character>& tmpBuffOtherLadderLinesText);
+    float lol=0;
 };
 
 #endif //FPV_VR_OSD_ARTIFICIALHORIZON_H
