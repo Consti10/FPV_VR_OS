@@ -6,8 +6,6 @@
     //OSD Settings -------------------------------------------------------------------------
     //OSD STYLE - - - - - - - - - -- - - - -- - - - -- - - - -- - - - -- - - - -- - - - -
     //Lines
-    <string name="OSD_MONO_LINE_WIDTH">Line width mono, in percentage.</string>
-    <string name="OSD_STEREO_LINE_WIDTH">Line width stereo, in percentage</string>
     <string name="OSD_LINE_FILL_COLOR">Line fill (inner) color</string>
     <string name="OSD_LINE_OUTLINE_COLOR">Line outline (outer) color</string>
     //Text

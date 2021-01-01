@@ -3,9 +3,7 @@
 
 class IDOSD{
 public:
-    static constexpr const char* OSD_MONO_LINE_WIDTH="Line width mono, in percentage.";
-    static constexpr const char* OSD_STEREO_LINE_WIDTH="Line width stereo, in percentage";
-    static constexpr const char* OSD_LINE_FILL_COLOR="Line fill (inner) color";
+   static constexpr const char* OSD_LINE_FILL_COLOR="Line fill (inner) color";
     static constexpr const char* OSD_LINE_OUTLINE_COLOR="Line outline (outer) color";
     static constexpr const char* OSD_TEXT_FONT_TYPE="Text font type";
     static constexpr const char* OSD_TEXT_FILL_COLOR1="Text fill color 1";

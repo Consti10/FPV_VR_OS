@@ -25,8 +25,6 @@ public:
     }
 public:
     //----STYLE---
-    int OSD_MONO_LINE_WIDTH;
-    int OSD_STEREO_LINE_WIDTH;
     TrueColor OSD_LINE_FILL_COLOR;
     TrueColor OSD_LINE_OUTLINE_COLOR;
     //

@@ -9,14 +9,6 @@
 
         <PreferenceCategory
             android:title="OSD lines">
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_MONO_LINE_WIDTH"
-                android:title="@string/OSD_MONO_LINE_WIDTH"
-                android:defaultValue="50" />
-            <com.mapzen.prefsplusx.EditIntPreference
-                android:key="@string/OSD_STEREO_LINE_WIDTH"
-                android:title="@string/OSD_STEREO_LINE_WIDTH"
-                android:defaultValue="50" />
             <com.kizitonwose.colorpreference.ColorPreference
                 android:key="@string/OSD_LINE_FILL_COLOR"
                 android:title="@string/OSD_LINE_FILL_COLOR"
