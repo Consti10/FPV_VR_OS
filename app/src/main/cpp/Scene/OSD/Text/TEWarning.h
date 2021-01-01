@@ -12,7 +12,6 @@
 #include <General/ITextHeight.h>
 #include <BasicGLPrograms.hpp>
 #include <TelemetryReceiver.h>
-#include <General/PositionDebug.hpp>
 #include <OSD/ElementBatching/BatchingManager.h>
 #include <OSD/ATextElements/OSDTextObj.hpp>
 
@@ -35,7 +34,6 @@ private:
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) override;
     const TelemetryReceiver& mTelemetryReceiver;
     const Options& mOptions;
-    PositionDebug mPositionDebug;
     static constexpr const wchar_t* MAX_TEXT_LENGTH_REFERENCE=L"BAT XXX YYY";
     static constexpr const int MAX_N_TEXT_OBJ=3; //Max. 3 warnings supported
     const std::vector<std::unique_ptr<OSDTextObj>> mGLTextObjIndices;

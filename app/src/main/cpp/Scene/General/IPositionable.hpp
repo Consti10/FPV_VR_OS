@@ -5,6 +5,10 @@
 #ifndef FPV_VR_POSITIONABLE_H
 #define FPV_VR_POSITIONABLE_H
 
+#include <GLProgramVC.h>
+#include <GLBuffer.hpp>
+#include <ColoredGeometry.hpp>
+
 class IPositionable{
 public:
     struct Rect2D{
@@ -40,10 +44,19 @@ public:
         mHeight=rect2D.mHeight;
         setupPosition();
     }
+    void debug(const GLProgramVC& glProgramVc,const glm::mat4 ViewM,const glm::mat4 ProjM){
+        auto tmp=ColoredGeometry::makeColoredRectangle({mX,mY,mZ},mWidth,mHeight,TrueColor2::GREEN);
+        mGLBuffDebug.uploadGL(tmp);
+        glProgramVc.beforeDraw(mGLBuffDebug.getGLBufferId());
+        glProgramVc.draw(ViewM,ProjM,0,mGLBuffDebug.getCount(),GL_TRIANGLES);
+        glProgramVc.afterDraw();
+    }
 protected:
     float mX,mY,mZ;
     float mWidth,mHeight;
 protected:
     virtual void setupPosition()=0;
+private:
+    GLBuffer<ColoredVertex> mGLBuffDebug;
 };
 #endif //FPV_VR_POSITIONABLE_H

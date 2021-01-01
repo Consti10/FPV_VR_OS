@@ -17,14 +17,12 @@ AHorizon::AHorizon(const AHorizon::Options& options,const SettingsOSDStyle& sett
         settingsOSDStyle(settingsOSDStyle),
         mTelemetryReceiver(telemetryReceiver),
         mGLPrograms(basicGLPrograms),
-        mPositionDebug(basicGLPrograms.vc,0, true),
         mMiddleTriangleBuff(batchingManager.allocateVCTriangles(3)),
         mOptions(options){
 }
 
 //
 void AHorizon::setupPosition() {
-    mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     degreeToYTranslationFactor=mHeight/180.0f;
     //make the ladder line
     {
@@ -38,7 +36,7 @@ void AHorizon::setupPosition() {
     {
         std::vector<ColoredVertex> tmpBuffOtherLadderLines;
         std::vector<GLProgramText::Character> tmpBuffOtherLadderLinesText;
-        const float charHeight=mHeight/20.0f;
+        const float charHeight=mHeight/30.0f;
         const float lineWidth=mWidth-GLProgramText::getStringLength(L"80",charHeight)*2.0f;
         const float deltaBetweenLines=mHeight/180.0f;
         int count=0;
@@ -125,7 +123,7 @@ void AHorizon::updateGL() {
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-    mPositionDebug.drawGLDebug(ViewM,ProjM);
+    debug(mGLPrograms.vc,ViewM,ProjM);
 
     //middle triangle is rendered by batching manager
 

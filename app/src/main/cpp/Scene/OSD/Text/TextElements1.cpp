@@ -6,9 +6,6 @@ constexpr auto TAG="TextElements1";
 TextElements1::TextElements1(const TextElements1::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,TelemetryReceiver& telemetryReceiver):
         IUpdateable(TAG),IDrawable(TAG),
         settingsOSDStyle(settingsOSDStyle),
-        mPositionDebugUpper(basicGLPrograms.vc,2, true),
-        mPositionDebugMiddle(basicGLPrograms.vc,7, true),
-        mPositionDebugLower(basicGLPrograms.vc,2, true),
         mTelemetryR(telemetryReceiver),
         mOptions(options),
         mGLTextObjIndices(allocateAllElements(settingsOSDStyle,options,batchingManager)) {
@@ -28,9 +25,9 @@ void TextElements1::setupPosition() {
     IPositionable::Rect2D rectUpperText(mX,mY+heightLower+heightMiddle,mZ,mWidth,heightUpper);
     IPositionable::Rect2D rectMiddleVideo(mX,mY+heightLower,mZ,mWidth,heightMiddle);
     IPositionable::Rect2D rectLowerText(mX,mY,mZ,mWidth,heightLower);
-    mPositionDebugUpper.setWorldPositionDebug(rectUpperText);
-    mPositionDebugMiddle.setWorldPositionDebug(rectMiddleVideo);
-    mPositionDebugLower.setWorldPositionDebug(rectLowerText);
+    //mPositionDebugUpper.setWorldPositionDebug(rectUpperText);
+    //mPositionDebugMiddle.setWorldPositionDebug(rectMiddleVideo);
+    //mPositionDebugLower.setWorldPositionDebug(rectLowerText);
 
     const float textObjW=mWidth/nRowsPerColumn;
     const float textObjH=mTextHeight;
@@ -74,9 +71,9 @@ void TextElements1::updateGL() {
 }
 
 void TextElements1::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-    mPositionDebugUpper.drawGLDebug(ViewM,ProjM);
-    mPositionDebugMiddle.drawGLDebug(ViewM,ProjM);
-    mPositionDebugLower.drawGLDebug(ViewM,ProjM);
+    //mPositionDebugUpper.drawGLDebug(ViewM,ProjM);
+    //mPositionDebugMiddle.drawGLDebug(ViewM,ProjM);
+    //mPositionDebugLower.drawGLDebug(ViewM,ProjM);
 }
 
 void TextElements1::updateSubElement(unsigned long whichSubStr,OSDTextObj* obj)const{

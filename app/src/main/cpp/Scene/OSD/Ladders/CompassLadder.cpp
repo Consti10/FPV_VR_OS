@@ -9,7 +9,6 @@ CompassLadder::CompassLadder(CompassLadder::Options options,const SettingsOSDSty
         IUpdateable(TAG),IDrawable(TAG),
         settingsOSDStyle(settingsOSDStyle),
         mTelemetryReceiver(telemetryReceiver),
-        mPositionDebug(basicGLPrograms.vc,0, true),
         mGLPrograms(basicGLPrograms),
         mOptions(options),
         mTextObjTelemetryValue(N_CHARS_PER_TEXT_OBJ,false,TrueColor2::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
@@ -19,7 +18,6 @@ CompassLadder::CompassLadder(CompassLadder::Options options,const SettingsOSDSty
 
 
 void CompassLadder::setupPosition() {
-    mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     mCalcTextHeight=mHeight/3.0f;
     const auto lineColor=settingsOSDStyle.OSD_LINE_FILL_COLOR;
     const auto textColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR2;
@@ -194,7 +192,6 @@ void CompassLadder::updateGL() {
 }
 
 void CompassLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-    mPositionDebug.drawGLDebug(ViewM,ProjM);
 
     //Background is drawn by BatchingManager
     //Main telemetry element is drawn by batchingManager

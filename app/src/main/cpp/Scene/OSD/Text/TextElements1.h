@@ -17,7 +17,6 @@
 #include "OSD/ATextElements/OSDTextObj.hpp"
 #include "../../General/IPositionable.hpp"
 #include "../../General/IDrawable.hpp"
-#include "../../General/PositionDebug.hpp"
 #include "General/IUpdateable.hpp"
 
 // All sub-elements are ordered in row/column fashion
@@ -42,7 +41,6 @@ private:
     const SettingsOSDStyle& settingsOSDStyle;
     const TelemetryReceiver& mTelemetryR;
     const std::vector<std::unique_ptr<OSDTextObj>> mGLTextObjIndices;
-    PositionDebug mPositionDebugUpper,mPositionDebugMiddle,mPositionDebugLower;
     static constexpr const wchar_t* MAX_TEXT_LENGTH_REFERENCE=L"Lat:99.9999999";
     static constexpr const int N_CHARS_PER_TEXT_OBJ=15;
     static std::vector<std::unique_ptr<OSDTextObj>> allocateAllElements(const SettingsOSDStyle& settingsOSDStyle,const Options& options,BatchingManager &batchingManager);

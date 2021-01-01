@@ -13,7 +13,6 @@
 #include <General/IDrawable.hpp>
 #include <General/IPositionable.hpp>
 #include <TelemetryReceiver.h>
-#include <General/PositionDebug.hpp>
 #include <General/IUpdateable.hpp>
 #include <OSD/ElementBatching/BatchingManager.h>
 #include <OSD/ATextElements/OSDTextObj.hpp>
@@ -41,7 +40,6 @@ private:
     void calcLadderStringsRenderData(float value);
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) override;
     const BasicGLPrograms& mGLPrograms;
-    PositionDebug mPositionDebug;
     OSDBackgroundObject mBackgroundObj;
     OSDTextObj mTextObjTelemetryValue;
     OSDTextObj mTextObjMetric;

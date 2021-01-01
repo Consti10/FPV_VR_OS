@@ -11,13 +11,11 @@ TextElements2::TextElements2(const TextElements2::Options& options,const Setting
         IUpdateable(TAG),IDrawable(TAG),
         settingsOSDStyle(settingsOSDStyle),
         mTelemetryReceiver(telemetryReceiver),
-        mPositionDebug(basicGLPrograms.vc,1, true),
         mOptions(options),
         mGLTextObjIndices(createAllElements(settingsOSDStyle,batchingManager,options)){
 }
 
 void TextElements2::setupPosition() {
-    mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     const float bigRowHeight=mTextHeight*TEXT_UPSCALE_FACTOR;
     const float smallRowHeight=mTextHeight*TEXT_DOWNSCALE_FACTOR;
 
@@ -169,7 +167,7 @@ void TextElements2::updateGL() {
 }
 
 void TextElements2::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-    mPositionDebug.drawGLDebug(ViewM,ProjM);
+
 }
 
 void TextElements2::updateSubElement(unsigned long id,OSDTextObj* obj)const {

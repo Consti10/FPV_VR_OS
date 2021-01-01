@@ -17,7 +17,6 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
         LEFT_HANDED(leftHanded),
         UNITS_BETWEEN_SRINGS(unitsBetween),
         UNITS_BETWEEN_LONG_LINES(unitsBetween),
-        mPositionDebug(basicGLPrograms.vc,0, true),
         mGLPrograms(basicGLPrograms),
         mTextObjTelemetryValue(15,false, TrueColor2::WHITE,true,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR,batchingManager),
         mTextObjMetric(4, false,TrueColor2::WHITE,false,TrueColor2::WHITE,batchingManager),
@@ -29,7 +28,6 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
 
 
 void AVerticalLadder::setupPosition() {
-    mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     const auto lineColor=settingsOSDStyle.OSD_LINE_FILL_COLOR;
     //create the background
     mBackgroundObj.setPosition(mX,mY,mZ,mWidth,mHeight);
@@ -202,8 +200,6 @@ void AVerticalLadder::updateGL() {
 }
 
 void AVerticalLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-    mPositionDebug.drawGLDebug(ViewM,ProjM);
-
     //Background is drawn by BatchingManager
     //Main telemetry element is drawn by batchingManager
 

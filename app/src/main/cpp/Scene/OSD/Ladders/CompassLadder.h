@@ -19,7 +19,6 @@
 #include <GLBuffer.hpp>
 #include "../../General/IDrawable.hpp"
 #include "../../General/IPositionable.hpp"
-#include "../../General/PositionDebug.hpp"
 
 /**
  * Draw an OSD compass ladder
@@ -52,7 +51,6 @@ private:
     const TelemetryReceiver& mTelemetryReceiver;
     OSDTextObj mTextObjTelemetryValue;
     OSDBackgroundObject mBackgroundObj;
-    PositionDebug mPositionDebug;
     GLBuffer<GLProgramLine::Vertex> mGLLadderLinesB;
     GLBuffer<GLProgramText::Character> mGLLadderTextB;
     GLBuffer<GLProgramText::Character> mGLHomeIconB;

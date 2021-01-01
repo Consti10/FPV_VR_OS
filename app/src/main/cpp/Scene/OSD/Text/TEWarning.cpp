@@ -8,7 +8,6 @@
 TEWarning::TEWarning(const TEWarning::Options& options,const BasicGLPrograms &basicGLPrograms,BatchingManager& batchingManager,TelemetryReceiver &telemetryReceiver):
         IUpdateable(TAG), IDrawable(TAG),
         mTelemetryReceiver(telemetryReceiver),
-        mPositionDebug(basicGLPrograms.vc,2, true),
         mOptions(options),
         mGLTextObjIndices(OSDTextObj::createAll(N_CHARS_PER_TEXT_OBJ,MAX_N_TEXT_OBJ,true,
                                                 TrueColor(glm::vec4(0.0f, 0, 0, 0.3f)),false,
@@ -16,7 +15,6 @@ TEWarning::TEWarning(const TEWarning::Options& options,const BasicGLPrograms &ba
 }
 
 void TEWarning::setupPosition() {
-    mPositionDebug.setWorldPositionDebug(mX,mY,mZ,mWidth,mHeight);
     float width=mWidth;
     float height=mHeight/3.0f;
     for(int i=0;i<MAX_N_TEXT_OBJ;i++){
@@ -79,7 +77,7 @@ void TEWarning::updateGL() {
 }
 
 void TEWarning::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-    mPositionDebug.drawGLDebug(ViewM,ProjM);
+
 }
 
 IPositionable::Rect2D TEWarning::calculatePosition(const IPositionable::Rect2D &osdOverlay) {

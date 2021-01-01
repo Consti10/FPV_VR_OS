@@ -18,7 +18,6 @@
 #include "OSD/ATextElements/OSDTextObj.hpp"
 #include "../../General/IPositionable.hpp"
 #include "../../General/IDrawable.hpp"
-#include "../../General/PositionDebug.hpp"
 #include "General/IUpdateable.hpp"
 
 // All Sub-elements have fixed positions (upper right, lower right, lower middle usw)
@@ -41,7 +40,6 @@ private:
     const Options& mOptions;
     const TelemetryReceiver& mTelemetryReceiver;
     const std::vector<std::unique_ptr<OSDTextObj>> mGLTextObjIndices;
-    PositionDebug mPositionDebug;
     const SettingsOSDStyle& settingsOSDStyle;
 
     const wchar_t* MAX_TEXT_LENGTH_REFERENCE_2=L"Lon 99.9999999";

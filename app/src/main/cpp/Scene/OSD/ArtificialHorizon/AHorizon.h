@@ -10,7 +10,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLProgramVC.h>
 #include <TelemetryReceiver.h>
-#include <General/PositionDebug.hpp>
 #include <General/IUpdateable.hpp>
 #include <BasicGLPrograms.hpp>
 #include <OSD/ElementBatching/BatchingManager.h>
@@ -50,7 +49,6 @@ private:
     const SettingsOSDStyle& settingsOSDStyle;
     const TelemetryReceiver& mTelemetryReceiver;
     const Options& mOptions;
-    PositionDebug mPositionDebug;
     GLBuffer<GLProgramLine::Vertex> mGLBuffLadders;
     ModifiableArray<ColoredVertex>* mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
