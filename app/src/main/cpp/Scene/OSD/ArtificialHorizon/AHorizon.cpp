@@ -226,8 +226,8 @@ IPositionable::Rect2D AHorizon::calculatePosition(const IPositionable::Rect2D &o
     float height=width*RATIO;
     float x=osdOverlay.mX+osdOverlay.mWidth/2.0f-width/2.0f;//+width;
     float y=osdOverlay.mY+osdOverlay.mHeight/2.0f-height/2.0f;
-    float z=osdOverlay.mZ;
-    return {x,y,z,width,height};
+
+    return {x,y,width,height};
 }
 
 ColoredMeshData AHorizon::create3DModelData(float hW, float sixtW) {

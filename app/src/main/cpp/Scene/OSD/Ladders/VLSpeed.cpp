@@ -32,6 +32,5 @@ IPositionable::Rect2D VLSpeed::calculatePosition(const IPositionable::Rect2D &os
     float width=height*RATIO;
     float x=osdOverlay.mX+osdOverlay.mWidth*OFFSET_VIDEO_X;
     float y=osdOverlay.mY+(osdOverlay.mHeight-height)/2.0f;
-    float z=osdOverlay.mZ;
-    return {x,y,z,width,height};
+    return {x,y,width,height};
 }

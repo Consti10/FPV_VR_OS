@@ -86,6 +86,5 @@ IPositionable::Rect2D TEWarning::calculatePosition(const IPositionable::Rect2D &
     float clHeight=mTextHeight*3;
     float x=osdOverlay.mX+osdOverlay.mWidth/2.0f-width*0.5f;
     float y=osdOverlay.mY+osdOverlay.mHeight-height-clHeight;
-    float z=osdOverlay.mZ;
-    return {x,y,z,width,height};
+    return {x,y,width,height};
 }

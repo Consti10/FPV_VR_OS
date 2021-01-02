@@ -85,7 +85,7 @@ void OSDRenderer::onSurfaceSizeChanged() {
     //take zero space, but it can hold up to 2 rows of text in the top and bottom
     //after we have placed this element, we can specify our new rectangle, that has the same width,
     //X and Z values, but different height and Y values
-    const IPositionable::Rect2D rectOSDOverlay(videoX,videoY+te1HeightBottom,videoZ,
+    const IPositionable::Rect2D rectOSDOverlay(videoX,videoY+te1HeightBottom,
                                                videoW,videoH-te1HeightTop-te1HeightBottom);
     if(mTextElements2){
         mTextElements2->setTextHeight(textHeightMono);

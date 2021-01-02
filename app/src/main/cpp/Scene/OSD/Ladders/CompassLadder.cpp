@@ -229,6 +229,5 @@ IPositionable::Rect2D CompassLadder::calculatePosition(const IPositionable::Rect
     float width=height*RATIO;
     float x=osdOverlay.mX+(osdOverlay.mWidth-width)*0.5f;
     float y=osdOverlay.mY+osdOverlay.mHeight-height;
-    float z=osdOverlay.mZ;
-    return {x,y,z,width,height};
+    return {x,y,width,height};
 }

@@ -22,9 +22,9 @@ void TextElements1::setupPosition() {
     float heightUpper=nUpperColumns*mTextHeight;
     float heightLower=nLowerColumns*mTextHeight;
     float heightMiddle=mHeight-heightUpper-heightLower;
-    IPositionable::Rect2D rectUpperText(mX,mY+heightLower+heightMiddle,mZ,mWidth,heightUpper);
-    IPositionable::Rect2D rectMiddleVideo(mX,mY+heightLower,mZ,mWidth,heightMiddle);
-    IPositionable::Rect2D rectLowerText(mX,mY,mZ,mWidth,heightLower);
+    IPositionable::Rect2D rectUpperText(mX,mY+heightLower+heightMiddle,mWidth,heightUpper);
+    IPositionable::Rect2D rectMiddleVideo(mX,mY+heightLower,mWidth,heightMiddle);
+    IPositionable::Rect2D rectLowerText(mX,mY,mWidth,heightLower);
 
     const float textObjW=mWidth/nRowsPerColumn;
     const float textObjH=mTextHeight;
@@ -110,7 +110,7 @@ IPositionable::Rect2D TextElements1::calculatePositionStereo(const IPositionable
     float textElementsHeightTop=mTextHeight*rowCol[1];
     float textElementsHeightBottom=mTextHeight*rowCol[2];
     //LOGD("W H %f %f",textElementsHeightTop,textElementsHeightBottom);
-    const IPositionable::Rect2D ret(osdOverlayCanvas.mX,osdOverlayCanvas.mY-textElementsHeightBottom,osdOverlayCanvas.mZ,
+    const IPositionable::Rect2D ret(osdOverlayCanvas.mX,osdOverlayCanvas.mY-textElementsHeightBottom,
                                     osdOverlayCanvas.mWidth,osdOverlayCanvas.mHeight+textElementsHeightBottom+textElementsHeightTop);
     return ret;
 }

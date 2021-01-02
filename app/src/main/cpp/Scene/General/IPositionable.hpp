@@ -14,7 +14,7 @@
 class IPositionable{
 public:
     struct Rect2D{
-        Rect2D(const float x,const float y,const float z,const float width,const float height):
+        Rect2D(const float x,const float y,const float width,const float height):
         mX(x),mY(y),mWidth(width),mHeight(height){}
         const float mX;
         const float mY;
