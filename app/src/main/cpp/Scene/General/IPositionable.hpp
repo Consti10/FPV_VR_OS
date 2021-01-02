@@ -18,14 +18,14 @@ public:
         mX(x),mY(y),mWidth(width),mHeight(height){}
         const float mX;
         const float mY;
-        const float mZ=0.0f;
+        //const float mZ=0.0f;
         const float mWidth;
         const float mHeight;
     };
     struct Rect2D_{
         float X;
         float Y;
-        const float Z=0.0f;
+        //const float Z=0.0f;
         float Width;
         float Height;
     };

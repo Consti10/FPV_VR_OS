@@ -31,7 +31,7 @@ public:
         mPosition.Height=h;
     }
     void recalculateData(){
-        ColoredGeometry::makeBackgroundRect(backgroundBuffer->modify(),glm::vec3(mPosition.X,mPosition.Y,mPosition.Z),
+        ColoredGeometry::makeBackgroundRect(backgroundBuffer->modify(),glm::vec3(mPosition.X,mPosition.Y,0),
                            mPosition.Width,mPosition.Height,mBackgroundColor,mBackgroundColor);
     }
 };

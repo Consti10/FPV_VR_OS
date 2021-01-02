@@ -126,7 +126,7 @@ public:
                         mPosition.X + xOffset +
                         xAdvance,
                         mPosition.Y + yOffset,
-                        mPosition.Z, scale, string,
+                        0, scale, string,
                         color,
                         textBuffer->modify(),
                         nActiveChars);
@@ -138,12 +138,12 @@ public:
             textRecalculationNeeded=false;
         }
         if(enableBackground && backgroundRecalculationNeeded){
-            ColoredGeometry::makeBackgroundRect(backgroundBuffer->modify(),glm::vec3(mPosition.X+xOffset,mPosition.Y,mPosition.Z),
+            ColoredGeometry::makeBackgroundRect(backgroundBuffer->modify(),glm::vec3(mPosition.X+xOffset,mPosition.Y,0),
                                currTextW,mPosition.Height,mBackgroundColor,mBackgroundColor);
             backgroundRecalculationNeeded=false;
         }
         if(enableOutline && outlineRecalculationNeeded){
-            ColoredGeometry::makeOutlineQuadWithLines(outlineBuffer->modify(),mPosition.X,mPosition.Y,mPosition.Z,mPosition.Width,mPosition.Height,
+            ColoredGeometry::makeOutlineQuadWithLines(outlineBuffer->modify(),mPosition.X,mPosition.Y,0,mPosition.Width,mPosition.Height,
                                      mOutlineColor);
             outlineRecalculationNeeded=false;
         }
