@@ -59,12 +59,20 @@ private:
     const float PERCENTAGE_VIDEO_X=0.2f;
     const float RATIO=6.0f;
     struct LadderLine{
-        int lineVertOffset=0,lineVertCount=0;
-        int textVertOffset=0,textVertCount=0;
+        // the value this line refers to
+        int valueDegree=0;
+        // begin and end of the colored vertices for this line
+        std::size_t lineVertOffset=0,lineVertCount=0;
+        // begin and end of the text vertices for this line
+        std::size_t textVertOffset=0,textVertCount=0;
     };
     LadderLine LadderLines[1];
     float degreeToYTranslationFactor;
     std::vector<LadderLine> offsetsForLadderLines;
+    LadderLine* currLadderLineClosestToTheMiddle=nullptr;
+    //
+    std::size_t currLineOffset,currLineCount;
+    std::size_t currTextOffset,currTextCount;
     //
     ColoredGLMeshBuffer mGLBuff3DModel;
     glm::mat4 mModelM3DModel;

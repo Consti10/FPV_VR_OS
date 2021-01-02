@@ -10,6 +10,7 @@
 #include <ColoredGeometry.hpp>
 
 // Used to place the OSD elements in world space.
+// Since OSD elements are only in 2D space, this has no "Z" value
 class IPositionable{
 public:
     struct Rect2D{
@@ -36,6 +37,7 @@ public:
         mWidth=width;
         mHeight=height;
         setupPosition();
+        assert(mZ==0.0f);
     };
     void setWorldPosition(const Rect2D& rect2D){
         mX=rect2D.mX;
@@ -44,6 +46,7 @@ public:
         mWidth=rect2D.mWidth;
         mHeight=rect2D.mHeight;
         setupPosition();
+        assert(mZ==0.0f);
     }
     void debug(const GLProgramVC& glProgramVc,const glm::mat4 ViewM,const glm::mat4 ProjM){
         auto tmp=ColoredGeometry::makeColoredRectangle({mX,mY,mZ},mWidth,mHeight,TrueColor2::GREEN);

@@ -31,7 +31,7 @@ static void addColoredLineHorizontalDashed(std::vector<ColoredVertex>& buff, con
     }
 }
 
-// adds exactly one OSD ladder line
+// adds colored geometry for exactly one OSD ladder line
 // it is centered around (0,@param y) and has a width of @param w, leaving a gap in the middle of @param spaceToLeaveFreeInTheMiddle
 static void addColoredLineHorizontalCustom(std::vector<ColoredVertex>& buff, const float y, const float w,const TrueColor color1,const float spaceToLeaveFreeInTheMiddle,const bool useDashes){
     const glm::vec2 beginLeft=glm::vec2(-w/2.0f,y);
@@ -76,21 +76,20 @@ void AHorizon::setupPosition() {
             const float y=(float)i*deltaBetweenLines;
             // the one at 0° has no text and is "bigger"
             if(i==0){
-                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/2.0f, y},(lineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
-                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{spaceInTheMiddle*0.5f, y},(lineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                const auto offsetBefore=tmpBuffOtherLadderLines.size();
+                addColoredLineHorizontalCustom(tmpBuffOtherLadderLines,y,mWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR,spaceInTheMiddle,false);
+                offsetsForLadderLines.push_back({i,offsetBefore,tmpBuffOtherLadderLines.size()-offsetBefore,tmpBuffOtherLadderLinesText.size(),0});
                 continue;
             }
+            const auto offsetBeforeLines=tmpBuffOtherLadderLines.size();
+            const auto offsetBeforeText=tmpBuffOtherLadderLinesText.size();
 
             // make a longer line with text on the side
             const std::wstring text=std::to_wstring(std::abs(i));
             const float textLength=GLProgramText::getStringLength(text, charHeight);
+            const bool useDashes=i<0;
             // in the negative range the lines are dashed
-            if(i>0){
-                addColoredLineHorizontalCustom(tmpBuffOtherLadderLines,y,lineWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR,spaceInTheMiddle,false);
-            }else{
-                addColoredLineHorizontalCustom(tmpBuffOtherLadderLines,y,lineWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR,spaceInTheMiddle,true);
-            }
-
+            addColoredLineHorizontalCustom(tmpBuffOtherLadderLines,y,lineWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR,spaceInTheMiddle,useDashes);
             // if we are in the positive / negative range also add an indicator for up/down
             // this adds the vertical dashes on the left/right side pointing up/down for negative/positive values, respectively
             if(i>0){
@@ -107,20 +106,13 @@ void AHorizon::setupPosition() {
             //
             GLProgramText::appendString(tmpBuffOtherLadderLinesText,-mWidth/2.0f,y-(charHeight*0.5f), 0, charHeight, text, textColor);
             GLProgramText::appendString(tmpBuffOtherLadderLinesText,(mWidth*0.5f)-textLength,y-(charHeight*0.5f), 0, charHeight, text, textColor);
-
+            offsetsForLadderLines.push_back({i,offsetBeforeLines,tmpBuffOtherLadderLines.size()-offsetBeforeLines,offsetBeforeText,tmpBuffOtherLadderLinesText.size()-offsetBeforeText});
         }
         mGLBuffLadderLinesOther.uploadGL(tmpBuffOtherLadderLines);
         mGLBuffLadderLinesOtherText.uploadGL(tmpBuffOtherLadderLinesText);
+        assert(offsetsForLadderLines.size()==count);
     }
 
-    //make the middle triangle
-    {
-        /*float middleTriangleWidthHeight=mWidth/16.0f;
-        ColoredGeometry::makeColoredTriangle1(mMiddleTriangleBuff->modify(),
-                             glm::vec3(mX+mWidth/2.0f-middleTriangleWidthHeight/2.0f,mY+mHeight/2.0f-middleTriangleWidthHeight/2.0f,mZ),
-                             middleTriangleWidthHeight,middleTriangleWidthHeight,
-                                              TrueColor2::GREEN);*/
-    }
     //create the 3D model
     {
         float hW=mWidth/2.0f;
@@ -135,7 +127,7 @@ void AHorizon::updateGL() {
     float rollDegree= mTelemetryReceiver.getUAVTelemetryData().Roll_Deg;
     //float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
     //float pitchDegree= lol;
-    float pitchDegree=0.0f;
+    float pitchDegree=10.0f;
     lol+=0.1;
     if(!mOptions.roll){
         rollDegree=0.0f;
@@ -149,12 +141,14 @@ void AHorizon::updateGL() {
     if(mOptions.invPitch){
         pitchDegree*=-1.0f;
     }
-    //for the 3d Model:
-    glm::mat4 translM = glm::translate(glm::mat4(1.0f),glm::vec3(mX+mWidth/2.0f,mY+mHeight/2.0f,mZ));
-    glm::mat4 rotateM=glm::mat4(1.0f);
-    rotateM=glm::rotate(rotateM,glm::radians(pitchDegree), glm::vec3(1.0f, 0.0f, 0.0f));
-    rotateM=glm::rotate(rotateM,glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
-    mModelM3DModel=translM*rotateM;
+    {
+        //for the 3d Model:
+        glm::mat4 translM = glm::translate(glm::mat4(1.0f),glm::vec3(mX+mWidth/2.0f,mY+mHeight/2.0f,mZ));
+        glm::mat4 rotateM=glm::mat4(1.0f);
+        rotateM=glm::rotate(rotateM,glm::radians(pitchDegree), glm::vec3(1.0f, 0.0f, 0.0f));
+        rotateM=glm::rotate(rotateM,glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
+        mModelM3DModel=translM*rotateM;
+    }
 
     //we need the pitchDegree expressed in the range from -90 to 90 degrees.
     //where +90 stays +90 and +91 becomes -89
@@ -175,6 +169,18 @@ void AHorizon::updateGL() {
     glm::mat4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
     glm::mat4 originTranslationM = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,mZ));
     mModelMLadders=rollRotationM*(originTranslationM*pitchTranslationM);
+    //
+    for(int i=0;i<offsetsForLadderLines.size();i++){
+        if(offsetsForLadderLines[i].valueDegree==(int)pitchTranslationFactor){
+            currLadderLineClosestToTheMiddle=&offsetsForLadderLines[i];
+            break;
+        }
+    }
+    assert(currLadderLineClosestToTheMiddle!= nullptr);
+    //currLadderLineClosestToTheMiddle=&offsetsForLadderLines.at((int)pi)
+    currLineOffset=currLadderLineClosestToTheMiddle->lineVertOffset;
+    currLineCount=currLadderLineClosestToTheMiddle->lineVertCount;
+
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
@@ -198,9 +204,14 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
 
     // draw the lines for "other lines"
     glLineWidth(2.0f);
-    mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
+
+    /*mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
     mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,0,mGLBuffLadderLinesOther.getCount(),GL_LINES);
+    mGLPrograms.vc.afterDraw();*/
+    mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
+    mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,currLineOffset,currLineCount,GL_LINES);
     mGLPrograms.vc.afterDraw();
+
     // draw the text for "other lines"
     const glm::mat4 mvp=ProjM*(ViewM*mModelMLadders);
     mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText.getGLBufferId());
