@@ -178,7 +178,6 @@ void AHorizon::updateGL() {
     //currLadderLineClosestToTheMiddle=&offsetsForLadderLines.at((int)pi)
     currLineOffset=currLadderLineClosestToTheMiddle->lineVertOffset;
     currLineCount=currLadderLineClosestToTheMiddle->lineVertCount;
-
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
