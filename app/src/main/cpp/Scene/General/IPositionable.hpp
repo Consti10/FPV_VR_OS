@@ -53,7 +53,7 @@ public:
     }
 protected:
     float mX,mY;
-    const float mZ=0.0f;
+    //const float mZ=0.0f;
     float mWidth,mHeight;
 protected:
     virtual void setupPosition()=0;

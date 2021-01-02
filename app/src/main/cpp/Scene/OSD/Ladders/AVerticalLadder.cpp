@@ -30,7 +30,7 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
 void AVerticalLadder::setupPosition() {
     const auto lineColor=settingsOSDStyle.OSD_LINE_FILL_COLOR;
     //create the background
-    mBackgroundObj.setPosition(mX,mY,mZ,mWidth,mHeight);
+    mBackgroundObj.setPosition(mX,mY,mWidth,mHeight);
     mBackgroundObj.recalculateData();
     //
     const float longLinesWidth=mWidth*1.0f/4.0f;
@@ -47,11 +47,11 @@ void AVerticalLadder::setupPosition() {
             const auto FILL_COLOR=settingsOSDStyle.OSD_LINE_FILL_COLOR;
             const auto OUTLINE_COLOR=settingsOSDStyle.OSD_LINE_OUTLINE_COLOR;
             if(LEFT_HANDED){
-                const glm::vec3 start=glm::vec3(mX + mWidth - width,mY+ i*distanceBetweenLines,mZ);
+                const glm::vec3 start=glm::vec3(mX + mWidth - width,mY+ i*distanceBetweenLines,0);
                 const glm::vec3 end=start+glm::vec3(width,0,0);
                 GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,FILL_COLOR,OUTLINE_COLOR);
             }else{
-                const glm::vec3 start=glm::vec3(mX,mY + i * distanceBetweenLines,mZ);
+                const glm::vec3 start=glm::vec3(mX,mY + i * distanceBetweenLines,0);
                 const glm::vec3 end=start+glm::vec3(width,0,0);
                 GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,FILL_COLOR,OUTLINE_COLOR);
             }
@@ -100,7 +100,7 @@ void AVerticalLadder::updateLadderStringsRange(int newMiddleValue) {
         if(s.length()>MAX_N_CHARS_PER_LADDER_STRING){
             s=L"E";
         }
-        float x,y,z=mZ,h;
+        float x,y,z=0.0f,h;
         if(LEFT_HANDED){
             float length=GLProgramText::getStringLength(s,ladderTextHeight);
             x=mX + mWidth * 2.0f / 3.0f - length;

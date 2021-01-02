@@ -45,13 +45,13 @@ void CompassLadder::setupPosition() {
         int offset=0;
         for(int i=0;i<N_EXISTING_LADDER_LINES;i+=4){
             glm::vec3 start;
-            start=glm::vec3(mX + (0 + i) * d_between_lines,ladderLinesStartY, mZ);
+            start=glm::vec3(mX + (0 + i) * d_between_lines,ladderLinesStartY,0);
             GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-            start=glm::vec3(mX + (1 + i) * d_between_lines,ladderLinesStartY, mZ);
+            start=glm::vec3(mX + (1 + i) * d_between_lines,ladderLinesStartY, 0);
             GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-            start=glm::vec3(mX + (2 + i) * d_between_lines,ladderLinesStartY, mZ);
+            start=glm::vec3(mX + (2 + i) * d_between_lines,ladderLinesStartY, 0);
             GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-            start=glm::vec3(mX + (3 + i) * d_between_lines,ladderLinesStartY, mZ);
+            start=glm::vec3(mX + (3 + i) * d_between_lines,ladderLinesStartY, 0);
             GLProgramLine::convertLineToRenderingData(start,start+glm::vec3(0,ladderLinesHeight,0),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
         }
         mGLLadderLinesB.uploadGL(tmp);
@@ -64,49 +64,49 @@ void CompassLadder::setupPosition() {
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"S",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 0,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"S",
+                                                    nwseCharsStartY, 0, nwseCharsHeight, L"S",
                                                     textColor,
                                                     tmp.data(), 0);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"W",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 1,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"W",
+                                                    nwseCharsStartY, 0, nwseCharsHeight, L"W",
                                                     textColor,
                                                     tmp.data(), 1);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"N",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 2,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"N",
+                                                    nwseCharsStartY, 0, nwseCharsHeight, L"N",
                                                     textColor,
                                                     tmp.data(), 2);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"E",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 3,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"E",
+                                                    nwseCharsStartY, 0, nwseCharsHeight, L"E",
                                                     textColor,
                                                     tmp.data(), 3);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"S",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 4,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"S",
+                                                    nwseCharsStartY, 0, nwseCharsHeight, L"S",
                                                     textColor,
                                                     tmp.data(), 4);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"W",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 5,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"W",
+                                                    nwseCharsStartY,0, nwseCharsHeight, L"W",
                                                     textColor,
                                                     tmp.data(), 5);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"N",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 6,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"N",
+                                                    nwseCharsStartY,0, nwseCharsHeight, L"N",
                                                     textColor,
                                                     tmp.data(), 6);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"E",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 7,
-                                                    nwseCharsStartY, mZ, nwseCharsHeight, L"E",
+                                                    nwseCharsStartY, 0, nwseCharsHeight, L"E",
                                                     textColor,
                                                     tmp.data(), 7);
         mGLLadderTextB.uploadGL(tmp);
@@ -119,7 +119,7 @@ void CompassLadder::setupPosition() {
         std::wstring wstring1;
         wstring1+=GLProgramText::ICON_HOME;
         GLProgramText::convertStringToRenderingData(mX - home_arrow_width_height / 2.0f,
-                                                    haStartY, mZ,
+                                                    haStartY, 0,
                                                     home_arrow_width_height, wstring1,
                                                     TrueColor2::GREEN, tmp.data(), 0);
         mGLHomeIconB.uploadGL(tmp);
@@ -127,13 +127,13 @@ void CompassLadder::setupPosition() {
     //create the middle arrow
     {
         float middle_arrow_width_height=mHeight/8.0f;
-        const glm::vec3 p1(mX+mWidth/2.0f,mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-middle_arrow_width_height/2.0f,mZ);
+        const glm::vec3 p1(mX+mWidth/2.0f,mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-middle_arrow_width_height/2.0f,0);
         const glm::vec3 p2(p1.x+middle_arrow_width_height,p1.y+middle_arrow_width_height,p1.z);
         const glm::vec3 p3(p1.x-middle_arrow_width_height,p1.y+middle_arrow_width_height,p1.z);
         ColoredGeometry::makeColoredTriangle(mMiddleArrow->modify(),p1,p2,p3,lineColor,lineColor,lineColor);
     }
 //create the background rectangle
-    mBackgroundObj.setPosition(mX,mY,mZ,mWidth,mHeight);
+    mBackgroundObj.setPosition(mX,mY,mWidth,mHeight);
     mBackgroundObj.recalculateData();
 }
 

@@ -143,11 +143,10 @@ void AHorizon::updateGL() {
     }
     {
         //for the 3d Model:
-        glm::mat4 translM = glm::translate(glm::mat4(1.0f),glm::vec3(mX+mWidth/2.0f,mY+mHeight/2.0f,mZ));
         glm::mat4 rotateM=glm::mat4(1.0f);
         rotateM=glm::rotate(rotateM,glm::radians(pitchDegree), glm::vec3(1.0f, 0.0f, 0.0f));
         rotateM=glm::rotate(rotateM,glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
-        mModelM3DModel=translM*rotateM;
+        mModelM3DModel=rotateM;
     }
 
     //we need the pitchDegree expressed in the range from -90 to 90 degrees.
@@ -167,8 +166,7 @@ void AHorizon::updateGL() {
     glm::mat4 rollRotationM=glm::rotate(glm::mat4(1.0f),glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
     const float pitchTranslY=pitchTranslationFactor*degreeToYTranslationFactor;
     glm::mat4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
-    glm::mat4 originTranslationM = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,mZ));
-    mModelMLadders=rollRotationM*(originTranslationM*pitchTranslationM);
+    mModelMLadders=rollRotationM*(pitchTranslationM);
     //
     for(int i=0;i<offsetsForLadderLines.size();i++){
         if(offsetsForLadderLines[i].valueDegree==(int)pitchTranslationFactor){

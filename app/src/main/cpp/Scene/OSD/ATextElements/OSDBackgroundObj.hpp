@@ -24,7 +24,7 @@ public:
             mBackgroundColor(backgroundColor){
         backgroundBuffer=batchingManager.allocateVCTriangles(N_BACKGROUND_VERTICES);
     }
-    void setPosition(float x, float y, float z, float w, float h){
+    void setPosition(float x, float y,float w, float h){
         mPosition.X=x;
         mPosition.Y=y;
         mPosition.Width=w;
