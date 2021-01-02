@@ -44,14 +44,8 @@ static void addColoredLineHorizontalCustom(std::vector<ColoredVertex>& buff, con
         ColoredGeometry::addColoredLineHorizontal(buff,beginLeft,lineWidthLeftOrRight,color1);
         ColoredGeometry::addColoredLineHorizontal(buff,beginRight,lineWidthLeftOrRight,color1);
     }
-    
 }
 
-// this adds the vertical dashes on the left/right side pointing up/down for negative/positive values, respectively
-static void addSideDashesVertical(std::vector<ColoredVertex>& buff,const float y,const float offsetLeftRight,const TrueColor color1){
-    ColoredGeometry::addColoredLineVertical(buff,{-offsetLeftRight*0.5f, y},-charHeight*0.5f,color1);
-    ColoredGeometry::addColoredLineVertical(buff,{offsetLeftRight*0.5f, y},-charHeight*0.5f,color1);
-}
 
 //
 void AHorizon::setupPosition() {
@@ -98,6 +92,7 @@ void AHorizon::setupPosition() {
             }
 
             // if we are in the positive / negative range also add an indicator for up/down
+            // this adds the vertical dashes on the left/right side pointing up/down for negative/positive values, respectively
             if(i>0){
                 ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{-lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
                 ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
