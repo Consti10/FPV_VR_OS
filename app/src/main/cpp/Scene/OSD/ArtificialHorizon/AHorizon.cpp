@@ -32,6 +32,11 @@ void AHorizon::setupPosition() {
         LadderLines[0].vertOffset=0;
         LadderLines[0].vertCount=6;
     }
+    const float spaceInTheMiddle=mWidth*0.2f;
+    // make the "middle element" that doesn't move
+    {
+        mMiddleElementBuff.setData(createMiddleIconData(spaceInTheMiddle,spaceInTheMiddle*0.2f));
+    }
     // the other ladders
     {
         std::vector<ColoredVertex> tmpBuffOtherLadderLines;
@@ -40,19 +45,35 @@ void AHorizon::setupPosition() {
         const float lineWidth=mWidth-GLProgramText::getStringLength(L"80",charHeight)*2.0f;
         const float deltaBetweenLines=mHeight/180.0f;
         int count=0;
-        for(int i=-80;i<90;i+=10){
+        for(int i=-180;i<=180;i+=10){
             count++;
             // skip the one in the middle (this one has an outline)
-            if(i==0)continue;
+            //if(i==0)continue;
             const float y=(float)i*deltaBetweenLines;
             if(count % 2 == 0){
-                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/4.0f, y},lineWidth/2.0f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                const float shortLineWidth=lineWidth*0.5f;
+                // make a short line without text
+                //ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/4.0f, y},lineWidth/2.0f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-shortLineWidth*0.5f, y},(shortLineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{spaceInTheMiddle*0.5f, y},(shortLineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
             }else{
-                const std::wstring wstring=std::to_wstring(i);
-                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/2.0f, y},lineWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                // make a longer line with text on the side
+                const std::wstring text=std::to_wstring(std::abs(i));
+                const float textLength=GLProgramText::getStringLength(text, charHeight);
+                //ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/2.0f, y},lineWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/2.0f, y},(lineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{spaceInTheMiddle*0.5f, y},(lineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                // if we are in the positive / negative range also add an indicator for up/down
+                if(i>0){
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{-lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                }else if(i<0){
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{-lineWidth*0.5f, y},charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{lineWidth*0.5f, y},charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                }
                 //
-                GLProgramText::appendString(tmpBuffOtherLadderLinesText,-mWidth/2.0f,y-(charHeight*0.5f),0,charHeight,wstring,settingsOSDStyle.OSD_LINE_FILL_COLOR);
-                GLProgramText::appendString(tmpBuffOtherLadderLinesText,lineWidth/2.0f,y-(charHeight*0.5f),0,charHeight,wstring,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                GLProgramText::appendString(tmpBuffOtherLadderLinesText,-mWidth/2.0f,y-(charHeight*0.5f), 0, charHeight, text, settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                GLProgramText::appendString(tmpBuffOtherLadderLinesText,(mWidth*0.5f)-textLength,y-(charHeight*0.5f), 0, charHeight, text, settingsOSDStyle.OSD_LINE_FILL_COLOR);
             }
         }
         mGLBuffLadderLinesOther.uploadGL(tmpBuffOtherLadderLines);
@@ -61,11 +82,11 @@ void AHorizon::setupPosition() {
 
     //make the middle triangle
     {
-        float middleTriangleWidthHeight=mWidth/16.0f;
+        /*float middleTriangleWidthHeight=mWidth/16.0f;
         ColoredGeometry::makeColoredTriangle1(mMiddleTriangleBuff->modify(),
                              glm::vec3(mX+mWidth/2.0f-middleTriangleWidthHeight/2.0f,mY+mHeight/2.0f-middleTriangleWidthHeight/2.0f,mZ),
                              middleTriangleWidthHeight,middleTriangleWidthHeight,
-                                              TrueColor2::GREEN);
+                                              TrueColor2::GREEN);*/
     }
     //create the 3D model
     {
@@ -81,6 +102,7 @@ void AHorizon::updateGL() {
     float rollDegree= mTelemetryReceiver.getUAVTelemetryData().Roll_Deg;
     float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
     //float pitchDegree= lol;
+    //float pitchDegree=0;
     lol+=0.1;
     if(!mOptions.roll){
         rollDegree=0.0f;
@@ -123,7 +145,7 @@ void AHorizon::updateGL() {
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-    debug(mGLPrograms.vc,ViewM,ProjM);
+    //debug(mGLPrograms.vc,ViewM,ProjM);
 
     //middle triangle is rendered by batching manager
 
@@ -137,7 +159,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     if(mOptions.mode==MODE_2D_LADDERS
        || mOptions.mode==MODE_BOTH_TOGETHER){
         mGLPrograms.line.beforeDraw(mGLBuffLadders.getGLBufferId());
-        mGLPrograms.line.draw(ViewM*mModelMLadders,ProjM,LadderLines[0].vertOffset,LadderLines[0].vertCount);
+        //mGLPrograms.line.draw(ViewM*mModelMLadders,ProjM,LadderLines[0].vertOffset,LadderLines[0].vertCount);
         mGLPrograms.line.afterDraw();
     }
     //
@@ -150,6 +172,8 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText.getGLBufferId());
     mGLPrograms.text.draw(mvp,0,mGLBuffLadderLinesOtherText.getCount()*6);
     mGLPrograms.text.afterDraw();
+
+    mGLPrograms.vc.drawX(ViewM,ProjM,mMiddleElementBuff);
 }
 
 IPositionable::Rect2D AHorizon::calculatePosition(const IPositionable::Rect2D &osdOverlay,const int GLOBAL_SCALE) {
@@ -185,5 +209,21 @@ ColoredMeshData AHorizon::create3DModelData(float hW, float sixtW) {
             ColoredVertex{0.0f-hW+(hW/4.0f),0.0f,0.0f-hW,TrueColor2::RED}
     };
     return ColoredMeshData(vertices,GL_TRIANGLES);
+}
+
+ColoredMeshData AHorizon::createMiddleIconData(float width,float height) {
+    std::vector<ColoredVertex> tmp;
+    tmp.reserve(64);
+    const float height1=height*0.5f;
+    const float width1=width-height1;
+    auto lineHorizontal1=ColoredGeometry::makeColoredRectangle({-width/2.0f,-height1/2.0f,0},width,height1,TrueColor2::RED);
+    //auto lineHorizontal2=ColoredGeometry::makeColoredRectangle({-width/2.0f,-height1/2.0f,0},width,height1,TrueColor2::RED);
+    //
+    const float strokeW=height1;
+    auto lineVertical=ColoredGeometry::makeColoredRectangle({-strokeW/2.0f,0,0},strokeW,height,TrueColor2::RED);
+    tmp.insert(tmp.end(),lineHorizontal1.begin(),lineHorizontal1.end());
+    //tmp.insert(tmp.end(),lineHorizontal2.begin(),lineHorizontal2.end());
+    tmp.insert(tmp.end(),lineVertical.begin(),lineVertical.end());
+    return ColoredMeshData(tmp,GL_TRIANGLES);
 }
 

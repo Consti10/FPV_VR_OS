@@ -45,6 +45,7 @@ private:
     void updateGL() override;
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) override;
     static ColoredMeshData create3DModelData(float hw,float sixtW);
+    static ColoredMeshData createMiddleIconData(float width,float height);
     const BasicGLPrograms& mGLPrograms;
     const SettingsOSDStyle& settingsOSDStyle;
     const TelemetryReceiver& mTelemetryReceiver;
@@ -53,7 +54,7 @@ private:
     ModifiableArray<ColoredVertex>* mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;
-    const float RATIO=2.0f;
+    const float RATIO=3.0f;
     struct LadderLine{
         int vertOffset=0,vertCount=0;
     };
@@ -66,6 +67,7 @@ private:
     GLBuffer<ColoredVertex> mGLBuffLadderLinesOther;
     GLBuffer<GLProgramText::Character> mGLBuffLadderLinesOtherText;
     float lol=0;
+    ColoredGLMeshBuffer mMiddleElementBuff;
 };
 
 #endif //FPV_VR_OSD_ARTIFICIALHORIZON_H
