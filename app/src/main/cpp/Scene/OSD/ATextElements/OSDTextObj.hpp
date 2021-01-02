@@ -50,7 +50,7 @@ public:
         if(enableOutline){
             outlineBuffer= batchingManager.allocateVCLines(N_OUTLINE_VERTICES);
         }
-        setPosition(0,0,0,0,0);
+        setPosition(0,0,0,0);
         setTextSafe(L"INIT");
         recalculateDataIfNeeded();
     }
@@ -61,10 +61,9 @@ public:
         backgroundRecalculationNeeded=true;
     }
 
-    void setPosition(float x, float y, float z, float w, float h){
+    void setPosition(float x, float y,float w, float h){
         mPosition.X=x;
         mPosition.Y=y;
-        mPosition.Z=z;
         mPosition.Width=w;
         mPosition.Height=h;
         outlineRecalculationNeeded=true;

@@ -28,59 +28,59 @@ void TextElements2::setupPosition() {
             case TelemetryReceiver::EZWB_UPLINK_RC_RSSI:{
                 const float maxLength1=GLProgramText::getStringLength(L"-99dBmX",bigRowHeight);
                 tmp->setPosition(mX + mWidth - maxLength1,
-                                 mY + mHeight - bigRowHeight, mZ, maxLength1, bigRowHeight);
+                                 mY + mHeight - bigRowHeight, maxLength1, bigRowHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::EZWB_UPLINK_RC_BLOCKS:{
                 const float maxLength2=GLProgramText::getStringLength(L"1024/1024",mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength2,
-                                 mY + mHeight - bigRowHeight-mTextHeight, mZ, maxLength2, mTextHeight);
+                                 mY + mHeight - bigRowHeight-mTextHeight, maxLength2, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::EZWB_STATUS_AIR:{
                 const float offset=(bigRowHeight+mTextHeight);
                 const float maxLength3=GLProgramText::getStringLength(L"Gnd 100% 999*",mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength3,
-                                 mY + mHeight - (offset+mTextHeight), mZ, maxLength3, mTextHeight);
+                                 mY + mHeight - (offset+mTextHeight), maxLength3, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::EZWB_STATUS_GROUND:{
                 const float offset=(bigRowHeight+mTextHeight);
                 const float maxLength3=GLProgramText::getStringLength(L"Gnd 100% 999*",mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength3,
-                                 mY + mHeight - (offset+mTextHeight*2), mZ, maxLength3, mTextHeight);
+                                 mY + mHeight - (offset+mTextHeight*2), maxLength3, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             //lower right corner
             case TelemetryReceiver::VS:{
                 float maxLength2=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_2_1,mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength2,
-                                 mY + mTextHeight * 3, mZ, maxLength2, mTextHeight);
+                                 mY + mTextHeight * 3, maxLength2, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::HS_GROUND:{
                 float maxLength2=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_2_1,mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength2,
-                                 mY + mTextHeight * 2, mZ, maxLength2, mTextHeight);
+                                 mY + mTextHeight * 2, maxLength2, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::LATITUDE:{
                 float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_2,mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength,
-                                 mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
+                                 mY + mTextHeight * 1, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::LONGITUDE:{
                 float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_2,mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength,
-                                 mY + mTextHeight * 0, mZ, maxLength, mTextHeight);
+                                 mY + mTextHeight * 0, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::HOME_DISTANCE:{
                 float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_2,mTextHeight);
                 float maxLength2=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_2_1,mTextHeight);
                 tmp->setPosition(mX + mWidth - maxLength - maxLength2,
-                                 mY + mTextHeight * 0, mZ, maxLength2, mTextHeight);
+                                 mY + mTextHeight * 0, maxLength2, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             //lower middle
@@ -88,68 +88,68 @@ void TextElements2::setupPosition() {
             case TelemetryReceiver::FLIGHT_STATUS_MAV_ONLY:{
                 float maxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_FLIGHT_MODE,mTextHeight);
                 tmp->setPosition(mX + mWidth/2.0f - maxLength/2.0f,
-                                 mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
+                                 mY + mTextHeight * 1, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             //lower left corner
             case TelemetryReceiver::SATS_IN_USE:{
                 float maxLength=GLProgramText::getStringLength(L"100 %",mTextHeight);
-                tmp->setPosition(mX, mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
+                tmp->setPosition(mX, mY + mTextHeight * 1, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::BATT_PERCENTAGE:{
                 float maxLength=GLProgramText::getStringLength(L"100 %",mTextHeight);
-                tmp->setPosition(mX, mY + mTextHeight * 0, mZ, maxLength, mTextHeight);
+                tmp->setPosition(mX, mY + mTextHeight * 0, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::BATT_VOLTAGE:{
                 float maxLength=GLProgramText::getStringLength(L"99.99 V",mTextHeight);
-                tmp->setPosition(mX + maxLength, mY + mTextHeight * 1, mZ, maxLength, mTextHeight);
+                tmp->setPosition(mX + maxLength, mY + mTextHeight * 1, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             case TelemetryReceiver::BATT_CURRENT:{
                 float maxLength=GLProgramText::getStringLength(L"99.99 V",mTextHeight);
-                tmp->setPosition(mX + maxLength, mY + mTextHeight * 0, mZ, maxLength, mTextHeight);
+                tmp->setPosition(mX + maxLength, mY + mTextHeight * 0, maxLength, mTextHeight);
                 tmp->setBounds(OSDTextObj::RIGHT);
             }break;
             //upper left corner
             case TelemetryReceiver::EZWB_DOWNLINK_VIDEO_RSSI:{
                 float te1MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_1,bigRowHeight);
-                tmp->setPosition(mX, mY + mHeight - bigRowHeight, mZ, te1MaxLength, bigRowHeight);
+                tmp->setPosition(mX, mY + mHeight - bigRowHeight, te1MaxLength, bigRowHeight);
             }break;
             case TelemetryReceiver::EZWB_DOWNLINK_VIDEO_RSSI2:{
                 float te1MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_1,bigRowHeight);
                 float te2MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_2,bigRowHeight);
-                tmp->setPosition(mX + te1MaxLength, mY + mHeight - bigRowHeight, mZ, te2MaxLength,
+                tmp->setPosition(mX + te1MaxLength, mY + mHeight - bigRowHeight, te2MaxLength,
                                  bigRowHeight);
             }break;
             case TelemetryReceiver::EZWB_BLOCKS:{
                 float te3MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_3,smallRowHeight);
-                tmp->setPosition(mX, mY + mHeight - bigRowHeight - mTextHeight, mZ, te3MaxLength,
+                tmp->setPosition(mX, mY + mHeight - bigRowHeight - mTextHeight, te3MaxLength,
                                  mTextHeight);
             }break;
             case TelemetryReceiver::EZWB_RSSI_ADAPTER0:{
                 float te3MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_3,smallRowHeight);
                 float startY=mY+mHeight-bigRowHeight-mTextHeight-smallRowHeight;
-                tmp->setPosition(mX, startY - 0 * smallRowHeight, mZ, te3MaxLength,
+                tmp->setPosition(mX, startY - 0 * smallRowHeight, te3MaxLength,
                                  smallRowHeight);
             }break;
             case TelemetryReceiver::EZWB_RSSI_ADAPTER1:{
                 float te3MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_3,smallRowHeight);
                 float startY=mY+mHeight-bigRowHeight-mTextHeight-smallRowHeight;
-                tmp->setPosition(mX, startY - 1 * smallRowHeight, mZ, te3MaxLength,
+                tmp->setPosition(mX, startY - 1 * smallRowHeight, te3MaxLength,
                                  smallRowHeight);
             }break;
             case TelemetryReceiver::EZWB_RSSI_ADAPTER2:{
                 float te3MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_3,smallRowHeight);
                 float startY=mY+mHeight-bigRowHeight-mTextHeight-smallRowHeight;
-                tmp->setPosition(mX, startY - 2 * smallRowHeight, mZ, te3MaxLength,
+                tmp->setPosition(mX, startY - 2 * smallRowHeight, te3MaxLength,
                                  smallRowHeight);
             }break;
             case TelemetryReceiver::EZWB_RSSI_ADAPTER3:{
                 float te3MaxLength=GLProgramText::getStringLength(MAX_TEXT_LENGTH_REFERENCE_EZWB_3,smallRowHeight);
                 float startY=mY+mHeight-bigRowHeight-mTextHeight-smallRowHeight;
-                tmp->setPosition(mX, startY - 3 * smallRowHeight, mZ, te3MaxLength,
+                tmp->setPosition(mX, startY - 3 * smallRowHeight, te3MaxLength,
                                  smallRowHeight);
             }break;
             default:

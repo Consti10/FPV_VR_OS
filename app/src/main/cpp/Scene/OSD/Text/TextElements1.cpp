@@ -43,8 +43,7 @@ void TextElements1::setupPosition() {
             auto& tmp=mGLTextObjIndices.at(i);
             tmp->setBounds(OSDTextObj::MIDDLE);
             tmp->setPosition(rectUpperText.mX + row * textObjW,
-                             rectUpperText.mY + rectUpperText.mHeight - (column + 1) * textObjH,
-                             rectUpperText.mZ, textObjW, textObjH);
+                             rectUpperText.mY + rectUpperText.mHeight - (column + 1) * textObjH,textObjW, textObjH);
             idxVect++;
         }
             //then, fill the lower rectangle with text
@@ -55,7 +54,7 @@ void TextElements1::setupPosition() {
             tmp->setBounds(OSDTextObj::MIDDLE);
             tmp->setPosition(rectLowerText.mX + row * textObjW,
                              rectLowerText.mY + rectLowerText.mHeight - (column + 1) * textObjH,
-                             rectLowerText.mZ, textObjW, textObjH);
+                              textObjW, textObjH);
             idxVect++;
         }
     }

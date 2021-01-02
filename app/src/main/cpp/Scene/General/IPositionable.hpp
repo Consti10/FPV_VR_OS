@@ -15,48 +15,45 @@ class IPositionable{
 public:
     struct Rect2D{
         Rect2D(const float x,const float y,const float z,const float width,const float height):
-        mX(x),mY(y),mZ(z),mWidth(width),mHeight(height){}
+        mX(x),mY(y),mWidth(width),mHeight(height){}
         const float mX;
         const float mY;
-        const float mZ;
+        const float mZ=0.0f;
         const float mWidth;
         const float mHeight;
     };
     struct Rect2D_{
         float X;
         float Y;
-        float Z;
+        const float Z=0.0f;
         float Width;
         float Height;
     };
 public:
-    void setWorldPosition(const float x,const float y,const float z,const float width,const float height){
+    void setWorldPosition(const float x,const float y,const float width,const float height){
         mX=x;
         mY=y;
-        mZ=z;
         mWidth=width;
         mHeight=height;
         setupPosition();
-        assert(mZ==0.0f);
     };
     void setWorldPosition(const Rect2D& rect2D){
         mX=rect2D.mX;
         mY=rect2D.mY;
-        mZ=rect2D.mZ;
         mWidth=rect2D.mWidth;
         mHeight=rect2D.mHeight;
         setupPosition();
-        assert(mZ==0.0f);
     }
     void debug(const GLProgramVC& glProgramVc,const glm::mat4 ViewM,const glm::mat4 ProjM){
-        auto tmp=ColoredGeometry::makeColoredRectangle({mX,mY,mZ},mWidth,mHeight,TrueColor2::GREEN);
+        auto tmp=ColoredGeometry::makeColoredRectangle({mX,mY,0},mWidth,mHeight,TrueColor2::GREEN);
         mGLBuffDebug.uploadGL(tmp);
         glProgramVc.beforeDraw(mGLBuffDebug.getGLBufferId());
         glProgramVc.draw(ViewM,ProjM,0,mGLBuffDebug.getCount(),GL_TRIANGLES);
         glProgramVc.afterDraw();
     }
 protected:
-    float mX,mY,mZ;
+    float mX,mY;
+    const float mZ=0.0f;
     float mWidth,mHeight;
 protected:
     virtual void setupPosition()=0;

@@ -76,7 +76,7 @@ void OSDRenderer::onSurfaceSizeChanged() {
     float te1HeightBottom=0;
     if(mTextElements1){
         mTextElements1->setTextHeight(textHeightMono);
-        mTextElements1->setWorldPosition(videoX, videoY, videoZ, videoW, videoH);
+        mTextElements1->setWorldPosition(videoX, videoY, videoW, videoH);
         glm::ivec3 cteH= mTextElements1->calculateRowsAndColumns(videoW);
         te1HeightTop=textHeightMono*cteH[1];
         te1HeightBottom=textHeightMono*cteH[2];

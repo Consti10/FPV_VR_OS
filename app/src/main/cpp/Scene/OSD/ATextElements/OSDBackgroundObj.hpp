@@ -27,7 +27,6 @@ public:
     void setPosition(float x, float y, float z, float w, float h){
         mPosition.X=x;
         mPosition.Y=y;
-        mPosition.Z=z;
         mPosition.Width=w;
         mPosition.Height=h;
     }

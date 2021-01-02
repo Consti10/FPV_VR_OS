@@ -30,7 +30,7 @@ void CompassLadder::setupPosition() {
         //OSDTextObj15* obj=mTextManager.getOSDTextObj15(mGLTextObjIndices.at(0));
         mTextObjTelemetryValue.setTextSafe(L"INIT");
         mTextObjTelemetryValue.setBounds(OSDTextObj::MIDDLE);
-        mTextObjTelemetryValue.setPosition(mX+mWidth/2.0f-currentHeadingElementWidth/2.0f,mY+mHeight-currentHeadingElementHeight,mZ,
+        mTextObjTelemetryValue.setPosition(mX+mWidth/2.0f-currentHeadingElementWidth/2.0f,mY+mHeight-currentHeadingElementHeight,
                          currentHeadingElementWidth,currentHeadingElementHeight);
         mTextObjTelemetryValue.recalculateDataIfNeeded();
     }

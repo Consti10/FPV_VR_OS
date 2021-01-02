@@ -19,7 +19,7 @@ void TEWarning::setupPosition() {
     float height=mHeight/3.0f;
     for(int i=0;i<MAX_N_TEXT_OBJ;i++){
         auto& obj=mGLTextObjIndices.at((unsigned long)i);
-        obj->setPosition(mX,mY+mHeight-(i+1)*height,mZ,width,height);
+        obj->setPosition(mX,mY+mHeight-(i+1)*height,width,height);
         obj->setBounds(OSDTextObj::MIDDLE);
         obj->recalculateDataIfNeeded();
     }

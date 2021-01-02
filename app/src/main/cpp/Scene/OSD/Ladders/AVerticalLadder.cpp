@@ -65,15 +65,15 @@ void AVerticalLadder::setupPosition() {
     outlineQuadHeight=outlineQuadWidth*7.0f/12.0f;
     mTextObjTelemetryValue.setTextSafe(L"INIT");
     if(LEFT_HANDED){
-        mTextObjTelemetryValue.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight/2.0f,mZ,
+        mTextObjTelemetryValue.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight/2.0f,
                                            outlineQuadWidth,outlineQuadHeight);
-        mTextObjMetric.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight,mZ,outlineQuadWidth,outlineQuadHeight/2.f);
+        mTextObjMetric.setPosition(mX,mY+mHeight/2.0f-outlineQuadHeight,outlineQuadWidth,outlineQuadHeight/2.f);
         mTextObjMetric.setTextSafe(mTelemetryReceiver.getTelemetryValue(TelemetryReceiver::HS_GROUND).metric);
         mTextObjMetric.recalculateDataIfNeeded();
     }else{
-        mTextObjTelemetryValue.setPosition(mX+longLinesWidth,mY+mHeight/2.0f-outlineQuadHeight/2.0f,mZ,
+        mTextObjTelemetryValue.setPosition(mX+longLinesWidth,mY+mHeight/2.0f-outlineQuadHeight/2.0f,
                                            outlineQuadWidth,outlineQuadHeight);
-        mTextObjMetric.setPosition(mX+longLinesWidth,mY+mHeight/2.0f-outlineQuadHeight,mZ,outlineQuadWidth,outlineQuadHeight/2.0f);
+        mTextObjMetric.setPosition(mX+longLinesWidth,mY+mHeight/2.0f-outlineQuadHeight,outlineQuadWidth,outlineQuadHeight/2.0f);
         mTextObjMetric.setBounds(OSDTextObj::BOUNDS::RIGHT);
         mTextObjMetric.setTextSafe(L"m");
         mTextObjMetric.recalculateDataIfNeeded();
