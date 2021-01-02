@@ -175,15 +175,12 @@ void AHorizon::updateGL() {
         }
     }
     assert(currLadderLineClosestToTheMiddle!= nullptr);
-    //currLadderLineClosestToTheMiddle=&offsetsForLadderLines.at((int)pi)
     currLineOffset=currLadderLineClosestToTheMiddle->lineVertOffset;
     currLineCount=currLadderLineClosestToTheMiddle->lineVertCount;
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //debug(mGLPrograms.vc,ViewM,ProjM);
-
-    //middle triangle is rendered by batching manager
 
     //Render the 3D Quadcopter representation
     if(mOptions.mode==MODE_3D_QUADCOPTER
