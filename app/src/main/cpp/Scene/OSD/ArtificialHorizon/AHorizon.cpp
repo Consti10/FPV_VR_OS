@@ -169,7 +169,7 @@ void AHorizon::updateGL() {
     mModelMLadders=rollRotationM*(pitchTranslationM);
     //
     for(int i=0;i<offsetsForLadderLines.size();i++){
-        if(offsetsForLadderLines[i].valueDegree==(int)pitchTranslationFactor){
+        if(offsetsForLadderLines[i].valueDegree==-(int)pitchTranslationFactor){
             currLadderLineClosestToTheMiddle=&offsetsForLadderLines[i];
             break;
         }
