@@ -47,9 +47,13 @@ void AHorizon::setupPosition() {
         int count=0;
         for(int i=-180;i<=180;i+=10){
             count++;
-            // skip the one in the middle (this one has an outline)
-            //if(i==0)continue;
             const float y=(float)i*deltaBetweenLines;
+            // the one at 0°
+            if(i==0){
+                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{-lineWidth/2.0f, y},(lineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                ColoredGeometry::addColoredLineHorizontal(tmpBuffOtherLadderLines,{spaceInTheMiddle*0.5f, y},(lineWidth-spaceInTheMiddle)*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                continue;
+            }
             if(count % 2 == 0){
                 const float shortLineWidth=lineWidth*0.5f;
                 // make a short line without text
@@ -104,9 +108,9 @@ void AHorizon::setupPosition() {
 
 void AHorizon::updateGL() {
     float rollDegree= mTelemetryReceiver.getUAVTelemetryData().Roll_Deg;
-    float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
+    //float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
     //float pitchDegree= lol;
-    //float pitchDegree=0;
+    float pitchDegree=0.0f;
     lol+=0.1;
     if(!mOptions.roll){
         rollDegree=0.0f;
@@ -166,12 +170,12 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
         //mGLPrograms.line.draw(ViewM*mModelMLadders,ProjM,LadderLines[0].vertOffset,LadderLines[0].vertCount);
         mGLPrograms.line.afterDraw();
     }
-    //
+    // draw the lines for "other lines"
     glLineWidth(2.0f);
     mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
     mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,0,mGLBuffLadderLinesOther.getCount(),GL_LINES);
     mGLPrograms.vc.afterDraw();
-    //
+    // draw the text for "other lines"
     const glm::mat4 mvp=ProjM*(ViewM*mModelMLadders);
     mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText.getGLBufferId());
     mGLPrograms.text.draw(mvp,0,mGLBuffLadderLinesOtherText.getCount()*6);
