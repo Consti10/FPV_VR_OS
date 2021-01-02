@@ -170,7 +170,7 @@ void AHorizon::updateGL() {
     glm::mat4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
     mModelMLadders=rollRotationM*(pitchTranslationM);
     //
-    int idxOfLadderLineClosestToMiddle=-1;
+    /*int idxOfLadderLineClosestToMiddle=-1;
     for(int i=0;i<offsetsForLadderLines.size();i++){
         if(offsetsForLadderLines[i].valueDegree==-(int)pitchTranslationFactor){
             idxOfLadderLineClosestToMiddle=i;
@@ -188,7 +188,7 @@ void AHorizon::updateGL() {
     for(int i=0;i<4;i++){
         currLineCount+=offsetsForLadderLines.at(idxOfLadderLineClosestToMiddle-2+i).lineVertCount;
         currTextCount+=offsetsForLadderLines.at(idxOfLadderLineClosestToMiddle-2+i).textVertCount;
-    }
+    }*/
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
@@ -211,12 +211,12 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     // draw the lines for "other lines"
     glLineWidth(2.0f);
 
-    /*mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
-    mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,0,mGLBuffLadderLinesOther.getCount(),GL_LINES);
-    mGLPrograms.vc.afterDraw();*/
     mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
-    mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,currLineOffset,currLineCount,GL_LINES);
+    mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,0,mGLBuffLadderLinesOther.getCount(),GL_LINES);
     mGLPrograms.vc.afterDraw();
+    /*mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
+    mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,currLineOffset,currLineCount,GL_LINES);
+    mGLPrograms.vc.afterDraw();*/
 
     // draw the text for "other lines"
     const glm::mat4 mvp=ProjM*(ViewM*mModelMLadders);
