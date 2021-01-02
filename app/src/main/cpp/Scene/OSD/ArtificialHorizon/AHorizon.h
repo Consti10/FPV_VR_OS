@@ -57,12 +57,14 @@ private:
     ModifiableArray<ColoredVertex>* mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;
-    const float RATIO=3.0f;
+    const float RATIO=6.0f;
     struct LadderLine{
-        int vertOffset=0,vertCount=0;
+        int lineVertOffset=0,lineVertCount=0;
+        int textVertOffset=0,textVertCount=0;
     };
     LadderLine LadderLines[1];
     float degreeToYTranslationFactor;
+    std::vector<LadderLine> offsetsForLadderLines;
     //
     ColoredGLMeshBuffer mGLBuff3DModel;
     glm::mat4 mModelM3DModel;
