@@ -104,9 +104,9 @@ void AHorizon::setupPosition() {
 
 void AHorizon::updateGL() {
     float rollDegree= mTelemetryReceiver.getUAVTelemetryData().Roll_Deg;
-    //float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
+    float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
     //float pitchDegree= lol;
-    float pitchDegree=0;
+    //float pitchDegree=0;
     lol+=0.1;
     if(!mOptions.roll){
         rollDegree=0.0f;
@@ -137,10 +137,10 @@ void AHorizon::updateGL() {
     //now pitchDegree is in the range of 0...360
     float pitchTranslationFactor=pitchDegree;
     //for the ladders, a rotation of 180° is the same as 0°
-    //pitchTranslationFactor=std::fmod(pitchTranslationFactor,180.0f);
-    //if(pitchTranslationFactor>90){
-    //    pitchTranslationFactor-=180;
-    //}
+    pitchTranslationFactor=std::fmod(pitchTranslationFactor,180.0f);
+    if(pitchTranslationFactor>90) {
+        pitchTranslationFactor -= 180;
+    }
     glm::mat4 rollRotationM=glm::rotate(glm::mat4(1.0f),glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
     const float pitchTranslY=pitchTranslationFactor*degreeToYTranslationFactor;
     glm::mat4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
