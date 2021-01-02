@@ -69,7 +69,6 @@ private:
     LadderLine LadderLines[1];
     float degreeToYTranslationFactor;
     std::vector<LadderLine> offsetsForLadderLines;
-    LadderLine* currLadderLineClosestToTheMiddle=nullptr;
     //
     std::size_t currLineOffset,currLineCount;
     std::size_t currTextOffset,currTextCount;

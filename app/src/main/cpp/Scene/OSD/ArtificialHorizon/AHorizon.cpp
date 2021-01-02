@@ -126,9 +126,9 @@ void AHorizon::setupPosition() {
 void AHorizon::updateGL() {
     float rollDegree= mTelemetryReceiver.getUAVTelemetryData().Roll_Deg;
     //float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
-    //float pitchDegree= lol;
-    float pitchDegree=10.0f;
-    lol+=0.1;
+    float pitchDegree= lol;
+    //float pitchDegree=10.0f;
+    lol+=0.05;
     if(!mOptions.roll){
         rollDegree=0.0f;
     }
@@ -163,20 +163,32 @@ void AHorizon::updateGL() {
     if(pitchTranslationFactor>90) {
         pitchTranslationFactor -= 180;
     }
+    assert(pitchTranslationFactor>=-90.0f && pitchTranslationFactor<=90.0f);
+
     glm::mat4 rollRotationM=glm::rotate(glm::mat4(1.0f),glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
     const float pitchTranslY=pitchTranslationFactor*degreeToYTranslationFactor;
     glm::mat4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
     mModelMLadders=rollRotationM*(pitchTranslationM);
     //
+    int idxOfLadderLineClosestToMiddle=-1;
     for(int i=0;i<offsetsForLadderLines.size();i++){
         if(offsetsForLadderLines[i].valueDegree==-(int)pitchTranslationFactor){
-            currLadderLineClosestToTheMiddle=&offsetsForLadderLines[i];
+            idxOfLadderLineClosestToMiddle=i;
             break;
         }
     }
-    assert(currLadderLineClosestToTheMiddle!= nullptr);
-    currLineOffset=currLadderLineClosestToTheMiddle->lineVertOffset;
-    currLineCount=currLadderLineClosestToTheMiddle->lineVertCount;
+    assert(idxOfLadderLineClosestToMiddle!=-1);
+    assert(idxOfLadderLineClosestToMiddle-2>0);
+
+    auto& tmp=offsetsForLadderLines.at(idxOfLadderLineClosestToMiddle-2);
+    currLineOffset=tmp.lineVertOffset;
+    currLineCount=0;
+    currTextOffset=tmp.textVertOffset;
+    currTextCount=0;
+    for(int i=0;i<4;i++){
+        currLineCount+=offsetsForLadderLines.at(idxOfLadderLineClosestToMiddle-2+i).lineVertCount;
+        currTextCount+=offsetsForLadderLines.at(idxOfLadderLineClosestToMiddle-2+i).textVertCount;
+    }
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
