@@ -11,14 +11,15 @@
 
 /**
  * Uses BatchingManager and therefore can be used by OSD elements with little overhead
+ * Can be used to draw a semi-transparent rectangular background over the video to make OSD elements appear more clearly
  */
 
 class OSDBackgroundObject {
 private:
     const TrueColor mBackgroundColor;
-    std::shared_ptr<ModifiableArray<ColoredVertex>> backgroundBuffer;
     IPositionable::Rect2D_ mPosition;
     static constexpr const int N_BACKGROUND_VERTICES=3*4;
+    std::shared_ptr<ModifiableArray<ColoredVertex>> backgroundBuffer;
 public:
     OSDBackgroundObject(BatchingManager& batchingManager,const TrueColor backgroundColor):
             mBackgroundColor(backgroundColor){
