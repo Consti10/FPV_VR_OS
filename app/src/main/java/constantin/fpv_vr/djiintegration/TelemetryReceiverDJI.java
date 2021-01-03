@@ -91,7 +91,7 @@ public class TelemetryReceiverDJI extends TelemetryReceiver {
                 final LocationCoordinate3D aircraftLocation = state.getAircraftLocation();
                 final Attitude aircraftAttitude = state.getAttitude();
                 setDJIValues(nativeInstance, aircraftLocation.getLatitude(), aircraftLocation.getLongitude(), aircraftLocation.getAltitude(),
-                        -(float) aircraftAttitude.roll, (float) aircraftAttitude.pitch,
+                        (float) aircraftAttitude.roll, (float) aircraftAttitude.pitch,
                         state.getVelocityZ() * MPS_TO_KPH,
                         -state.getVelocityX() * MPS_TO_KPH,
                         state.getSatelliteCount(), (float) aircraftAttitude.yaw);

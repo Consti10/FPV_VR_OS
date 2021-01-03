@@ -109,10 +109,13 @@ void AHorizon::setupPosition() {
 
 void AHorizon::updateGL() {
     float rollDegree= mTelemetryReceiver.getUAVTelemetryData().Roll_Deg;
-    //float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
-    float pitchDegree= lol;
+    //float rollDegree=10;
+    float pitchDegree= mTelemetryReceiver.getUAVTelemetryData().Pitch_Deg;
+    //float pitchDegree= lol;
     //float pitchDegree=10.0f;
     lol+=0.05;
+    // a positive value for roll means right side down. In this case, rotate to the left
+    // a positive value for pitch means nose up. In this case, translate down
     if(!mOptions.roll){
         rollDegree=0.0f;
     }
@@ -142,7 +145,7 @@ void AHorizon::updateGL() {
     assert(pitchTranslationFactor>=-90.0f && pitchTranslationFactor<=90.0f);
 
     glm::mat4 rollRotationM=glm::rotate(glm::mat4(1.0f),glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
-    const float pitchTranslY=pitchTranslationFactor*degreeToYTranslationFactor;
+    const float pitchTranslY=-(pitchTranslationFactor*degreeToYTranslationFactor);
     glm::mat4 pitchTranslationM=glm::translate(glm::mat4(1.0f),glm::vec3(0,pitchTranslY,0));
     mModelMLadders=rollRotationM*(pitchTranslationM);
 
@@ -156,7 +159,7 @@ void AHorizon::updateGL() {
     }else{
         // the line at idx=18 is the line for value 0
         // calculate the index of the line closest to the middle
-        const std::size_t idxOfLadderLineClosestToMiddle=18-(std::lround(pitchTranslationFactor*0.1f));
+        const std::size_t idxOfLadderLineClosestToMiddle=18+(std::lround(pitchTranslationFactor*0.1f));
         assert(idxOfLadderLineClosestToMiddle>0);
         const int N_LADDER_LINES=mOptions.mode==Options::MODE_HORIZON_WITH_5_LADDERS ? 5 : 3;
         const int MINUS_VALUE=mOptions.mode==Options::MODE_HORIZON_WITH_5_LADDERS ? 2 : 1;
