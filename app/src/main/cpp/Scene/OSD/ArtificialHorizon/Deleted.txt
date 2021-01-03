@@ -49,3 +49,21 @@ if(mOptions.mode==MODE_3D_QUADCOPTER
    || mOptions.mode==MODE_BOTH_TOGETHER){
     mGLPrograms.vc.drawX(ViewM*mModelM3DModel,ProjM,mGLBuff3DModel);
 }
+
+GLBuffer<GLProgramLine::Vertex> mGLBuffLadders;
+//Render the lines
+    /*if(mOptions.mode==MODE_2D_LADDERS
+       || mOptions.mode==MODE_BOTH_TOGETHER){
+        mGLPrograms.line.beforeDraw(mGLBuffLadders.getGLBufferId());
+        //mGLPrograms.line.draw(ViewM*mModelMLadders,ProjM,LadderLines[0].vertOffset,LadderLines[0].vertCount);
+        mGLPrograms.line.afterDraw();
+    }*/
+
+//make the ladder line
+/*{
+    const float lineH=mWidth*0.015f;
+    auto tmp=GLProgramLine::makeHorizontalLine({-mWidth/2.0f,0},mWidth,lineH,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+    mGLBuffLadders.uploadGL(tmp);
+    LadderLines[0].vertOffset=0;
+    LadderLines[0].vertCount=6;
+}*/

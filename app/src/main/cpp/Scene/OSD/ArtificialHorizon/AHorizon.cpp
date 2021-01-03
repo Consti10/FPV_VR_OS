@@ -50,14 +50,7 @@ static void addColoredLineHorizontalCustom(std::vector<ColoredVertex>& buff, con
 //
 void AHorizon::setupPosition() {
     degreeToYTranslationFactor=mHeight/180.0f;
-    //make the ladder line
-    /*{
-        const float lineH=mWidth*0.015f;
-        auto tmp=GLProgramLine::makeHorizontalLine({-mWidth/2.0f,0},mWidth,lineH,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
-        mGLBuffLadders.uploadGL(tmp);
-        LadderLines[0].vertOffset=0;
-        LadderLines[0].vertCount=6;
-    }*/
+
     const float spaceInTheMiddle=mWidth*0.2f;
     // make the "middle element" that doesn't move
     {
@@ -186,14 +179,6 @@ void AHorizon::updateGL() {
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //debug(mGLPrograms.vc,ViewM,ProjM);
-
-    //Render the lines
-    /*if(mOptions.mode==MODE_2D_LADDERS
-       || mOptions.mode==MODE_BOTH_TOGETHER){
-        mGLPrograms.line.beforeDraw(mGLBuffLadders.getGLBufferId());
-        //mGLPrograms.line.draw(ViewM*mModelMLadders,ProjM,LadderLines[0].vertOffset,LadderLines[0].vertCount);
-        mGLPrograms.line.afterDraw();
-    }*/
 
     // draw the lines for "other lines"
     glLineWidth(2.0f);

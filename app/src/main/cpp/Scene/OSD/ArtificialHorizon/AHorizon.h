@@ -49,7 +49,6 @@ private:
     const SettingsOSDStyle& settingsOSDStyle;
     const TelemetryReceiver& mTelemetryReceiver;
     const Options& mOptions;
-    GLBuffer<GLProgramLine::Vertex> mGLBuffLadders;
     std::shared_ptr<ModifiableArray<ColoredVertex>> mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
     // How much of the video W this element uses
