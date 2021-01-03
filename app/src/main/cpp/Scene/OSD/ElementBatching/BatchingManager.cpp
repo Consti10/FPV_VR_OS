@@ -16,15 +16,15 @@ BatchingManager::BatchingManager(const BasicGLPrograms &basicGLPrograms):
         mTextB("Text"){
 }
 
-ModifiableArray<ColoredVertex>* BatchingManager::allocateVCTriangles(const int nVertices) {
+std::shared_ptr<ModifiableArray<ColoredVertex>> BatchingManager::allocateVCTriangles(const int nVertices) {
     return mTriangleBuffer.allocate(nVertices);
 }
 
-ModifiableArray<ColoredVertex> *BatchingManager::allocateVCLines(const int nVertices) {
+std::shared_ptr<ModifiableArray<ColoredVertex>> BatchingManager::allocateVCLines(const int nVertices) {
     return mOutlineB.allocate(nVertices);
 }
 
-ModifiableArray<GLProgramText::Character> *BatchingManager::allocateText(const int nRectangles) {
+std::shared_ptr<ModifiableArray<GLProgramText::Character>> BatchingManager::allocateText(const int nRectangles) {
     return mTextB.allocate(nRectangles);
 }
 

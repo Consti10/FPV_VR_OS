@@ -54,7 +54,7 @@ private:
     GLBuffer<GLProgramLine::Vertex> mGLLadderLinesB;
     GLBuffer<GLProgramText::Character> mGLLadderTextB;
     GLBuffer<GLProgramText::Character> mGLHomeIconB;
-    ModifiableArray<ColoredVertex>* mMiddleArrow;
+    std::shared_ptr<ModifiableArray<ColoredVertex>> mMiddleArrow;
     glm::mat4 mHeadingTranslM;
     glm::mat4 mHomeArrowTM;
     float degreeInGLTranslation=0;

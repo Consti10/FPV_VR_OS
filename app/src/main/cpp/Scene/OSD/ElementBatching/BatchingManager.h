@@ -23,9 +23,9 @@
 class BatchingManager : public IUpdateable, public IDrawable {
 public:
     explicit BatchingManager(const BasicGLPrograms& basicGLPrograms);
-    ModifiableArray<ColoredVertex>* allocateVCTriangles(int nVertices);
-    ModifiableArray<ColoredVertex>* allocateVCLines(int nVertices);
-    ModifiableArray<GLProgramText::Character>* allocateText(int nRectangles);
+    std::shared_ptr<ModifiableArray<ColoredVertex>> allocateVCTriangles(int nVertices);
+    std::shared_ptr<ModifiableArray<ColoredVertex>> allocateVCLines(int nVertices);
+    std::shared_ptr<ModifiableArray<GLProgramText::Character>> allocateText(int nRectangles);
     void initGL();
     void updateGL()override;
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM)override;

@@ -55,7 +55,7 @@ template <class T>
 class CpuGpuBuff{
 public:
     GLuint gpuBuffer;
-    std::vector<ModifiableArray<T>*> cpuBuffer={};
+    std::vector<std::shared_ptr<ModifiableArray<T>>> cpuBuffer={};
     //std::vector<Chunk<T>> chunks;
     unsigned int sizeBytes=0;
     unsigned int size;
@@ -65,8 +65,9 @@ public:
     explicit CpuGpuBuff(const std::string& name){
         glGenBuffers(1,&gpuBuffer);
     }
-    ModifiableArray<T>* allocate(const int n){
-        auto data=new ModifiableArray<T>(n);
+    std::shared_ptr<ModifiableArray<T>> allocate(const int n){
+        //auto data=new ModifiableArray<T>(n);
+        auto data=std::make_shared<ModifiableArray<T>>(n);
         cpuBuffer.push_back(data);
         return data;
     }

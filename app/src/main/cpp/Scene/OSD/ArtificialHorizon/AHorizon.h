@@ -54,7 +54,7 @@ private:
     const TelemetryReceiver& mTelemetryReceiver;
     const Options& mOptions;
     GLBuffer<GLProgramLine::Vertex> mGLBuffLadders;
-    ModifiableArray<ColoredVertex>* mMiddleTriangleBuff;
+    std::shared_ptr<ModifiableArray<ColoredVertex>> mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
     const float PERCENTAGE_VIDEO_X=0.2f;
     const float RATIO=6.0f;

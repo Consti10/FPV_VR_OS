@@ -23,9 +23,9 @@ public:
     const bool enableOutline;
     const bool enableBackground;
     const int maxNChars;
-    ModifiableArray<GLProgramText::Character>* textBuffer;
-    ModifiableArray<ColoredVertex>* backgroundBuffer;
-    ModifiableArray<ColoredVertex>* outlineBuffer;
+    std::shared_ptr<ModifiableArray<GLProgramText::Character>> textBuffer;
+    std::shared_ptr<ModifiableArray<ColoredVertex>> backgroundBuffer;
+    std::shared_ptr<ModifiableArray<ColoredVertex>> outlineBuffer;
 private:
     const TrueColor mBackgroundColor;
     const TrueColor mOutlineColor;
