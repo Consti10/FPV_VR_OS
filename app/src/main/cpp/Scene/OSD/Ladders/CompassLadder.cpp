@@ -192,7 +192,6 @@ void CompassLadder::updateGL() {
 }
 
 void CompassLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-
     //Background is drawn by BatchingManager
     //Main telemetry element is drawn by batchingManager
     //Middle arrow is drawn by BatchingManager
