@@ -20,6 +20,7 @@
 #include <SettingsOSDStyle.h>
 
 // Abstract vertical ladder
+// Used for both the speed and altitude ladder
 class AVerticalLadder : public IDrawable, public IPositionable, public IUpdateable  {
 public:
     AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,const TelemetryReceiver& telemetryReceiver,

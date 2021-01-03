@@ -201,7 +201,7 @@ void AVerticalLadder::updateGL() {
 
 void AVerticalLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //Background is drawn by BatchingManager
-    //Main telemetry element is drawn by batchingManager
+    //Main telemetry value element is drawn by batchingManager
 
     //draw the ladder lines
     mGLPrograms.line.beforeDraw(mLadderLines.glBuffer);
