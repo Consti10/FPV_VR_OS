@@ -44,7 +44,6 @@ private:
     void setupPosition() override;
     void updateGL() override;
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) override;
-    static ColoredMeshData create3DModelData(float hw,float sixtW);
     // create an icon with Colored Geometry that roughly looks like this:
     //  |
     //-- --
@@ -73,8 +72,6 @@ private:
     std::size_t currLineOffset,currLineCount;
     std::size_t currTextOffset,currTextCount;
     //
-    ColoredGLMeshBuffer mGLBuff3DModel;
-    glm::mat4 mModelM3DModel;
     // ladders other than the one in the middle
     GLBuffer<ColoredVertex> mGLBuffLadderLinesOther;
     GLBuffer<GLProgramText::Character> mGLBuffLadderLinesOtherText;

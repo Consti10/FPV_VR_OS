@@ -112,15 +112,6 @@ void AHorizon::setupPosition() {
         mGLBuffLadderLinesOtherText.uploadGL(tmpBuffOtherLadderLinesText);
         assert(offsetsForLadderLines.size()==count);
     }
-
-    //create the 3D model
-    {
-        float hW=mWidth/2.0f;
-        float sixtW=mWidth/6.0f;
-        mGLBuff3DModel.setData(create3DModelData(hW,sixtW));
-        //GLBufferHelper::uploadGLBufferStatic(mGLBuff3DModel, modelData.data(),
-        //                                     modelData.size() * sizeof(GLProgramVC::Vertex));
-    }
 }
 
 void AHorizon::updateGL() {
@@ -140,13 +131,6 @@ void AHorizon::updateGL() {
     }
     if(mOptions.invPitch){
         pitchDegree*=-1.0f;
-    }
-    {
-        //for the 3d Model:
-        glm::mat4 rotateM=glm::mat4(1.0f);
-        rotateM=glm::rotate(rotateM,glm::radians(pitchDegree), glm::vec3(1.0f, 0.0f, 0.0f));
-        rotateM=glm::rotate(rotateM,glm::radians(rollDegree), glm::vec3(0.0f, 0.0f, 1.0f));
-        mModelM3DModel=rotateM;
     }
 
     //we need the pitchDegree expressed in the range from -90 to 90 degrees.
@@ -194,12 +178,6 @@ void AHorizon::updateGL() {
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //debug(mGLPrograms.vc,ViewM,ProjM);
 
-    //Render the 3D Quadcopter representation
-    if(mOptions.mode==MODE_3D_QUADCOPTER
-       || mOptions.mode==MODE_BOTH_TOGETHER){
-        mGLPrograms.vc.drawX(ViewM*mModelM3DModel,ProjM,mGLBuff3DModel);
-    }
-
     //Render the lines
     /*if(mOptions.mode==MODE_2D_LADDERS
        || mOptions.mode==MODE_BOTH_TOGETHER){
@@ -237,32 +215,6 @@ IPositionable::Rect2D AHorizon::calculatePosition(const IPositionable::Rect2D &o
     float y=osdOverlay.mY+osdOverlay.mHeight/2.0f-height/2.0f;
 
     return {x,y,width,height};
-}
-
-ColoredMeshData AHorizon::create3DModelData(float hW, float sixtW) {
-    //Copter as colored geometry data
-    std::vector<ColoredVertex> vertices= {
-            ColoredVertex{0.0f,0.0f,0.0f-sixtW,TrueColor2::RED}, //
-            ColoredVertex{0.0f+sixtW,0.0f,0.0f+sixtW,TrueColor2::BLUE}, //bottom right
-            ColoredVertex{0.0f-sixtW,0.0f,0.0f+sixtW,TrueColor2::YELLOW}, // bottom left
-            //1
-            ColoredVertex{0.0f,0.0f,0.0f,TrueColor2::RED},
-            ColoredVertex{0.0f+hW,0.0f,0.0f-hW, TrueColor2::RED},
-            ColoredVertex{0.0f+hW-(hW/4.0f),0.0f,0.0f-hW, TrueColor2::RED},
-            //2
-            ColoredVertex{0.0f,0.0f,0.0f, TrueColor2::BLUE},
-            ColoredVertex{0.0f+hW,0.0f,0.0f+hW, TrueColor2::BLUE},
-            ColoredVertex{0.0f+hW-(hW/4.0f),0.0f,0.0f+hW, TrueColor2::BLUE},
-            //3
-            ColoredVertex{0.0f,0.0f,0.0f, TrueColor2::YELLOW},
-            ColoredVertex{0.0f-hW,0.0f,0.0f+hW, TrueColor2::YELLOW},
-            ColoredVertex{0.0f-hW+(hW/4.0f),0.0f,0.0f+hW, TrueColor2::YELLOW},
-            //4
-            ColoredVertex{0.0f,0.0f,0.0f, TrueColor2::RED},
-            ColoredVertex{0.0f-hW,0.0f,0.0f-hW, TrueColor2::RED},
-            ColoredVertex{0.0f-hW+(hW/4.0f),0.0f,0.0f-hW,TrueColor2::RED}
-    };
-    return ColoredMeshData(vertices,GL_TRIANGLES);
 }
 
 ColoredMeshData AHorizon::createMiddleIconData(float width,float height,const TrueColor color) {
