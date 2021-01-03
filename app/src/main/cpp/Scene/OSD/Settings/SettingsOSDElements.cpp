@@ -23,7 +23,7 @@ SettingsOSDElements::SettingsOSDElements(JNIEnv *env, jobject androidContext) {
     oSpeedL.scale=prefOSDElements.getInt(IDOSD::SL_scale);
     oSpeedL.enable=prefOSDElements.getBoolean(IDOSD::SL_enable);
     //Artificial horizon
-    oArtificialHorizon.mode=prefOSDElements.getInt(IDOSD::AH_mode);
+    oArtificialHorizon.mode=static_cast<AHorizon::Options::RENDERING_MODE>(prefOSDElements.getInt(IDOSD::AH_mode));
     oArtificialHorizon.scale=prefOSDElements.getInt(IDOSD::AH_scale);
     oArtificialHorizon.roll=prefOSDElements.getBoolean(IDOSD::AH_roll);
     oArtificialHorizon.pitch=prefOSDElements.getBoolean(IDOSD::AH_pitch);

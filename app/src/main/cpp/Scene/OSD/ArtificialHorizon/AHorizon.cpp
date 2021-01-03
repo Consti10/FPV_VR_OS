@@ -155,23 +155,32 @@ void AHorizon::updateGL() {
     mModelMLadders=rollRotationM*(pitchTranslationM);
 
     assert(pitchTranslationFactor>=-90.0f && pitchTranslationFactor<=90.0f);
+    if(mOptions.mode==Options::MODE_HORIZON_ONLY){
+        auto& tmp=offsetsForLadderLines.at(18);
+        currLineOffset=tmp.lineVertOffset;
+        currLineCount=tmp.lineVertCount;
+        currTextOffset=tmp.textVertOffset;
+        currTextCount=tmp.textVertCount;
+    }else{
+        // the line at idx=18 is the line for value 0
+        // calculate the index of the line closest to the middle
+        const std::size_t idxOfLadderLineClosestToMiddle=18-(std::lround(pitchTranslationFactor*0.1f));
+        assert(idxOfLadderLineClosestToMiddle>0);
+        const int N_LADDER_LINES=mOptions.mode==Options::MODE_HORIZON_WITH_5_LADDERS ? 5 : 3;
+        const int MINUS_VALUE=mOptions.mode==Options::MODE_HORIZON_WITH_5_LADDERS ? 2 : 1;
+        const std::size_t idxOfLadderLineLowest=idxOfLadderLineClosestToMiddle-MINUS_VALUE;
+        assert(idxOfLadderLineLowest>0);
 
-    // the line at idx=18 is the line for value 0
-    // calculate the index of the line closest to the middle
-    const std::size_t idxOfLadderLineClosestToMiddle=18-(std::lround(pitchTranslationFactor*0.1f));
-    const int N_LADDER_LINES=7;
-    const std::size_t idxOfLadderLineLowest=idxOfLadderLineClosestToMiddle-3;
-    assert(idxOfLadderLineClosestToMiddle-3>0);
-
-    auto& tmp=offsetsForLadderLines.at(idxOfLadderLineLowest);
-    currLineOffset=tmp.lineVertOffset;
-    currLineCount=0;
-    currTextOffset=tmp.textVertOffset;
-    currTextCount=0;
-    for(int i=0;i<N_LADDER_LINES;i++){
-        const auto idx=idxOfLadderLineLowest+i;
-        currLineCount+=offsetsForLadderLines.at(idx).lineVertCount;
-        currTextCount+=offsetsForLadderLines.at(idx).textVertCount;
+        auto& tmp=offsetsForLadderLines.at(idxOfLadderLineLowest);
+        currLineOffset=tmp.lineVertOffset;
+        currLineCount=0;
+        currTextOffset=tmp.textVertOffset;
+        currTextCount=0;
+        for(int i=0;i<N_LADDER_LINES;i++){
+            const auto idx=idxOfLadderLineLowest+i;
+            currLineCount+=offsetsForLadderLines.at(idx).lineVertCount;
+            currTextCount+=offsetsForLadderLines.at(idx).textVertCount;
+        }
     }
 }
 

@@ -26,20 +26,17 @@
 class AHorizon: public IDrawable, public IPositionable, public IUpdateable{
 public:
     struct Options {
-        int mode=MODE_BOTH_TOGETHER;
+        enum RENDERING_MODE{MODE_HORIZON_ONLY=0,MODE_HORIZON_WITH_3_LADDERS=1,MODE_HORIZON_WITH_5_LADDERS=2,MODE_NONE=3};
+        RENDERING_MODE mode=MODE_HORIZON_WITH_3_LADDERS;
         int scale=100;
         bool roll = true, pitch = true;
         bool invRoll=false, invPitch=false;
         const bool isEnabled()const{
-            return (mode==MODE_3D_QUADCOPTER || mode==MODE_2D_LADDERS || mode==MODE_BOTH_TOGETHER );
+            return (mode==MODE_HORIZON_ONLY || mode==MODE_HORIZON_WITH_3_LADDERS || mode==MODE_HORIZON_WITH_5_LADDERS);
         };
     };
     AHorizon(const AHorizon::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms& basicGLPrograms,BatchingManager& batchingManager,const TelemetryReceiver& telemetryReceiver);
     Rect2D calculatePosition(const Rect2D &osdOverlay,int GLOBAL_SCALE);
-    static constexpr int MODE_3D_QUADCOPTER = 0;
-    static constexpr int MODE_2D_LADDERS = 1;
-    static constexpr int MODE_BOTH_TOGETHER = 2;
-    static constexpr int MODE_NONE=3;
 private:
     void setupPosition() override;
     void updateGL() override;
@@ -55,6 +52,7 @@ private:
     GLBuffer<GLProgramLine::Vertex> mGLBuffLadders;
     std::shared_ptr<ModifiableArray<ColoredVertex>> mMiddleTriangleBuff;
     glm::mat4 mModelMLadders;
+    // How much of the video W this element uses
     const float PERCENTAGE_VIDEO_X=0.2f;
     const float RATIO=6.0f;
     struct LadderLine{

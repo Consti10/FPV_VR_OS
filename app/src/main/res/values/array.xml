@@ -80,9 +80,9 @@
     </string-array>
 
     <string-array name="entriesArtificialHorizon" >
-        <item>3D Quadcopter</item>
-        <item>2D Ladders (Traditional)</item>
-        <item>Both</item>
+        <item>HORIZON_ONLY</item>
+        <item>HORIZON_WITH_3_LADDERS</item>
+        <item>HORIZON_WITH_5_LADDERS</item>
         <item>NONE</item>
     </string-array>
 
