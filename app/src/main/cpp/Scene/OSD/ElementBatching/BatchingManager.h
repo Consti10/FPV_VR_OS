@@ -15,7 +15,11 @@
 
 #include "CpuGpuBuff.h"
 
-
+/**
+ * Batching many elements of the same kind into one draw call gives a big performance improvement
+ * To use the batching manager, use "allocateXXX" to get a buffer and use modify() to write into this buffer
+ * Each time per frame, the batching manager checks if these buffer(s) have been modified and uploads the new content to the GPU if needed
+ */
 class BatchingManager : public IUpdateable, public IDrawable {
 public:
     explicit BatchingManager(const BasicGLPrograms& basicGLPrograms);

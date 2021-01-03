@@ -67,6 +67,7 @@ void TextElements1::updateGL() {
 }
 
 void TextElements1::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
+    // nothing, everything is drawn by the Batching Manager
     //mPositionDebugUpper.drawGLDebug(ViewM,ProjM);
     //mPositionDebugMiddle.drawGLDebug(ViewM,ProjM);
     //mPositionDebugLower.drawGLDebug(ViewM,ProjM);

@@ -77,7 +77,7 @@ void TEWarning::updateGL() {
 }
 
 void TEWarning::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-
+    // nothing, everything is drawn by the Batching Manager
 }
 
 IPositionable::Rect2D TEWarning::calculatePosition(const IPositionable::Rect2D &osdOverlay) {

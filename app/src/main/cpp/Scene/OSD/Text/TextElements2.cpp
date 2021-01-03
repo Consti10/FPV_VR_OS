@@ -167,7 +167,7 @@ void TextElements2::updateGL() {
 }
 
 void TextElements2::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
-
+    // nothing, everything is drawn by the Batching Manager
 }
 
 void TextElements2::updateSubElement(unsigned long id,OSDTextObj* obj)const {
