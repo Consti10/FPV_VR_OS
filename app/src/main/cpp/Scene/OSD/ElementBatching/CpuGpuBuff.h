@@ -13,7 +13,7 @@
 #include <android/log.h>
 
 
-// Holds an array of fixed size
+// Holds an dynamic memory array of fixed size
 // Intention is to avoid common mistakes (e.g. modifying the array but forgetting to set _sizeModified )
 template <class T> class ModifiableArray{
 private:
