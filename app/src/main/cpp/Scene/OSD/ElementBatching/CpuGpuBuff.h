@@ -15,10 +15,13 @@
 
 // Holds an dynamic memory array of fixed size
 // Intention is to avoid common mistakes (e.g. modifying the array but forgetting to set _sizeModified )
+// The intended usage of this class is a producer - consumer pattern:
+// The producer changes the content of the memory area, after which this area is marked as "modified" (aka dirty)
+// The consumer consumes this changed content, and after that it is no longer marked as "modified" (dirty)
 template <class T> class ModifiableArray{
 private:
     //How many elements of member '_array' have been modified since last update call.
-    unsigned int _sizeModified=0;
+    unsigned int nModifiedElements=0;
     //The data this instance holds
     std::vector<T>_array;
 public:
@@ -32,17 +35,17 @@ public:
         return size()*sizeof(T);
     }
     unsigned int hasBeenModified()const{
-        return _sizeModified;
+        return nModifiedElements;
     }
-    T* modify(unsigned int sizeModified){
-        _sizeModified=sizeModified;
+    T* modify(unsigned int nElementsToModify){
+        nModifiedElements=nElementsToModify;
         return _array.data();
     }
     T* modify(){
         return modify(size());
     }
     const T* update(){
-        _sizeModified=0;
+        nModifiedElements=0;
         return _array.data();
     }
     void zeroContent(){
