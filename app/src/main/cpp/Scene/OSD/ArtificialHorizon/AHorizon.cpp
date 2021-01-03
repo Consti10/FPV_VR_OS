@@ -214,6 +214,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     mGLPrograms.text.draw(mvp,currTextOffset*6,currTextCount*6);
     mGLPrograms.text.afterDraw();
 
+    // draw the "Middle element"
     mGLPrograms.vc.drawX(ViewM,ProjM,mMiddleElementBuff);
 }
 

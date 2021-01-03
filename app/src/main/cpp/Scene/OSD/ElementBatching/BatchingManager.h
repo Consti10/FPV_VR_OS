@@ -34,9 +34,9 @@ private:
     const BasicGLPrograms& mBasicGLPrograms;
     TrueColor mTextOutlineColor;
     float mTextOutlineStrength;
-    CpuGpuBuff<ColoredVertex> mTriangleBuffer;
-    CpuGpuBuff<ColoredVertex> mOutlineB;
-    CpuGpuBuff<GLProgramText::Character> mTextB;
+    CpuGpuBuff<ColoredVertex> mBufferVCTriangles;
+    CpuGpuBuff<ColoredVertex> mBufferVCLines;
+    CpuGpuBuff<GLProgramText::Character> mBufferText;
 };
 
 

@@ -11,21 +11,21 @@
 
 BatchingManager::BatchingManager(const BasicGLPrograms &basicGLPrograms):
         mBasicGLPrograms(basicGLPrograms),
-        mTriangleBuffer("Background"),
-        mOutlineB("Outline"),
-        mTextB("Text"){
+        mBufferVCTriangles("Background"),
+        mBufferVCLines("Outline"),
+        mBufferText("Text"){
 }
 
 std::shared_ptr<ModifiableArray<ColoredVertex>> BatchingManager::allocateVCTriangles(const int nVertices) {
-    return mTriangleBuffer.allocate(nVertices);
+    return mBufferVCTriangles.allocate(nVertices);
 }
 
 std::shared_ptr<ModifiableArray<ColoredVertex>> BatchingManager::allocateVCLines(const int nVertices) {
-    return mOutlineB.allocate(nVertices);
+    return mBufferVCLines.allocate(nVertices);
 }
 
 std::shared_ptr<ModifiableArray<GLProgramText::Character>> BatchingManager::allocateText(const int nRectangles) {
-    return mTextB.allocate(nRectangles);
+    return mBufferText.allocate(nRectangles);
 }
 
 void BatchingManager::setTextColor(const TrueColor textOutlineColor,const float textOutlineStrength) {
@@ -34,32 +34,32 @@ void BatchingManager::setTextColor(const TrueColor textOutlineColor,const float 
 }
 
 void BatchingManager::initGL() {
-    mTriangleBuffer.setupGPUBuffer();
-    mTextB.setupGPUBuffer();
-    mOutlineB.setupGPUBuffer();
+    mBufferVCTriangles.setupGPUBuffer();
+    mBufferText.setupGPUBuffer();
+    mBufferVCLines.setupGPUBuffer();
 }
 
 void BatchingManager::updateGL() {
-    mTriangleBuffer.uploadToGpuIfModified();
-    mTextB.uploadToGpuIfModified();
-    mOutlineB.uploadToGpuIfModified();
+    mBufferVCTriangles.uploadToGpuIfModified();
+    mBufferText.uploadToGpuIfModified();
+    mBufferVCLines.uploadToGpuIfModified();
 }
 
 void BatchingManager::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //draw the background before the text
-    const int nTriangleVertices=(int)mTriangleBuffer.size;
-    mBasicGLPrograms.vc.beforeDraw(mTriangleBuffer.gpuBuffer);
+    const int nTriangleVertices=(int)mBufferVCTriangles.size;
+    mBasicGLPrograms.vc.beforeDraw(mBufferVCTriangles.gpuBuffer);
     mBasicGLPrograms.vc.draw(ViewM,ProjM,0,nTriangleVertices,GL_TRIANGLES);
     mBasicGLPrograms.vc.afterDraw();
 
-    const int nTextVertices=(int)mTextB.size*6;
-    mBasicGLPrograms.text.beforeDraw(mTextB.gpuBuffer);
+    const int nTextVertices= (int)mBufferText.size * 6;
+    mBasicGLPrograms.text.beforeDraw(mBufferText.gpuBuffer);
     mBasicGLPrograms.text.updateOutline(mTextOutlineColor, mTextOutlineStrength);
     mBasicGLPrograms.text.draw(ProjM,0,nTextVertices);
     mBasicGLPrograms.text.afterDraw();
 
-    const int nOutlineVertices=(int)mOutlineB.size;
-    mBasicGLPrograms.vc.beforeDraw(mOutlineB.gpuBuffer);
+    const int nOutlineVertices=(int)mBufferVCLines.size;
+    mBasicGLPrograms.vc.beforeDraw(mBufferVCLines.gpuBuffer);
     glLineWidth(1);
     mBasicGLPrograms.vc.draw(ViewM,ProjM,0,nOutlineVertices,GL_LINES);
     mBasicGLPrograms.vc.afterDraw();
