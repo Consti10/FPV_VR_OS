@@ -47,18 +47,18 @@ void BatchingManager::updateGL() {
 
 void BatchingManager::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //draw the background before the text
-    const int nTriangleVertices=(int)mBufferVCTriangles.size;
+    const int nTriangleVertices=(int)mBufferVCTriangles.nElements;
     mBasicGLPrograms.vc.beforeDraw(mBufferVCTriangles.gpuBuffer);
     mBasicGLPrograms.vc.draw(ViewM,ProjM,0,nTriangleVertices,GL_TRIANGLES);
     mBasicGLPrograms.vc.afterDraw();
 
-    const int nTextVertices= (int)mBufferText.size * 6;
+    const int nTextVertices= (int)mBufferText.nElements * 6;
     mBasicGLPrograms.text.beforeDraw(mBufferText.gpuBuffer);
     mBasicGLPrograms.text.updateOutline(mTextOutlineColor, mTextOutlineStrength);
     mBasicGLPrograms.text.draw(ProjM,0,nTextVertices);
     mBasicGLPrograms.text.afterDraw();
 
-    const int nOutlineVertices=(int)mBufferVCLines.size;
+    const int nOutlineVertices=(int)mBufferVCLines.nElements;
     mBasicGLPrograms.vc.beforeDraw(mBufferVCLines.gpuBuffer);
     glLineWidth(1);
     mBasicGLPrograms.vc.draw(ViewM,ProjM,0,nOutlineVertices,GL_LINES);

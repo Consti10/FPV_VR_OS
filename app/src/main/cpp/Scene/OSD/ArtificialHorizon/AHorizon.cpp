@@ -125,7 +125,6 @@ void AHorizon::updateGL() {
     if(mOptions.invPitch){
         pitchDegree*=-1.0f;
     }
-
     //we need the pitchDegree expressed in the range from -90 to 90 degrees.
     //where +90 stays +90 and +91 becomes -89
     //first bring it into the range 0...360

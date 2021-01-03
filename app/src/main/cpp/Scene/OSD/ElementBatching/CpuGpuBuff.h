@@ -59,9 +59,10 @@ class CpuGpuBuff{
 public:
     GLuint gpuBuffer;
     std::vector<std::shared_ptr<ModifiableArray<T>>> cpuBuffer={};
-    //std::vector<Chunk<T>> chunks;
+    // How many elements of type T this buffer holds (fragmented into chunks due to ModifiableArray)
+    unsigned int nElements;
+    // Total size of the buffer (same on GPU and CPU)
     unsigned int sizeBytes=0;
-    unsigned int size;
 private:
     const std::string name;
 public:
@@ -69,13 +70,12 @@ public:
         glGenBuffers(1,&gpuBuffer);
     }
     std::shared_ptr<ModifiableArray<T>> allocate(const int n){
-        //auto data=new ModifiableArray<T>(n);
         auto data=std::make_shared<ModifiableArray<T>>(n);
         cpuBuffer.push_back(data);
         return data;
     }
     void setupGPUBuffer(){
-        size=calculateCPUBufferSize();
+        nElements=calculateCPUBufferSize();
         sizeBytes= calculateCPUBufferSizeB();
         //LOGD("Size:%d nObj: %d",mSizeB,nObjects);
         glBindBuffer(GL_ARRAY_BUFFER,gpuBuffer);
