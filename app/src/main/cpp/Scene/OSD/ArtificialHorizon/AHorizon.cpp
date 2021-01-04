@@ -65,41 +65,41 @@ void AHorizon::setupPosition() {
         const float deltaBetweenLines=mHeight/180.0f;
         int count=0;
         for(int i=-180;i<=180;i+=10){
-            count++;
             const float y=(float)i*deltaBetweenLines;
             // the one at 0° has no text and is "bigger"
             if(i==0){
                 const auto offsetBefore=tmpBuffOtherLadderLines.size();
                 addColoredLineHorizontalCustom(tmpBuffOtherLadderLines,y,mWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR,spaceInTheMiddle,false);
                 offsetsForLadderLines.push_back({i,offsetBefore,tmpBuffOtherLadderLines.size()-offsetBefore,tmpBuffOtherLadderLinesText.size(),0});
-                continue;
-            }
-            const auto offsetBeforeLines=tmpBuffOtherLadderLines.size();
-            const auto offsetBeforeText=tmpBuffOtherLadderLinesText.size();
+            }else{
+                const auto offsetBeforeLines=tmpBuffOtherLadderLines.size();
+                const auto offsetBeforeText=tmpBuffOtherLadderLinesText.size();
 
-            // make a longer line with text on the side
-            const std::wstring text=std::to_wstring(std::abs(i));
-            const float textLength=GLProgramText::getStringLength(text, charHeight);
-            const bool useDashes=i<0;
-            // in the negative range the lines are dashed
-            addColoredLineHorizontalCustom(tmpBuffOtherLadderLines,y,lineWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR,spaceInTheMiddle,useDashes);
-            // if we are in the positive / negative range also add an indicator for up/down
-            // this adds the vertical dashes on the left/right side pointing up/down for negative/positive values, respectively
-            if(i>0){
-                ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{-lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
-                ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
-            }else if(i<0){
-                ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{-lineWidth*0.5f, y},charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
-                ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{lineWidth*0.5f, y},charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                // make a longer line with text on the side
+                const std::wstring text=std::to_wstring(std::abs(i));
+                const float textLength=GLProgramText::getStringLength(text, charHeight);
+                const bool useDashes=i<0;
+                // in the negative range the lines are dashed
+                addColoredLineHorizontalCustom(tmpBuffOtherLadderLines,y,lineWidth,settingsOSDStyle.OSD_LINE_FILL_COLOR,spaceInTheMiddle,useDashes);
+                // if we are in the positive / negative range also add an indicator for up/down
+                // this adds the vertical dashes on the left/right side pointing up/down for negative/positive values, respectively
+                if(i>0){
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{-lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{lineWidth*0.5f, y},-charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                }else if(i<0){
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{-lineWidth*0.5f, y},charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                    ColoredGeometry::addColoredLineVertical(tmpBuffOtherLadderLines,{lineWidth*0.5f, y},charHeight*0.5f,settingsOSDStyle.OSD_LINE_FILL_COLOR);
+                }
+                auto textColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR2;
+                if(i<0){
+                    textColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR1;
+                }
+                //
+                GLProgramText::appendString(tmpBuffOtherLadderLinesText,-mWidth/2.0f,y-(charHeight*0.5f), 0, charHeight, text, textColor);
+                GLProgramText::appendString(tmpBuffOtherLadderLinesText,(mWidth*0.5f)-textLength,y-(charHeight*0.5f), 0, charHeight, text, textColor);
+                offsetsForLadderLines.push_back({i,offsetBeforeLines,tmpBuffOtherLadderLines.size()-offsetBeforeLines,offsetBeforeText,tmpBuffOtherLadderLinesText.size()-offsetBeforeText});
             }
-            auto textColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR2;
-            if(i<0){
-                textColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR1;
-            }
-            //
-            GLProgramText::appendString(tmpBuffOtherLadderLinesText,-mWidth/2.0f,y-(charHeight*0.5f), 0, charHeight, text, textColor);
-            GLProgramText::appendString(tmpBuffOtherLadderLinesText,(mWidth*0.5f)-textLength,y-(charHeight*0.5f), 0, charHeight, text, textColor);
-            offsetsForLadderLines.push_back({i,offsetBeforeLines,tmpBuffOtherLadderLines.size()-offsetBeforeLines,offsetBeforeText,tmpBuffOtherLadderLinesText.size()-offsetBeforeText});
+            count++;
         }
         mGLBuffLadderLinesOther.uploadGL(tmpBuffOtherLadderLines);
         mGLBuffLadderLinesOtherText.uploadGL(tmpBuffOtherLadderLinesText);
