@@ -66,6 +66,7 @@ private:
     //
     std::size_t currLineOffset,currLineCount;
     std::size_t currTextOffset,currTextCount;
+    bool horizonZeroIsCurrentlyVisible=false;
     //
     // ladders other than the one in the middle
     GLBuffer<ColoredVertex> mGLBuffLadderLinesOther;

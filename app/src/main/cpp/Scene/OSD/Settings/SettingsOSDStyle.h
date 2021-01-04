@@ -53,12 +53,12 @@ public:
             OSD_LINE_WIDTH_PX_2=2;
         }else if(SURFACE_H_PX<=1080){
             // aka medium/higher resolution
-            OSD_LINE_WIDTH_PX_1=3;
+            OSD_LINE_WIDTH_PX_1=2;
             OSD_LINE_WIDTH_PX_2=4;
         }else{
             // aka really high resolution
             OSD_LINE_WIDTH_PX_1=3;
-            OSD_LINE_WIDTH_PX_2=4;
+            OSD_LINE_WIDTH_PX_2=6;
         }
     }
 };

@@ -157,6 +157,7 @@ void AHorizon::updateGL() {
         currLineCount=tmp.lineVertCount;
         currTextOffset=tmp.textVertOffset;
         currTextCount=tmp.textVertCount;
+        horizonZeroIsCurrentlyVisible=true;
     }else{
         // the line at idx=18 is the line for value 0
         // calculate the index of the line closest to the middle
@@ -172,19 +173,20 @@ void AHorizon::updateGL() {
         currLineCount=0;
         currTextOffset=tmp.textVertOffset;
         currTextCount=0;
+        horizonZeroIsCurrentlyVisible=false;
         for(int i=0;i<N_LADDER_LINES;i++){
             const auto idx=idxOfLadderLineLowest+i;
             currLineCount+=offsetsForLadderLines.at(idx).lineVertCount;
             currTextCount+=offsetsForLadderLines.at(idx).textVertCount;
+            if(offsetsForLadderLines.at(idx).valueDegree==0){
+                horizonZeroIsCurrentlyVisible=true;
+            }
         }
     }
 }
 
 void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //debug(mGLPrograms.vc,ViewM,ProjM);
-
-    // draw the lines for "other lines"
-    glLineWidth(settingsOSDStyle.OSD_LINE_WIDTH_PX_1);
 
     /*mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
     mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,0,mGLBuffLadderLinesOther.getCount(),GL_LINES);
@@ -194,9 +196,17 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText.getGLBufferId());
     mGLPrograms.text.draw(mvp,0,mGLBuffLadderLinesOtherText.getCount()*6);
     mGLPrograms.text.afterDraw();*/
+    // first draw the line part
+    glLineWidth(settingsOSDStyle.OSD_LINE_WIDTH_PX_1);
     mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
     mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,currLineOffset,currLineCount,GL_LINES);
+    if(horizonZeroIsCurrentlyVisible){
+        // the middle line has a slightly bigger line width. If currently visible,just draw this one line again with a bigger line width
+        glLineWidth(settingsOSDStyle.OSD_LINE_WIDTH_PX_2);
+        mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,offsetsForLadderLines[18].lineVertOffset,offsetsForLadderLines[18].lineVertCount,GL_LINES);
+    }
     mGLPrograms.vc.afterDraw();
+    // now draw the text part
     const glm::mat4 mvp=ProjM*(ViewM*mModelMLadders);
     mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText.getGLBufferId());
     mGLPrograms.text.draw(mvp,currTextOffset*6,currTextCount*6);
