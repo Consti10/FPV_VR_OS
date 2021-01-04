@@ -54,7 +54,6 @@ public:
 private:
     static constexpr const float MIN_Z_DISTANCE=0.01f;
     static constexpr const float MAX_Z_DISTANCE=100.0f;
-
 };
 
 
