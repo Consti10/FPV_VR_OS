@@ -41,9 +41,7 @@ private:
     void setupPosition() override;
     void updateGL() override;
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) override;
-    // create an icon with Colored Geometry that roughly looks like this:
-    //  |
-    //-- --
+    // create an icon with Colored Geometry that roughly looks like a crosshair:
     static ColoredMeshData createMiddleIconData(float width,float height,const TrueColor color);
     const BasicGLPrograms& mGLPrograms;
     const SettingsOSDStyle& settingsOSDStyle;
