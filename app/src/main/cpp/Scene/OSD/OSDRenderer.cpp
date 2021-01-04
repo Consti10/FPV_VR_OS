@@ -55,6 +55,7 @@ OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& t
     mFLightStart=std::chrono::steady_clock::now();
     //
     onSurfaceSizeChanged();
+    MLOGD<<"SurfaceX"<<HEIGHT_PX;
 }
 
 void OSDRenderer::onSurfaceSizeChanged() {

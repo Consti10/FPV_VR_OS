@@ -51,10 +51,14 @@ public:
             // aka really low resolution
             OSD_LINE_WIDTH_PX_1=1;
             OSD_LINE_WIDTH_PX_2=2;
+        }else if(SURFACE_H_PX<=1080){
+            // aka medium/higher resolution
+            OSD_LINE_WIDTH_PX_1=3;
+            OSD_LINE_WIDTH_PX_2=4;
         }else{
-            // aka high resolution
-            OSD_LINE_WIDTH_PX_1=2;
-            OSD_LINE_WIDTH_PX_2=3;
+            // aka really high resolution
+            OSD_LINE_WIDTH_PX_1=3;
+            OSD_LINE_WIDTH_PX_2=4;
         }
     }
 };

@@ -60,9 +60,9 @@ private:
         // begin and end of the text vertices for this line
         std::size_t textVertOffset=0,textVertCount=0;
     };
-    LadderLine LadderLines[1];
     float degreeToYTranslationFactor;
     std::vector<LadderLine> offsetsForLadderLines;
+    //std::array<LadderLine,18+18> offsetsForLadderLines;
     //
     std::size_t currLineOffset,currLineCount;
     std::size_t currTextOffset,currTextCount;

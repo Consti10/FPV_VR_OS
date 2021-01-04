@@ -104,6 +104,7 @@ void AHorizon::setupPosition() {
         mGLBuffLadderLinesOther.uploadGL(tmpBuffOtherLadderLines);
         mGLBuffLadderLinesOtherText.uploadGL(tmpBuffOtherLadderLinesText);
         assert(offsetsForLadderLines.size()==count);
+        assert(offsetsForLadderLines.size()==18+18+1);
     }
 }
 
@@ -183,7 +184,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //debug(mGLPrograms.vc,ViewM,ProjM);
 
     // draw the lines for "other lines"
-    glLineWidth(2.0f);
+    glLineWidth(settingsOSDStyle.OSD_LINE_WIDTH_PX_1);
 
     /*mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
     mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,0,mGLBuffLadderLinesOther.getCount(),GL_LINES);
