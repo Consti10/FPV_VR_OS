@@ -7,7 +7,7 @@
 #include <android/log.h>
 #include <SharedPreferences.hpp>
 
-SettingsOSDStyle::SettingsOSDStyle(JNIEnv *env, jobject androidContext) {
+SettingsOSDStyle::SettingsOSDStyle(JNIEnv *env, jobject androidContext,int SURFACE_H_PX) {
 //OSD style ------------
     SharedPreferences prefOSDStyle(env,androidContext,"pref_osd");
     OSD_LINE_FILL_COLOR= TrueColor::ARGB(prefOSDStyle.getInt(IDOSD::OSD_LINE_FILL_COLOR));
@@ -39,4 +39,6 @@ SettingsOSDStyle::SettingsOSDStyle(JNIEnv *env, jobject androidContext) {
     const auto tmp=Color::toRGBA(OSD_TEXT_FILL_COLOR1);
     OSD_TEXT_FILL_COLOR1=Color::fromRGBA(tmp.x,tmp.y,tmp.z,tmp.w);*/
     OSD_STEREO_RATIO=prefOSDStyle.getFloat(IDOSD::OSD_STEREO_RATIO,1.333f);
+    // other
+    calculateLineWidth(SURFACE_H_PX);
 }

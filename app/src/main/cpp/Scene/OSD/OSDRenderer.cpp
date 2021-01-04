@@ -6,7 +6,7 @@
 
 OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo1,int WIDTH_PX,int HEIGHT_PX):
         stereo(stereo1),
-        settingsOSDStyle(env,androidContext),
+        settingsOSDStyle(env,androidContext,HEIGHT_PX),
         settingsOSDElements(env,androidContext),
         mBasicGLPrograms(),
         mBatchingManager(mBasicGLPrograms),

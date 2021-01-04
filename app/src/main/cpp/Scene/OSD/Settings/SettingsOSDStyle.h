@@ -12,7 +12,7 @@
 
 class SettingsOSDStyle {
 public:
-    SettingsOSDStyle(JNIEnv *env, jobject androidContext);
+    SettingsOSDStyle(JNIEnv *env, jobject androidContext,int SURFACE_H_PX);
     SettingsOSDStyle(SettingsOSDStyle const &) = delete;
     void operator=(SettingsOSDStyle const &)= delete;
     static TrueColor getOSDBackgroundColor(int _alpha){
@@ -42,6 +42,21 @@ public:
     int OSD_STEREO_GLOBAL_SCALE;
 public:
     float OSD_STEREO_RATIO;
+public:
+    // set manually depending on the resolution of the Surface the OSD is rendered onto
+    int OSD_LINE_WIDTH_PX_1; // small line width
+    int OSD_LINE_WIDTH_PX_2;// big line width
+    void calculateLineWidth(int SURFACE_H_PX){
+        if(SURFACE_H_PX<=720){
+            // aka really low resolution
+            OSD_LINE_WIDTH_PX_1=1;
+            OSD_LINE_WIDTH_PX_2=2;
+        }else{
+            // aka high resolution
+            OSD_LINE_WIDTH_PX_1=2;
+            OSD_LINE_WIDTH_PX_2=3;
+        }
+    }
 };
 
 
