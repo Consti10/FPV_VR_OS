@@ -41,7 +41,6 @@ void CompassLadder::setupPosition() {
         const float ladderLinesWidth=ladderLinesHeight*0.3f;
         float ladderLinesStartY=mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-ladderLinesHeight;//in relation to the top !
         std::vector<GLProgramLine::Vertex> tmp(N_EXISTING_LADDER_LINES*6);
-        glm::vec3 color=glm::vec3(1,1,1);
         int offset=0;
         for(int i=0;i<N_EXISTING_LADDER_LINES;i+=4){
             glm::vec2 start;
