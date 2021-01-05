@@ -28,6 +28,7 @@ public:
     static constexpr float PERCENTAGE_VIDEO_Y_MONO=10.0f/20.0f;
     static constexpr float PERCENTAGE_VIDEO_Y_STEREO=8.0f/20.0f;
     static constexpr float RATIO=1.0f/2.5f;
+    static constexpr float OFFSET_VIDEO_X_LEFT_OR_RIGHT=1.0f/20.0f;
 protected:
     float verticalLadderValue=0;
     void updateGL() override;

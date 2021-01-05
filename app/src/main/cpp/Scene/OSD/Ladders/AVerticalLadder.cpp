@@ -28,7 +28,6 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
 
 
 void AVerticalLadder::setupPosition() {
-    const auto lineColor=settingsOSDStyle.OSD_LINE_FILL_COLOR;
     //create the background
     mBackgroundObj.setPosition(mX,mY,mWidth,mHeight);
     mBackgroundObj.recalculateData();

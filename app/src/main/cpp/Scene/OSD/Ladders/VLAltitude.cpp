@@ -36,9 +36,11 @@ IPositionable::Rect2D VLAltitude::calculatePosition(const IPositionable::Rect2D 
         percentageVideoY=PERCENTAGE_VIDEO_Y_MONO;
         GLOBAL_SCALE=settingsOSDStyle.OSD_MONO_GLOBAL_SCALE;
     }
-    float height=osdOverlay.mHeight*percentageVideoY*(mOptions.scale/100.0f)*(GLOBAL_SCALE*0.01f);
+    float height=osdOverlay.mHeight*percentageVideoY*(mOptions.scale*0.01f)*(GLOBAL_SCALE*0.01f);
     float width=height*RATIO;
-    float x=osdOverlay.mX+osdOverlay.mWidth*OFFSET_VIDEO_X;
+    // bound to the right side
+    //float x=osdOverlay.mX+osdOverlay.mWidth* OFFSET_VIDEO_X_LEFT_OR_RIGHT;
+    float x=osdOverlay.mX+osdOverlay.mWidth-(osdOverlay.mWidth* OFFSET_VIDEO_X_LEFT_OR_RIGHT)-width;
     float y=osdOverlay.mY+(osdOverlay.mHeight-height)/2.0f;
     return {x,y,width,height};
 }
