@@ -100,7 +100,7 @@ void AVerticalLadder::updateLadderStringsRange(int newMiddleValue) {
         if(s.length()>MAX_N_CHARS_PER_LADDER_STRING){
             s=L"E";
         }
-        float x,y,z=0.0f,h;
+        float x,y,h;
         if(LEFT_HANDED){
             float length=GLProgramText::getStringLength(s,ladderTextHeight);
             x=mX + mWidth * 2.0f / 3.0f - length;
@@ -117,7 +117,7 @@ void AVerticalLadder::updateLadderStringsRange(int newMiddleValue) {
               (i - blub) * distBetween;
             h=ladderTextHeight;
         }
-        GLProgramText::convertStringToRenderingData(x,y,z,h, s,textColor, tmp,i * MAX_N_CHARS_PER_LADDER_STRING);
+        GLProgramText::convertStringToRenderingData(x,y,h, s,textColor, tmp,i * MAX_N_CHARS_PER_LADDER_STRING);
     }
     //LOGD("Size (in bytes) of ladder strings buffer: %d",(int)sizeof(tmp));
     GLBufferHelper::uploadGLBuffer(mLadderStrings.glBuffer, tmp, sizeof(tmp),GL_DYNAMIC_DRAW);

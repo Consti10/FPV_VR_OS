@@ -95,8 +95,8 @@ void AHorizon::setupPosition() {
                     textColor=settingsOSDStyle.OSD_TEXT_FILL_COLOR1;
                 }
                 //
-                GLProgramText::appendString(tmpBuffOtherLadderLinesText,-mWidth/2.0f,y-(charHeight*0.5f), 0, charHeight, text, textColor);
-                GLProgramText::appendString(tmpBuffOtherLadderLinesText,(mWidth*0.5f)-textLength,y-(charHeight*0.5f), 0, charHeight, text, textColor);
+                GLProgramText::appendString(tmpBuffOtherLadderLinesText,-mWidth/2.0f,y-(charHeight*0.5f), charHeight, text, textColor);
+                GLProgramText::appendString(tmpBuffOtherLadderLinesText,(mWidth*0.5f)-textLength,y-(charHeight*0.5f), charHeight, text, textColor);
                 offsetsForLadderLines.push_back({i,offsetBeforeLines,tmpBuffOtherLadderLines.size()-offsetBeforeLines,offsetBeforeText,tmpBuffOtherLadderLinesText.size()-offsetBeforeText});
             }
             count++;

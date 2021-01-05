@@ -126,7 +126,7 @@ public:
                         mPosition.X + xOffset +
                         xAdvance,
                         mPosition.Y + yOffset,
-                        0, scale, string,
+                        scale, string,
                         color,
                         textBuffer->modify(),
                         nActiveChars);

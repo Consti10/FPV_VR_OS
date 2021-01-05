@@ -64,49 +64,49 @@ void CompassLadder::setupPosition() {
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"S",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 0,
-                                                    nwseCharsStartY, 0, nwseCharsHeight, L"S",
+                                                    nwseCharsStartY, nwseCharsHeight, L"S",
                                                     textColor,
                                                     tmp.data(), 0);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"W",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 1,
-                                                    nwseCharsStartY, 0, nwseCharsHeight, L"W",
+                                                    nwseCharsStartY, nwseCharsHeight, L"W",
                                                     textColor,
                                                     tmp.data(), 1);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"N",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 2,
-                                                    nwseCharsStartY, 0, nwseCharsHeight, L"N",
+                                                    nwseCharsStartY, nwseCharsHeight, L"N",
                                                     textColor,
                                                     tmp.data(), 2);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"E",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 3,
-                                                    nwseCharsStartY, 0, nwseCharsHeight, L"E",
+                                                    nwseCharsStartY, nwseCharsHeight, L"E",
                                                     textColor,
                                                     tmp.data(), 3);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"S",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 4,
-                                                    nwseCharsStartY, 0, nwseCharsHeight, L"S",
+                                                    nwseCharsStartY, nwseCharsHeight, L"S",
                                                     textColor,
                                                     tmp.data(), 4);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"W",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 5,
-                                                    nwseCharsStartY,0, nwseCharsHeight, L"W",
+                                                    nwseCharsStartY, nwseCharsHeight, L"W",
                                                     textColor,
                                                     tmp.data(), 5);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"N",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 6,
-                                                    nwseCharsStartY,0, nwseCharsHeight, L"N",
+                                                    nwseCharsStartY, nwseCharsHeight, L"N",
                                                     textColor,
                                                     tmp.data(), 6);
         GLProgramText::convertStringToRenderingData(mX - GLProgramText::getStringLength(L"E",
                                                                                         nwseCharsHeight) /
                                                          2.0f + d_between_lines * 4 * 7,
-                                                    nwseCharsStartY, 0, nwseCharsHeight, L"E",
+                                                    nwseCharsStartY, nwseCharsHeight, L"E",
                                                     textColor,
                                                     tmp.data(), 7);
         mGLLadderTextB.uploadGL(tmp);
@@ -119,7 +119,7 @@ void CompassLadder::setupPosition() {
         std::wstring wstring1;
         wstring1+=GLProgramText::ICON_HOME;
         GLProgramText::convertStringToRenderingData(mX - home_arrow_width_height / 2.0f,
-                                                    haStartY, 0,
+                                                    haStartY,
                                                     home_arrow_width_height, wstring1,
                                                     TrueColor2::GREEN, tmp.data(), 0);
         mGLHomeIconB.uploadGL(tmp);
