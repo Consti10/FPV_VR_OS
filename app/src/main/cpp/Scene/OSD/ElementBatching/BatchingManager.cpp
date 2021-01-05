@@ -3,11 +3,6 @@
 //
 
 #include "BatchingManager.h"
-#include <GLHelper.hpp>
-
-#include <GLES3/gl3.h>
-#include <TrueColor.hpp>
-#include <BasicGLPrograms.hpp>
 
 BatchingManager::BatchingManager(const BasicGLPrograms &basicGLPrograms):
         mBasicGLPrograms(basicGLPrograms),
