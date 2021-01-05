@@ -24,6 +24,7 @@ GLRMono::GLRMono(JNIEnv* env, jobject androidContext, TelemetryReceiver& telemet
 
 void GLRMono::onContextCreated(JNIEnv * env,jobject androidContext,int screenW,int screenH,jobject optionalSurfaceTextureHolder,float optionalVideo360FOV){
     Extensions::initializeGL();
+    HelperKhrDebug::enableIfPossible();
     NDKThreadHelper::setProcessThreadPriority(env,FPV_VR_PRIORITY::CPU_PRIORITY_GLRENDERER_MONO,TAG);
     //Once we have an OpenGL context, we can create our OpenGL world object instances. Note the use of shared btw. unique pointers:
     //If the phone does not preserve the OpenGL context when paused, OnSurfaceCreated might be called multiple times
