@@ -16,7 +16,7 @@
 #include <FPSCalculator.h>
 #include <SettingsVR.h>
 
-//Only fulfills testing purpose(s)
+//Deprecated
 
 class GLRStereoDaydream: public IVideoFormatChanged {
 public:
