@@ -46,12 +46,12 @@ void AVerticalLadder::setupPosition() {
             const auto FILL_COLOR=settingsOSDStyle.OSD_LINE_FILL_COLOR;
             const auto OUTLINE_COLOR=settingsOSDStyle.OSD_LINE_OUTLINE_COLOR;
             if(LEFT_HANDED){
-                const glm::vec3 start=glm::vec3(mX + mWidth - width,mY+ i*distanceBetweenLines,0);
-                const glm::vec3 end=start+glm::vec3(width,0,0);
+                const glm::vec2 start=glm::vec2(mX + mWidth - width,mY+ i*distanceBetweenLines);
+                const glm::vec2 end=start+glm::vec2(width,0);
                 GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,FILL_COLOR,OUTLINE_COLOR);
             }else{
-                const glm::vec3 start=glm::vec3(mX,mY + i * distanceBetweenLines,0);
-                const glm::vec3 end=start+glm::vec3(width,0,0);
+                const glm::vec2 start=glm::vec2(mX,mY + i * distanceBetweenLines);
+                const glm::vec2 end=start+glm::vec2(width,0);
                 GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB,i*6,FILL_COLOR,OUTLINE_COLOR);
             }
         }
