@@ -21,7 +21,7 @@ public:
     VLAltitude(const VLAltitude::Options& options,const SettingsOSDStyle& settingsOSDStyle,const BasicGLPrograms &basicGLPrograms, BatchingManager &batchingManager,
               const TelemetryReceiver &telemetryReceiver);
     Rect2D calculatePosition(const Rect2D &osdOverlay, bool stereo);
-    static constexpr float OFFSET_VIDEO_X=15.0f/20.0f;
+    static constexpr float OFFSET_VIDEO_X=17.0f/20.0f;
 private:
     void updateGL() override;
     const VLAltitude::Options& mOptions;
