@@ -28,6 +28,9 @@ public:
     std::shared_ptr<ModifiableArray<ColoredVertex>> allocateVCTriangles(int nVertices);
     std::shared_ptr<ModifiableArray<ColoredVertex>> allocateVCLines(int nVertices);
     std::shared_ptr<ModifiableArray<GLProgramText::Character>> allocateText(int nRectangles);
+    //
+    std::shared_ptr<ModifiableArray<GLProgramLine::Vertex>> allocateLines(int nLines);
+    //
     void initGL();
     void updateGL()override;
     void drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM)override;
@@ -39,6 +42,8 @@ private:
     CpuGpuBuff<ColoredVertex> mBufferVCTriangles;
     CpuGpuBuff<ColoredVertex> mBufferVCLines;
     CpuGpuBuff<GLProgramText::Character> mBufferText;
+    //
+    CpuGpuBuff<GLProgramLine::Vertex> mBufferLines;
 };
 
 

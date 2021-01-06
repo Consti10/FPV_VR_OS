@@ -24,6 +24,7 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
 {
     glGenBuffers(1,&mLadderLines.glBuffer);
     glGenBuffers(1,&mLadderStrings.glBuffer);
+    xBufferLines=batchingManager.allocateLines(N_LADDER_LINES);
 }
 
 
@@ -154,6 +155,21 @@ void AVerticalLadder::calcLadderLinesRenderData(const float value) {
     mLadderLines.currentDrawOffset=((int)valueModPos/5+1);
     mLadderLines.currentDrawNumber=(N_LADDER_LINES-4);
     mLadderLinesTM = glm::translate(glm::mat4(1.0f),glm::vec3(0,-glTranslationPerUnit*valueModPos,0));
+    //
+    /*const auto posMiddle=glm::vec2(0,-glTranslationPerUnit*valueModPos);
+    const auto lowestPos=glm::vec2(0,-mHeight*0.5f);
+    const float distanceBetweenLines=mHeight/(4.0f*4.0f);
+    const float linesHeight=distanceBetweenLines*0.2f;
+    const auto FILL_COLOR=settingsOSDStyle.OSD_LINE_FILL_COLOR;
+    const auto OUTLINE_COLOR=settingsOSDStyle.OSD_LINE_OUTLINE_COLOR;
+    //GLProgramLine::Vertex tmpLinesB[N_LADDER_LINES*6];
+    std::vector<GLProgramLine::Vertex> tmpLinesB(N_LADDER_LINES*6);
+    for(int i=0;i<N_LADDER_LINES;i++){
+        const auto start=lowestPos+glm::vec2(mX,(float)i*distanceBetweenLines);
+        const auto end=start+glm::vec2(mWidth*1.0f/4.0f,0);
+        GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB.data(),i*6,FILL_COLOR,OUTLINE_COLOR);
+    }
+    std::memcpy(xBufferLines->modify(),tmpLinesB.data(),tmpLinesB.size()*sizeof(GLProgramLine::Vertex));*/
 }
 
 //calculate the offsets & translation matrix for the ladder strings
@@ -196,6 +212,7 @@ void AVerticalLadder::updateGL() {
     updateMainString(verticalLadderValue);
     calcLadderLinesRenderData(verticalLadderValue);
     calcLadderStringsRenderData(verticalLadderValue);
+    //
 }
 
 void AVerticalLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {

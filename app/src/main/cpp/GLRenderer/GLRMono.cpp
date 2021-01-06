@@ -65,7 +65,7 @@ void GLRMono::onDrawFrame(JNIEnv* env) {
     mFPSCalculator.tick();
     mTelemetryReceiver.setOpenGLFPS(mFPSCalculator.getCurrentFPS());
     cpuFrameTime.stop();
-    //cpuFrameTime.printAvg(5000);
+    cpuFrameTime.printInIntervalls(std::chrono::seconds(1));
     if(ENABLE_VIDEO){
         //Reduce latency by rendering >60fps
         Extensions::eglPresentationTimeANDROID(eglGetCurrentDisplay(),eglGetCurrentSurface(EGL_DRAW),std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());

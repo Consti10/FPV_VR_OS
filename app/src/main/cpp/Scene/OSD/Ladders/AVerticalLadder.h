@@ -72,6 +72,8 @@ private:
         int currentMiddleValue;
         glm::mat4 currTranslationM;
     }mLadderStrings;
+    //
+    std::shared_ptr<ModifiableArray<GLProgramLine::Vertex>> xBufferLines;
 };
 
 //0 and 1000: 0

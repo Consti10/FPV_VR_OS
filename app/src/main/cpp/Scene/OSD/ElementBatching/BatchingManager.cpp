@@ -8,7 +8,8 @@ BatchingManager::BatchingManager(const BasicGLPrograms &basicGLPrograms):
         mBasicGLPrograms(basicGLPrograms),
         mBufferVCTriangles("Background"),
         mBufferVCLines("Outline"),
-        mBufferText("Text"){
+        mBufferText("Text"),
+        mBufferLines("Lines"){
 }
 
 std::shared_ptr<ModifiableArray<ColoredVertex>> BatchingManager::allocateVCTriangles(const int nVertices) {
@@ -23,6 +24,11 @@ std::shared_ptr<ModifiableArray<GLProgramText::Character>> BatchingManager::allo
     return mBufferText.allocate(nRectangles);
 }
 
+std::shared_ptr<ModifiableArray<GLProgramLine::Vertex>> BatchingManager::allocateLines(int nLines) {
+    return mBufferLines.allocate(nLines*6);
+}
+
+
 void BatchingManager::setTextColor(const TrueColor textOutlineColor,const float textOutlineStrength) {
     mTextOutlineColor=textOutlineColor;
     mTextOutlineStrength=textOutlineStrength;
@@ -32,12 +38,14 @@ void BatchingManager::initGL() {
     mBufferVCTriangles.setupGPUBuffer();
     mBufferText.setupGPUBuffer();
     mBufferVCLines.setupGPUBuffer();
+    mBufferLines.setupGPUBuffer();
 }
 
 void BatchingManager::updateGL() {
     mBufferVCTriangles.uploadToGpuIfModified();
     mBufferText.uploadToGpuIfModified();
     mBufferVCLines.uploadToGpuIfModified();
+    mBufferLines.uploadToGpuIfModified();
 }
 
 void BatchingManager::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
@@ -59,6 +67,10 @@ void BatchingManager::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     mBasicGLPrograms.vc.draw(ViewM,ProjM,0,nOutlineVertices,GL_LINES);
     mBasicGLPrograms.vc.afterDraw();
 
+    mBasicGLPrograms.line.beforeDraw(mBufferLines.gpuBuffer);
+    mBasicGLPrograms.line.draw(ViewM,ProjM,0,(int)mBufferLines.nElements);
+    mBasicGLPrograms.line.afterDraw();
+
     //LOGD("N vertices: background: %d | text %d | outline %d",nTriangleVertices,nTextVertices,nOutlineVertices);
 
     /*GLfloat lineWidthRange[2] = {0.0f, 0.0f};
@@ -67,4 +79,5 @@ void BatchingManager::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
     LOGD("Aliased: %f %f",lineWidthRange[0],lineWidthRange[1]);*/
 }
+
 
