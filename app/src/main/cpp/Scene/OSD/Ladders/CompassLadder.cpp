@@ -196,17 +196,17 @@ void CompassLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     //Middle arrow is drawn by BatchingManager
 
     //Render all the ladder lines
-    mGLPrograms.line.beforeDraw(mGLLadderLinesB.getGLBufferId());
+    mGLPrograms.line.beforeDraw(mGLLadderLinesB);
     mGLPrograms.line.draw(ViewM*mHeadingTranslM,ProjM,6*linesOffset,6*nLinesToDraw);
     mGLPrograms.line.afterDraw();
 
     //Render the N W S E chars
-    mGLPrograms.text.beforeDraw(mGLLadderTextB.getGLBufferId());
+    mGLPrograms.text.beforeDraw(mGLLadderTextB);
     mGLPrograms.text.draw(ProjM*mHeadingTranslM,6*charOffset,6*nCharsToDraw);
     mGLPrograms.text.afterDraw();
 
     //Render the home icon
-    mGLPrograms.text.beforeDraw(mGLHomeIconB.getGLBufferId());
+    mGLPrograms.text.beforeDraw(mGLHomeIconB);
     if(mOptions.homeArrow){
         mGLPrograms.text.draw(ProjM*mHomeArrowTM,0,6);
     }

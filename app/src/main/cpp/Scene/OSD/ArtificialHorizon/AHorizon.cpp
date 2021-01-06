@@ -198,7 +198,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     mGLPrograms.text.afterDraw();*/
     // first draw the line part
     glLineWidth(settingsOSDStyle.OSD_LINE_WIDTH_PX_1);
-    mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther.getGLBufferId());
+    mGLPrograms.vc.beforeDraw(mGLBuffLadderLinesOther);
     mGLPrograms.vc.draw(ViewM*mModelMLadders,ProjM,currLineOffset,currLineCount,GL_LINES);
     if(horizonZeroIsCurrentlyVisible){
         // the middle line has a slightly bigger line width. If currently visible,just draw this one line again with a bigger line width
@@ -208,7 +208,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     mGLPrograms.vc.afterDraw();
     // now draw the text part
     const glm::mat4 mvp=ProjM*(ViewM*mModelMLadders);
-    mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText.getGLBufferId());
+    mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText);
     mGLPrograms.text.draw(mvp,currTextOffset*6,currTextCount*6);
     mGLPrograms.text.afterDraw();
 

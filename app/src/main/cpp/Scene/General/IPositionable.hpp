@@ -45,7 +45,7 @@ public:
     void debug(const GLProgramVC& glProgramVc,const glm::mat4 ViewM,const glm::mat4 ProjM){
         auto tmp=ColoredGeometry::makeColoredRectangle({mX,mY,0},mWidth,mHeight,TrueColor2::GREEN);
         mGLBuffDebug.uploadGL(tmp);
-        glProgramVc.beforeDraw(mGLBuffDebug.getGLBufferId());
+        glProgramVc.beforeDraw(mGLBuffDebug);
         glProgramVc.draw(ViewM,ProjM,0,mGLBuffDebug.getCount(),GL_TRIANGLES);
         glProgramVc.afterDraw();
     }

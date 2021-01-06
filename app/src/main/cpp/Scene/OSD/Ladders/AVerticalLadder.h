@@ -53,22 +53,22 @@ private:
     const int PRECALCULATED_RANGE_BOOTH_SIDES=1000;
     const int N_LADDER_STRINGS=(PRECALCULATED_RANGE_BOOTH_SIDES*2)/UNITS_BETWEEN_SRINGS;
     const int MAX_N_CHARS_PER_LADDER_STRING=6; //-99999, -1.23
-
     float outlineQuadWidth;
     float outlineQuadHeight;
+    // The ladder lines are one big GPU buffer (allocated/created once) with an offset and count (calculated each frame)
     struct LadderLines{
         int currentDrawOffset;
         int currentDrawNumber;
-        GLuint glBuffer;
+        GLBuffer<GLProgramLine::Vertex> glBuffer;
+        glm::mat4 currTranslationM;
     }mLadderLines;
-    glm::mat4 mLadderLinesTM;
-
+    // The ladder strings are one big GPU buffer (rarely ever re-calculated) with an offset and count (calculated each frame)
     struct LadderStrings{
         int currentDrawOffset1;
         int currentDrawNumber1;
         int currentDrawOffset2;
         int currentDrawNumber2;
-        GLuint glBuffer;
+        GLBuffer<GLProgramText::Character> glBuffer;
         int currentMiddleValue;
         glm::mat4 currTranslationM;
     }mLadderStrings;
