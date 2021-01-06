@@ -24,7 +24,7 @@ AVerticalLadder::AVerticalLadder(const SettingsOSDStyle& settingsOSDStyle,const 
 {
     glGenBuffers(1,&mLadderLines.glBuffer);
     glGenBuffers(1,&mLadderStrings.glBuffer);
-    xBufferLines=batchingManager.allocateLines(N_LADDER_LINES);
+    //xBufferLines=batchingManager.allocateLines(N_LADDER_LINES);
 }
 
 
