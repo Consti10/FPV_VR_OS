@@ -1,7 +1,6 @@
 //rootProject.name='FPV_VR_OS'
 
 include ':app'
-//include ':djiintegration'
 
 include ':Shared'
 project(':Shared').projectDir=new File('..\\LiveVideo10ms\\Shared')
