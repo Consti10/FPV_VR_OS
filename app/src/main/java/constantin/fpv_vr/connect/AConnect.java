@@ -118,34 +118,36 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
         final FragmentManager fm=getSupportFragmentManager();
         final View v=findViewById(R.id.spinner_connection_type);
         setPreferencesForConnectionType(this,position);
+        // https://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
+        // i just changed it to commitNow and hope that fixes it
         switch (position){
             case CONNECTION_TYPE_EZWB: //EZ-Wifibroadcast (Network)
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectWB()).commit();
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectWB()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to EZWB (UDP)",v);
                 break;
             case CONNECTION_TYPE_Manually: //Manually (Network)
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectManually()).commit();
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectManually()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to Manually(UDP)",v);
                 break;
             case CONNECTION_TYPE_TestFile: //Assets file
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectTestFile()).commit();
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectTestFile()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to Test file (Assets)",v);
                 break;
             case CONNECTION_TYPE_StorageFile://storage file
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectGroundRecFile()).commit();
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectGroundRecFile()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to GRecFile (File)",v);
                 break;
             case CONNECTION_TYPE_RTSP: //RTSP
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectRTSP()).commit();
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectRTSP()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to RTSP",v);
                 break;
             case CONNECTION_TYPE_DJI:
                 // Will crash on emulator !
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commit();
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to DJI",v);
                 break;
             case CONNECTION_TYPE_UVC:
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectUVC()).commit();
+                fm.beginTransaction().replace(R.id.fragment_container, new FConnectUVC()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to UVC",v);
                 break;
         }
