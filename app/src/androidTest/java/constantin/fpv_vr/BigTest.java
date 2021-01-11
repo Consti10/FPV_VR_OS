@@ -80,7 +80,7 @@ public class BigTest {
         }
         try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 
-        // start mono mono & osd, stereo
+        // start mono,mono & osd, stereo
         openAll3PlayingActivitiesShort();
 
         //Open AConnect and change receiving mode to manually
