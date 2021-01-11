@@ -209,7 +209,7 @@ void AHorizon::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
     // now draw the text part
     const glm::mat4 mvp=ProjM*(ViewM*mModelMLadders);
     mGLPrograms.text.beforeDraw(mGLBuffLadderLinesOtherText);
-    mGLPrograms.text.draw(mvp,currTextOffset*6,currTextCount*6);
+    mGLPrograms.text.draw(mvp,currTextOffset*GLProgramText::INDICES_PER_CHARACTER,currTextCount*GLProgramText::INDICES_PER_CHARACTER);
     mGLPrograms.text.afterDraw();
 
     // draw the "Middle element"

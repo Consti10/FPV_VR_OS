@@ -218,7 +218,8 @@ void AVerticalLadder::drawGL(const glm::mat4& ViewM,const glm::mat4& ProjM) {
 
     //draw the ladder lines
     mGLPrograms.line.beforeDraw(mLadderLines.glBuffer);
-    mGLPrograms.line.draw(mLadderLines.currTranslationM*ViewM, ProjM, mLadderLines.currentDrawOffset*6,mLadderLines.currentDrawNumber*6);
+    mGLPrograms.line.draw(mLadderLines.currTranslationM*ViewM, ProjM, mLadderLines.currentDrawOffset*GLProgramLine::VERTICES_PER_LINE,
+                          mLadderLines.currentDrawNumber*GLProgramLine::VERTICES_PER_LINE);
     mGLPrograms.line.afterDraw();
 
     //draw the ladder strings
