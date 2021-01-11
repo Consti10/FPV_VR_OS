@@ -33,7 +33,7 @@ public:
                 return TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
                 break;
             case RM_360_DUAL_FISHEYE_INSTA360_1:
-                return GLProgramTextureHelper::convert(SphereBuilder::createSphereEquirectangularMonoscopic(), true);
+                return TexturedStereoVertexHelper::convert(SphereBuilder::createSphereEquirectangularMonoscopic(), true);
                 break;
             case RM_360_DUAL_FISHEYE_INSTA360_2:
                 return SphereBuilder::createSphereDualFisheyeInsta360();
