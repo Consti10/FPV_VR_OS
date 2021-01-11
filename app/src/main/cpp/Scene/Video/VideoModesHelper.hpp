@@ -24,7 +24,7 @@ public:
         RM_360_KODAK_SP360_4K_DUAL,RM_360_KODAK_SP360_4K_SINGLE,RM_360_FIREFLY_SPLIT_4K,RM_360_1080P_USB,RM_360_STEREO_PI};
 
     static const unsigned int TESSELATION_FACTOR=10;
-    static GLProgramTexture::TexturedMeshData createMeshForMode(const VIDEO_RENDERING_MODE videoRenderingMode,const float positionZ, const float width, const float height){
+    static TexturedMeshData createMeshForMode(const VIDEO_RENDERING_MODE videoRenderingMode, const float positionZ, const float width, const float height){
         switch (videoRenderingMode){
             case RM_2D_MONOSCOPIC:
                 return TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
@@ -33,7 +33,7 @@ public:
                 return TexturedGeometry::makeTesselatedVideoCanvas(TESSELATION_FACTOR,{0,0,positionZ},{width,height},0.0f,1.0f);
                 break;
             case RM_360_DUAL_FISHEYE_INSTA360_1:
-                return GLProgramTexture::convert(SphereBuilder::createSphereEquirectangularMonoscopic(),true);
+                return GLProgramTextureHelper::convert(SphereBuilder::createSphereEquirectangularMonoscopic(), true);
                 break;
             case RM_360_DUAL_FISHEYE_INSTA360_2:
                 return SphereBuilder::createSphereDualFisheyeInsta360();
