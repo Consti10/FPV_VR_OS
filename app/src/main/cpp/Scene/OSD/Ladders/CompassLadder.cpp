@@ -40,18 +40,18 @@ void CompassLadder::setupPosition() {
         const float ladderLinesHeight=mCalcTextHeight*0.2f*3.5f;
         const float ladderLinesWidth=ladderLinesHeight*0.3f;
         float ladderLinesStartY=mY+mHeight-mCalcTextHeight*TEXT_UPSCALE-ladderLinesHeight;//in relation to the top !
-        std::vector<GLProgramLine::Vertex> tmp(N_EXISTING_LADDER_LINES*6);
+        std::vector<GLProgramLine::Vertex> tmp(N_EXISTING_LADDER_LINES*GLProgramLine::VERTICES_PER_LINE);
         int offset=0;
         for(int i=0;i<N_EXISTING_LADDER_LINES;i+=4){
             glm::vec2 start;
             start=glm::vec2(mX + (0 + i) * d_between_lines,ladderLinesStartY);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*GLProgramLine::VERTICES_PER_LINE,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
             start=glm::vec2(mX + (1 + i) * d_between_lines,ladderLinesStartY);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*GLProgramLine::VERTICES_PER_LINE,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
             start=glm::vec2(mX + (2 + i) * d_between_lines,ladderLinesStartY);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*GLProgramLine::VERTICES_PER_LINE,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
             start=glm::vec2(mX + (3 + i) * d_between_lines,ladderLinesStartY);
-            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*6,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
+            GLProgramLine::convertLineToRenderingData(start,start+glm::vec2(0,ladderLinesHeight),ladderLinesWidth,tmp.data(),offset++*GLProgramLine::VERTICES_PER_LINE,settingsOSDStyle.OSD_LINE_FILL_COLOR,settingsOSDStyle.OSD_LINE_OUTLINE_COLOR);
         }
         mGLLadderLinesB.uploadGL(tmp);
     }

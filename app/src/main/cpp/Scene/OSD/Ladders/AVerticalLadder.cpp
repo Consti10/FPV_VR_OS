@@ -36,7 +36,7 @@ void AVerticalLadder::setupPosition() {
     {
         const float distanceBetweenLines=mHeight/(4.0f*4.0f);
         const float shortLinesWidth=longLinesWidth*0.5f;
-        std::vector<GLProgramLine::Vertex> tmpLinesB(N_LADDER_LINES*6);
+        std::vector<GLProgramLine::Vertex> tmpLinesB(N_LADDER_LINES*GLProgramLine::VERTICES_PER_LINE);
         for(int i=0;i<N_LADDER_LINES;i++){
             float width=shortLinesWidth;
             if(i%4==0)width=longLinesWidth;
@@ -46,11 +46,11 @@ void AVerticalLadder::setupPosition() {
             if(LEFT_HANDED){
                 const glm::vec2 start=glm::vec2(mX + mWidth - width,mY+ i*distanceBetweenLines);
                 const glm::vec2 end=start+glm::vec2(width,0);
-                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB.data(),i*6,FILL_COLOR,OUTLINE_COLOR);
+                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB.data(),i*GLProgramLine::VERTICES_PER_LINE,FILL_COLOR,OUTLINE_COLOR);
             }else{
                 const glm::vec2 start=glm::vec2(mX,mY + i * distanceBetweenLines);
                 const glm::vec2 end=start+glm::vec2(width,0);
-                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB.data(),i*6,FILL_COLOR,OUTLINE_COLOR);
+                GLProgramLine::convertLineToRenderingData(start,end,linesHeight,tmpLinesB.data(),i*GLProgramLine::VERTICES_PER_LINE,FILL_COLOR,OUTLINE_COLOR);
             }
         }
         mLadderLines.glBuffer.uploadGL(tmpLinesB);
