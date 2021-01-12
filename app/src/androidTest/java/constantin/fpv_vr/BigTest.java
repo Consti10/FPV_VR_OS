@@ -23,10 +23,8 @@ import static org.hamcrest.CoreMatchers.anything;
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class BigTest {
 
-    private static final int WAIT_TIME_LONG=10000;
-    private static final int WAIT_TIME_SHORT=1000;
+    private static final int WAIT_TIME_SHORT=5000;
     private static final int SECONDS_10_IN_MS=10*1000;
-    private static final int SECONDS_20_IN_MS=10*1000;
 
     // ActivityScenarioRule is a replacement for ActivityTestRule
     @Rule
