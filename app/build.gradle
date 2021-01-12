@@ -10,8 +10,8 @@ android {
         applicationId "constantin.fpv_vr.wifibroadcast"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 46
-        versionName "4.6"
+        versionCode 47
+        versionName "4.7"
         multiDexEnabled true //DJI
         externalNativeBuild {
             cmake {
