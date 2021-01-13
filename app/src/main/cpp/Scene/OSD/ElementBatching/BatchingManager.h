@@ -16,11 +16,12 @@
 #include <GLES2/gl2.h>
 #include <array>
 #include <memory>
+
 /**
  * Batching many elements of the same kind into one draw call gives a big performance improvement
  * To use the batching manager, use "allocateXXX" to get a buffer and use modify() to write into this buffer
  * Each time per frame, the batching manager checks if these buffer(s) have been modified and uploads the new content to the GPU if needed
- * I then draws all the vertices in one single draw call
+ * It then draws all the vertices in one single draw call
  */
 class BatchingManager : public IUpdateable, public IDrawable {
 public:
