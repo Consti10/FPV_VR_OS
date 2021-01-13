@@ -5,23 +5,13 @@ package constantin.fpv_vr.play_stereo;
  * h.264 nalus->VideoDecoder->SurfaceTexture-(updateTexImage)->Texture->Rendering with OpenGL
  ***************************************************************************/
 
-import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
 
 import constantin.fpv_vr.AirHeadTrackingSender;
 import constantin.fpv_vr.VideoTelemetryComponent;
-import constantin.fpv_vr.connect.AConnect;
-import constantin.fpv_vr.djiintegration.DJIApplication;
-import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
-import constantin.fpv_vr.djiintegration.VideoPlayerDJI;
-import constantin.fpv_vr.settings.SJ;
 import constantin.renderingx.core.views.VrActivity;
 import constantin.renderingx.core.views.VrView;
 import constantin.renderingx.core.vrsettings.ASettingsVR;
-import constantin.telemetry.core.TelemetryReceiver;
-import constantin.uvcintegration.UVCPlayer;
-import constantin.video.core.player.VideoPlayer;
 
 public class AStereoVR extends VrActivity {
     //Components use the android LifecycleObserver. Since they don't need forwarding of
@@ -39,7 +29,7 @@ public class AStereoVR extends VrActivity {
         videoTelemetryComponent.setIVideoParamsChanged(mGLRStereoVR);
 
         vrView.getPresentationView().setRenderer(mGLRStereoVR,videoTelemetryComponent.configure2());
-        vrView.getPresentationView().setmISecondaryContext(mGLRStereoVR);
+        vrView.getPresentationView().setISecondaryContext(mGLRStereoVR);
 
         vrView.setIOnEmulateTrigger(new VrView.IEmulateTrigger(){
             @Override
