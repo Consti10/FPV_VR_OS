@@ -46,6 +46,22 @@ static void addColoredLineHorizontalCustom(std::vector<ColoredVertex>& buff, con
     }
 }
 
+// create an icon with Colored Geometry that roughly looks like a crosshair:
+static ColoredMeshData createMiddleIconData(float width,float height,const TrueColor color) {
+    std::vector<ColoredVertex> tmp;
+    tmp.reserve(64);
+    const float height1=height*0.5f;
+    const float width1=width-height1;
+    auto lineHorizontal1=ColoredGeometry::makeColoredRectangle({-width/2.0f,-height1/2.0f,0},width1*0.5f,height1,color);
+    auto lineHorizontal2=ColoredGeometry::makeColoredRectangle({height1/2.0f,-height1/2.0f,0},width1*0.5f,height1,color);
+    //
+    const float strokeW=height1;
+    auto lineVertical=ColoredGeometry::makeColoredRectangle({-strokeW/2.0f,0,0},strokeW,height,color);
+    tmp.insert(tmp.end(),lineHorizontal1.begin(),lineHorizontal1.end());
+    tmp.insert(tmp.end(),lineHorizontal2.begin(),lineHorizontal2.end());
+    tmp.insert(tmp.end(),lineVertical.begin(),lineVertical.end());
+    return ColoredMeshData(tmp,GL_TRIANGLES);
+}
 
 //
 void AHorizon::setupPosition() {
@@ -223,21 +239,5 @@ IPositionable::Rect2D AHorizon::calculatePosition(const IPositionable::Rect2D &o
     float y=osdOverlay.mY+osdOverlay.mHeight/2.0f-height/2.0f;
 
     return {x,y,width,height};
-}
-
-ColoredMeshData AHorizon::createMiddleIconData(float width,float height,const TrueColor color) {
-    std::vector<ColoredVertex> tmp;
-    tmp.reserve(64);
-    const float height1=height*0.5f;
-    const float width1=width-height1;
-    auto lineHorizontal1=ColoredGeometry::makeColoredRectangle({-width/2.0f,-height1/2.0f,0},width1*0.5f,height1,color);
-    auto lineHorizontal2=ColoredGeometry::makeColoredRectangle({height1/2.0f,-height1/2.0f,0},width1*0.5f,height1,color);
-    //
-    const float strokeW=height1;
-    auto lineVertical=ColoredGeometry::makeColoredRectangle({-strokeW/2.0f,0,0},strokeW,height,color);
-    tmp.insert(tmp.end(),lineHorizontal1.begin(),lineHorizontal1.end());
-    tmp.insert(tmp.end(),lineHorizontal2.begin(),lineHorizontal2.end());
-    tmp.insert(tmp.end(),lineVertical.begin(),lineVertical.end());
-    return ColoredMeshData(tmp,GL_TRIANGLES);
 }
 
