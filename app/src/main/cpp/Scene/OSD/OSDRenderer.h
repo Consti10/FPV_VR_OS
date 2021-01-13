@@ -29,7 +29,7 @@ class OSDRenderer{
 public:
     OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& telemetryReceiver,bool stereo,int WIDTH_PX,int HEIGHT_PX);
 private:
-    void onSurfaceSizeChanged();
+    void placeGLElements();
 public:
     void updateAndDrawElementsGL();
     const SettingsOSDStyle settingsOSDStyle;

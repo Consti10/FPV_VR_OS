@@ -54,11 +54,11 @@ OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& t
 
     mFLightStart=std::chrono::steady_clock::now();
     //
-    onSurfaceSizeChanged();
+            placeGLElements();
     MLOGD<<"SurfaceX"<<HEIGHT_PX;
 }
 
-void OSDRenderer::onSurfaceSizeChanged() {
+void OSDRenderer::placeGLElements() {
     const float ratio=(float)HEIGHT_PX/(float)WIDTH_PX;
     const float videoZ=0;
     const float videoW=WIDTH_PX;//
