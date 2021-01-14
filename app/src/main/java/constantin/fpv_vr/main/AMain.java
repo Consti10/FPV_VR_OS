@@ -85,7 +85,9 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         //if(!DJISDKManager.getInstance().hasSDKRegistered()){
         //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
         //}
+        //  since DJI can only be enabled via the "connect" fragment, this won't do anything for a normal user
         ((DJIApplication)getApplication()).initializeDJIIfNeeded();
+        // Also this one won't do anything unless an UVC device was connected
         notifyUserIfAppStartedForUVC();
     }
 
