@@ -13,6 +13,7 @@ import com.secneo.sdk.Helper;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import constantin.fpv_vr.settings.SJ;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.sdk.base.BaseComponent;
@@ -48,13 +49,8 @@ import dji.sdk.sdkmanager.DJISDKManager;
          Log.d(TAG,"DJI install stop()");
      }
 
-     private static int getConnectionType(final Context context){
-         final SharedPreferences pref_connect=context.getSharedPreferences("pref_connect", MODE_PRIVATE);
-         return pref_connect.getInt("CONNECTION_TYPE",2);
-     }
-
      public static boolean isDJIEnabled(final Context context){
-         return getConnectionType(context)==5;
+         return SJ.getConnectionType(context)==5;
      }
 
      public static synchronized Aircraft getConnectedAircraft(){
