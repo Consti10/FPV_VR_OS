@@ -12,8 +12,6 @@ import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_TestFile;
 @SuppressWarnings("WeakerAccess")
 
 /* *
- * SJ stands for SettingsJava. Since the name of the class is written so often anywhere in my code i decided
- * to go with this shorter, but almost meaningless name
  * SJ is only a wrapper around the android shared preferences that has functions for most commonly used values
  */
 
