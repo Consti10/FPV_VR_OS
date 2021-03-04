@@ -20,7 +20,8 @@
 
 /**
  * Artificial horizon using Ladders
- * Holds own GL Buffers
+ * Holds own GL Buffers, except for the "middle" indicator - since it doesn't move,it is requested from BatchingManager
+ * NOTE: For performance reason, everything is "pre-calculated" and when drawing the vertices with OpenGL, only the draw indices and offset change
  */
 
 class AHorizon: public IDrawable, public IPositionable, public IUpdateable{
