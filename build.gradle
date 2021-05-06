@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        //mavenCentral()
         maven { url 'https://maven.google.com/'
             name 'Google'
         }
@@ -21,6 +22,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        //mavenCentral()
         maven { url "https://jitpack.io" } //this one is for being able to include projects from github via jitpack
     }
 
