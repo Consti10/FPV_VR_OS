@@ -132,6 +132,8 @@ public class FConnectDJI extends Fragment implements View.OnClickListener, Reque
         camera.getExposureMode(callbackGeneric(idx++,"Camera exposure mode"));
         camera.getWhiteBalance(callbackWhiteBalance(idx++,"Camera whiteBalance"));
         //
+        camera.getVideoCaptionEnabled(callbackGeneric(idx++,"Video caption enabled:"));
+
         final Gimbal gimbal=aircraft.getGimbal();
         //gimbal.setControllerMode(ControllerMode.ONE_AXIS,DJIHelper.callbackToastWhenError(mContext,"Gimbal"));
         //DJIHelper.isGimbalFeatureSupported(gimbal,CapabilityKey.ADJUST_PITCH);

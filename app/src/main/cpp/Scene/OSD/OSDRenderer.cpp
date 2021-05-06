@@ -54,8 +54,8 @@ OSDRenderer::OSDRenderer(JNIEnv* env,jobject androidContext,TelemetryReceiver& t
 
     mFLightStart=std::chrono::steady_clock::now();
     //
-            placeGLElements();
-    MLOGD<<"SurfaceX"<<HEIGHT_PX;
+    placeGLElements();
+    //MLOGD<<"SurfaceX"<<HEIGHT_PX;
 }
 
 void OSDRenderer::placeGLElements() {
