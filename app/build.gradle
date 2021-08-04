@@ -105,7 +105,7 @@ dependencies {
     })
     compileOnly 'com.dji:dji-sdk-provided:4.13.1'
     //implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core:1.3.2'
+    implementation 'androidx.core:core:1.6.0'
     //implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     //implementation 'androidx.recyclerview:recyclerview:1.1.0'
     //This one is especially needed, else
@@ -144,8 +144,8 @@ dependencies {
     //THIS IS IT ! implementation "androidx.activity:activity:1.2.0-alpha08"
 
     //firebase stuff
-    implementation 'com.google.firebase:firebase-core:18.0.3'
-    implementation 'com.google.firebase:firebase-crashlytics:17.4.1'
+    implementation 'com.google.firebase:firebase-core:19.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.0'
 
     //Screen recording and more
     implementation 'com.github.HBiSoft:HBRecorder:0.1.12'
@@ -153,9 +153,9 @@ dependencies {
     implementation("com.google.guava:guava:29.0-android")
     
     // Testing
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.3.0')
-    androidTestImplementation('androidx.test:rules:1.3.0')
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0')
+    androidTestImplementation('androidx.test:rules:1.4.0')
 }
 
 apply plugin: 'com.google.gms.google-services'
