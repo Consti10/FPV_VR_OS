@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="constantin.fpv_vr">
 
+    <!-- complains about duplicate (in DJI area) -->
     <!-- Info about networks (EZ-WB connect via WIFI) -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" /> <!-- for the notification -->
+    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
+    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
+    <!--<uses-permission android:name="android.permission.VIBRATE" />--> <!-- for the notification -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <!-- ******************************************* DJI SDK begin *******************************************-->
@@ -49,9 +50,10 @@
             android:theme="@style/MyStyleFullscreen" />
         <activity
             android:name=".main.AMain"
-            android:directBootAware="true"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:directBootAware="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -113,7 +115,8 @@
             android:value="5d59d94daccf4da9a2d51e3d" />
         <activity
             android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
-            android:theme="@android:style/Theme.Translucent" >
+            android:theme="@android:style/Theme.Translucent"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
             </intent-filter>
