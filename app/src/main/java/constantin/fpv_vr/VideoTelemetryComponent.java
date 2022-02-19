@@ -5,8 +5,8 @@ import android.view.SurfaceHolder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import constantin.fpv_vr.connect.AConnect;
-import constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
-import constantin.fpv_vr.djiintegration.VideoPlayerDJI;
+//XDJIimport constantin.fpv_vr.djiintegration.TelemetryReceiverDJI;
+//XDJIimport constantin.fpv_vr.djiintegration.VideoPlayerDJI;
 import constantin.fpv_vr.settings.SJ;
 import constantin.telemetry.core.TelemetryReceiver;
 import constantin.uvcintegration.UVCPlayer;
@@ -23,10 +23,10 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
     private static final String TAG=VideoTelemetryComponent.class.getSimpleName();
     private final int connectionType;
     private VideoPlayer videoPlayer;
-    private VideoPlayerDJI videoPlayerDJI;
+    //XDJIprivate VideoPlayerDJI videoPlayerDJI;
     private UVCPlayer uvcPlayer;
     private TelemetryReceiver telemetryReceiver;
-    private TelemetryReceiverDJI telemetryReceiverDJI;
+    //XDJIprivate TelemetryReceiverDJI telemetryReceiverDJI;
 
     public VideoTelemetryComponent(final AppCompatActivity parent){
         connectionType=SJ.getConnectionType(parent);
@@ -34,8 +34,8 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
             uvcPlayer=new UVCPlayer(parent);
             telemetryReceiver=new TelemetryReceiver(parent,0,0,0);
         }else if(connectionType==AConnect.CONNECTION_TYPE_DJI){
-            videoPlayerDJI=new VideoPlayerDJI(parent);
-            telemetryReceiverDJI=new TelemetryReceiverDJI(parent,0,0);
+            //XDJIvideoPlayerDJI=new VideoPlayerDJI(parent);
+            //XDJItelemetryReceiverDJI=new TelemetryReceiverDJI(parent,0,0);
         }else{
             videoPlayer=new VideoPlayer(parent);
             telemetryReceiver=new TelemetryReceiver(parent,videoPlayer.getExternalGroundRecorder(),videoPlayer.getExternalFilePlayer(),0);
@@ -44,7 +44,8 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
 
     public TelemetryReceiver getTelemetryReceiver(){
         if(connectionType==AConnect.CONNECTION_TYPE_DJI){
-            return telemetryReceiverDJI;
+            //XDJIreturn telemetryReceiverDJI;
+            return null;
         }
         return telemetryReceiver;
     }
@@ -53,7 +54,8 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
         if(connectionType==AConnect.CONNECTION_TYPE_UVC){
             return uvcPlayer.configure1();
         }else if(connectionType==AConnect.CONNECTION_TYPE_DJI){
-            return videoPlayerDJI.configure1();
+            //XDJIreturn videoPlayerDJI.configure1();
+            return null;
         }else{
             return videoPlayer.configure1();
         }
@@ -63,7 +65,8 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
         if(connectionType==AConnect.CONNECTION_TYPE_UVC){
             return uvcPlayer.configure2();
         }else if(connectionType==AConnect.CONNECTION_TYPE_DJI){
-            return videoPlayerDJI.configure2();
+            //XDJIreturn videoPlayerDJI.configure2();
+            return null;
         }else{
             return videoPlayer.configure2();
         }
@@ -73,7 +76,7 @@ public class VideoTelemetryComponent extends GestureDetector.SimpleOnGestureList
         if(connectionType==AConnect.CONNECTION_TYPE_UVC){
             uvcPlayer.setIVideoParamsChanged(iVideoParamsChanged);
         }else if(connectionType==AConnect.CONNECTION_TYPE_DJI){
-           videoPlayerDJI.setIVideoParamsChanged(iVideoParamsChanged);
+            //XDJIvideoPlayerDJI.setIVideoParamsChanged(iVideoParamsChanged);
         }else{
             videoPlayer.setIVideoParamsChanged(iVideoParamsChanged);
         }

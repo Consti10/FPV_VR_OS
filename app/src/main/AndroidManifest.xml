@@ -109,7 +109,7 @@
             android:value="false" />
 
         <!-- ******************************************* DJI SDK begin *******************************************-->
-        <uses-library android:name="com.android.future.usb.accessory" />
+        <!--<uses-library android:name="com.android.future.usb.accessory" />
         <meta-data
             android:name="com.dji.sdk.API_KEY"
             android:value="5d59d94daccf4da9a2d51e3d" />
@@ -123,13 +123,13 @@
             <meta-data
                 android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
                 android:resource="@xml/accessory_filter" />
-        </activity>
-        <service android:name="dji.sdk.sdkmanager.DJIGlobalService" >
-        </service>
+        </activity>-->
+        <!--<service android:name="dji.sdk.sdkmanager.DJIGlobalService" >
+        </service>-->
         <!-- added by consti, see here https://developers.google.com/maps/documentation/android-sdk/config#specify_requirement_for_apache_http_legacy_library -->
-        <uses-library
+        <!--<uses-library
             android:name="org.apache.http.legacy"
-            android:required="false" />
+            android:required="false" />-->
         <!-- ******************************************* DJI SDK end *******************************************-->
     </application>
 

@@ -143,8 +143,8 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 break;
             case CONNECTION_TYPE_DJI:
                 // Will crash on emulator !
-                fm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commitNow();
-                makeSnackBarForView(mContext,"connection type set to DJI",v);
+                //XDJIfm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commitNow();
+                //XDJImakeSnackBarForView(mContext,"connection type set to DJI",v);
                 break;
             case CONNECTION_TYPE_UVC:
                 fm.beginTransaction().replace(R.id.fragment_container, new FConnectUVC()).commitNow();
