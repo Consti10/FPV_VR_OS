@@ -5,8 +5,8 @@ on: [push]
 jobs:
   build:
 
-    #runs-on: ubuntu-20.04
-    runs-on: windows-latest
+    runs-on: ubuntu-20.04
+    #runs-on: windows-latest
     
     steps:
     #- name: Checkout repository and submodules
@@ -31,6 +31,13 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
+
+    - name: Validate Gradle wrapper
+      uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: build
 
     - name: weird
       run: gradle wrapper
