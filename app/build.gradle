@@ -10,8 +10,8 @@ android {
         applicationId "constantin.fpv_vr.wifibroadcast"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 47
-        versionName "4.7"
+        versionCode 48
+        versionName "4.8"
         multiDexEnabled true //DJI
         externalNativeBuild {
             cmake {
@@ -53,7 +53,7 @@ android {
         }
     }
     buildFeatures{
-        viewBinding=true
+        viewBinding true
         //prefab = true
     }
     // dji sdk begin
@@ -142,8 +142,8 @@ dependencies {
     //THIS IS IT ! implementation "androidx.activity:activity:1.2.0-alpha08"
 
     //firebase stuff
-    implementation 'com.google.firebase:firebase-core:20.1.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.8'
+    implementation 'com.google.firebase:firebase-core:21.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
 
     //Screen recording and more
     implementation 'com.github.HBiSoft:HBRecorder:0.1.12'

@@ -92,12 +92,12 @@ public class BigTest {
 
         // Set to DJI and
         // only check if app does not crash with dji enabled
-        onView(withId(R.id.b_Connect)).perform(click());
+        /*onView(withId(R.id.b_Connect)).perform(click());
         onView(withId(R.id.spinner_connection_type)).perform(click());
         onData(anything()).atPosition(5).perform(click());
         // Wait for dji registration and so on
         try { Thread.sleep(SECONDS_10_IN_MS); } catch (InterruptedException e) { e.printStackTrace(); }
-        pressBack();
+        pressBack();*/
     }
 
 }
