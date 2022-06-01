@@ -13,7 +13,7 @@ jobs:
     #  with:
     #   submodules: recursive
     - name: Checkout FPV_VR_OS
-      run: https://github.com/Consti10/FPV_VR_OS
+      run: git clone https://github.com/Consti10/FPV_VR_OS
 
     - name: Checkout sources for LiveVideo10ms
       run: git clone https://github.com/Consti10/LiveVideo10ms
