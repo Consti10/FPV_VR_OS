@@ -5,20 +5,31 @@ on: [push]
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-22.04
     
     steps:
-    - name: Checkout repository and submodules
-      uses: actions/checkout@v3
-      with:
-       submodules: recursive
-       
+    #- name: Checkout repository and submodules
+    #  uses: actions/checkout@v3
+    #  with:
+    #   submodules: recursive
+    - name: Checkout FPV_VR_OS
+      run: https://github.com/Consti10/FPV_VR_OS
+
+    - name: Checkout sources for LiveVideo10ms
+      run: git clone https://github.com/Consti10/LiveVideo10ms
+
+    - name: Checkout sources for RenderingX
+      run: git clone https://github.com/Consti10/RenderingX
+
     - name: set up JDK 11
       uses: actions/setup-java@v3
       with:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
+
+    - name: cd into repo
+      run: cd FPV_VR_OS
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
