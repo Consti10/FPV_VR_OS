@@ -44,10 +44,8 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: |
-        cd FPV_VR
         chmod +x gradlew
       
     - name: Build with Gradle
       run: |
-        cd FPV_VR
         ./gradlew build
