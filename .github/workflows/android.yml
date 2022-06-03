@@ -44,7 +44,6 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: |
-        ls
         cd FPV_VR_OS
         chmod +x gradlew
       
