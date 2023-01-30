@@ -11,8 +11,8 @@ buildscript {
     }
     dependencies {
 		classpath 'com.android.tools.build:gradle:7.4.0'
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.0'
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
@@ -29,8 +29,8 @@ allprojects {
         minSdkVersion = 21
         compileSdkVersion = 31
         targetSdkVersion = 31
-        appcompatVersion = '1.4.1'
-        materialVersion = '1.7.0-alpha02'
+        appcompatVersion = '1.6.0'
+        materialVersion = '1.9.0-alpha01'
         constraintlayoutVersion='2.1.4'
         androidxpreferenceVersion='1.2.0'
         mGvrVersion = '1.180.0'
