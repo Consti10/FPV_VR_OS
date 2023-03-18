@@ -22,8 +22,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.hbisoft.hbrecorder.HBRecorder;
-import com.hbisoft.hbrecorder.HBRecorderListener;
+/*TMPiimport com.hbisoft.hbrecorder.HBRecorder;
+import com.hbisoft.hbrecorder.HBRecorderListener;*/
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -57,11 +57,11 @@ import static constantin.fpv_vr.connect.AConnect.CONNECTION_TYPE_UVC;
 
 import constantin.fpv_vr.databinding.ActivityMainBinding;
 
-public class AMain extends AppCompatActivity implements View.OnClickListener , HBRecorderListener {
+public class AMain extends AppCompatActivity implements View.OnClickListener /*TMPi, HBRecorderListener*/ {
     private static final String TAG=AMain.class.getSimpleName();
     private TestReceiverVideo mTestReceiverVideo=null;
     private final RequestPermissionHelper requestPermissionHelper=new RequestPermissionHelper(Permissions.BASIC_PERMISSIONS);
-    private HBRecorder hbRecorder;
+    //private HBRecorder hbRecorder;
     private static final int SCREEN_RECORD_REQUEST_CODE = 777;
     //If this Intent != null the permission to record screen was already granted
     Intent mRecordScreenPermissionI=null;
@@ -192,7 +192,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 Toaster.makeToast(this,"Cannot enable mp4 ground recording",false);
                 return;
             }
-            if(hbRecorder==null){
+            /*TMPif(hbRecorder==null){
                 hbRecorder = new HBRecorder(this, this);
                 hbRecorder.setVideoFrameRate(AGroundRecordingSettings.getGROUND_RECORDING_VIDEO_FPS(this));
                 hbRecorder.setVideoBitrate(AGroundRecordingSettings.getGROUND_RECORDING_VIDEO_BITRATE(this));
@@ -200,15 +200,15 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
                 setOutputPath();
             }
             hbRecorder.startScreenRecording(mRecordScreenPermissionI, mRecordScreenResultCode, this);
-            System.out.println("hbRecorder Start screen recorder");
+            System.out.println("hbRecorder Start screen recorder");*/
         }
     }
 
     private void stopRecordingScreenIfNeeded(){
-        if(hbRecorder!=null && hbRecorder.isBusyRecording()){
+        /*TMPiif(hbRecorder!=null && hbRecorder.isBusyRecording()){
             hbRecorder.stopScreenRecording();
             System.out.println("hbRecorder Stop screen recorder");
-        }
+        }*/
     }
 
     //For Android 10> we will pass a Uri to HBRecorder
@@ -230,11 +230,11 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
             mUri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
             //FILE NAME SHOULD BE THE SAME
-            hbRecorder.setFileName(filename);
-            hbRecorder.setOutputUri(mUri);
+            /*TMPihbRecorder.setFileName(filename);
+            hbRecorder.setOutputUri(mUri);*/
         }else{
             createFolder();
-            hbRecorder.setOutputPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) +"/FPV_VR2");
+            /*TMPihbRecorder.setOutputPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) +"/FPV_VR2");*/
         }
     }
     //Generate a timestamp to be used as a file name
@@ -255,7 +255,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
         }
     }
 
-    @Override
+    /*TMPi@Override
     public void HBRecorderOnStart() { }
 
     @Override
@@ -267,7 +267,7 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
     @Override
     public void HBRecorderOnError(int errorCode, String reason) {
         System.out.println("HBRecorderOnError "+errorCode+" "+reason);
-    }
+    }*/
     // Notify user if mode is probably UVC
     private void notifyUserIfAppStartedForUVC(){
         if (UVCHelper.startedViaIntentFilterActionUSB(this)) {

@@ -146,7 +146,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.3.3'
 
     //Screen recording and more
-    implementation 'com.github.HBiSoft:HBRecorder:0.1.12'
+    //implementation 'com.github.HBiSoft:HBRecorder:3.0.1'
     implementation 'com.github.santaevpavel:OutlineSpan:0.1.0'
     implementation("com.google.guava:guava:29.0-android")
     
