@@ -143,10 +143,10 @@ dependencies {
 
     //firebase stuff
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.5'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.6'
 
     //Screen recording and more
-    //implementation 'com.github.HBiSoft:HBRecorder:3.0.1'
+    implementation 'com.github.HBiSoft:HBRecorder:3.0.1'
     implementation 'com.github.santaevpavel:OutlineSpan:0.1.0'
     implementation("com.google.guava:guava:29.0-android")
     
