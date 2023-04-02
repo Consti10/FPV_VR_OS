@@ -33,7 +33,6 @@
         <item>Included Test File</item>
         <item>Ground recording file</item>
         <item>RTSP (experimental)</item>
-        <item>DJI (experimental)</item>
         <item>UVC (experimental)</item>
     </string-array>
 

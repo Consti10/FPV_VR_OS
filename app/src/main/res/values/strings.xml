@@ -37,8 +37,6 @@
 
     <string name="RTSPDescription">In development. Enter valid RTSP string (or other string that can be played by ffmpeg), then start video playing activity.</string>
 
-    <string name="DJIDescription">DJI In development.</string>
-
     <string name="Mode1_Description">Mode 1: Connect to EZ-WB/OpenHD RX Pi via Wifi</string>
     <string name="Mode2_Description">Mode 2: Connect to EZ-WB/OpenHD RX Pi via USB cable</string>
 

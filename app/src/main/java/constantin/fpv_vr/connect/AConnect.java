@@ -57,8 +57,7 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
     public static final int CONNECTION_TYPE_TestFile =2;
     public static final int CONNECTION_TYPE_StorageFile =3;
     public static final int CONNECTION_TYPE_RTSP =4;
-    public static final int CONNECTION_TYPE_DJI =5;
-    public static final int CONNECTION_TYPE_UVC=6;
+    public static final int CONNECTION_TYPE_UVC=5;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -141,11 +140,6 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
                 fm.beginTransaction().replace(R.id.fragment_container, new FConnectRTSP()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to RTSP",v);
                 break;
-            case CONNECTION_TYPE_DJI:
-                // Will crash on emulator !
-                //XDJIfm.beginTransaction().replace(R.id.fragment_container, new FConnectDJI()).commitNow();
-                //XDJImakeSnackBarForView(mContext,"connection type set to DJI",v);
-                break;
             case CONNECTION_TYPE_UVC:
                 fm.beginTransaction().replace(R.id.fragment_container, new FConnectUVC()).commitNow();
                 makeSnackBarForView(mContext,"connection type set to UVC",v);
@@ -195,10 +189,6 @@ public class AConnect extends AppCompatActivity implements AdapterView.OnItemSel
             case CONNECTION_TYPE_RTSP:
                 VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.FFMPEG);
                 TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_UDP);
-                break;
-            case CONNECTION_TYPE_DJI:
-                VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);
-                TelemetrySettings.setT_SOURCE(context,TelemetrySettings.SOURCE_TYPE_EXTERNAL_DJI);
                 break;
             case CONNECTION_TYPE_UVC:
                 VideoSettings.setVS_SOURCE(context, VideoSettings.VS_SOURCE.EXTERNAL);

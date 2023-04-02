@@ -9,29 +9,17 @@
     <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
     <!--<uses-permission android:name="android.permission.VIBRATE" />--> <!-- for the notification -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <!-- ******************************************* DJI SDK begin *******************************************-->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="false"/>
     <uses-feature
         android:name="android.hardware.usb.accessory"
         android:required="false"/>
-    <!-- ******************************************* DJI SDK end *******************************************-->
 
     <!--https://developer.android.com/about/versions/11/privacy/storage-->
     <!-- Set requestLegacyExternalStorage to true -->
@@ -100,29 +88,6 @@
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
 
-        <!-- ******************************************* DJI SDK begin *******************************************-->
-        <!--<uses-library android:name="com.android.future.usb.accessory" />
-        <meta-data
-            android:name="com.dji.sdk.API_KEY"
-            android:value="5d59d94daccf4da9a2d51e3d" />
-        <activity
-            android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
-            android:theme="@android:style/Theme.Translucent"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
-            </intent-filter>
-            <meta-data
-                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
-                android:resource="@xml/accessory_filter" />
-        </activity>-->
-        <!--<service android:name="dji.sdk.sdkmanager.DJIGlobalService" >
-        </service>-->
-        <!-- added by consti, see here https://developers.google.com/maps/documentation/android-sdk/config#specify_requirement_for_apache_http_legacy_library -->
-        <!--<uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />-->
-        <!-- ******************************************* DJI SDK end *******************************************-->
     </application>
 
 </manifest>
