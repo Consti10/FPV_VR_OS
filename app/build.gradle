@@ -79,8 +79,6 @@ dependencies {
     //implementation "com.github.Consti10.LiveVideo10ms:VideoCore:25f87dc9"
     //implementation "com.github.Consti10.LiveVideo10ms:TelemetryCore:25f87dc9"
 
-    //THIS IS IT ! implementation "androidx.activity:activity:1.2.0-alpha08"
-
     //firebase stuff
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.6'
