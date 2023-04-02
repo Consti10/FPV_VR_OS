@@ -66,14 +66,5 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/b_Exp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="EXP"
-        android:onClick="onClick"
-        tools:ignore="HardcodedText"
-        android:visibility="invisible"/>
-
 
 </LinearLayout>

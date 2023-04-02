@@ -47,9 +47,6 @@
         android:requestLegacyExternalStorage="true" >
 
         <activity
-            android:name=".OSD2.ATestlayout"
-            android:theme="@style/MyStyleFullscreen" />
-        <activity
             android:name=".main.AMain"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme"

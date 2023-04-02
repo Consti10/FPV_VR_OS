@@ -32,7 +32,6 @@ import java.util.Locale;
 
 import constantin.fpv_vr.Permissions;
 import constantin.fpv_vr.R;
-import constantin.fpv_vr.OSD2.ATestlayout;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.connect.AConnect;
 import constantin.fpv_vr.djiintegration.DJIApplication;
@@ -154,8 +153,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
             startActivity(new Intent().setClass(this, ASettingsOSD.class));
         }else if(v==binding.bConnect){
             startActivity(new Intent().setClass(this, AConnect.class));
-        }else if(v==binding.bExp){
-            startActivity(new Intent().setClass(this, ATestlayout.class));
         }
     }
 
