@@ -34,7 +34,6 @@ import constantin.fpv_vr.Permissions;
 import constantin.fpv_vr.R;
 import constantin.fpv_vr.Toaster;
 import constantin.fpv_vr.connect.AConnect;
-import constantin.fpv_vr.djiintegration.DJIApplication;
 import constantin.fpv_vr.play_mono.AMonoVideoOSD;
 import constantin.fpv_vr.play_stereo.AStereoVR;
 import constantin.fpv_vr.settings.AGroundRecordingSettings;
@@ -81,11 +80,6 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          * Same for the permissions (required in >=android X)
          */
         requestPermissionHelper.checkAndRequestPermissions(this);
-        //if(!DJISDKManager.getInstance().hasSDKRegistered()){
-        //    startActivity(new Intent().setClass(this, DJIConnectionA.class));
-        //}
-        //  since DJI can only be enabled via the "connect" fragment, this won't do anything for a normal user
-        ((DJIApplication)getApplication()).initializeDJIIfNeeded();
         // Also this one won't do anything unless an UVC device was connected
         notifyUserIfAppStartedForUVC();
     }
@@ -132,19 +126,11 @@ public class AMain extends AppCompatActivity implements View.OnClickListener , H
          * Each button starts its own activity or service
          */
         if(v==binding.bStartMonoVideoOnly || v==binding.bStartMonoVideoOSD){
-            if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
-                Toaster.makeToast(this,"No connected product",false);
-                return;
-            }
             final Intent intent=new Intent().setClass(this, AMonoVideoOSD.class);
             intent.putExtra(AMonoVideoOSD.EXTRA_KEY_ENABLE_OSD,v.getId()==R.id.b_startMonoVideoOSD);
             startActivity(intent);
             startRecordingScreenIfEnabled();
         }else if(v==binding.bStartStereo){
-            if(DJIApplication.isDJIEnabled(this) && !DJIApplication.isAircraftConnected()){
-                Toaster.makeToast(this,"No connected product",false);
-                return;
-            }
             final Intent intent = new Intent();
             intent.setClass(this, AStereoVR.class);
             startActivity(intent);

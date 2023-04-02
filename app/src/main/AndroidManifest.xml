@@ -36,7 +36,6 @@
     <!--https://developer.android.com/about/versions/11/privacy/storage-->
     <!-- Set requestLegacyExternalStorage to true -->
     <application
-        android:name=".djiintegration.DJIApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
