@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="constantin.fpv_vr">
 
-    <!-- complains about duplicate (in DJI area) -->
     <!-- Info about networks (EZ-WB connect via WIFI) -->
     <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
     <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
