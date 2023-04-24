@@ -8,9 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--<uses-permission android:name="android.permission.VIBRATE" />--> <!-- for the notification -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Fucking hell annoying android api changes - doesn't work anymore
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
